@@ -1,0 +1,13 @@
+﻿version: '3.8'
+
+services:
+  king-detective:
+    image: ghcr.io/tony-wang1990/king-detective:main
+    container_name: king-detective
+    restart: always
+    ports:
+      - "9527:9527"
+    volumes:
+      - ./application.yml:/app/king-detective/application.yml
+      - ./king-detective.db:/app/king-detective/king-detective.db
+      - ./keys:/app/king-detective/keys
