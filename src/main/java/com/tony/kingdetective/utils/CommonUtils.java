@@ -727,8 +727,8 @@ public class CommonUtils {
                 "      \n" +
                 "      # Set up warning message\n" +
                 "      {\n" +
-                "        echo \"🎉 欢迎使用 Y 探长~ 🎉\"\n" +
-                "        echo \"Source code address: https://github.com/tony-wang1990/king-detective\"\n" +
+                "        echo \\\"🎉 欢迎使用 W 探长 (King-Detective)~ 🎉\\\"\\n" +
+                "        echo \\\"Source code address: https://github.com/tony-wang1990/King-Detective\\\"\\n" +
                 "      } | tee /etc/motd\n" +
                 "      \n" +
                 "      # OS-specific configurations\n" +
