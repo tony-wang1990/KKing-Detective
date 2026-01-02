@@ -3,7 +3,7 @@
 import lombok.Getter;
 
 /**
- * @projectName: oci-helper
+ * @projectName: king-detective
  * @package: com.yohann.ocihelper.enums
  * @className: SysCfgTypeEnum
  * @author: Yohann

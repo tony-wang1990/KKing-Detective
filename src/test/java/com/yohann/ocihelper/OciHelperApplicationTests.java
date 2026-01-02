@@ -1,4 +1,4 @@
-package com.yohann.ocihelper;
+﻿package com.yohann.ocihelper;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;
@@ -75,7 +75,7 @@ class OciHelperApplicationTests {
 
     @Test
     void contextLoads() throws IOException {
-        String baseDir = "C:\\Users\\yohann_fan\\Desktop\\test\\oci-helper\\";
+        String baseDir = "C:\\Users\\yohann_fan\\Desktop\\test\\king-detective\\";
 //        String baseDir = "C:\\Users\\Yohann\\Desktop\\";
         String s = FileUtil.readString(baseDir + "test.txt", Charset.defaultCharset());
         List<OciUser> ociUsers = CommonUtils.parseConfigContent(s);

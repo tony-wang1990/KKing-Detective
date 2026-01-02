@@ -80,17 +80,17 @@ public class KeyboardBuilder {
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
                                 .text("\uD83D\uDCE2 通知频道")
-                                .url("https://t.me/oci_helper")
+                                .url("https://t.me/king_detective")
                                 .build(),
                         InlineKeyboardButton.builder()
                                 .text("\uD83D\uDD0D 放货查询")
-                                .url("https://check.oci-helper.de5.net")
+                                .url("https://check.king-detective.de5.net")
                                 .build()
                 ),
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
                                 .text("\uD83D\uDCBB 开源地址（帮忙点点star⭐）")
-                                .url("https://github.com/Yohann0617/oci-helper")
+                                .url("https://github.com/tony-wang1990/king-detective")
                                 .build()
                 ),
                 new InlineKeyboardRow(

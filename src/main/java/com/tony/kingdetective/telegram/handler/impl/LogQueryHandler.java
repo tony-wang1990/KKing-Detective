@@ -26,7 +26,7 @@ import java.util.LinkedList;
 @Component
 public class LogQueryHandler extends AbstractCallbackHandler {
 
-    private static final String LOG_FILE_PATH = "/var/log/oci-helper.log";
+    private static final String LOG_FILE_PATH = "/var/log/king-detective.log";
     private static final int MAX_LINES = 300;
 
     @Override
@@ -62,7 +62,7 @@ public class LogQueryHandler extends AbstractCallbackHandler {
 
             // Send file to user using ByteArrayInputStream to preserve UTF-8 encoding
             String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
-            String fileName = "oci-helper_" + timestamp + ".log";
+            String fileName = "king-detective_" + timestamp + ".log";
 
             SendDocument sendDocument = SendDocument.builder()
                     .chatId(chatId)

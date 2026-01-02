@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
- * @projectName: oci-helper
+ * @projectName: king-detective
  * @package: com.yohann.ocihelper.bean.params.oci.traffic
  * @className: GetTrafficDataParams
  * @author: Yohann

@@ -3,7 +3,7 @@
 import lombok.Data;
 
 /**
- * @projectName: oci-helper
+ * @projectName: king-detective
  * @package: com.yohann.ocihelper.bean.params
  * @className: CreateTaskPageParams
  * @author: Yohann

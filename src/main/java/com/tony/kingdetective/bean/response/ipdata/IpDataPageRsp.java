@@ -3,7 +3,7 @@
 import lombok.Data;
 
 /**
- * @projectName: oci-helper
+ * @projectName: king-detective
  * @package: com.yohann.ocihelper.bean.response.ipdata
  * @className: IpDataPageRsp
  * @author: Yohann

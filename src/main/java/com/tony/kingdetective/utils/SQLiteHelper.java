@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import java.sql.*;
 
 /**
- * @projectName: oci-helper
+ * @projectName: king-detective
  * @package: com.yohann.ocihelper.utils
  * @className: SQLiteHelper
  * @author: Yohann

@@ -1,4 +1,4 @@
-name: Docker Image CI
+﻿name: Docker Image CI
 
 on:
   push:
@@ -39,4 +39,4 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           file: ./Dockerfile
-          tags: yohannfan/oci-helper:latest
+          tags: yohannfan/king-detective:latest

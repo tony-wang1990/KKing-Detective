@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import jakarta.validation.constraints.NotBlank;
 
 /**
- * @projectName: oci-helper
+ * @projectName: king-detective
  * @package: com.yohann.ocihelper.bean.params.oci
  * @className: GetOciCfgDetailsParams
  * @author: Yohann

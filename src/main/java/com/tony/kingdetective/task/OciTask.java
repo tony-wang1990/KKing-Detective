@@ -203,7 +203,7 @@ public class OciTask implements ApplicationRunner {
         virtualExecutor.execute(() -> {
             Optional.ofNullable(kvService.getOne(new LambdaQueryWrapper<OciKv>()
                     .eq(OciKv::getCode, SysCfgEnum.SYS_MFA_SECRET.getCode()))).ifPresent(mfa -> {
-                String qrCodeURL = CommonUtils.generateQRCodeURL(mfa.getValue(), account, "oci-helper");
+                String qrCodeURL = CommonUtils.generateQRCodeURL(mfa.getValue(), account, "king-detective");
                 CommonUtils.genQRPic(CommonUtils.MFA_QR_PNG_PATH, qrCodeURL);
             });
         });
@@ -233,8 +233,8 @@ public class OciTask implements ApplicationRunner {
                 .eq(OciKv::getCode, SysCfgEnum.SYS_INFO_VERSION.getCode())
                 .eq(OciKv::getType, SysCfgTypeEnum.SYS_INFO.getCode())
                 .select(OciKv::getValue), String::valueOf);
-        log.info(String.format("【oci-helper】服务启动成功~ 当前版本：%s 最新版本：%s", nowVersion, latestVersion));
-        sysService.sendMessage(String.format("【oci-helper】服务启动成功🎉🎉\n\n当前版本：%s\n最新版本：%s\n发送 /start 操作机器人🤖\n放货通知频道：https://t.me/oci_helper", nowVersion, latestVersion));
+        log.info(String.format("【king-detective】服务启动成功~ 当前版本：%s 最新版本：%s", nowVersion, latestVersion));
+        sysService.sendMessage(String.format("【king-detective】服务启动成功🎉🎉\n\n当前版本：%s\n最新版本：%s\n发送 /start 操作机器人🤖\n放货通知频道：https://t.me/king_detective", nowVersion, latestVersion));
     }
 
     public static void pushVersionUpdateMsg(IOciKvService kvService, ISysService sysService) {
@@ -255,11 +255,11 @@ public class OciTask implements ApplicationRunner {
                 return;
             }
             if (!now.equals(latest)) {
-                log.warn(String.format("【oci-helper】版本更新啦！！！当前版本：%s 最新版本：%s", now, latest));
+                log.warn(String.format("【king-detective】版本更新啦！！！当前版本：%s 最新版本：%s", now, latest));
                 if (!isPushedLatestVersion) {
-                    sysService.sendMessage(String.format("🔔【oci-helper】版本更新啦！！！\n\n当前版本：%s\n最新版本：%s\n一键脚本：%s\n\n更新内容：\n%s",
+                    sysService.sendMessage(String.format("🔔【king-detective】版本更新啦！！！\n\n当前版本：%s\n最新版本：%s\n一键脚本：%s\n\n更新内容：\n%s",
                             now, latest,
-                            "bash <(wget -qO- https://github.com/Yohann0617/oci-helper/releases/latest/download/sh_oci-helper_install.sh)",
+                            "bash <(wget -qO- https://github.com/tony-wang1990/king-detective/releases/latest/download/sh_king-detective_install.sh)",
                             CommonUtils.getLatestVersionBody()));
                     isPushedLatestVersion = true;
                 }

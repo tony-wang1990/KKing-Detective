@@ -19,7 +19,7 @@ import jakarta.annotation.Resource;
 import java.util.List;
 
 /**
- * @projectName: oci-helper
+ * @projectName: king-detective
  * @package: com.yohann.ocihelper.controller
  * @className: TrafficStatisticsController
  * @author: Yohann

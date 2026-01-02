@@ -1,5 +1,8 @@
-server:
-  port: 8818
+﻿server:
+  port: 9527
+  # 支持 IPv6 和 IPv4 双栈
+  address: '::'  # 监听所有 IPv6 地址（也兼容 IPv4）
+  # address: 0.0.0.0  # 如果只需要 IPv4，使用这个
 
 # --------------------------------------- 用户自定义修改项 ------------------------------------
 # web登录管理员账号密码
@@ -40,7 +43,7 @@ logging:
 
 # 密钥文件存放目录（如果是docker部署则不用修改）
 oci-cfg:
-  boot-broadcast-url: https://backend.oci-helper.de5.net/api/boot
-  boot-broadcast-channel: https://api.telegram.org/bot8252348609:AAHQsW95nrozzWpXRjKRVa0Ul4oyWrxn_wI/sendMessage?chat_id=@oci_helper
+  boot-broadcast-url: https://backend.king-detective.de5.net/api/boot
+  boot-broadcast-channel: https://api.telegram.org/bot8252348609:AAHQsW95nrozzWpXRjKRVa0Ul4oyWrxn_wI/sendMessage?chat_id=@king_detective
 #  key-dir-path: /app/king-detective/keys
   key-dir-path: C:\\Users\\yatao\\Desktop

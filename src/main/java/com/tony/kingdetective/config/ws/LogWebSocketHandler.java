@@ -24,7 +24,7 @@ import java.util.concurrent.*;
 import static com.yohann.ocihelper.service.impl.OciServiceImpl.TEMP_MAP;
 
 /**
- * @projectName: oci-helper
+ * @projectName: king-detective
  * @package: com.yohann.ocihelper.utils
  * @className: LogWebSocketHandler
  * @author: Yohann

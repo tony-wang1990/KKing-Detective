@@ -527,7 +527,7 @@ public class OracleInstanceFetcher implements Closeable {
 
     synchronized private Vcn createVcn(VirtualNetworkClient virtualNetworkClient, String compartmentId, String cidrBlock)
             throws Exception {
-        String vcnName = "oci-helper-vcn";
+        String vcnName = "king-detective-vcn";
         CreateVcnDetails createVcnDetails = CreateVcnDetails.builder()
                 .cidrBlock(cidrBlock)
                 .isIpv6Enabled(true)
@@ -547,7 +547,7 @@ public class OracleInstanceFetcher implements Closeable {
 
     public Vcn createVcn(String cidrBlock)
             throws Exception {
-        String vcnName = "oci-helper-vcn";
+        String vcnName = "king-detective-vcn";
         CreateVcnDetails createVcnDetails = CreateVcnDetails.builder()
                 .cidrBlock(cidrBlock)
                 .isIpv6Enabled(true)
@@ -661,7 +661,7 @@ public class OracleInstanceFetcher implements Closeable {
     synchronized private InternetGateway createInternetGateway(
             VirtualNetworkClient virtualNetworkClient, String compartmentId, Vcn vcn)
             throws Exception {
-        String internetGatewayName = "oci-helper-gateway";
+        String internetGatewayName = "king-detective-gateway";
 
         //查询网关是否存在,不存在再创建
         ListInternetGatewaysRequest build = ListInternetGatewaysRequest.builder()
@@ -789,7 +789,7 @@ public class OracleInstanceFetcher implements Closeable {
             String networkCidrBlock,
             Vcn vcn)
             throws Exception {
-        String subnetName = "oci-helper-subnet";
+        String subnetName = "king-detective-subnet";
         Subnet subnet;
         CreateSubnetDetails createSubnetDetails =
                 CreateSubnetDetails.builder()
@@ -1134,7 +1134,7 @@ public class OracleInstanceFetcher implements Closeable {
             AvailabilityDomain availabilityDomain,
             Image image,
             String kmsKeyId) throws Exception {
-        String bootVolumeName = "oci-helper-boot-volume";
+        String bootVolumeName = "king-detective-boot-volume";
         // find existing boot volume by image
         ListBootVolumesRequest listBootVolumesRequest = ListBootVolumesRequest.builder()
                 .availabilityDomain(availabilityDomain.getName())
@@ -1181,7 +1181,7 @@ public class OracleInstanceFetcher implements Closeable {
     public LaunchInstanceDetails createLaunchInstanceDetailsFromBootVolume(
             LaunchInstanceDetails launchInstanceDetails,
             BootVolume bootVolume) throws Exception {
-        String bootVolumeName = "oci-helper-instance-from-boot-volume";
+        String bootVolumeName = "king-detective-instance-from-boot-volume";
         InstanceSourceViaBootVolumeDetails instanceSourceViaBootVolumeDetails = InstanceSourceViaBootVolumeDetails.builder()
                 .bootVolumeId(bootVolume.getId())
                 .build();

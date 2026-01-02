@@ -1,4 +1,4 @@
-﻿# King-Detective 👑🕵️
+# King-Detective 👑🕵️
 
 [![visitors](https://komarev.com/ghpvc/?username=tony-wang1990&color=green&base=10000&abbreviated=true)](https://github.com/tony-wang1990)
 [![Stars](https://img.shields.io/github/stars/tony-wang1990/King-Detective)](https://github.com/tony-wang1990/King-Detective/stargazers)
@@ -38,190 +38,42 @@
 10. 支持分页查询、添加、更新、删除 **Cloudflare** 多个域名的 DNS 记录。⭐
 11. 支持 **Telegram 机器人**简单操作，服务成功部署后向机器人发送`/start`选择操作。
 12. 支持类似于甲骨文云 **Cloud Shell** 控制台功能，方便使用 netboot 救砖。⭐⭐
-13. 支持IP信息查询（部署成功后访问 http://ip:9527/ip-info ）以及首页显示全球服务器地图（可精确到街道的店铺），点亮全球。
+13. 支持IP信息查询（部署成功后访问 http://ip:8818/ip-info ）以及首页显示全球服务器地图（可精确到街道的店铺），点亮全球。
 14. 支持 AI 聊天助手，基于 [硅基流动](https://cloud.siliconflow.cn) 免费API，可免费无限次调用。
 15. 支持 Google 账号一键登录，如何配置请参考：[如何配置 Google 账号一键登录](./doc/GOOGLE_LOGIN_GUIDE.md)
 
 ## 💻部署说明
 
-### 🌐 IPv6 网络支持 ⭐
+### 方式一：Docker 部署（推荐）
 
-King-Detective **完全支持 IPv6 网络环境**，包括：
-- ✅ IPv4/IPv6 双栈服务器
-- ✅ 纯 IPv6 服务器（需要 NAT64/DNS64）
-- ✅ 通过 Cloudflare Tunnel 在任何网络环境部署
-
-> **重要**: OCI Java SDK 支持 IPv6，但 OCI API 端点主要提供 IPv4 访问。纯 IPv6 环境需要 NAT64/DNS64 或代理。详见 [IPv6 部署完整指南](./IPv6-DEPLOYMENT-GUIDE.md)
-
-### 方式一：一键 IPv6 部署脚本（推荐）🚀
-
-适用于任何支持 IPv6 的 Linux 服务器（Oracle Cloud、Google Cloud、frog.fm 等）
+> 请注意：本项目目前处于开发阶段，暂未发布 Docker 镜像。如需使用，请采用方式二本地构建。
 
 ```bash
-# 一键安装（自动检测网络环境并配置）
-curl -fsSL https://raw.githubusercontent.com/tony-wang1990/King-Detective/main/install-ipv6.sh | sudo bash
-```
-
-**脚本会自动：**
-- 检测 IPv4/IPv6 网络环境
-- 安装 Docker 和 Docker Compose
-- 配置 Docker IPv6 支持
-- 测试并配置 NAT64/DNS64（如需要）
-- 下载并启动 King-Detective
-- 引导您设置管理员账号密码
-
-### 方式二：手动 Docker 部署
-
-#### 双栈网络服务器
-
-```bash
-# 1. 创建工作目录
+# 创建工作目录
 mkdir -p /app/king-detective/keys && cd /app/king-detective
 
-# 2. 下载配置文件
-wget https://raw.githubusercontent.com/tony-wang1990/King-Detective/main/docker-compose-ipv6.yml -O docker-compose.yml
-wget https://raw.githubusercontent.com/tony-wang1990/King-Detective/main/src/main/resources/application.yml
 
-# 3. 修改配置
-nano application.yml
-# 修改 web.account 和 web.password
+- 🔔 安装完成后浏览器直接访问 `http://ip:8818` 即可访问（建议之后通过https访问），账号密码可通过脚本进行修改。
+如需自己手动修改账号密码，更改 `/app/oci-helper/application.yml` 中的配置并执行 `docker restart oci-helper` 重启docker容器即可。
+- 📃 如需查看完整日志，执行：`docker logs oci-helper  >>  /app/oci-helper/oci-helper.log` 导出日志文件自行查看。
 
-# 4. 配置 Docker IPv6
-sudo nano /etc/docker/daemon.json
-```
-
-添加以下内容：
-```json
-{
-  "ipv6": true,
-  "fixed-cidr-v6": "fd00::/64"
-}
-```
-
+🎄 部署完成后，`/app/oci-helper`的目录结构如下：
 ```bash
-# 5. 重启 Docker
-sudo systemctl restart docker
-
-# 6. 启动服务
-docker-compose up -d
-
-# 7. 查看日志
-docker-compose logs -f
-```
-
-#### 纯 IPv6 服务器（frog.fm 等）
-
-```bash
-# 1. 先配置 DNS64（使用 Google 公共 DNS64）
-echo "nameserver 2001:4860:4860::6464" | sudo tee /etc/resolv.conf
-
-# 2. 测试 NAT64/DNS64
-ping6 -c 4 google.com  # 应该能 ping 通
-
-# 3. 然后按照上面的步骤部署
-```
-
-### 方式三：通过 Cloudflare Tunnel 部署
-
-无论您的网络环境如何，都可以通过 Cloudflare Tunnel 获得**免费 HTTPS** 和**全球加速**：
-
-```bash
-# 1. 安装 cloudflared
-wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
-chmod +x cloudflared-linux-amd64
-sudo mv cloudflared-linux-amd64 /usr/local/bin/cloudflared
-
-# 2. 登录并创建隧道
-cloudflared tunnel login
-cloudflared tunnel create king-detective
-
-# 3. 配置隧道
-mkdir -p ~/.cloudflared
-nano ~/.cloudflared/config.yml
-```
-
-配置内容：
-```yaml
-tunnel: <your-tunnel-id>
-credentials-file: /root/.cloudflared/<your-tunnel-id>.json
-
-ingress:
-  - hostname: king-detective.yourdomain.com
-    service: http://localhost:9527
-  - service: http_status:404
-```
-
-```bash
-# 4. 配置 DNS 并启动
-cloudflared tunnel route dns <tunnel-id> king-detective.yourdomain.com
-cloudflared service install
-systemctl start cloudflared
-
-# 5. 部署 King-Detective
-cd /app/king-detective
-docker-compose up -d
-```
-
-现在可以通过 `https://king-detective.yourdomain.com` 访问！
-
-### 访问应用
-
-**IPv4 访问**:
-```
-http://your-ipv4-address:9527
-```
-
-**IPv6 访问**:
-```
-http://[your-ipv6-address]:9527
-```
-
-**默认账号密码**:
-- 用户名: `admin`
-- 密码: `admin123456`
-
-⚠️ **首次登录后请立即修改密码！**
-
----
-
-## 📡 网络环境检查
-
-在部署前，建议先检查您的网络环境：
-
-```bash
-# 检查 IPv4
-curl -4 ifconfig.me
-
-# 检查 IPv6
-curl -6 ifconfig.me
-
-# 测试 NAT64/DNS64（纯 IPv6 环境）
-curl -6 http://www.google.com
-
-# 测试到 OCI API 的连接
-curl -6 https://iaas.us-ashburn-1.oraclecloud.com
-```
-
-## 🎄 部署完成后
-
-部署完成后，`/app/king-detective`的目录结构如下：
-```bash
-root@king-detective:/app/king-detective# tree
+root@yohann:/app/oci-helper# tree
 .
 ├── keys                            # 是一个目录，存放所有的pem秘钥文件
-├── application.yml                 # 项目配置文件，如需更改网页账号密码在此处更改，并执行 docker restart king-detective 重启容器
+├── application.yml                 # 项目配置文件，如需更改网页账号密码在此处更改，并执行 docker restart oci-helper 重启容器
 ├── docker-compose.yml              # docker-compose部署所需配置文件
-├── king-detective.db               # 项目数据库文件
+├── oci-helper.db                   # 项目数据库文件
 └── update_version_trigger.flag     # 注意是一个文件，不是目录，用于版本自动更新
 ````
-
 
 ### 📃更新日志
 
 > 1. 2025年07月08日——新增一键升级功能，首次更新时**需要先删除**旧的`docker-compose.yml`文件，再执行一键脚本。如有将部署脚本下载到本地的用户也需要重新下载。具体参考releases中v3.0.1版本要求。
 > 2. 2025年07月04日——升级了部分依赖以及SDK，首次更新时**需要先删除**旧的`application.yml`文件，再执行一键脚本。具体参考releases中v3.0.0版本要求。
 > 3. 2025年06月04日——新增了支持 Cloud Shell 控制台功能，更新之前**需要先删除**旧的`docker-compose.yml`文件，再执行一键脚本。
-> 4. 2024年11月30日——数据库新增了一张表，TG、钉钉消息通知都改成了在web页面配置，如遇到配置异常，请删除`application.yml`文件，然后重新执行一键命令，修改自定义的账号密码，`docker restart king-detective`重启容器即可。
+> 4. 2024年11月30日——数据库新增了一张表，TG、钉钉消息通知都改成了在web页面配置，如遇到配置异常，请删除`application.yml`文件，然后重新执行一键命令，修改自定义的账号密码，`docker restart oci-helper`重启容器即可。
 
 ### 🌏Nginx反向代理
 
@@ -231,44 +83,44 @@ root@king-detective:/app/king-detective# tree
     <summary> ☜ 点击查看 👨‍💻</summary>
 
 #### 1. 修改 docker-compose.yaml
-> 这一步是保证服务端口只有服务器内部网络可以访问，外部无法直接通过IP+端口的方式访问服务，提高安全性。修改完之后需要执行 `cd /app/king-detective && docker-compose down && docker-compose up -d` 重启服务或者直接再执行一次一键脚本。
+> 这一步是保证服务端口只有服务器内部网络可以访问，外部无法直接通过IP+端口的方式访问服务，提高安全性。修改完之后需要执行 `cd /app/oci-helper && docker-compose down && docker-compose up -d` 重启服务或者直接再执行一次一键脚本。
 
-`/app/king-detective/docker-compose.yaml`：
+`/app/oci-helper/docker-compose.yaml`：
 ```yaml
 services:
   watcher:
-    image: ghcr.io/tony-wang1990/king-detective-watcher:main
-    container_name: king-detective-watcher
+    image: ghcr.io/yohann0617/oci-helper-watcher:main
+    container_name: oci-helper-watcher
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/local/bin/docker-compose:/usr/local/bin/docker-compose
-      - /app/king-detective/docker-compose.yml:/app/king-detective/docker-compose.yml
-      - /app/king-detective/update_version_trigger.flag:/app/king-detective/update_version_trigger.flag
-      - /app/king-detective/king-detective.db:/app/king-detective/king-detective.db
+      - /app/oci-helper/docker-compose.yml:/app/oci-helper/docker-compose.yml
+      - /app/oci-helper/update_version_trigger.flag:/app/oci-helper/update_version_trigger.flag
+      - /app/oci-helper/oci-helper.db:/app/oci-helper/oci-helper.db
 
-  king-detective:
-    image: ghcr.io/tony-wang1990/king-detective:master
-    container_name: king-detective
+  oci-helper:
+    image: ghcr.io/yohann0617/oci-helper:master
+    container_name: oci-helper
     restart: always
     ports:
-      - "127.0.0.1:9527:9527" # 修改项
+      - "127.0.0.1:8818:8818" # 修改项
     volumes:
-      - /app/king-detective/application.yml:/app/king-detective/application.yml
-      - /app/king-detective/king-detective.db:/app/king-detective/king-detective.db
-      - /app/king-detective/keys:/app/king-detective/keys
-      - /app/king-detective/update_version_trigger.flag:/app/king-detective/update_version_trigger.flag
+      - /app/oci-helper/application.yml:/app/oci-helper/application.yml
+      - /app/oci-helper/oci-helper.db:/app/oci-helper/oci-helper.db
+      - /app/oci-helper/keys:/app/oci-helper/keys
+      - /app/oci-helper/update_version_trigger.flag:/app/oci-helper/update_version_trigger.flag
     networks:
       - app-network
       
   websockify:
-    image: ghcr.io/tony-wang1990/king-detective-websockify:master
+    image: ghcr.io/yohann0617/oci-helper-websockify:master
     container_name: websockify
     restart: always
     ports:
       - "127.0.0.1:6080:6080" # 修改项
     depends_on:
-      - king-detective
+      - oci-helper
     networks:
       - app-network
 
@@ -294,7 +146,7 @@ networks:
 
         location / {
             add_header Cache-Control no-cache;
-            proxy_pass http://127.0.0.1:9527;
+            proxy_pass http://127.0.0.1:8818;
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -317,21 +169,21 @@ networks:
 
 ### 1. 新建目录
 
-创建密钥文件存放目录`/app/king-detective/keys`。
+创建密钥文件存放目录`/app/oci-helper/keys`。
 
 ```bash
-mkdir -p /app/king-detective/keys && cd /app/king-detective
+mkdir -p /app/oci-helper/keys && cd /app/oci-helper
 ```
 
 ### 2. 下载文件
 
-下载 [Releases](https://github.com/tony-wang1990/king-detective/releases/tag/deploy) 中的`application.yml`、`king-detective.db`、`docker-compose.yml`以及**最新 Release 版本**的`sh_king-detective_install.sh`这4个文件到`/app/king-detective`目录下，并修改`application.yml`部分配置。
-`sh_king-detective_install.sh`是部署脚本，可自行修改内容，执行之前记得先`chmod +x /app/king-detective/sh_king-detective_install.sh`。
+下载 [Releases](https://github.com/Yohann0617/oci-helper/releases/tag/deploy) 中的`application.yml`、`oci-helper.db`、`docker-compose.yml`以及**最新 Release 版本**的`sh_oci-helper_install.sh`这4个文件到`/app/oci-helper`目录下，并修改`application.yml`部分配置。
+`sh_oci-helper_install.sh`是部署脚本，可自行修改内容，执行之前记得先`chmod +x /app/oci-helper/sh_oci-helper_install.sh`。
 
 ### 3. docker-compose 部署或更新
 
 ```bash
-chmod +x /app/king-detective/sh_king-detective_install.sh && cd /app/king-detective && ./sh_king-detective_install.sh
+chmod +x /app/oci-helper/sh_oci-helper_install.sh && cd /app/oci-helper && ./sh_oci-helper_install.sh
 ```
 
 > 此脚本也可以用于更新镜像并重启容器，不会删除已有的配置。
@@ -396,7 +248,7 @@ chmod +x /app/king-detective/sh_king-detective_install.sh && cd /app/king-detect
 
 ## ⭐Stargazers over time
 
-[![Stargazers over time](https://starchart.cc/tony-wang1990/king-detective.svg?variant=adaptive)](https://starchart.cc/tony-wang1990/king-detective)
+[![Stargazers over time](https://starchart.cc/Yohann0617/oci-helper.svg?variant=adaptive)](https://starchart.cc/Yohann0617/oci-helper)
 
 ## 🙏 特别鸣谢
 

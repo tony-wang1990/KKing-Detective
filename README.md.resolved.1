@@ -1,4 +1,4 @@
-﻿# King-Detective 👑🕵️
+# King-Detective 👑🕵️
 
 [![visitors](https://komarev.com/ghpvc/?username=tony-wang1990&color=green&base=10000&abbreviated=true)](https://github.com/tony-wang1990)
 [![Stars](https://img.shields.io/github/stars/tony-wang1990/King-Detective)](https://github.com/tony-wang1990/King-Detective/stargazers)
@@ -38,7 +38,7 @@
 10. 支持分页查询、添加、更新、删除 **Cloudflare** 多个域名的 DNS 记录。⭐
 11. 支持 **Telegram 机器人**简单操作，服务成功部署后向机器人发送`/start`选择操作。
 12. 支持类似于甲骨文云 **Cloud Shell** 控制台功能，方便使用 netboot 救砖。⭐⭐
-13. 支持IP信息查询（部署成功后访问 http://ip:9527/ip-info ）以及首页显示全球服务器地图（可精确到街道的店铺），点亮全球。
+13. 支持IP信息查询（部署成功后访问 http://ip:8818/ip-info ）以及首页显示全球服务器地图（可精确到街道的店铺），点亮全球。
 14. 支持 AI 聊天助手，基于 [硅基流动](https://cloud.siliconflow.cn) 免费API，可免费无限次调用。
 15. 支持 Google 账号一键登录，如何配置请参考：[如何配置 Google 账号一键登录](./doc/GOOGLE_LOGIN_GUIDE.md)
 
@@ -147,7 +147,7 @@ credentials-file: /root/.cloudflared/<your-tunnel-id>.json
 
 ingress:
   - hostname: king-detective.yourdomain.com
-    service: http://localhost:9527
+    service: http://localhost:8818
   - service: http_status:404
 ```
 
@@ -168,12 +168,12 @@ docker-compose up -d
 
 **IPv4 访问**:
 ```
-http://your-ipv4-address:9527
+http://your-ipv4-address:8818
 ```
 
 **IPv6 访问**:
 ```
-http://[your-ipv6-address]:9527
+http://[your-ipv6-address]:8818
 ```
 
 **默认账号密码**:
@@ -219,9 +219,9 @@ root@king-detective:/app/king-detective# tree
 ### 📃更新日志
 
 > 1. 2025年07月08日——新增一键升级功能，首次更新时**需要先删除**旧的`docker-compose.yml`文件，再执行一键脚本。如有将部署脚本下载到本地的用户也需要重新下载。具体参考releases中v3.0.1版本要求。
-> 2. 2025年07月04日——升级了部分依赖以及SDK，首次更新时**需要先删除**旧的`application.yml`文件，再执行一键脚本。具体参考releases中v3.0.0版本要求。
+> 2. 2025年07月04日——升级了部分依赖以及SDK，首次更新时**需要先删除**旧的[application.yml](file:///C:/Users/yatao/.gemini/antigravity/brain/King-Detective/src/main/resources/application.yml)文件，再执行一键脚本。具体参考releases中v3.0.0版本要求。
 > 3. 2025年06月04日——新增了支持 Cloud Shell 控制台功能，更新之前**需要先删除**旧的`docker-compose.yml`文件，再执行一键脚本。
-> 4. 2024年11月30日——数据库新增了一张表，TG、钉钉消息通知都改成了在web页面配置，如遇到配置异常，请删除`application.yml`文件，然后重新执行一键命令，修改自定义的账号密码，`docker restart king-detective`重启容器即可。
+> 4. 2024年11月30日——数据库新增了一张表，TG、钉钉消息通知都改成了在web页面配置，如遇到配置异常，请删除[application.yml](file:///C:/Users/yatao/.gemini/antigravity/brain/King-Detective/src/main/resources/application.yml)文件，然后重新执行一键命令，修改自定义的账号密码，`docker restart king-detective`重启容器即可。
 
 ### 🌏Nginx反向代理
 
@@ -252,7 +252,7 @@ services:
     container_name: king-detective
     restart: always
     ports:
-      - "127.0.0.1:9527:9527" # 修改项
+      - "127.0.0.1:8818:8818" # 修改项
     volumes:
       - /app/king-detective/application.yml:/app/king-detective/application.yml
       - /app/king-detective/king-detective.db:/app/king-detective/king-detective.db
@@ -294,7 +294,7 @@ networks:
 
         location / {
             add_header Cache-Control no-cache;
-            proxy_pass http://127.0.0.1:9527;
+            proxy_pass http://127.0.0.1:8818;
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -325,7 +325,7 @@ mkdir -p /app/king-detective/keys && cd /app/king-detective
 
 ### 2. 下载文件
 
-下载 [Releases](https://github.com/tony-wang1990/king-detective/releases/tag/deploy) 中的`application.yml`、`king-detective.db`、`docker-compose.yml`以及**最新 Release 版本**的`sh_king-detective_install.sh`这4个文件到`/app/king-detective`目录下，并修改`application.yml`部分配置。
+下载 [Releases](https://github.com/tony-wang1990/king-detective/releases/tag/deploy) 中的[application.yml](file:///C:/Users/yatao/.gemini/antigravity/brain/King-Detective/src/main/resources/application.yml)、[king-detective.db](file:///C:/Users/yatao/.gemini/antigravity/brain/King-Detective/king-detective.db)、`docker-compose.yml`以及**最新 Release 版本**的`sh_king-detective_install.sh`这4个文件到`/app/king-detective`目录下，并修改[application.yml](file:///C:/Users/yatao/.gemini/antigravity/brain/King-Detective/src/main/resources/application.yml)部分配置。
 `sh_king-detective_install.sh`是部署脚本，可自行修改内容，执行之前记得先`chmod +x /app/king-detective/sh_king-detective_install.sh`。
 
 ### 3. docker-compose 部署或更新

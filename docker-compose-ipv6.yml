@@ -1,0 +1,45 @@
+﻿version: '3.8'
+
+services:
+  king-detective:
+    image: ghcr.io/tony-wang1990/king-detective:main
+    container_name: king-detective
+    restart: always
+    ports:
+      # IPv6 支持：使用 :: 前缀表示监听 IPv6
+      - "[::]:9527:9527"  # IPv6 监听
+      - "0.0.0.0:9527:9527"  # IPv4 监听（兼容）
+    volumes:
+      - ./application.yml:/app/king-detective/application.yml
+      - ./king-detective.db:/app/king-detective/king-detective.db
+      - ./keys:/app/king-detective/keys
+    networks:
+      - king-detective-network
+    environment:
+      - JAVA_OPTS=-Djava.net.preferIPv6Addresses=true -Djava.net.preferIPv4Stack=false
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
+
+  websockify:
+    image: ghcr.io/tony-wang1990/king-detective-websockify:main
+    container_name: king-detective-websockify
+    restart: always
+    ports:
+      - "[::]:6080:6080"  # IPv6 VNC 端口
+      - "0.0.0.0:6080:6080"  # IPv4 VNC 端口
+    depends_on:
+      - king-detective
+    networks:
+      - king-detective-network
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
+
+networks:
+  king-detective-network:
+    driver: bridge
+    enable_ipv6: true
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/16
+        - subnet: fd00::/64  # IPv6 子网

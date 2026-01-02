@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @projectName: oci-helper
+ * @projectName: king-detective
  * @package: com.yohann.ocihelper.bean.response.oci.traffic
  * @className: GetConditionRsp
  * @author: Yohann

@@ -58,7 +58,7 @@ class UpdateSysVersionHandler extends VersionInfoBaseHandler {
         long chatId = callbackQuery.getMessage().getChatId();
         long messageId = callbackQuery.getMessage().getMessageId();
         
-        List<String> command = List.of("/bin/sh", "-c", "echo trigger > /app/oci-helper/update_version_trigger.flag");
+        List<String> command = List.of("/bin/sh", "-c", "echo trigger > /app/king-detective/update_version_trigger.flag");
         Process process = RuntimeUtil.exec(command.toArray(new String[0]));
         
         int exitCode = 0;
@@ -77,7 +77,7 @@ class UpdateSysVersionHandler extends VersionInfoBaseHandler {
                         .build());
                 return SendMessage.builder()
                         .chatId(chatId)
-                        .text("\uD83D\uDD04 正在更新 oci-helper 最新版本，请稍后...")
+                        .text("\uD83D\uDD04 正在更新 king-detective 最新版本，请稍后...")
                         .build();
             } else {
                 log.error("version update task exec error,exitCode:{}", exitCode);

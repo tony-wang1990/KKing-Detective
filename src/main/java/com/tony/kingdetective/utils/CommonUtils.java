@@ -61,7 +61,7 @@ public class CommonUtils {
     public static final String CREATE_COUNTS_PREFIX = "CREATE_COUNTS_PREFIX_";
     public static final String CHANGE_IP_ERROR_COUNTS_PREFIX = "CHANGE_IP_ERROR_COUNTS_PREFIX_";
     public static final String TERMINATE_INSTANCE_PREFIX = "TERMINATE_INSTANCE_PREFIX_";
-    public static final String LOG_FILE_PATH = "/var/log/oci-helper.log";
+    public static final String LOG_FILE_PATH = "/var/log/king-detective.log";
     public static final String MFA_QR_PNG_PATH = System.getProperty("user.dir") + File.separator + "mfa.png";
     private static final String CIDR_REGEX =
             "^([0-9]{1,3}\\.){3}[0-9]{1,3}/([0-9]|[1-2][0-9]|3[0-2])$";
@@ -610,7 +610,7 @@ public class CommonUtils {
     }
 
     private static String getGithubRepositoryInfo(String item) {
-        String repository = "Yohann0617/oci-helper";
+        String repository = "tony-wang1990/king-detective";
         String apiUrl = "https://api.github.com/repos/" + repository + "/releases/latest";
         String rst = null;
         try {
@@ -644,7 +644,7 @@ public class CommonUtils {
             connection.disconnect();
         } catch (Exception e) {
             log.error("Failed to fetch the latest release. exception: {}", e.getMessage());
-            throw new OciException(-1, "获取 oci-helper 项目信息失败");
+            throw new OciException(-1, "获取 king-detective 项目信息失败");
         }
         return rst;
     }
@@ -728,7 +728,7 @@ public class CommonUtils {
                 "      # Set up warning message\n" +
                 "      {\n" +
                 "        echo \"🎉 欢迎使用 Y 探长~ 🎉\"\n" +
-                "        echo \"Source code address: https://github.com/Yohann0617/oci-helper\"\n" +
+                "        echo \"Source code address: https://github.com/tony-wang1990/king-detective\"\n" +
                 "      } | tee /etc/motd\n" +
                 "      \n" +
                 "      # OS-specific configurations\n" +

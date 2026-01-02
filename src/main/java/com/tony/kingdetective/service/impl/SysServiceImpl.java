@@ -80,7 +80,7 @@ import static com.yohann.ocihelper.task.OciTask.botsApplication;
 import static com.yohann.ocihelper.task.OciTask.pushVersionUpdateMsg;
 
 /**
- * @projectName: oci-helper
+ * @projectName: king-detective
  * @package: com.yohann.ocihelper.service.impl
  * @className: ISysServiceImpl
  * @author: Yohann
@@ -228,7 +228,7 @@ public class SysServiceImpl implements ISysService {
                 mfa.setCode(SysCfgEnum.SYS_MFA_SECRET.getCode());
                 mfa.setValue(secretKey);
                 mfa.setType(SysCfgTypeEnum.SYS_MFA_CFG.getCode());
-                String qrCodeURL = CommonUtils.generateQRCodeURL(secretKey, account, "oci-helper");
+                String qrCodeURL = CommonUtils.generateQRCodeURL(secretKey, account, "king-detective");
                 CommonUtils.genQRPic(CommonUtils.MFA_QR_PNG_PATH, qrCodeURL);
                 kvService.save(mfa);
             }
@@ -323,7 +323,7 @@ public class SysServiceImpl implements ISysService {
         File outEncZip = null;
         try {
             String basicDirPath = System.getProperty("user.dir") + File.separator;
-            tempDir = FileUtil.mkdir(basicDirPath + "oci-helper-backup-" +
+            tempDir = FileUtil.mkdir(basicDirPath + "king-detective-backup-" +
                     LocalDateTime.now().format(DateTimeFormatter.ofPattern(DatePattern.PURE_DATETIME_PATTERN)));
             String keysDirPath = basicDirPath + "keys";
             FileUtil.copy(keysDirPath, tempDir.getAbsolutePath(), true);
@@ -372,7 +372,7 @@ public class SysServiceImpl implements ISysService {
         File outEncZip = null;
         try {
             String basicDirPath = System.getProperty("user.dir") + File.separator;
-            tempDir = FileUtil.mkdir(basicDirPath + "oci-helper-backup-" +
+            tempDir = FileUtil.mkdir(basicDirPath + "king-detective-backup-" +
                     LocalDateTime.now().format(DateTimeFormatter.ofPattern(DatePattern.PURE_DATETIME_PATTERN)));
             String keysDirPath = basicDirPath + "keys";
             FileUtil.copy(keysDirPath, tempDir.getAbsolutePath(), true);
@@ -508,7 +508,7 @@ public class SysServiceImpl implements ISysService {
 
             CommonUtils.unzipFile(tempUnzipDir, password, tempZip.getAbsolutePath());
 
-            // 查找解压后的备份目录（应该是 oci-helper-backup-* 格式）
+            // 查找解压后的备份目录（应该是 king-detective-backup-* 格式）
             File tempUnzipDirFile = new File(tempUnzipDir);
             File[] subDirs = tempUnzipDirFile.listFiles(File::isDirectory);
 
@@ -729,7 +729,7 @@ public class SysServiceImpl implements ISysService {
         if (latestVersion.equals(currentVersion)) {
             throw new OciException(-1, "当前已是最新版本，请返回主页并刷新页面查看");
         }
-        List<String> command = List.of("/bin/sh", "-c", "echo trigger > /app/oci-helper/update_version_trigger.flag");
+        List<String> command = List.of("/bin/sh", "-c", "echo trigger > /app/king-detective/update_version_trigger.flag");
         Process process = RuntimeUtil.exec(command.toArray(new String[0]));
 
         int exitCode = 0;
@@ -1011,7 +1011,7 @@ public class SysServiceImpl implements ISysService {
     private void initGenMfaPng() {
         Optional.ofNullable(kvService.getOne(new LambdaQueryWrapper<OciKv>()
                 .eq(OciKv::getCode, SysCfgEnum.SYS_MFA_SECRET.getCode()))).ifPresent(mfa -> {
-            String qrCodeURL = CommonUtils.generateQRCodeURL(mfa.getValue(), account, "oci-helper");
+            String qrCodeURL = CommonUtils.generateQRCodeURL(mfa.getValue(), account, "king-detective");
             CommonUtils.genQRPic(CommonUtils.MFA_QR_PNG_PATH, qrCodeURL);
         });
     }
