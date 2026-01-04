@@ -212,6 +212,9 @@ public class OciTask implements ApplicationRunner {
     private void saveVersion() {
         virtualExecutor.execute(() -> {
             String latestVersion = CommonUtils.getLatestVersion();
+            if (StrUtil.isBlank(latestVersion)) {
+                latestVersion = "v2.00"; // 默认版本，如果无法获取
+            }
             OciKv oldVersion = kvService.getOne(new LambdaQueryWrapper<OciKv>()
                     .eq(OciKv::getCode, SysCfgEnum.SYS_INFO_VERSION.getCode())
                     .eq(OciKv::getType, SysCfgTypeEnum.SYS_INFO.getCode()));
@@ -222,6 +225,12 @@ public class OciTask implements ApplicationRunner {
                         .type(SysCfgTypeEnum.SYS_INFO.getCode())
                         .value(latestVersion)
                         .build());
+                log.info("版本信息已初始化：{}", latestVersion);
+            } else if (StrUtil.isBlank(oldVersion.getValue())) {
+                // 如果已有记录但值为空/null，更新为最新版本
+                oldVersion.setValue(latestVersion);
+                kvService.updateById(oldVersion);
+                log.info("版本信息已更新：null -> {}", latestVersion);
             }
         });
 
@@ -254,7 +263,7 @@ public class OciTask implements ApplicationRunner {
             if (StrUtil.isBlank(latest)) {
                 return;
             }
-            if (!now.equals(latest)) {
+            if (StrUtil.isNotBlank(now) && !now.equals(latest)) {
                 log.warn(String.format("【king-detective】版本更新啦！！！当前版本：%s 最新版本：%s", now, latest));
                 if (!isPushedLatestVersion) {
                     sysService.sendMessage(String.format("🔔【king-detective】版本更新啦！！！\n\n当前版本：%s\n最新版本：%s\n一键脚本：%s\n\n更新内容：\n%s",
