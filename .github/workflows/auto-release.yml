@@ -35,14 +35,21 @@ jobs:
         id: calc_version
         run: |
           latest_tag="${{ steps.get_latest_tag.outputs.latest_tag }}"
+          # Remove 'v' prefix
           version_num=${latest_tag#v}
-          # Convert to integer (2.00 -> 200), increment, convert back
-          int_version=$(awk "BEGIN {printf "%%.0f", $version_num * 100}")
-          new_int_version=$((int_version + 1))
-          # Format as v2.01, v2.02, etc
-          new_tag=$(awk "BEGIN {printf "v%%.2f", $new_int_version / 100}")
+          # Split by dot: 2.00 -> major=2, minor=00
+          major=$(echo $version_num | cut -d'.' -f1)
+          minor=$(echo $version_num | cut -d'.' -f2)
+          # Increment: remove leading zeros, add 1, pad to 2 digits
+          minor_int=$((10#$minor + 1))
+          if [ $minor_int -ge 100 ]; then
+            major=$((major + 1))
+            minor_int=0
+          fi
+          new_minor=$(printf "%02d" $minor_int)
+          new_tag="v${major}.${new_minor}"
           echo "new_tag=$new_tag" >> $GITHUB_OUTPUT
-          echo "New version: $new_tag"
+          echo "New version: $new_tag (from $latest_tag)"
       
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
