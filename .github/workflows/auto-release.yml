@@ -36,10 +36,11 @@ jobs:
         run: |
           latest_tag="${{ steps.get_latest_tag.outputs.latest_tag }}"
           version_num=${latest_tag#v}
-          int_version=$(echo "$version_num * 100" | bc | cut -d'.' -f1)
+          # Convert to integer (2.00 -> 200), increment, convert back
+          int_version=$(awk "BEGIN {printf "%%.0f", $version_num * 100}")
           new_int_version=$((int_version + 1))
-          new_version=$(echo "scale=2; $new_int_version / 100" | bc)
-          new_tag=$(printf "v%%0.2f" $new_version)
+          # Format as v2.01, v2.02, etc
+          new_tag=$(awk "BEGIN {printf "v%%.2f", $new_int_version / 100}")
           echo "new_tag=$new_tag" >> $GITHUB_OUTPUT
           echo "New version: $new_tag"
       
