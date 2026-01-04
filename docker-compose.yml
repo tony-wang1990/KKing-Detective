@@ -2,7 +2,7 @@ version: '3.3'
 
 services:
   watcher:
-    image: ghcr.io/yohann0617/oci-helper-watcher:main
+    image: ghcr.io/tony-wang1990/king-detective-watcher:main
     container_name: king-detective-watcher
     restart: always
     volumes:
@@ -27,7 +27,7 @@ services:
       - app-network
 
   websockify:
-    image: ghcr.io/yohann0617/oci-helper-websockify:master
+    image: ghcr.io/tony-wang1990/king-detective-websockify:main
     container_name: websockify
     restart: always
     ports:
