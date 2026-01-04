@@ -32,10 +32,10 @@ public class SystemController {
             String timestamp = String.valueOf(System.currentTimeMillis());
             Files.write(flagFile.toPath(), timestamp.getBytes());
             log.info("触发自动更新，timestamp: {}", timestamp);
-            return ResponseData.success("更新触发成功，系统将在几分钟内自动更新并重启");
+            return ResponseData.successData("更新触发成功，系统将在几分钟内自动更新并重启");
         } catch (Exception e) {
             log.error("触发更新失败", e);
-            return ResponseData.error("更新触发失败: " + e.getMessage());
+            return ResponseData.errorData("更新触发失败: " + e.getMessage());
         }
     }
 
@@ -49,6 +49,6 @@ public class SystemController {
         if (version == null || version.isEmpty()) {
             version = "v2.0.0";
         }
-        return ResponseData.success(version);
+        return ResponseData.successData(version);
     }
 }

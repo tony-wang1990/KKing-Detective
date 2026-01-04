@@ -81,8 +81,6 @@ public class InstanceServiceImpl implements IInstanceService {
 
     @Value("${oci-cfg.boot-broadcast-url}")
     private String bootBroadcastUrl;
-    @Value("${oci-cfg.boot-broadcast-channel}")
-    private String bootBroadcastChannel;
 
     private static final String LEGACY_MESSAGE_TEMPLATE =
             "【开机任务】 \n\n🎉 用户：[%s] 开机成功 🎉\n" +
@@ -200,32 +198,40 @@ public class InstanceServiceImpl implements IInstanceService {
                         }
                     }
 
+
                     // TG 频道消息推送
                     if (fetcher.getUser().isJoinChannelBroadcast()) {
-                        String channelMsg = String.format(CHANNEL_MESSAGE_TEMPLATE,
-                                LocalDateTime.now().format(DateTimeFormatter.ofPattern(DatePattern.NORM_DATETIME_PATTERN)),
-                                instanceDetail.getRegion(),
-                                OciRegionsEnum.getNameById(instanceDetail.getRegion()).get(),
-                                instanceDetail.getArchitecture(),
-                                instanceDetail.getOcpus().longValue(),
-                                instanceDetail.getMemory().longValue(),
-                                instanceDetail.getDisk(),
-                                currentCount,
-                                createTask == null ? "未知" : CommonUtils.getTimeDifference(createTask.getCreateTime()));
-                        try (HttpResponse response = HttpRequest.get(bootBroadcastChannel)
-                                .form("text", channelMsg)
-                                .timeout(20_000)
-                                .execute()) {
-                            int status = response.getStatus();
-                            String body = response.body();
+                        OciKv channelCfg = kvService.getOne(new LambdaQueryWrapper<OciKv>()
+                                .eq(OciKv::getCode, SysCfgEnum.BOOT_BROADCAST_CHANNEL.getCode()));
+                        
+                        if (channelCfg != null && cn.hutool.core.util.StrUtil.isNotBlank(channelCfg.getValue())) {
+                            String channelMsg = String.format(CHANNEL_MESSAGE_TEMPLATE,
+                                    LocalDateTime.now().format(DateTimeFormatter.ofPattern(DatePattern.NORM_DATETIME_PATTERN)),
+                                    instanceDetail.getRegion(),
+                                    OciRegionsEnum.getNameById(instanceDetail.getRegion()).get(),
+                                    instanceDetail.getArchitecture(),
+                                    instanceDetail.getOcpus().longValue(),
+                                    instanceDetail.getMemory().longValue(),
+                                    instanceDetail.getDisk(),
+                                    currentCount,
+                                    createTask == null ? "未知" : CommonUtils.getTimeDifference(createTask.getCreateTime()));
+                            try (HttpResponse response = HttpRequest.get(channelCfg.getValue())
+                                    .form("text", channelMsg)
+                                    .timeout(20_000)
+                                    .execute()) {
+                                int status = response.getStatus();
+                                String body = response.body();
 
-                            if (status == 200) {
-                                log.info("频道放货信息推送成功");
-                            } else {
-                                log.warn("频道放货推送失败,status:{},body:{}", status, body);
+                                if (status == 200) {
+                                    log.info("频道放货信息推送成功");
+                                } else {
+                                    log.warn("频道放货推送失败,status:{},body:{}", status, body);
+                                }
+                            } catch (Exception e) {
+                                log.error("频道放货推送异常", e);
                             }
-                        } catch (Exception e) {
-                            log.error("频道放货推送异常", e);
+                        } else {
+                            log.warn("频道广播配置未设置，跳过频道推送");
                         }
                     }
                 });

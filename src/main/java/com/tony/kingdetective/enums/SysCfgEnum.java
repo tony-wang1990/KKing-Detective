@@ -29,6 +29,7 @@ public enum SysCfgEnum {
     ENABLED_VERSION_UPDATE_NOTIFICATIONS("Y109", "是否开启版本更新通知", SysCfgTypeEnum.SYS_INIT_CFG),
     SILICONFLOW_AI_API("Y110", "硅基流动API", SysCfgTypeEnum.SYS_INIT_CFG),
     BOOT_BROADCAST_TOKEN("Y111", "开机播报Token", SysCfgTypeEnum.SYS_INIT_CFG),
+    BOOT_BROADCAST_CHANNEL("Y114", "TG频道广播地址", SysCfgTypeEnum.SYS_INIT_CFG),
     SYS_VNC("Y112", "实例VNC连接url", SysCfgTypeEnum.SYS_INIT_CFG),
     GOOGLE_ONE_CLICK_LOGIN("Y113", "谷歌一键登录所需参数", SysCfgTypeEnum.SYS_INIT_CFG),
 
