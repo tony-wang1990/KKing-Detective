@@ -76,14 +76,28 @@ mkdir -p /app/king-detective/keys || { echo "错误: 无法创建目录"; exit 1
 cd /app/king-detective || { echo "错误: 无法进入目录"; exit 1; }
 
 echo "步骤 3: 下载配置文件..."
-wget -q https://raw.githubusercontent.com/tony-wang1990/King-Detective/main/docker-compose.yml || { echo "错误: 下载 docker-compose.yml 失败"; exit 1; }
-echo "  - docker-compose.yml 下载成功"
 
-wget -q https://raw.githubusercontent.com/tony-wang1990/King-Detective/main/src/main/resources/application.yml || { echo "错误: 下载 application.yml 失败"; exit 1; }
-echo "  - application.yml 下载成功"
+# 只在文件不存在时才下载，避免覆盖用户配置
+if [ ! -f "docker-compose.yml" ]; then
+    wget -q https://raw.githubusercontent.com/tony-wang1990/King-Detective/main/docker-compose.yml || { echo "错误: 下载 docker-compose.yml 失败"; exit 1; }
+    echo "  - docker-compose.yml 下载成功"
+else
+    echo "  - docker-compose.yml 已存在，跳过下载"
+fi
 
-wget -q https://raw.githubusercontent.com/tony-wang1990/King-Detective/main/src/main/resources/king-detective.db || { echo "错误: 下载 king-detective.db 失败"; exit 1; }
-echo "  - king-detective.db 下载成功"
+if [ ! -f "application.yml" ]; then
+    wget -q https://raw.githubusercontent.com/tony-wang1990/King-Detective/main/src/main/resources/application.yml || { echo "错误: 下载 application.yml 失败"; exit 1; }
+    echo "  - application.yml 下载成功"
+else
+    echo "  - application.yml 已存在，保留现有配置"
+fi
+
+if [ ! -f "king-detective.db" ]; then
+    wget -q https://raw.githubusercontent.com/tony-wang1990/King-Detective/main/src/main/resources/king-detective.db || { echo "错误: 下载 king-detective.db 失败"; exit 1; }
+    echo "  - king-detective.db 下载成功"
+else
+    echo "  - king-detective.db 已存在，保留现有数据"
+fi
 
 echo "步骤 4: 拉取最新镜像..."
 docker-compose pull || { echo "警告: 拉取镜像失败，将使用现有镜像"; }
