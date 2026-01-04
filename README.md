@@ -11,34 +11,58 @@ bash <(wget -qO- https://raw.githubusercontent.com/tony-wang1990/King-Detective/
 
 脚本会自动完成：
 
-- 环境检测 (Docker/Compose)
-- 拉取最新镜像
-- 启动服务
-
-
-修改账号密码
-如果需要修改登录账号和密码，请在服务器上执行以下步骤：
-
-修改配置文件：
-bash
-nano /app/king-detective/application.yml
-如果是手动部署，文件路径可能为 
-./application.yml
-找到并修改以下内容：
-yaml
-web:
-  account: "您的新账号"
-  password: "您的新密码"
-重启服务生效：
-bash
-docker-compose restart king-detective
-
+- ✅ 环境检测（Docker/Docker Compose）
+- ✅ 拉取最新Docker镜像
+- ✅ 启动服务（自动重启）
+- ✅ 支持一键更新（拉取最新版本）
 
 
 ## 💻 访问应用
 
-- **地址：** `http://your-ip:9527`
+- **Web面板：** `http://your-ip:9527`
 - **默认账号：** `admin`
 - **默认密码：** `admin123456`
 
+## 🔄 版本管理
+
+### 查看版本信息
+
+#### Telegram Bot
+1. 发送 `/start`
+2. 点击 **🛡️ 版本信息**
+3. 查看当前版本和最新版本
+
+#### Web面板
+- 登录后台即可查看版本信息
+
+### 一键更新
+
+#### 方式1：Bot一键更新
+1. 点击 **🛡️ 版本信息**
+2. 如果有新版本，点击 **🔄 点击更新至最新版本**
+3. 等待1-2分钟自动完成
+
+#### 方式2：命令行更新
+在VPS上重新执行安装脚本即可：
+```bash
+bash <(wget -qO- https://raw.githubusercontent.com/tony-wang1990/King-Detective/main/scripts/install.sh)
+```
+
+## ⚙️ 修改账号密码
+
+如果需要修改登录账号和密码：
+
+```bash
+# 编辑配置文件
+nano /app/king-detective/application.yml
+
+# 修改以下内容
+web:
+  account: "您的新账号"
+  password: "您的新密码"
+
+# 重启服务生效
+cd /app/king-detective
+docker-compose restart king-detective
+```
 
