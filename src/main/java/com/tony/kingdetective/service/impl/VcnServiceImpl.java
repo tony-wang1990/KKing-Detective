@@ -44,6 +44,7 @@ public class VcnServiceImpl implements IVcnService {
             customCache.remove(CacheConstant.PREFIX_VCN_PAGE + params.getOciCfgId());
         }
 
+        @SuppressWarnings("unch ecked")
         List<VcnPageRsp.VcnInfo> vcnList = (List<VcnPageRsp.VcnInfo>) customCache.get(CacheConstant.PREFIX_VCN_PAGE + params.getOciCfgId());
         SysUserDTO sysUserDTO = sysService.getOciUser(params.getOciCfgId());
         if (ObjUtil.isEmpty(vcnList)) {
