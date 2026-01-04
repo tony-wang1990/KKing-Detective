@@ -85,8 +85,11 @@ echo "  - application.yml 下载成功"
 wget -q https://raw.githubusercontent.com/tony-wang1990/King-Detective/main/src/main/resources/king-detective.db || { echo "错误: 下载 king-detective.db 失败"; exit 1; }
 echo "  - king-detective.db 下载成功"
 
-echo "步骤 4: 启动服务..."
-docker-compose up -d || { echo "错误: 启动服务失败"; exit 1; }
+echo "步骤 4: 拉取最新镜像..."
+docker-compose pull || { echo "警告: 拉取镜像失败，将使用现有镜像"; }
+
+echo "步骤 5: 启动服务..."
+docker-compose up -d --force-recreate || { echo "错误: 启动服务失败"; exit 1; }
 
 echo ""
 echo "=== 安装完成！ ==="
