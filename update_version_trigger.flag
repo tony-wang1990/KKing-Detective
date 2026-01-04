@@ -1,0 +1,2 @@
+# This file is used to trigger version updates
+# When modified, the watcher container will detect the change and update the application

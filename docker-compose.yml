@@ -1,6 +1,17 @@
 version: '3.3'
 
 services:
+  watcher:
+    image: ghcr.io/yohann0617/oci-helper-watcher:main
+    container_name: king-detective-watcher
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/local/bin/docker-compose:/usr/local/bin/docker-compose
+      - /app/king-detective/docker-compose.yml:/app/king-detective/docker-compose.yml
+      - /app/king-detective/update_version_trigger.flag:/app/king-detective/update_version_trigger.flag
+      - /app/king-detective/king-detective.db:/app/king-detective/king-detective.db
+
   king-detective:
     image: ghcr.io/tony-wang1990/king-detective:main
     container_name: king-detective
@@ -11,3 +22,21 @@ services:
       - ./application.yml:/app/king-detective/application.yml
       - ./king-detective.db:/app/king-detective/king-detective.db
       - ./keys:/app/king-detective/keys
+      - ./update_version_trigger.flag:/app/king-detective/update_version_trigger.flag
+    networks:
+      - app-network
+
+  websockify:
+    image: ghcr.io/yohann0617/oci-helper-websockify:master
+    container_name: websockify
+    restart: always
+    ports:
+      - "127.0.0.1:6080:6080"
+    depends_on:
+      - king-detective
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
