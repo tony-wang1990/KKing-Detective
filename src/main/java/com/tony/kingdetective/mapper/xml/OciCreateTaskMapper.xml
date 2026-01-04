@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tony.kingdetective.mapper.OciCreateTaskMapper">
 
-    <select id="createTaskPage" resulttype="com.tony.kingdetective.bean.response.oci.task.CreateTaskRsp">
+    <select id="createTaskPage" resultType="com.tony.kingdetective.bean.response.oci.task.CreateTaskRsp">
         select oct.id,
         ou.oci_region as region,
         oct.ocpus,
