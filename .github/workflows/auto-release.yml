@@ -1,0 +1,75 @@
+name: Auto Release and Build
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'README.md'
+      - 'docs/**'
+      - '.gitignore'
+
+jobs:
+  auto-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Get latest tag
+        id: get_latest_tag
+        run: |
+          latest_tag=$(git tag -l "v*" --sort=-v:refname | head -n 1)
+          if [ -z "$latest_tag" ]; then
+            latest_tag="v2.00"
+          fi
+          echo "latest_tag=$latest_tag" >> $GITHUB_OUTPUT
+          echo "Latest tag: $latest_tag"
+      
+      - name: Calculate new version
+        id: calc_version
+        run: |
+          latest_tag="${{ steps.get_latest_tag.outputs.latest_tag }}"
+          version_num=${latest_tag#v}
+          int_version=$(echo "$version_num * 100" | bc | cut -d'.' -f1)
+          new_int_version=$((int_version + 1))
+          new_version=$(echo "scale=2; $new_int_version / 100" | bc)
+          new_tag=$(printf "v%%0.2f" $new_version)
+          echo "new_tag=$new_tag" >> $GITHUB_OUTPUT
+          echo "New version: $new_tag"
+      
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.calc_version.outputs.new_tag }}
+          name: Release ${{ steps.calc_version.outputs.new_tag }}
+          body: |
+            🎉 自动发布版本 ${{ steps.calc_version.outputs.new_tag }}
+            
+            ## 更新内容
+            最新提交: ${{ github.event.head_commit.message }}
+            
+            ## 如何更新
+            ### VPS一键更新（推荐）
+            #### 方式1：Telegram机器人更新
+            1. 打开Telegram机器人
+            2. 发送 `/start`
+            3. 点击 "🛡️ 版本信息"
+            4. 点击 "🔄 点击更新至最新版本"
+            
+            #### 方式2：命令行更新
+            ```bash
+            bash <(wget -qO- https://raw.githubusercontent.com/tony-wang1990/King-Detective/main/scripts/install.sh)
+            ```
+            
+            ## 项目地址
+            https://github.com/tony-wang1990/King-Detective
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
