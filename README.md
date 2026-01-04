@@ -20,13 +20,41 @@
 
 ## 💻 一键部署
 
+### 方式1：自动安装脚本（推荐）
+
 ```bash
 bash <(wget -qO- https://raw.githubusercontent.com/tony-wang1990/King-Detective/main/install.sh)
 ```
 
-安装完成后访问 `http://your-ip:9527`
+### 方式2：手动部署
 
-默认账号：`admin` / `admin123456`
+#### 1. 克隆项目
+
+```bash
+git clone https://github.com/tony-wang1990/King-Detective.git
+cd King-Detective
+```
+
+#### 2. 运行部署脚本
+
+```bash
+chmod +x deploy.sh
+./deploy.sh
+```
+
+**脚本功能：**
+
+- ✅ 自动检测Docker和Docker Compose
+- ✅ 自动拉取最新镜像
+- ✅ 智能识别首次安装或更新
+- ✅ 服务健康检查
+- ✅ 交互式TG频道配置
+- ✅ 实时日志查看
+
+#### 3. 访问应用
+
+- **应用地址：** `http://your-ip:8080`
+- **默认账号：** `admin` / `admin123456`
 
 ## 📁 部署后目录结构
 
@@ -41,11 +69,25 @@ bash <(wget -qO- https://raw.githubusercontent.com/tony-wang1990/King-Detective/
 
 ## 🔄 一键更新
 
-系统支持一键自动更新功能：
+### 方式1：使用部署脚本（推荐）
+
+```bash
+cd /path/to/King-Detective
+./deploy.sh
+```
+
+脚本会自动：
+
+1. 拉取最新镜像
+2. 停止旧容器
+3. 启动新容器
+4. 健康检查
+
+### 方式2：系统设置更新
 
 1. 登录后进入系统设置
 2. 点击"一键更新"按钮
-3. 系统will自动拉取最新镜像并重启
+3. 系统自动拉取最新镜像并重启
 
 **注意：** 更新过程中配置和数据不会丢失
 
@@ -71,6 +113,24 @@ location / {
 
 ## 📝 更新日志
 
+### v2.0.0 (2026-01-04) ✨ 最新版本
+
+**新增功能：**
+
+- ✨ 添加一键部署脚本 `deploy.sh`
+- ✨ TG频道配置改为数据库配置（更安全灵活）
+
+**Bug修复：**
+
+- 🐛 修复 SystemController 编译错误
+- 🐛 修复 ResponseData 方法调用错误
+
+**优化改进：**
+
+- 🔧 移除硬编码TG频道配置
+- 🔧 添加配置未设置时的警告日志
+- 📚 完善部署文档
+
 ### v2.1.0 (2026-01-04)
 
 - ✨ 新增一键自动更新功能
@@ -79,7 +139,7 @@ location / {
 - 🐛 修复编译警告（@Builder.Default）
 - 🐛 修复unchecked警告
 
-### v2.0.0 (2026-01-04)
+### v2.0.0 (2026-01-03)
 
 - ✅ 修复 MyBatis XML 属性大小写错误
 - ✅ 修复 pom.xml XML 编码问题
