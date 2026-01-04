@@ -38,6 +38,7 @@ public class OciCfgDetailsRsp {
         private String name;
         private List<String> publicIp;
         private String shape;
+        @Builder.Default
         private Integer enableChangeIp = 0;
         private String ocpus;
         private String memory;

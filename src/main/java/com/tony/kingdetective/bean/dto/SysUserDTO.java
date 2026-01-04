@@ -20,15 +20,22 @@ public class SysUserDTO {
     private String taskId;
     private OciCfg ociCfg;
     private String username;
+    @Builder.Default
     private float ocpus = 1F;
+    @Builder.Default
     private float memory = 6F;
     private Long disk;
+    @Builder.Default
     private String architecture = "ARM";
+    @Builder.Default
     private Long interval = 60L;
+    @Builder.Default
     private volatile int createNumbers = 0;
     private String rootPassword;
+    @Builder.Default
     private String operationSystem = "Ubuntu";
     private List<CloudInstance> instanceList;
+    @Builder.Default
     private boolean joinChannelBroadcast = true;
 
     @Data
