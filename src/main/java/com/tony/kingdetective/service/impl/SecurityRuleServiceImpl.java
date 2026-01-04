@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.service.impl
  * @className: SecurityRuleServiceImpl
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2025/3/1 15:38
  */
 @Service

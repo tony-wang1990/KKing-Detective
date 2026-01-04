@@ -10,7 +10,7 @@ import java.util.List;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.bean.response.oci.vcn
  * @className: VcnPageRsp
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2025/3/3 20:22
  */
 @EqualsAndHashCode(callSuper = true)

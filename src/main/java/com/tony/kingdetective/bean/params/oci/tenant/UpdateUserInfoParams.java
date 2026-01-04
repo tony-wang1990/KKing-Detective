@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 /**
  * @ClassName UpdateUserInfoParams
  * @Description:
- * @Author: Yohann_Fan
+ * @author: Tony Wang_Fan
  * @CreateTime: 2025-03-14 18:07
  **/
 @EqualsAndHashCode(callSuper = true)

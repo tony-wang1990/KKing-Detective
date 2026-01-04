@@ -5,7 +5,7 @@ import lombok.Getter;
 /**
  * @ClassName IpDataTypeEnum
  * @Description:
- * @Author: Yohann_Fan
+ * @author: Tony Wang_Fan
  * @CreateTime: 2025-03-06 16:14
  **/
 @Getter

@@ -6,7 +6,7 @@ import lombok.Data;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.bean.response.ipdata
  * @className: IpDataPageRsp
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2025/8/5 23:12
  */
 @Data

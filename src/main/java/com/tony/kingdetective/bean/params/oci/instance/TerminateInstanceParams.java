@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.bean.params
  * @className: TerminateInstanceParams
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2024/11/28 21:48
  */
 @Data

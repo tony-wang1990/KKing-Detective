@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 /**
  * @ClassName ListCfDnsRecordsParams
  * @Description:
- * @Author: Yohann_Fan
+ * @author: Tony Wang_Fan
  * @CreateTime: 2025-03-21 15:09
  **/
 @EqualsAndHashCode(callSuper = true)

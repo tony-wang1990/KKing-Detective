@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * @ClassName UpdateCfCfgParams
  * @Description:
- * @Author: Yohann_Fan
+ * @author: Tony Wang_Fan
  * @CreateTime: 2025-03-20 17:37
  **/
 @Data

@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.service.impl
  * @className: VcnServiceImpl
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2025/3/3 20:21
  */
 @Service

@@ -11,7 +11,7 @@ import java.util.List;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.bean.response
  * @className: OciCfgDetailsRsp
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2024/11/13 23:54
  */
 @Data

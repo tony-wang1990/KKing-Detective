@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotBlank;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.bean.params.oci.securityrule
  * @className: GetSecurityRuleListPageParams
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2025/3/1 16:08
  */
 @EqualsAndHashCode(callSuper = true)

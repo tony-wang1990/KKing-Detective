@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotBlank;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.bean.params.oci.vcn
  * @className: VcnPageParams
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2025/3/3 21:02
  */
 @EqualsAndHashCode(callSuper = true)

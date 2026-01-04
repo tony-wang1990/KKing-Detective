@@ -10,7 +10,7 @@ import java.util.List;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.bean.params
  * @className: UploadCfgParams
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2024/11/18 22:11
  */
 @Data

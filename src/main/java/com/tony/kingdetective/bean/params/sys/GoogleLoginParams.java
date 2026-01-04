@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotBlank;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.bean.params.sys
  * @className: GoogleLoginParams
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2026/01/02
  */
 @Data

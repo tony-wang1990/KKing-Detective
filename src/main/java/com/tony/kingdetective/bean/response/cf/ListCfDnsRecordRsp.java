@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * @ClassName ListCfDnsRecordRsp
  * @Description:
- * @Author: Yohann_Fan
+ * @author: Tony Wang_Fan
  * @CreateTime: 2025-03-21 15:03
  **/
 @Data

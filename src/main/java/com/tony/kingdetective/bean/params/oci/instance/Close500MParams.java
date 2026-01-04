@@ -7,7 +7,7 @@ import lombok.Data;
 /**
  * @ClassName Close500MParams
  * @Description:
- * @Author: Yohann_Fan
+ * @author: Tony Wang_Fan
  * @CreateTime: 2025-08-25 10:08
  **/
 @Data

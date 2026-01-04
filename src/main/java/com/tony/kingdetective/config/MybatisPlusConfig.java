@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
  * @projectName: scan-proxyip
  * @package: com.proxyip.select.config
  * @className: MybatisPlusConfig
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2024/3/30 17:27
  */
 @Configuration

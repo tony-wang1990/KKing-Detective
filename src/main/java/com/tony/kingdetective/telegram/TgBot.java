@@ -32,7 +32,7 @@ import java.util.concurrent.CompletableFuture;
  * - 避免阻塞主线程，显著提升响应速度和并发处理能力
  * - 虚拟线程轻量级，可以创建数百万个而不影响性能
  *
- * @author Yohann_Fan
+ * @author Tony Wang
  */
 @Slf4j
 public class TgBot implements LongPollingSingleThreadUpdateConsumer {

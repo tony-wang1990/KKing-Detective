@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotBlank;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.bean.params.oci
  * @className: GetOciCfgDetailsParams
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2025/1/3 23:20
  */
 @Data

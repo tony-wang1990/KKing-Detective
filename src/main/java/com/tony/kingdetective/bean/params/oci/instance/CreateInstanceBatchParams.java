@@ -12,7 +12,7 @@ import java.util.List;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.bean.params
  * @className: CreateInstanceBatchParams
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2024/11/16 0:04
  */
 @Data

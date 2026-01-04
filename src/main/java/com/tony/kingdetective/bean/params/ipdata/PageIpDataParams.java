@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.bean.params.ipdata
  * @className: PageIpDataParams
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2025/8/5 23:12
  */
 @EqualsAndHashCode(callSuper = true)

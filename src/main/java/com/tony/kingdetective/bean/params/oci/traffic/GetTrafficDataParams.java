@@ -10,7 +10,7 @@ import java.util.Date;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.bean.params.oci.traffic
  * @className: GetTrafficDataParams
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2025/3/7 20:37
  */
 @Data

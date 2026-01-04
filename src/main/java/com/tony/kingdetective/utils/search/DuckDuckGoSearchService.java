@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.utils
  * @className: DuckDuckGoSearchService
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2025/9/22 22:43
  */
 @Service

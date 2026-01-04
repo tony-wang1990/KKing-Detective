@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 /**
  * @ClassName DynamicChatClientFactory
  * @Description: Dynamic ChatClient factory for Spring AI 1.0.0-M5
- * @Author: Yohann_Fan
+ * @author: Tony Wang_Fan
  * @CreateTime: 2025-09-23 14:42
  **/
 @Component

@@ -11,7 +11,7 @@ import java.util.List;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.bean.params
  * @className: ChangeIpParams
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2024/11/14 0:03
  */
 @Data

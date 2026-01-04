@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.*;
 
 /**
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2024/3/30 15:28
  */
 @Configuration

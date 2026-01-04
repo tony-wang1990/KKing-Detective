@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * @ClassName OciAddCfDnsRecordsParams
  * @Description:
- * @Author: Yohann_Fan
+ * @author: Tony Wang_Fan
  * @CreateTime: 2025-03-21 14:25
  **/
 @Data

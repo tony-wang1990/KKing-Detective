@@ -83,7 +83,7 @@ import static com.tony.kingdetective.task.OciTask.pushVersionUpdateMsg;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.service.impl
  * @className: ISysServiceImpl
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2024/11/30 17:09
  */
 @Service

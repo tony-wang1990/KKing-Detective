@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 /**
  * @ClassName AddEgressSecurityRuleParams
  * @Description:
- * @Author: Yohann_Fan
+ * @author: Tony Wang_Fan
  * @CreateTime: 2025-03-05 15:50
  **/
 @Data

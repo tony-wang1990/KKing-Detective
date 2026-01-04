@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotBlank;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.bean.params.oci
  * @className: UpdateBootVolumeParams
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2025/1/4 19:27
  */
 @Data

@@ -11,7 +11,7 @@ import org.springframework.web.socket.server.standard.ServerEndpointExporter;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.config
  * @className: WebSocketConfig
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2024/11/17 18:35
  */
 @Configuration

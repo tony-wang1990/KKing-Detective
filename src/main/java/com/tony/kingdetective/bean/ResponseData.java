@@ -1,7 +1,7 @@
 package com.tony.kingdetective.bean;
 
 /**
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2024/3/30 18:59
  */
 public class ResponseData<T> {

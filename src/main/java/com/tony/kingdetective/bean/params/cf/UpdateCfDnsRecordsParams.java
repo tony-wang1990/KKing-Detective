@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * @ClassName UpdateCfDnsRecordsParams
  * @Description:
- * @Author: Yohann_Fan
+ * @author: Tony Wang_Fan
  * @CreateTime: 2025-03-21 15:23
  **/
 @Data

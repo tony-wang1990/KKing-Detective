@@ -6,7 +6,7 @@ import lombok.Data;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.bean.response
  * @className: CreateTaskRsp
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2024/11/15 21:42
  */
 @Data

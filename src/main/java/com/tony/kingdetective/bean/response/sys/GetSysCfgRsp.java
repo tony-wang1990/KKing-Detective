@@ -6,7 +6,7 @@ import lombok.Data;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.bean.response.sys
  * @className: GetSysCfgRsp
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2024/11/30 20:14
  */
 @Data

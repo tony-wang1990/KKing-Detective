@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * @ClassName TenantInfoRsp
  * @Description:
- * @Author: Yohann_Fan
+ * @author: Tony Wang_Fan
  * @CreateTime: 2025-03-10 14:58
  **/
 @Data

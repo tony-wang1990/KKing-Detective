@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
-* @author Yohann_Fan
+* @author Tony Wang
 * @description 针对表【ip_data】的数据库操作Mapper
 * @createDate 2025-08-04 17:28:41
 * @Entity com.tony.kingdetective.bean.entity.IpData

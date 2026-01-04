@@ -11,7 +11,7 @@ import java.util.List;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.bean.response.oci.securityrule
  * @className: SecurityRuleListRsp
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2025/3/1 16:04
  */
 @EqualsAndHashCode(callSuper = true)

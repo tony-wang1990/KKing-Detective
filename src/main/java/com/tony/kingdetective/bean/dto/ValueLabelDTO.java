@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.bean.dto
  * @className: ValueLabelDTO
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2025/3/7 21:16
  */
 @Data

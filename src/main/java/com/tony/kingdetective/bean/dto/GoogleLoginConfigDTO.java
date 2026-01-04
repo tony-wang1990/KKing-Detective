@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.bean.dto
  * @className: GoogleLoginConfigDTO
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2026/01/02
  */
 @Data

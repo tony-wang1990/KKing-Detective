@@ -6,7 +6,7 @@ import com.tony.kingdetective.bean.response.oci.tenant.TenantInfoRsp;
 /**
  * @ClassName ITenantService
  * @Description:
- * @Author: Yohann_Fan
+ * @author: Tony Wang_Fan
  * @CreateTime: 2025-03-12 16:02
  **/
 public interface ITenantService {

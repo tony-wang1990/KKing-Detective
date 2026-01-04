@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotBlank;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.bean.params
  * @className: SendCaptchaParams
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2024/11/28 21:55
  */
 @Data

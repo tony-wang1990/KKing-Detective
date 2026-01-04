@@ -27,7 +27,7 @@ import java.util.*;
 /**
  * @ClassName AIChatController
  * @Description:
- * @Author: Yohann_Fan
+ * @author: Tony Wang_Fan
  * @CreateTime: 2025-09-22 14:02
  **/
 @RestController

@@ -8,7 +8,7 @@ import java.util.List;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.bean.dto
  * @className: TrafficSelDTO
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2025/3/7 23:59
  */
 @Data

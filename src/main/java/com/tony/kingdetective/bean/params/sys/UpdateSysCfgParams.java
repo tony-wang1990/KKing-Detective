@@ -6,7 +6,7 @@ import lombok.Data;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.bean.params.sys
  * @className: UpdateLoginCfgParams
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2024/11/30 18:22
  */
 @Data

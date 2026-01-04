@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 /**
  * @ClassName IcmpUtils
  * @Description:
- * @Author: Yohann_Fan
+ * @author: Tony Wang_Fan
  * @CreateTime: 2025-04-30 13:58
  **/
 public class IcmpUtils {

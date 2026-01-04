@@ -22,7 +22,7 @@ import java.util.List;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.controller
  * @className: TrafficStatisticsController
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2025/3/7 20:35
  */
 @RestController

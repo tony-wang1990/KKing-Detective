@@ -7,7 +7,7 @@ import lombok.Getter;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.enums
  * @className: OciUnSupportRegionEnum
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2024/11/30 17:29
  */
 @Getter

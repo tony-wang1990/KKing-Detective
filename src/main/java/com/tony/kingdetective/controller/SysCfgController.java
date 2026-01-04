@@ -17,7 +17,7 @@ import jakarta.annotation.Resource;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.controller
  * @className: SysCfgController
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2024/11/30 17:07
  */
 @RestController

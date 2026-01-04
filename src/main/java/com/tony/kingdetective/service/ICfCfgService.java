@@ -10,7 +10,7 @@ import com.tony.kingdetective.bean.response.cf.ListCfCfgPageRsp;
 import com.tony.kingdetective.bean.response.cf.ListCfDnsRecordRsp;
 
 /**
-* @author Yohann_Fan
+* @author Tony Wang
 * @description 针对表【cf_cfg】的数据库操作Service
 * @createDate 2025-03-19 16:10:18
 */

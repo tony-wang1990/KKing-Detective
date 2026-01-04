@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.bean.params.oci.instance
  * @className: AutoRescueParams
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2025/7/19 14:28
  */
 @EqualsAndHashCode(callSuper = true)

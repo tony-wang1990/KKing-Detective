@@ -27,7 +27,7 @@ import static com.tony.kingdetective.service.impl.OciServiceImpl.TEMP_MAP;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.utils
  * @className: LogWebSocketHandler
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2024/11/17 18:21
  */
 @Slf4j

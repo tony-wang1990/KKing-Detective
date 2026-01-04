@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * @ClassName GetCfCfgSelRsp
  * @Description:
- * @Author: Yohann_Fan
+ * @author: Tony Wang_Fan
  * @CreateTime: 2025-03-21 16:20
  **/
 @Data

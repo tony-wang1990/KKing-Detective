@@ -10,7 +10,7 @@ import java.util.List;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.bean.params.oci.vcn
  * @className: RemoveVcnParams
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2025/3/3 22:59
  */
 @Data

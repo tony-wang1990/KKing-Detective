@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 /**
  * @ClassName StartVncParams
  * @Description:
- * @Author: Yohann_Fan
+ * @author: Tony Wang_Fan
  * @CreateTime: 2025-06-04 11:02
  **/
 @Data

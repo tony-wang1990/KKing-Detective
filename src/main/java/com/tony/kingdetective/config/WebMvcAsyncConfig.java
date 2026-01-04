@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.config
  * @className: AsyncConfig
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2025/9/22 22:24
  */
 @Configuration

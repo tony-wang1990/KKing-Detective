@@ -6,7 +6,7 @@ import lombok.Data;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.bean.params
  * @className: BasicPageParams
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2025/3/3 21:01
  */
 @Data

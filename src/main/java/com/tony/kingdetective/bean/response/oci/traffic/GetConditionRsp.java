@@ -10,7 +10,7 @@ import java.util.Map;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.bean.response.oci.traffic
  * @className: GetConditionRsp
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2025/3/7 21:33
  */
 @Data

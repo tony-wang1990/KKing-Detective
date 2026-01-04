@@ -12,7 +12,7 @@ import java.util.List;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.bean.params.ipdata
  * @className: AddIpDataParams
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2025/8/5 21:55
  */
 @Data

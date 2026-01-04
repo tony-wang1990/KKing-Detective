@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * @ClassName OciRemoveCfDnsRecordsParams
  * @Description:
- * @Author: Yohann_Fan
+ * @author: Tony Wang_Fan
  * @CreateTime: 2025-03-21 14:53
  **/
 @Data

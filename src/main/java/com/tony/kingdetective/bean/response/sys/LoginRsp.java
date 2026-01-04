@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * @ClassName LoginRsp
  * @Description:
- * @Author: Yohann_Fan
+ * @author: Tony Wang_Fan
  * @CreateTime: 2025-07-08 16:08
  **/
 @Data

@@ -4,7 +4,7 @@ package com.tony.kingdetective.enums;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.enums
  * @className: SecurityRuleProtocolEnum
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2025/3/4 22:13
  */
 public enum SecurityRuleProtocolEnum {

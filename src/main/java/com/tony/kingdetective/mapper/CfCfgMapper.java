@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
- * @author Yohann_Fan
+ * @author Tony Wang
  * @description 针对表【cf_cfg】的数据库操作Mapper
  * @createDate 2025-03-19 16:10:18
  * @Entity com.tony.kingdetective.bean.entity.CfCfg

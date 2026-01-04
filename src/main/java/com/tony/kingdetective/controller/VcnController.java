@@ -19,7 +19,7 @@ import jakarta.annotation.Resource;
  * @projectName: king-detective
  * @package: com.tony.kingdetective.controller
  * @className: VcnController
- * @author: Yohann
+ * @author: Tony Wang
  * @date: 2025/3/3 20:56
  */
 @RestController

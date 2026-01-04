@@ -6,7 +6,7 @@ import lombok.Data;
 /**
  * @ClassName UpdatePwdExpirationPolicyParams
  * @Description:
- * @Author: Yohann_Fan
+ * @author: Tony Wang_Fan
  * @CreateTime: 2025-09-19 17:05
  **/
 @Data
