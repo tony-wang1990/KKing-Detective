@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.yohann.ocihelper.service.impl.OciServiceImpl.TEMP_MAP;
+import static com.tony.kingdetective.service.impl.OciServiceImpl.TEMP_MAP;
 
 /**
  * 切换任务选择处理器

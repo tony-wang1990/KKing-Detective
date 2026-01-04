@@ -75,7 +75,7 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
-import static com.yohann.ocihelper.config.VirtualThreadConfig.VIRTUAL_EXECUTOR;
+import static com.tony.kingdetective.config.VirtualThreadConfig.VIRTUAL_EXECUTOR;
 
 /**
  * <p>

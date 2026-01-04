@@ -40,7 +40,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.oracle.bmc.core.model.CreatePublicIpDetails.Lifetime.Ephemeral;
-import static com.yohann.ocihelper.service.impl.OciServiceImpl.TASK_MAP;
+import static com.tony.kingdetective.service.impl.OciServiceImpl.TASK_MAP;
 
 /**
  * <p>

@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
-import static com.yohann.ocihelper.config.VirtualThreadConfig.VIRTUAL_EXECUTOR;
+import static com.tony.kingdetective.config.VirtualThreadConfig.VIRTUAL_EXECUTOR;
 
 /**
  * Confirm terminate instances handler

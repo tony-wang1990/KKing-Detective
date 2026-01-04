@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.bean.dto
+ * @package: com.tony.kingdetective.bean.dto
  * @className: ValueLabelDTO
  * @author: Yohann
  * @date: 2025/3/7 21:16

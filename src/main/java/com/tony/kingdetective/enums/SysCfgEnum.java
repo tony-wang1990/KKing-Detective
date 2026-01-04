@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.enums
+ * @package: com.tony.kingdetective.enums
  * @className: SysCfgEnum
  * @author: Yohann
  * @date: 2024/11/30 17:29

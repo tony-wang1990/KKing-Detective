@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.bean.response.oci.securityrule
+ * @package: com.tony.kingdetective.bean.response.oci.securityrule
  * @className: SecurityRuleListRsp
  * @author: Yohann
  * @date: 2025/3/1 16:04

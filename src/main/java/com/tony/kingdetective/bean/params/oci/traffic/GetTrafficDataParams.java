@@ -8,7 +8,7 @@ import java.util.Date;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.bean.params.oci.traffic
+ * @package: com.tony.kingdetective.bean.params.oci.traffic
  * @className: GetTrafficDataParams
  * @author: Yohann
  * @date: 2025/3/7 20:37

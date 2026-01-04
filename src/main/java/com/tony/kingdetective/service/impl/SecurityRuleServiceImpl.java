@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.service.impl
+ * @package: com.tony.kingdetective.service.impl
  * @className: SecurityRuleServiceImpl
  * @author: Yohann
  * @date: 2025/3/1 15:38

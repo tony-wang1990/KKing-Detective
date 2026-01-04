@@ -15,7 +15,7 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 
 import java.util.concurrent.CompletableFuture;
 
-import static com.yohann.ocihelper.config.VirtualThreadConfig.VIRTUAL_EXECUTOR;
+import static com.tony.kingdetective.config.VirtualThreadConfig.VIRTUAL_EXECUTOR;
 
 /**
  * Telegram Bot instance creation service

@@ -75,13 +75,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
-import static com.yohann.ocihelper.service.impl.OciServiceImpl.*;
-import static com.yohann.ocihelper.task.OciTask.botsApplication;
-import static com.yohann.ocihelper.task.OciTask.pushVersionUpdateMsg;
+import static com.tony.kingdetective.service.impl.OciServiceImpl.*;
+import static com.tony.kingdetective.task.OciTask.botsApplication;
+import static com.tony.kingdetective.task.OciTask.pushVersionUpdateMsg;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.service.impl
+ * @package: com.tony.kingdetective.service.impl
  * @className: ISysServiceImpl
  * @author: Yohann
  * @date: 2024/11/30 17:09

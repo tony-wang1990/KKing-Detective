@@ -18,7 +18,7 @@ import java.util.concurrent.ExecutorService;
 @SpringBootApplication
 @ConfigurationPropertiesScan
 @EnableScheduling
-@MapperScan("com.yohann.ocihelper.mapper")
+@MapperScan("com.tony.kingdetective.mapper")
 public class KingDetectiveApplication {
 
     public static void main(String[] args) {

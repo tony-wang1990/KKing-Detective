@@ -8,7 +8,7 @@ import java.util.Map;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.bean.response.oci.traffic
+ * @package: com.tony.kingdetective.bean.response.oci.traffic
  * @className: GetConditionRsp
  * @author: Yohann
  * @date: 2025/3/7 21:33

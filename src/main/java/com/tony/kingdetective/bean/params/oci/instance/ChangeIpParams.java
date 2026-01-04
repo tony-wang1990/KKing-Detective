@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.bean.params
+ * @package: com.tony.kingdetective.bean.params
  * @className: ChangeIpParams
  * @author: Yohann
  * @date: 2024/11/14 0:03

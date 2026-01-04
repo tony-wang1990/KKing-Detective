@@ -24,8 +24,8 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-import static com.yohann.ocihelper.config.VirtualThreadConfig.VIRTUAL_EXECUTOR;
-import static com.yohann.ocihelper.service.impl.OciServiceImpl.TEMP_MAP;
+import static com.tony.kingdetective.config.VirtualThreadConfig.VIRTUAL_EXECUTOR;
+import static com.tony.kingdetective.service.impl.OciServiceImpl.TEMP_MAP;
 
 /**
  * Telegram Bot 业务逻辑服务

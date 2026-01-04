@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.bean.dto
+ * @package: com.tony.kingdetective.bean.dto
  * @className: GoogleLoginConfigDTO
  * @author: Yohann
  * @date: 2026/01/02

@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.bean.params
+ * @package: com.tony.kingdetective.bean.params
  * @className: TerminateInstanceParams
  * @author: Yohann
  * @date: 2024/11/28 21:48

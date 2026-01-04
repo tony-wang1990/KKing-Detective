@@ -9,7 +9,7 @@ import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.config
+ * @package: com.tony.kingdetective.config
  * @className: WebSocketConfig
  * @author: Yohann
  * @date: 2024/11/17 18:35

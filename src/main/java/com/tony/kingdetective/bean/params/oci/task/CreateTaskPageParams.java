@@ -4,7 +4,7 @@ import lombok.Data;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.bean.params
+ * @package: com.tony.kingdetective.bean.params
  * @className: CreateTaskPageParams
  * @author: Yohann
  * @date: 2024/11/15 21:37

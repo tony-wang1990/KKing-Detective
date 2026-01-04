@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.bean.dto
+ * @package: com.tony.kingdetective.bean.dto
  * @className: TrafficSelDTO
  * @author: Yohann
  * @date: 2025/3/7 23:59

@@ -20,7 +20,7 @@ import java.util.List;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.controller
+ * @package: com.tony.kingdetective.controller
  * @className: TrafficStatisticsController
  * @author: Yohann
  * @date: 2025/3/7 20:35

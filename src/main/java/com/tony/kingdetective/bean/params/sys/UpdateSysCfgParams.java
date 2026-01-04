@@ -4,7 +4,7 @@ import lombok.Data;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.bean.params.sys
+ * @package: com.tony.kingdetective.bean.params.sys
  * @className: UpdateLoginCfgParams
  * @author: Yohann
  * @date: 2024/11/30 18:22

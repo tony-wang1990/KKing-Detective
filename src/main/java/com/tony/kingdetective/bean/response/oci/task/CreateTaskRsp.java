@@ -4,7 +4,7 @@ import lombok.Data;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.bean.response
+ * @package: com.tony.kingdetective.bean.response
  * @className: CreateTaskRsp
  * @author: Yohann
  * @date: 2024/11/15 21:42

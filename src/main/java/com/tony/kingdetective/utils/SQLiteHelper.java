@@ -8,7 +8,7 @@ import java.sql.*;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.utils
+ * @package: com.tony.kingdetective.utils
  * @className: SQLiteHelper
  * @author: Yohann
  * @date: 2025/3/14 23:44

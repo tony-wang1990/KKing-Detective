@@ -2,7 +2,7 @@ package com.tony.kingdetective.enums;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.enums
+ * @package: com.tony.kingdetective.enums
  * @className: SecurityRuleProtocolEnum
  * @author: Yohann
  * @date: 2025/3/4 22:13

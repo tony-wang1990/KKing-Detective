@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.bean.params.oci.securityrule
+ * @package: com.tony.kingdetective.bean.params.oci.securityrule
  * @className: GetSecurityRuleListPageParams
  * @author: Yohann
  * @date: 2025/3/1 16:08

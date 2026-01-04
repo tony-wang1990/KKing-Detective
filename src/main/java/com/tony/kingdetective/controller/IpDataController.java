@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.controller
+ * @package: com.tony.kingdetective.controller
  * @className: IpDataController
  * @author: Yohann
  * @date: 2025/8/5 21:53

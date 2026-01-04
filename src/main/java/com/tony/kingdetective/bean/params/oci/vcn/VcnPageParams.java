@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.bean.params.oci.vcn
+ * @package: com.tony.kingdetective.bean.params.oci.vcn
  * @className: VcnPageParams
  * @author: Yohann
  * @date: 2025/3/3 21:02

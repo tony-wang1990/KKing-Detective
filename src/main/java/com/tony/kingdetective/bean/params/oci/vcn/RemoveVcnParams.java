@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.bean.params.oci.vcn
+ * @package: com.tony.kingdetective.bean.params.oci.vcn
  * @className: RemoveVcnParams
  * @author: Yohann
  * @date: 2025/3/3 22:59

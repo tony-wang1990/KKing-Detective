@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.bean.params.oci
+ * @package: com.tony.kingdetective.bean.params.oci
  * @className: GetOciCfgDetailsParams
  * @author: Yohann
  * @date: 2025/1/3 23:20

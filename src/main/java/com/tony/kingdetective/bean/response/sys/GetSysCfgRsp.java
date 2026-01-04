@@ -4,7 +4,7 @@ import lombok.Data;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.bean.response.sys
+ * @package: com.tony.kingdetective.bean.response.sys
  * @className: GetSysCfgRsp
  * @author: Yohann
  * @date: 2024/11/30 20:14

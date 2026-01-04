@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.bean.response.oci.traffic
+ * @package: com.tony.kingdetective.bean.response.oci.traffic
  * @className: GetTrafficDataRsp
  * @author: Yohann
  * @date: 2025/3/7 21:26

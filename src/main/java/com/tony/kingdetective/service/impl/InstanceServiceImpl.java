@@ -54,7 +54,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import static com.oracle.bmc.core.model.RouteTable.LifecycleState.Available;
-import static com.yohann.ocihelper.service.impl.OciServiceImpl.TEMP_MAP;
+import static com.tony.kingdetective.service.impl.OciServiceImpl.TEMP_MAP;
 
 /**
  * <p>

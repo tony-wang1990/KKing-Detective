@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.bean.response
+ * @package: com.tony.kingdetective.bean.response
  * @className: OciCfgDetailsRsp
  * @author: Yohann
  * @date: 2024/11/13 23:54

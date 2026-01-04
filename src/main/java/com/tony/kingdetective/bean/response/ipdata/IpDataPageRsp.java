@@ -4,7 +4,7 @@ import lombok.Data;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.bean.response.ipdata
+ * @package: com.tony.kingdetective.bean.response.ipdata
  * @className: IpDataPageRsp
  * @author: Yohann
  * @date: 2025/8/5 23:12

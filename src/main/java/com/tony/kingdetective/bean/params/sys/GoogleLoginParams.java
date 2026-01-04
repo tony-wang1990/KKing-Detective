@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.bean.params.sys
+ * @package: com.tony.kingdetective.bean.params.sys
  * @className: GoogleLoginParams
  * @author: Yohann
  * @date: 2026/01/02

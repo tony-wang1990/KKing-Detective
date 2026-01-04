@@ -187,15 +187,15 @@ public class TgBot implements LongPollingSingleThreadUpdateConsumer {
             }
             
             // Save to database
-            com.yohann.ocihelper.service.IOciKvService kvService = 
-                SpringUtil.getBean(com.yohann.ocihelper.service.IOciKvService.class);
+            com.tony.kingdetective.service.IOciKvService kvService = 
+                SpringUtil.getBean(com.tony.kingdetective.service.IOciKvService.class);
             
-            com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<com.yohann.ocihelper.bean.entity.OciKv> wrapper = 
+            com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<com.tony.kingdetective.bean.entity.OciKv> wrapper = 
                 new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<>();
-            wrapper.eq(com.yohann.ocihelper.bean.entity.OciKv::getCode, 
-                com.yohann.ocihelper.enums.SysCfgEnum.SYS_VNC.getCode());
+            wrapper.eq(com.tony.kingdetective.bean.entity.OciKv::getCode, 
+                com.tony.kingdetective.enums.SysCfgEnum.SYS_VNC.getCode());
             
-            com.yohann.ocihelper.bean.entity.OciKv vncConfig = kvService.getOne(wrapper);
+            com.tony.kingdetective.bean.entity.OciKv vncConfig = kvService.getOne(wrapper);
             
             if (vncConfig != null) {
                 // Update existing
@@ -203,11 +203,11 @@ public class TgBot implements LongPollingSingleThreadUpdateConsumer {
                 kvService.updateById(vncConfig);
             } else {
                 // Create new
-                vncConfig = new com.yohann.ocihelper.bean.entity.OciKv();
+                vncConfig = new com.tony.kingdetective.bean.entity.OciKv();
                 vncConfig.setId(cn.hutool.core.util.IdUtil.getSnowflakeNextIdStr());
-                vncConfig.setCode(com.yohann.ocihelper.enums.SysCfgEnum.SYS_VNC.getCode());
+                vncConfig.setCode(com.tony.kingdetective.enums.SysCfgEnum.SYS_VNC.getCode());
                 vncConfig.setValue(url);
-                vncConfig.setType(com.yohann.ocihelper.enums.SysCfgTypeEnum.SYS_INIT_CFG.getCode());
+                vncConfig.setType(com.tony.kingdetective.enums.SysCfgTypeEnum.SYS_INIT_CFG.getCode());
                 kvService.save(vncConfig);
             }
             
@@ -262,11 +262,11 @@ public class TgBot implements LongPollingSingleThreadUpdateConsumer {
             sendMessage(chatId, "⏳ 正在创建加密备份...\n\n请稍候，这可能需要几秒钟。");
             
             // Execute encrypted backup using the new method
-            com.yohann.ocihelper.service.ISysService sysService = 
-                SpringUtil.getBean(com.yohann.ocihelper.service.ISysService.class);
+            com.tony.kingdetective.service.ISysService sysService = 
+                SpringUtil.getBean(com.tony.kingdetective.service.ISysService.class);
             
-            com.yohann.ocihelper.bean.params.sys.BackupParams params = 
-                new com.yohann.ocihelper.bean.params.sys.BackupParams();
+            com.tony.kingdetective.bean.params.sys.BackupParams params = 
+                new com.tony.kingdetective.bean.params.sys.BackupParams();
             params.setEnableEnc(true);
             params.setPassword(password);
             
@@ -369,8 +369,8 @@ public class TgBot implements LongPollingSingleThreadUpdateConsumer {
             sendMessage(chatId, "⏳ 正在恢复数据...\n\n请稍候，这可能需要几分钟。\n\n⚠️ 恢复过程中请勿关闭程序！");
             
             // Execute restore
-            com.yohann.ocihelper.service.ISysService sysService = 
-                SpringUtil.getBean(com.yohann.ocihelper.service.ISysService.class);
+            com.tony.kingdetective.service.ISysService sysService = 
+                SpringUtil.getBean(com.tony.kingdetective.service.ISysService.class);
             
             // Try with password, if it fails and password is simple, try without password
             try {

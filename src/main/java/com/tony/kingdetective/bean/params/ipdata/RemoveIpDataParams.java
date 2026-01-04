@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.bean.params.ipdata
+ * @package: com.tony.kingdetective.bean.params.ipdata
  * @className: AddIpDataParams
  * @author: Yohann
  * @date: 2025/8/5 21:55

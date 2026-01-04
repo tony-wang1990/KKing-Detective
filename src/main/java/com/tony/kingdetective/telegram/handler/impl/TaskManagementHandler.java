@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.yohann.ocihelper.service.impl.OciServiceImpl.TEMP_MAP;
+import static com.tony.kingdetective.service.impl.OciServiceImpl.TEMP_MAP;
 
 /**
  * 任务管理回调处理器

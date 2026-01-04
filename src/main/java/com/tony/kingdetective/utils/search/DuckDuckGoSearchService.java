@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.utils
+ * @package: com.tony.kingdetective.utils
  * @className: DuckDuckGoSearchService
  * @author: Yohann
  * @date: 2025/9/22 22:43

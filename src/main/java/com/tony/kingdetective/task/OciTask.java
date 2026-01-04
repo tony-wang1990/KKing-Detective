@@ -45,7 +45,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static com.yohann.ocihelper.service.impl.OciServiceImpl.*;
+import static com.tony.kingdetective.service.impl.OciServiceImpl.*;
 
 /**
  * <p>

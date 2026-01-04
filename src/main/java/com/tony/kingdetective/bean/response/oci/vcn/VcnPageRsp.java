@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.bean.response.oci.vcn
+ * @package: com.tony.kingdetective.bean.response.oci.vcn
  * @className: VcnPageRsp
  * @author: Yohann
  * @date: 2025/3/3 20:22

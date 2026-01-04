@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.bean.params.oci.instance
+ * @package: com.tony.kingdetective.bean.params.oci.instance
  * @className: AutoRescueParams
  * @author: Yohann
  * @date: 2025/7/19 14:28

@@ -17,7 +17,7 @@ import jakarta.annotation.Resource;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.controller
+ * @package: com.tony.kingdetective.controller
  * @className: VcnController
  * @author: Yohann
  * @date: 2025/3/3 20:56

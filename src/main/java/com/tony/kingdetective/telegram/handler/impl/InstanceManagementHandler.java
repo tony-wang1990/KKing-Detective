@@ -698,12 +698,12 @@ class StartVncConnectionHandler extends AbstractCallbackHandler {
         }
         
         // Call startVnc service
-        com.yohann.ocihelper.service.IOciService ociService = SpringUtil.getBean(com.yohann.ocihelper.service.IOciService.class);
-        com.yohann.ocihelper.service.IOciKvService kvService = SpringUtil.getBean(com.yohann.ocihelper.service.IOciKvService.class);
+        com.tony.kingdetective.service.IOciService ociService = SpringUtil.getBean(com.tony.kingdetective.service.IOciService.class);
+        com.tony.kingdetective.service.IOciKvService kvService = SpringUtil.getBean(com.tony.kingdetective.service.IOciKvService.class);
         
         try {
-            com.yohann.ocihelper.bean.params.oci.instance.StartVncParams params = 
-                new com.yohann.ocihelper.bean.params.oci.instance.StartVncParams();
+            com.tony.kingdetective.bean.params.oci.instance.StartVncParams params = 
+                new com.tony.kingdetective.bean.params.oci.instance.StartVncParams();
             params.setOciCfgId(ociCfgId);
             params.setInstanceId(instanceId);
             // compartmentId is optional, will be null
@@ -713,10 +713,10 @@ class StartVncConnectionHandler extends AbstractCallbackHandler {
                         // Get VNC URL from system config
             // The VNC URL can be configured via Telegram bot "VNC 配置" menu
             // If not configured, will use default (host public IP:6080)
-            com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<com.yohann.ocihelper.bean.entity.OciKv> wrapper = 
+            com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<com.tony.kingdetective.bean.entity.OciKv> wrapper = 
                 new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<>();
-            wrapper.eq(com.yohann.ocihelper.bean.entity.OciKv::getCode, com.yohann.ocihelper.enums.SysCfgEnum.SYS_VNC.getCode());
-            com.yohann.ocihelper.bean.entity.OciKv vncConfig = kvService.getOne(wrapper);
+            wrapper.eq(com.tony.kingdetective.bean.entity.OciKv::getCode, com.tony.kingdetective.enums.SysCfgEnum.SYS_VNC.getCode());
+            com.tony.kingdetective.bean.entity.OciKv vncConfig = kvService.getOne(wrapper);
             
                         
             // Determine VNC URL strategy:

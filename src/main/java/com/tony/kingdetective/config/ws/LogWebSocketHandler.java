@@ -21,11 +21,11 @@ import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.*;
 
-import static com.yohann.ocihelper.service.impl.OciServiceImpl.TEMP_MAP;
+import static com.tony.kingdetective.service.impl.OciServiceImpl.TEMP_MAP;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.utils
+ * @package: com.tony.kingdetective.utils
  * @className: LogWebSocketHandler
  * @author: Yohann
  * @date: 2024/11/17 18:21

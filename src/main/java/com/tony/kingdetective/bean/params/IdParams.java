@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.bean.params
+ * @package: com.tony.kingdetective.bean.params
  * @className: IdParams
  * @author: Yohann
  * @date: 2024/11/13 23:52

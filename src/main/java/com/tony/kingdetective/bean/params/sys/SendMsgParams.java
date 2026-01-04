@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.bean.params.sys
+ * @package: com.tony.kingdetective.bean.params.sys
  * @className: SendMsgParams
  * @author: Yohann
  * @date: 2024/11/30 18:32

@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 
 /**
  * @projectName: king-detective
- * @package: com.yohann.ocihelper.bean.params.oci
+ * @package: com.tony.kingdetective.bean.params.oci
  * @className: UpdateBootVolumeParams
  * @author: Yohann
  * @date: 2025/1/4 19:27
