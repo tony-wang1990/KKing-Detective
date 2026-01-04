@@ -82,7 +82,7 @@ echo "  - docker-compose.yml 下载成功"
 wget -q https://raw.githubusercontent.com/tony-wang1990/King-Detective/main/src/main/resources/application.yml || { echo "错误: 下载 application.yml 失败"; exit 1; }
 echo "  - application.yml 下载成功"
 
-wget -q https://raw.githubusercontent.com/tony-wang1990/King-Detective/main/king-detective.db || { echo "错误: 下载 king-detective.db 失败"; exit 1; }
+wget -q https://raw.githubusercontent.com/tony-wang1990/King-Detective/main/src/main/resources/king-detective.db || { echo "错误: 下载 king-detective.db 失败"; exit 1; }
 echo "  - king-detective.db 下载成功"
 
 echo "步骤 4: 启动服务..."
