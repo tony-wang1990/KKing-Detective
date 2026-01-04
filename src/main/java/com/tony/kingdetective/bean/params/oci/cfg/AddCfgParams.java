@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.bean.params.oci.cfg;
+package com.tony.kingdetective.bean.params.oci.cfg;
 
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;

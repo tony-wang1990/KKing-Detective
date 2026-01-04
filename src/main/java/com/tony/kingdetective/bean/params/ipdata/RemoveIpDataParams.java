@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.bean.params.ipdata;
+package com.tony.kingdetective.bean.params.ipdata;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;

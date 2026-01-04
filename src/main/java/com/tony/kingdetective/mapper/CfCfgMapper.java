@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.mapper;
+package com.tony.kingdetective.mapper;
 
 import com.tony.kingdetective.bean.entity.CfCfg;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;

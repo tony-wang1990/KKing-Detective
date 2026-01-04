@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.service;
+package com.tony.kingdetective.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.tony.kingdetective.bean.entity.OciKv;

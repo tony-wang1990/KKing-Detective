@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.bean.params.oci.cfg;
+package com.tony.kingdetective.bean.params.oci.cfg;
 
 import com.tony.kingdetective.bean.params.IdParams;
 import lombok.Data;

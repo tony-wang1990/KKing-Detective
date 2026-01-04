@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.telegram.service;
+package com.tony.kingdetective.telegram.service;
 
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.extra.spring.SpringUtil;

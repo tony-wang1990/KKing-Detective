@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.telegram.utils;
+package com.tony.kingdetective.telegram.utils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.service.impl;
+package com.tony.kingdetective.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;

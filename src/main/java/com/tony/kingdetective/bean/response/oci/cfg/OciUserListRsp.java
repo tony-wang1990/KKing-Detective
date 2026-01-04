@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.bean.response.oci.cfg;
+package com.tony.kingdetective.bean.response.oci.cfg;
 
 import lombok.Data;
 

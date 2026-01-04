@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.bean.params.cf;
+package com.tony.kingdetective.bean.params.cf;
 
 import lombok.Data;
 

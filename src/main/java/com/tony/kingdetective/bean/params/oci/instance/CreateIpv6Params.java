@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.bean.params.oci.instance;
+package com.tony.kingdetective.bean.params.oci.instance;
 
 import com.tony.kingdetective.bean.params.oci.instance.GetInstanceCfgInfoParams;
 import lombok.Data;

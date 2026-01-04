@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.service;
+package com.tony.kingdetective.service;
 
 import com.oracle.bmc.core.model.Instance;
 import com.tony.kingdetective.bean.Tuple2;

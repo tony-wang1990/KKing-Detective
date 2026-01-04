@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.telegram.handler.impl;
+package com.tony.kingdetective.telegram.handler.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.extra.spring.SpringUtil;

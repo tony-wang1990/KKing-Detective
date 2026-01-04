@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.bean.dto;
+package com.tony.kingdetective.bean.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

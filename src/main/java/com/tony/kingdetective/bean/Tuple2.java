@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.bean;
+package com.tony.kingdetective.bean;
 
 /**
  * <p>

@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.bean.entity;
+package com.tony.kingdetective.bean.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;

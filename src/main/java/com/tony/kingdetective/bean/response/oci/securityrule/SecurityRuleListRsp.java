@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.bean.response.oci.securityrule;
+package com.tony.kingdetective.bean.response.oci.securityrule;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tony.kingdetective.bean.response.oci.vcn.VcnPageRsp;

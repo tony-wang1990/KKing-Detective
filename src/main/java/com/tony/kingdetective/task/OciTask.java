@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.task;
+package com.tony.kingdetective.task;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;

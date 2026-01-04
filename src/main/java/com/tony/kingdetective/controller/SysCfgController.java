@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.controller;
+package com.tony.kingdetective.controller;
 
 import com.tony.kingdetective.bean.ResponseData;
 import com.tony.kingdetective.bean.params.sys.*;

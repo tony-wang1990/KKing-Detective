@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.telegram;
+package com.tony.kingdetective.telegram;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.tony.kingdetective.telegram.builder.KeyboardBuilder;

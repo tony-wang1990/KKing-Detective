@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.bean.response.sys;
+package com.tony.kingdetective.bean.response.sys;
 
 import lombok.Data;
 

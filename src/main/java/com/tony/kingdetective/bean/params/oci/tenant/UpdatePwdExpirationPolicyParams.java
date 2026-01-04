@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.bean.params.oci.tenant;
+package com.tony.kingdetective.bean.params.oci.tenant;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

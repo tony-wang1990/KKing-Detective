@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.utils;
+package com.tony.kingdetective.utils;
 
 import cn.hutool.json.JSONUtil;
 import com.oracle.bmc.identity.IdentityClient;

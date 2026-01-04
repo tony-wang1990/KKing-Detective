@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.bean.params.oci.volume;
+package com.tony.kingdetective.bean.params.oci.volume;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;

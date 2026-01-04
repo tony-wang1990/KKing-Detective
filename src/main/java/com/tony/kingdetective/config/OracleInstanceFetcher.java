@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.config;
+package com.tony.kingdetective.config;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;

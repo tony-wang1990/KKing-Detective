@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.config.ai;
+package com.tony.kingdetective.config.ai;
 
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.openai.OpenAiChatModel;

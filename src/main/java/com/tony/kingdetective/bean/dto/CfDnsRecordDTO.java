@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.bean.dto;
+package com.tony.kingdetective.bean.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;

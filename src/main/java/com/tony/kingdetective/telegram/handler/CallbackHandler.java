@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.telegram.handler;
+package com.tony.kingdetective.telegram.handler;
 
 import org.telegram.telegrambots.meta.api.methods.botapimethods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;

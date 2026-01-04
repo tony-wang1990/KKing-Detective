@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.bean.params.oci.securityrule;
+package com.tony.kingdetective.bean.params.oci.securityrule;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.service.impl;
+package com.tony.kingdetective.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;

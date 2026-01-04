@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.bean.constant;
+package com.tony.kingdetective.bean.constant;
 
 /**
  * <p>

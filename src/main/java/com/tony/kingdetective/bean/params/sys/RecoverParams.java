@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.bean.params.sys;
+package com.tony.kingdetective.bean.params.sys;
 
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;

@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.service;
+package com.tony.kingdetective.service;
 
 /**
  * <p>

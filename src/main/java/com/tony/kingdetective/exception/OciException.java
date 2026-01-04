@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.exception;
+package com.tony.kingdetective.exception;
 
 import com.tony.kingdetective.enums.ErrorEnum;
 

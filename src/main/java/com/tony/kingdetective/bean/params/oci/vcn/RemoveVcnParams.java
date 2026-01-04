@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.bean.params.oci.vcn;
+package com.tony.kingdetective.bean.params.oci.vcn;
 
 import lombok.Data;
 

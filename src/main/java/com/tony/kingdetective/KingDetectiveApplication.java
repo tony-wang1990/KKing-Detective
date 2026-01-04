@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective;
+package com.tony.kingdetective;
 
 import com.tony.kingdetective.utils.DelegatingVirtualTaskScheduler;
 import jakarta.annotation.Resource;

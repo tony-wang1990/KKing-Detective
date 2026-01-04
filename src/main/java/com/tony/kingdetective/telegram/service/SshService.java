@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.telegram.service;
+package com.tony.kingdetective.telegram.service;
 
 import cn.hutool.extra.ssh.JschUtil;
 import com.jcraft.jsch.ChannelExec;

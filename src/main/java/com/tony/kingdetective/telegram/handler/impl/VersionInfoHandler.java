@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.telegram.handler.impl;
+package com.tony.kingdetective.telegram.handler.impl;
 
 import cn.hutool.core.util.RuntimeUtil;
 import lombok.extern.slf4j.Slf4j;

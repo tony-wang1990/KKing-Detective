@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.config.ws;
+package com.tony.kingdetective.config.ws;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

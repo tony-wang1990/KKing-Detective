@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.utils;
+package com.tony.kingdetective.utils;
 
 import cn.hutool.core.thread.ThreadFactoryBuilder;
 import com.google.common.cache.*;

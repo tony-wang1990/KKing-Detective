@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.enums;
+package com.tony.kingdetective.enums;
 
 import com.oracle.bmc.core.model.Shape;
 import lombok.Getter;

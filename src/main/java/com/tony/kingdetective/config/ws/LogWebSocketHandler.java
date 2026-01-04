@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.config.ws;
+package com.tony.kingdetective.config.ws;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.Tailer;

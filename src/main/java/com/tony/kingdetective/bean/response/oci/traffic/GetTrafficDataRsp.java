@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.bean.response.oci.traffic;
+package com.tony.kingdetective.bean.response.oci.traffic;
 
 import lombok.Data;
 

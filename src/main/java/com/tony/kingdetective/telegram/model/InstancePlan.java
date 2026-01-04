@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.telegram.model;
+package com.tony.kingdetective.telegram.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

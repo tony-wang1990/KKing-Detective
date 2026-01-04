@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.controller;
+package com.tony.kingdetective.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tony.kingdetective.bean.ResponseData;

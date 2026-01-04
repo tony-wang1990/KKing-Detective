@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.config;
+package com.tony.kingdetective.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.AsyncTaskExecutor;

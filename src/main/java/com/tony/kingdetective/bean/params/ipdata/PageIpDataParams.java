@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.bean.params.ipdata;
+package com.tony.kingdetective.bean.params.ipdata;
 
 import com.tony.kingdetective.bean.params.BasicPageParams;
 import lombok.Data;

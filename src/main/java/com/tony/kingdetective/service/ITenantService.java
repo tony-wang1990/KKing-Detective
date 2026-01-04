@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.service;
+package com.tony.kingdetective.service;
 
 import com.tony.kingdetective.bean.params.oci.tenant.*;
 import com.tony.kingdetective.bean.response.oci.tenant.TenantInfoRsp;

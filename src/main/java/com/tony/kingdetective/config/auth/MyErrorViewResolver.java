@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.config.auth;
+package com.tony.kingdetective.config.auth;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.boot.autoconfigure.web.servlet.error.ErrorViewResolver;

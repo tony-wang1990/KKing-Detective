@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.utils;
+package com.tony.kingdetective.utils;
 
 
 import jakarta.validation.constraints.NotNull;

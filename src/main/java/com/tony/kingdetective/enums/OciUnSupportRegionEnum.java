@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.enums;
+package com.tony.kingdetective.enums;
 
 import com.oracle.bmc.Realm;
 import lombok.Getter;

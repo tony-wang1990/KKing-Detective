@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.config.auth;
+package com.tony.kingdetective.config.auth;
 
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Configuration;

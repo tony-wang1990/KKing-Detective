@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.controller;
+package com.tony.kingdetective.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.tony.kingdetective.bean.ResponseData;

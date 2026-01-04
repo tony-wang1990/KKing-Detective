@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.telegram.factory;
+package com.tony.kingdetective.telegram.factory;
 
 import com.tony.kingdetective.telegram.handler.CallbackHandler;
 import lombok.extern.slf4j.Slf4j;

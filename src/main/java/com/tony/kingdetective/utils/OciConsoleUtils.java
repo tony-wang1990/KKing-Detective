@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.utils;
+package com.tony.kingdetective.utils;
 
 import com.tony.kingdetective.bean.dto.ConsoleConnectionResultDTO;
 import com.tony.kingdetective.bean.dto.SshKeyPairDTO;

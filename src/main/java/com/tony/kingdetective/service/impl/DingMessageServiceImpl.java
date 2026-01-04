@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.service.impl;
+package com.tony.kingdetective.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;

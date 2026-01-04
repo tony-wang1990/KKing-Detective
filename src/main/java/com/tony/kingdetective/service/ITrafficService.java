@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.service;
+package com.tony.kingdetective.service;
 
 import com.tony.kingdetective.bean.dto.ValueLabelDTO;
 import com.tony.kingdetective.bean.params.oci.traffic.GetTrafficDataParams;

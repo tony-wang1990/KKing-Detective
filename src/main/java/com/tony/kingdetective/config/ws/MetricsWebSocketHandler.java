@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.config.ws;
+package com.tony.kingdetective.config.ws;
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;

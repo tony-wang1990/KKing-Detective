@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.bean.params.oci.securityrule;
+package com.tony.kingdetective.bean.params.oci.securityrule;
 
 import com.oracle.bmc.core.model.IcmpOptions;
 import lombok.Data;

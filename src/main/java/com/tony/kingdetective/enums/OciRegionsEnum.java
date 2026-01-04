@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.enums;
+package com.tony.kingdetective.enums;
 
 import java.util.Arrays;
 import java.util.Optional;

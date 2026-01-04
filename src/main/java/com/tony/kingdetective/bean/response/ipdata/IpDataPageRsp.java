@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.bean.response.ipdata;
+package com.tony.kingdetective.bean.response.ipdata;
 
 import lombok.Data;
 

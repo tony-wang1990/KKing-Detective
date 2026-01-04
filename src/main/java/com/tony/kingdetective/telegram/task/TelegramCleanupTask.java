@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.telegram.task;
+package com.tony.kingdetective.telegram.task;
 
 import com.tony.kingdetective.telegram.storage.ChatSessionStorage;
 import com.tony.kingdetective.telegram.storage.SshConnectionStorage;

@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.bean.entity;
+package com.tony.kingdetective.bean.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;

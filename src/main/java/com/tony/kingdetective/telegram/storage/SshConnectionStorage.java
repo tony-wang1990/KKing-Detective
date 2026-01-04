@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.telegram.storage;
+package com.tony.kingdetective.telegram.storage;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

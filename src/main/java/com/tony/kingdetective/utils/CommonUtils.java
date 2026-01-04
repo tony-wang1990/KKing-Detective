@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.utils;
+package com.tony.kingdetective.utils;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.img.ImgUtil;

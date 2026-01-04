@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.bean.params.oci.task;
+package com.tony.kingdetective.bean.params.oci.task;
 
 import lombok.Data;
 

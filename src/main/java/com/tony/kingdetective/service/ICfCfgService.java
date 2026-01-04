@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.service;
+package com.tony.kingdetective.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tony.kingdetective.bean.entity.CfCfg;

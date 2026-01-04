@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.bean.response.oci.tenant;
+package com.tony.kingdetective.bean.response.oci.tenant;
 
 import com.oracle.bmc.identity.model.User;
 import lombok.Data;

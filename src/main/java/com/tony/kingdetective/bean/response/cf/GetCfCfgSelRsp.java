@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.bean.response.cf;
+package com.tony.kingdetective.bean.response.cf;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

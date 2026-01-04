@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.config.auth;
+package com.tony.kingdetective.config.auth;
 
 import cn.hutool.jwt.JWTUtil;
 import com.tony.kingdetective.exception.OciException;

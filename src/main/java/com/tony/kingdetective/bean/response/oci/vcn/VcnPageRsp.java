@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.bean.response.oci.vcn;
+package com.tony.kingdetective.bean.response.oci.vcn;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.Data;

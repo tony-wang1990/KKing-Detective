@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.bean.params.oci.securityrule;
+package com.tony.kingdetective.bean.params.oci.securityrule;
 
 import com.tony.kingdetective.bean.params.BasicPageParams;
 import lombok.Data;

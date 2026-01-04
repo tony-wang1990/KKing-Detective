@@ -1,4 +1,4 @@
-﻿package com.yohann.ocihelper;
+package com.yohann.ocihelper;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;

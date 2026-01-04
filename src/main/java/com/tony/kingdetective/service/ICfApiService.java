@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.service;
+package com.tony.kingdetective.service;
 
 import cn.hutool.http.HttpResponse;
 import com.tony.kingdetective.bean.dto.CfDnsRecordDTO;

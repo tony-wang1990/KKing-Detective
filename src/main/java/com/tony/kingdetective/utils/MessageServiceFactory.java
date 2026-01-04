@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.utils;
+package com.tony.kingdetective.utils;
 
 import com.tony.kingdetective.enums.MessageTypeEnum;
 import com.tony.kingdetective.service.IMessageService;
