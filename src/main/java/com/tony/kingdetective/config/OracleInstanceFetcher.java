@@ -5,6 +5,7 @@ import com.oracle.bmc.auth.AuthenticationDetailsProvider;
 import com.oracle.bmc.auth.SimpleAuthenticationDetailsProvider;
 import com.oracle.bmc.core.*;
 import com.oracle.bmc.core.model.*;
+import com.oracle.bmc.computemanagement.ComputeManagementClient;
 import com.oracle.bmc.core.requests.*;
 import com.oracle.bmc.core.responses.*;
 import com.oracle.bmc.identity.IdentityClient;
@@ -12,6 +13,7 @@ import com.oracle.bmc.identity.model.*;
 import com.oracle.bmc.identity.requests.*;
 import com.oracle.bmc.identity.responses.*;
 import com.oracle.bmc.model.BmcException;
+import com.oracle.bmc.identitydomains.IdentityDomainsClient;
 import com.oracle.bmc.workrequests.WorkRequestClient;
 import com.tony.kingdetective.bean.dto.InstanceDetailDTO;
 import com.tony.kingdetective.bean.dto.SysUserDTO;
@@ -39,6 +41,7 @@ import java.util.stream.Collectors;
  * Oracle Instance Fetcher
  */
 @Slf4j
+@lombok.Getter
 public class OracleInstanceFetcher implements AutoCloseable {
 
     private final String compartmentId;
@@ -51,6 +54,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
     private final ComputeManagementClient computeManagementClient;
     private final IdentityClient identityClient;
     private final BlockstorageClient blockstorageClient;
+    private final IdentityDomainsClient identityDomainsClient;
 
     public OracleInstanceFetcher(SysUserDTO user) {
         this.user = user;
@@ -71,6 +75,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
         this.computeClient = ComputeClient.builder().build(provider);
         this.computeManagementClient = ComputeManagementClient.builder().build(provider);
         this.blockstorageClient = BlockstorageClient.builder().build(provider);
+        this.identityDomainsClient = IdentityDomainsClient.builder().build(provider);
     }
 
     @Override
@@ -81,6 +86,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
         if (computeManagementClient != null) computeManagementClient.close();
         if (identityClient != null) identityClient.close();
         if (blockstorageClient != null) blockstorageClient.close();
+        if (identityDomainsClient != null) identityDomainsClient.close();
     }
 
 
@@ -268,8 +274,44 @@ public class OracleInstanceFetcher implements AutoCloseable {
         return instanceDetailDTO;
     }
 
+    public IdentityDomainsClient getIdentityDomainsClient() {
+        return identityDomainsClient;
+    }
+
     public SysUserDTO getUser() {
         return user;
+    }
+
+    public String getCompartmentId() {
+        return compartmentId;
+    }
+
+    public AuthenticationDetailsProvider getAuthenticationDetailsProvider() {
+        return provider;
+    }
+
+    public VirtualNetworkClient getVirtualNetworkClient() {
+        return virtualNetworkClient;
+    }
+
+    public ComputeClient getComputeClient() {
+        return computeClient;
+    }
+
+    public ComputeManagementClient getComputeManagementClient() {
+        return computeManagementClient;
+    }
+
+    public IdentityClient getIdentityClient() {
+        return identityClient;
+    }
+
+    public BlockstorageClient getBlockstorageClient() {
+        return blockstorageClient;
+    }
+
+    public WorkRequestClient getWorkRequestClient() {
+        return workRequestClient;
     }
 
     public String getRegisteredTime() {

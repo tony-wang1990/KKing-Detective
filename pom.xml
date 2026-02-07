@@ -98,6 +98,11 @@
             <artifactId>oci-java-sdk-usageapi</artifactId>
             <version>${oci-version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.oracle.oci.sdk</groupId>
+            <artifactId>oci-java-sdk-computemanagement</artifactId>
+            <version>${oci-version}</version>
+        </dependency>
 
 
         <!-- sqlite???èμ–???-->
