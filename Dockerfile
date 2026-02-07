@@ -25,7 +25,7 @@ RUN apt update && \
 
 FROM base-with-tools
 
-ENV KING_DETECTIVE_VERSION=3.0.0
+ENV KING_DETECTIVE_VERSION=3.0.1
 
 WORKDIR /app/king-detective
 
