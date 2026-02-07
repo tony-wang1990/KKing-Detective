@@ -1,26 +1,84 @@
-import com.oracle.bmc.core.ComputeManagementClient;
+package com.tony.kingdetective.config;
 
-// ...
+import cn.hutool.core.collection.CollectionUtil;
+import com.oracle.bmc.auth.AuthenticationDetailsProvider;
+import com.oracle.bmc.auth.SimpleAuthenticationDetailsProvider;
+import com.oracle.bmc.core.*;
+import com.oracle.bmc.core.model.*;
+import com.oracle.bmc.core.requests.*;
+import com.oracle.bmc.core.responses.*;
+import com.oracle.bmc.identity.IdentityClient;
+import com.oracle.bmc.identity.model.*;
+import com.oracle.bmc.identity.requests.*;
+import com.oracle.bmc.identity.responses.*;
+import com.oracle.bmc.model.BmcException;
+import com.oracle.bmc.workrequests.WorkRequestClient;
+import com.tony.kingdetective.bean.dto.InstanceDetailDTO;
+import com.tony.kingdetective.bean.dto.SysUserDTO;
+import com.tony.kingdetective.bean.enums.ArchitectureEnum;
+import com.tony.kingdetective.bean.enums.ErrorEnum;
+import com.tony.kingdetective.bean.enums.InstanceStateEnum;
+import com.tony.kingdetective.bean.enums.OperationSystemEnum;
+import com.tony.kingdetective.bean.params.oci.instance.CreateInstanceParams;
+import com.tony.kingdetective.exception.OciException;
+import com.tony.kingdetective.utils.CommonUtils;
+import lombok.extern.slf4j.Slf4j;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+/**
+ * Oracle Instance Fetcher
+ */
+@Slf4j
+public class OracleInstanceFetcher implements AutoCloseable {
+
+    private final String compartmentId;
+    private final SysUserDTO user;
+    private final AuthenticationDetailsProvider provider;
+
+    private final VirtualNetworkClient virtualNetworkClient;
+    private final WorkRequestClient workRequestClient;
     private final ComputeClient computeClient;
-    private final ComputeManagementClient computeManagementClient; // Add this
+    private final ComputeManagementClient computeManagementClient;
     private final IdentityClient identityClient;
-// ...
+    private final BlockstorageClient blockstorageClient;
+
+    public OracleInstanceFetcher(SysUserDTO user) {
+        this.user = user;
+        this.compartmentId = user.getOciCfg().getTenantId();
+        
+        Supplier<InputStream> privateKeySupplier = () -> new ByteArrayInputStream(user.getOciCfg().getPrivateKey().getBytes(StandardCharsets.UTF_8));
+        this.provider = SimpleAuthenticationDetailsProvider.builder()
+                .tenantId(user.getOciCfg().getTenantId())
+                .userId(user.getOciCfg().getUserId())
+                .fingerprint(user.getOciCfg().getFingerprint())
+                .privateKeySupplier(privateKeySupplier)
+                .region(com.oracle.bmc.Region.valueOf(user.getOciCfg().getRegion()))
+                .build();
+
+        this.virtualNetworkClient = VirtualNetworkClient.builder().build(provider);
+        this.workRequestClient = WorkRequestClient.builder().build(provider);
+        this.identityClient = IdentityClient.builder().build(provider);
+        this.computeClient = ComputeClient.builder().build(provider);
+        this.computeManagementClient = ComputeManagementClient.builder().build(provider);
+        this.blockstorageClient = BlockstorageClient.builder().build(provider);
+    }
 
     @Override
     public void close() {
-        computeClient.close();
-        computeManagementClient.close(); // Add this
-        identityClient.close();
-// ...
+        if (virtualNetworkClient != null) virtualNetworkClient.close();
+        if (workRequestClient != null) workRequestClient.close();
+        if (computeClient != null) computeClient.close();
+        if (computeManagementClient != null) computeManagementClient.close();
+        if (identityClient != null) identityClient.close();
+        if (blockstorageClient != null) blockstorageClient.close();
+    }
 
-    public OracleInstanceFetcher(SysUserDTO user) {
-// ...
-        identityClient = IdentityClient.builder().build(provider);
-        computeClient = ComputeClient.builder().build(provider);
-        computeManagementClient = ComputeManagementClient.builder().build(provider); // Add this
-        blockstorageClient = BlockstorageClient.builder().build(provider);
-// ...
 
     synchronized public InstanceDetailDTO createInstanceData() {
         InstanceDetailDTO instanceDetailDTO = new InstanceDetailDTO();

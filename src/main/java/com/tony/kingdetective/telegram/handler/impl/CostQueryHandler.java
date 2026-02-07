@@ -23,6 +23,7 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.ZoneOffset;
 import java.util.*;
 
 /**
@@ -63,10 +64,6 @@ public class CostQueryHandler extends AbstractCallbackHandler {
                 UsageapiClient usageClient = UsageapiClient.builder()
                         .build(fetcher.getAuthenticationDetailsProvider());
                 
-import java.time.ZoneOffset;
-
-// ...
-
                 // Calculate date range (last 3 months) in UTC
                 LocalDate endDate = LocalDate.now(ZoneOffset.UTC);
                 LocalDate startDate = endDate.minusMonths(3);
