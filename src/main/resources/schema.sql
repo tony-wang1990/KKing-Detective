@@ -60,7 +60,7 @@ create table if not exists `cf_cfg`
     primary key ("id")
 );
 
---IP数据表
+-- IP数据表
 create table if not exists `ip_data`
 (
     id          varchar(64)                                     not null,
@@ -76,3 +76,43 @@ create table if not exists `ip_data`
     create_time datetime default (datetime('now', 'localtime')) not null,
     primary key ("id")
 );
+
+-- 登录尝试表 (防爆破)
+create table if not exists `login_attempts`
+(
+    id           INTEGER PRIMARY KEY AUTOINCREMENT,
+    ip_address   varchar(255)                                    null,
+    attempt_count INTEGER                                        DEFAULT 0,
+    last_attempt datetime                                        null
+);
+
+-- IP黑名单表
+create table if not exists `ip_blacklist`
+(
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    ip_address  varchar(255)                                    null,
+    reason      varchar(255)                                    null,
+    banned_by   varchar(255)                                    null,
+    create_time datetime default (datetime('now', 'localtime')) not null
+);
+
+-- 审计日志表
+CREATE TABLE IF NOT EXISTS `audit_log` (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    username TEXT,
+    operation TEXT NOT NULL,
+    target TEXT,
+    details TEXT,
+    success INTEGER DEFAULT 1,
+    error_message TEXT,
+    ip_address TEXT,
+    user_agent TEXT,
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 创建索引
+CREATE INDEX if not exists idx_audit_log_user_id ON audit_log(user_id);
+CREATE INDEX if not exists idx_audit_log_operation ON audit_log(operation);
+CREATE INDEX if not exists idx_audit_log_create_time ON audit_log(create_time);
+CREATE INDEX if not exists idx_audit_log_success ON audit_log(success);

@@ -36,9 +36,11 @@ public class DatabaseMigrationRunner implements ApplicationRunner {
         try (Connection conn = dataSource.getConnection();
              Statement stmt = conn.createStatement()) {
             
-            // 检查 audit_log 表是否存在
-            if (!tableExists(conn, "audit_log")) {
-                log.info("检测到新版本，开始执行数据库迁移...");
+            // 检查新版本表是否存在 (只要缺一个就执行迁移)
+            if (!tableExists(conn, "audit_log") || 
+                !tableExists(conn, "ip_blacklist") || 
+                !tableExists(conn, "login_attempts")) {
+                log.info("检测到数据库结构缺失，开始执行 v4.0 全量迁移...");
                 executeMigrationScript(stmt);
                 log.info("✅ 数据库迁移完成！");
             } else {
@@ -70,7 +72,7 @@ public class DatabaseMigrationRunner implements ApplicationRunner {
      */
     private void executeMigrationScript(Statement stmt) throws Exception {
         // 读取 SQL 脚本
-        ClassPathResource resource = new ClassPathResource("db/migration_audit_log.sql");
+        ClassPathResource resource = new ClassPathResource("db/migration_v4_0.sql");
         
         String sql;
         try (BufferedReader reader = new BufferedReader(
@@ -83,8 +85,18 @@ public class DatabaseMigrationRunner implements ApplicationRunner {
         for (String statement : statements) {
             String trimmed = statement.trim();
             if (!trimmed.isEmpty() && !trimmed.startsWith("--")) {
-                log.debug("执行 SQL: {}", trimmed.substring(0, Math.min(50, trimmed.length())) + "...");
-                stmt.execute(trimmed);
+                try {
+                    log.debug("执行 SQL: {}", trimmed.substring(0, Math.min(50, trimmed.length())) + "...");
+                    stmt.execute(trimmed);
+                } catch (Exception e) {
+                    // 忽略 "duplicate column" 或 "table already exists" 错误，确保幂等性
+                    String msg = e.getMessage().toLowerCase();
+                    if (msg.contains("duplicate column") || msg.contains("exists")) {
+                        log.warn("忽略已存在的结构: {}", trimmed.split("\n")[0]);
+                    } else {
+                        throw e;
+                    }
+                }
             }
         }
     }
