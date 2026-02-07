@@ -183,7 +183,7 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
         ));
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("◀️ 返回", "show_create_plans:" + userId)
+                KeyboardBuilder.button("◀️ 返回", "create_instance:" + userId + ":" + planType)
         ));
         keyboard.add(KeyboardBuilder.buildCancelRow());
         
