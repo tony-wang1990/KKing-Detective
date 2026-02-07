@@ -182,4 +182,8 @@ public class EncryptionUtil {
         }
     }
     
+    
     private EncryptionUtil() {
+        throw new AssertionError("工具类不应该被实例化");
+    }
+}
