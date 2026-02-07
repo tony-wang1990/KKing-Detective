@@ -30,14 +30,18 @@ import com.tony.kingdetective.enums.InstanceActionEnum;
 import com.tony.kingdetective.bean.params.oci.instance.CreateInstanceParams;
 import com.tony.kingdetective.bean.params.oci.securityrule.UpdateSecurityRuleListParams;
 import com.tony.kingdetective.bean.response.oci.cfg.OciCfgDetailsRsp;
+import com.tony.kingdetective.bean.constant.CacheConstant;
 import com.tony.kingdetective.exception.OciException;
 import com.tony.kingdetective.utils.CommonUtils;
+import com.tony.kingdetective.utils.CustomExpiryGuavaCache;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -1337,7 +1341,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
             // Step 1:创建一个 Reserved Public IP
             CreatePublicIpDetails createPublicIpDetails = CreatePublicIpDetails.builder()
                     .compartmentId(compartmentId)
-                    .lifetime(Ephemeral)  // 设置为 Reserved
+                    .lifetime(CreatePublicIpDetails.Lifetime.Ephemeral)  // 设置为 Ephemeral
                     .displayName("publicIp")
                     .privateIpId(privateIpId)
                     .build();
