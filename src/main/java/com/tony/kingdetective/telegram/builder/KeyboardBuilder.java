@@ -79,6 +79,98 @@ public class KeyboardBuilder {
                 ),
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
+                                .text("📊 配额查询")
+                                .callbackData("quota_query")
+                                .build(),
+                        InlineKeyboardButton.builder()
+                                .text("🌐 IPv6管理")
+                                .callbackData("ipv6_config_select")
+                                .build()
+                ),
+                new InlineKeyboardRow(
+                        InlineKeyboardButton.builder()
+                                .text("💰 花费查询")
+                                .callbackData("cost_query")
+                                .build(),
+                        InlineKeyboardButton.builder()
+                                .text("📈 流量历史")
+                                .callbackData("traffic_history")
+                                .build()
+                ),
+                new InlineKeyboardRow(
+                        InlineKeyboardButton.builder()
+                                .text("🔄 实例升降级")
+                                .callbackData("shape_change_select")
+                                .build(),
+                        InlineKeyboardButton.builder()
+                                .text("📧 批量邮箱")
+                                .callbackData("batch_email_query")
+                                .build()
+                ),
+                new InlineKeyboardRow(
+                        InlineKeyboardButton.builder()
+                                .text("📋 订阅信息")
+                                .callbackData("subscription_info")
+                                .build(),
+                        InlineKeyboardButton.builder()
+                                .text("💾 占用内存")
+                                .callbackData("memory_occupy_select")
+                                .build()
+                ),
+                new InlineKeyboardRow(
+                        InlineKeyboardButton.builder()
+                                .text("🔐 清除2FA")
+                                .callbackData("clear_2fa_devices")
+                                .build(),
+                        InlineKeyboardButton.builder()
+                                .text("🚀 快捷开机")
+                                .callbackData("quick_start")
+                                .build()
+                ),
+                new InlineKeyboardRow(
+                        InlineKeyboardButton.builder()
+                                .text("🚫 禁用被封户")
+                                .callbackData("disable_banned_accounts")
+                                .build()
+                ),
+                new InlineKeyboardRow(
+                        InlineKeyboardButton.builder()
+                                .text("🔔 监控通知")
+                                .callbackData("instance_monitoring")
+                                .build(),
+                        InlineKeyboardButton.builder()
+                                .text("📅 每日报告")
+                                .callbackData("daily_report")
+                                .build()
+                ),
+                new InlineKeyboardRow(
+                        InlineKeyboardButton.builder()
+                                .text("🌐 拓展区域")
+                                .callbackData("auto_region_expansion")
+                                .build()
+                ),
+                new InlineKeyboardRow(
+                        InlineKeyboardButton.builder()
+                                .text("🔔 实例自启")
+                                .callbackData("auto_restart_monitoring")
+                                .build(),
+                        InlineKeyboardButton.builder()
+                                .text("🔓 开放端口")
+                                .callbackData("open_all_ports_select")
+                                .build()
+                ),
+                new InlineKeyboardRow(
+                        InlineKeyboardButton.builder()
+                                .text("📊 资源占用")
+                                .callbackData("instance_resource_usage_select")
+                                .build(),
+                        InlineKeyboardButton.builder()
+                                .text("🛡 安全管理")
+                                .callbackData("security_management")
+                                .build()
+                ),
+                new InlineKeyboardRow(
+                        InlineKeyboardButton.builder()
                                 .text("\uD83D\uDCE2 通知频道")
                                 .url("https://t.me/Woci_detective")
                                 .build(),

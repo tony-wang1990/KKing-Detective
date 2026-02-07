@@ -5,13 +5,18 @@ import com.tony.kingdetective.bean.params.sys.*;
 import com.tony.kingdetective.bean.response.sys.GetGlanceRsp;
 import com.tony.kingdetective.bean.response.sys.GetSysCfgRsp;
 import com.tony.kingdetective.bean.response.sys.LoginRsp;
+import com.tony.kingdetective.exception.OciException;
+import com.tony.kingdetective.service.IIpBlacklistService;
+import com.tony.kingdetective.service.ILoginAttemptService;
 import com.tony.kingdetective.service.ISysService;
 import com.tony.kingdetective.utils.CommonUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * @projectName: king-detective
@@ -20,16 +25,68 @@ import jakarta.annotation.Resource;
  * @author: Tony Wang
  * @date: 2024/11/30 17:07
  */
+@Slf4f
 @RestController
 @RequestMapping(path = "/api/sys")
 public class SysCfgController {
 
     @Resource
     private ISysService sysService;
+    
+    @Resource
+    private ILoginAttemptService loginAttemptService;
+    
+    @Resource
+    private IIpBlacklistService blacklistService;
+    
+    @Resource
+    private HttpServletRequest request;
 
     @PostMapping(path = "/login")
     public ResponseData<LoginRsp> addCfg(@Validated @RequestBody LoginParams params) {
-        return ResponseData.successData(sysService.login(params), "登录成功");
+        String clientIp = getClientIp(request);
+        
+        try {
+            // Clean expired login attempts
+            loginAttemptService.cleanExpiredAttempts();
+            
+            LoginRsp result = sysService.login(params);
+            
+            // Login success - clear attempts
+            loginAttemptService.clearAttempts(clientIp);
+            
+            return ResponseData.successData(result, "登录成功");
+        } catch (OciException e) {
+            // Login failed - record attempt
+            loginAttemptService.recordFailure(clientIp);
+            int attemptCount = loginAttemptService.getAttemptCount(clientIp);
+            
+            // Auto-ban after 5 failures (no notification)
+            if (attemptCount >= 5) {
+                blacklistService.addToBlacklist(clientIp, "Login failed 5 times", "AUTO");
+                log.warn("IP {} automatically blacklisted after 5 failed login attempts", clientIp);
+                // Do NOT send notification
+            }
+            
+            throw e;
+        }
+    }
+    
+    /**
+     * Get client IP address
+     */
+    private String getClientIp(HttpServletRequest request) {
+        String ip = request.getHeader("X-Forwarded-For");
+        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("X-Real-IP");
+        }
+        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
+        }
+        if (ip != null && ip.contains(",")) {
+            ip = ip.split(",")[0].trim();
+        }
+        return ip;
     }
 
     @PostMapping(path = "/updateVersion")

@@ -1,35 +1,93 @@
-HELP.md
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
-exit
+# ==========================
+# Sensitive Files
+# ==========================
+.env
+.env.local
+.env.*.local
+*.secret
+*.key
+*.pem
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
+# ==========================
+# Application Configuration
+# ==========================
+# Uncomment if contains secrets
+# application-*.yml
+# application-*.yaml
+# application-*.properties
 
-### IntelliJ IDEA ###
-.idea
-*.iws
+# ==========================
+# Database
+# ==========================
+*.db
+*.sqlite
+*.sqlite3
+king-detective.db
+
+# ==========================
+# IDE
+# ==========================
+.idea/
+.vscode/
 *.iml
 *.ipr
-*.db
+*.iws
+.DS_Store
+*.swp
+*.swo
+*~
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+# ==========================
+# Build Output
+# ==========================
+target/
 build/
-!**/src/main/**/build/
-!**/src/test/**/build/
+out/
+*.jar
+*.war
+*.ear
+*.class
 
-### VS Code ###
-.vscode/
+# ==========================
+# Logs
+# ==========================
+logs/
+*.log
+*.log.*
+
+# ==========================
+# Backup & Temp
+# ==========================
+backup/
+*.bak
+*.tmp
+*.temp
+
+# ==========================
+# OCI Keys & Certificates
+# ==========================
+keys/
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.jks
+
+# ==========================
+# Docker
+# ==========================
+.dockerignore
+
+# ==========================
+# OS Files
+# ==========================
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# ==========================
+# Node (if using frontend)
+# ==========================
+node_modules/
+package-lock.json
