@@ -212,19 +212,38 @@ class ChangeIpInstanceHandler extends AbstractCallbackHandler {
                 com.oracle.bmc.core.responses.ListPublicIpsResponse listIpResponse = 
                         fetcher.getVirtualNetworkClient().listPublicIps(listIpRequest);
                 
+                // Get PrivateIp object to get its OCID
+                ListPrivateIpsRequest listPrivateIpsRequest = ListPrivateIpsRequest.builder()
+                        .vnicId(vnic.getId())
+                        .build();
+                ListPrivateIpsResponse listPrivateIpsResponse = fetcher.getVirtualNetworkClient().listPrivateIps(listPrivateIpsRequest);
+                
+                if (listPrivateIpsResponse.getItems().isEmpty()) {
+                     return buildEditMessage(
+                            callbackQuery,
+                            "❌ 未找到私有IP对象",
+                            new InlineKeyboardMarkup(List.of(
+                                    new InlineKeyboardRow(
+                                            KeyboardBuilder.button("◀️ 返回", "auto_ip_change:" + ociCfgId)
+                                    ),
+                                    KeyboardBuilder.buildCancelRow()
+                            ))
+                    );
+                }
+                
+                com.oracle.bmc.core.model.PrivateIp privateIpObj = listPrivateIpsResponse.getItems().get(0);
+                String privateIpOcid = privateIpObj.getId();
+
                 // Find public IP assigned to this private IP
                 com.oracle.bmc.core.model.PublicIp targetPublicIp = null;
                 for (com.oracle.bmc.core.model.PublicIp publicIp : listIpResponse.getItems()) {
-                    if (publicIp.getPrivateIpId() != null && vnic.getPrivateIp() != null) {
-                        // We need to match by checking if this public IP is assigned to our VNIC
-                        if (publicIp.getAssignedEntityId() != null && 
-                            publicIp.getAssignedEntityId().equals(vnic.getPrivateIp())) {
-                            targetPublicIp = publicIp;
-                            break;
-                        }
+                    if (publicIp.getAssignedEntityId() != null && 
+                        publicIp.getAssignedEntityId().equals(privateIpOcid)) {
+                        targetPublicIp = publicIp;
+                        break;
                     }
                 }
-                
+
                 if (targetPublicIp == null) {
                     return buildEditMessage(
                             callbackQuery,
