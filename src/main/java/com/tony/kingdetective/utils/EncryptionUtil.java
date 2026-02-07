@@ -4,7 +4,6 @@ import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.symmetric.AES;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
@@ -181,7 +180,6 @@ public class EncryptionUtil {
             return String.format("%-32s", key).replace(' ', '0');
         }
     }
-    
     
     private EncryptionUtil() {
         throw new AssertionError("工具类不应该被实例化");
