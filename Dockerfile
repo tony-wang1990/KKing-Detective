@@ -25,13 +25,13 @@ RUN apt update && \
 
 FROM base-with-tools
 
-ENV KING_DETECTIVE_VERSION=1.0.0
+ENV KING_DETECTIVE_VERSION=3.0.0
 
 WORKDIR /app/king-detective
 
 COPY --from=builder /app/king-detective.jar .
 
-EXPOSE 8818
+EXPOSE 9527
 
 CMD exec java \
     --add-opens java.base/java.net=ALL-UNNAMED \
