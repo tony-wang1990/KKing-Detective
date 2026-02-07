@@ -7,6 +7,7 @@
 *.secret
 *.key
 *.pem
+.secret_key
 
 # ==========================
 # Application Configuration

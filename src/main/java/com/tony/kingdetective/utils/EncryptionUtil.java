@@ -20,10 +20,8 @@ public class EncryptionUtil {
     private static final String ALGORITHM = "AES";
     private static final String TRANSFORMATION = "AES/ECB/PKCS5Padding";
     
-    // 从环境变量获取密钥，如果不存在则使用默认密钥（生产环境必须设置环境变量）
-    private static final String SECRET_KEY = System.getenv("KING_DETECTIVE_SECRET_KEY") != null
-            ? System.getenv("KING_DETECTIVE_SECRET_KEY")
-            : "KingDetective2026SecretKey!!"; // 32字符
+    // 从环境变量获取密钥，如果不存在则自动生成并保存
+    private static final String SECRET_KEY = getOrCreateSecretKey();
     
     private static final AES aes;
     
@@ -120,4 +118,68 @@ public class EncryptionUtil {
         
         return encrypt(text);
     }
-}
+    
+    /**
+     * 获取或创建密钥
+     * 优先从环境变量读取，如果不存在则自动生成并保存到 .secret_key 文件
+     */
+    private static String getOrCreateSecretKey() {
+        // 1. 尝试从环境变量读取
+        String envKey = System.getenv("KING_DETECTIVE_SECRET_KEY");
+        if (envKey != null && !envKey.isEmpty()) {
+            log.info("✅ 使用环境变量中的加密密钥");
+            return ensureKeyLength(envKey);
+        }
+        
+        // 2. 尝试从文件读取
+        java.io.File keyFile = new java.io.File(System.getProperty("user.dir"), ".secret_key");
+        if (keyFile.exists()) {
+            try {
+                String fileKey = java.nio.file.Files.readString(keyFile.toPath(), StandardCharsets.UTF_8).trim();
+                if (!fileKey.isEmpty()) {
+                    log.info("✅ 使用 .secret_key 文件中的加密密钥");
+                    return ensureKeyLength(fileKey);
+                }
+            } catch (Exception e) {
+                log.warn("读取 .secret_key 文件失败，将生成新密钥", e);
+            }
+        }
+        
+        // 3. 自动生成新密钥并保存
+        String newKey = generateRandomKey();
+        try {
+            java.nio.file.Files.writeString(keyFile.toPath(), newKey, StandardCharsets.UTF_8);
+            log.info("🔑 已自动生成并保存加密密钥到: {}", keyFile.getAbsolutePath());
+            log.info("⚠️  请妥善保管此文件，丢失将无法解密已加密的数据！");
+        } catch (Exception e) {
+            log.error("保存密钥文件失败", e);
+        }
+        
+        return newKey;
+    }
+    
+    /**
+     * 生成随机32字符密钥
+     */
+    private static String generateRandomKey() {
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+        java.util.Random random = new java.security.SecureRandom();
+        StringBuilder key = new StringBuilder(32);
+        for (int i = 0; i < 32; i++) {
+            key.append(chars.charAt(random.nextInt(chars.length())));
+        }
+        return key.toString();
+    }
+    
+    /**
+     * 确保密钥长度为32字节
+     */
+    private static String ensureKeyLength(String key) {
+        if (key.length() >= 32) {
+            return key.substring(0, 32);
+        } else {
+            return String.format("%-32s", key).replace(' ', '0');
+        }
+    }
+    
+    private EncryptionUtil() {
