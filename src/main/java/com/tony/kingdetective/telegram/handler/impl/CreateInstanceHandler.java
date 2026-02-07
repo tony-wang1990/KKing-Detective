@@ -37,14 +37,97 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
         String userId = parts[1];
         String planType = parts[2];
         
-        // Check if this is the confirmation step (with joinChannelBroadcast parameter)
-        if (parts.length > 3) {
-            // This is the final confirmation with joinChannelBroadcast parameter
-            boolean joinChannelBroadcast = Boolean.parseBoolean(parts[3]);
-            return executeInstanceCreation(callbackQuery, telegramClient, userId, planType, joinChannelBroadcast);
+        // Check if we have count and broadcast parameters (final confirmation)
+        if (parts.length > 4) {
+            int count = Integer.parseInt(parts[3]);
+            boolean joinChannelBroadcast = Boolean.parseBoolean(parts[4]);
+            return executeInstanceCreation(callbackQuery, telegramClient, userId, planType, count, joinChannelBroadcast);
         }
         
-        // This is the initial plan selection, show joinChannelBroadcast options
+        // Check if we have count parameter (broadcast selection step)
+        if (parts.length > 3) {
+            int count = Integer.parseInt(parts[3]);
+            return showBroadcastOptions(callbackQuery, userId, planType, count);
+        }
+        
+        // This is the initial plan selection, show quantity options
+        return showQuantityOptions(callbackQuery, userId, planType);
+    }
+    
+    /**
+     * Show quantity selection options
+     */
+    private BotApiMethod<? extends Serializable> showQuantityOptions(
+            CallbackQuery callbackQuery,
+            String userId,
+            String planType) {
+        
+        IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
+        OciUser user = userService.getById(userId);
+        
+        if (user == null) {
+            return buildEditMessage(
+                    callbackQuery,
+                    "❌ 配置不存在",
+                    new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
+            );
+        }
+        
+        InstancePlan plan = getPlanByType(planType);
+        
+        String message = String.format(
+                "【选择创建数量】\n\n" +
+                "🔑 配置名：%s\n" +
+                "🌏 区域：%s\n" +
+                "💻 方案：%s\n" +
+                "⚙️ 配置：%dC%dG%dG\n" +
+                "🏗️ 架构：%s\n" +
+                "💿 系统：%s\n\n" +
+                "请选择需要创建的实例数量：",
+                user.getUsername(),
+                user.getOciRegion(),
+                planType.equals("plan1") ? "方案1" : "方案2",
+                plan.getOcpus(),
+                plan.getMemory(),
+                plan.getDisk(),
+                plan.getArchitecture(),
+                plan.getOperationSystem()
+        );
+        
+        List<InlineKeyboardRow> keyboard = new ArrayList<>();
+        
+        // Add quantity buttons (1-4 in two rows)
+        keyboard.add(new InlineKeyboardRow(
+                KeyboardBuilder.button("1台", "create_instance:" + userId + ":" + planType + ":1"),
+                KeyboardBuilder.button("2台", "create_instance:" + userId + ":" + planType + ":2")
+        ));
+        
+        keyboard.add(new InlineKeyboardRow(
+                KeyboardBuilder.button("3台", "create_instance:" + userId + ":" + planType + ":3"),
+                KeyboardBuilder.button("4台", "create_instance:" + userId + ":" + planType + ":4")
+        ));
+        
+        keyboard.add(new InlineKeyboardRow(
+                KeyboardBuilder.button("◀️ 返回", "show_create_plans:" + userId)
+        ));
+        keyboard.add(KeyboardBuilder.buildCancelRow());
+        
+        return buildEditMessage(
+                callbackQuery,
+                message,
+                new InlineKeyboardMarkup(keyboard)
+        );
+    }
+    
+    /**
+     * Show broadcast options after quantity selection
+     */
+    private BotApiMethod<? extends Serializable> showBroadcastOptions(
+            CallbackQuery callbackQuery,
+            String userId,
+            String planType,
+            int count) {
+        
         IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
         OciUser user = userService.getById(userId);
         
@@ -67,7 +150,8 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
                 "💻 方案：%s\n" +
                 "⚙️ 配置：%dC%dG%dG\n" +
                 "🏗️ 架构：%s\n" +
-                "💿 系统：%s\n\n" +
+                "💿 系统：%s\n" +
+                "🔢 数量：%d台\n\n" +
                 "📢 是否向 TG 频道推送开机成功信息？\n" +
                 "（开启后，开机成功时会自动向频道发送放货信息）",
                 user.getUsername(),
@@ -77,7 +161,8 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
                 plan.getMemory(),
                 plan.getDisk(),
                 plan.getArchitecture(),
-                plan.getOperationSystem()
+                plan.getOperationSystem(),
+                count
         );
         
         // Build keyboard with options
@@ -86,14 +171,14 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
         keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button(
                         "✅ 开启频道推送",
-                        "create_instance:" + userId + ":" + planType + ":true"
+                        "create_instance:" + userId + ":" + planType + ":" + count + ":true"
                 )
         ));
         
         keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button(
                         "❌ 关闭频道推送",
-                        "create_instance:" + userId + ":" + planType + ":false"
+                        "create_instance:" + userId + ":" + planType + ":" + count + ":false"
                 )
         ));
         
@@ -116,7 +201,8 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
             CallbackQuery callbackQuery, 
             TelegramClient telegramClient,
             String userId, 
-            String planType, 
+            String planType,
+            int count,
             boolean joinChannelBroadcast) {
         
         IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
@@ -132,6 +218,7 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
         
         // 获取方案详情
         InstancePlan plan = getPlanByType(planType);
+        plan.setCreateNumbers(count);  // Set the actual count
         plan.setJoinChannelBroadcast(joinChannelBroadcast);
         
         // 启动异步创建
@@ -157,6 +244,7 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
                 "⚙️ 配置：%dC%dG%dG\n" +
                 "🏗️ 架构：%s\n" +
                 "💿 系统：%s\n" +
+                "🔢 数量：%d台\n" +
                 "📢 频道推送：%s\n\n" +
                 "请稍候，任务已提交...",
                 user.getUsername(),
@@ -167,6 +255,7 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
                 plan.getDisk(),
                 plan.getArchitecture(),
                 plan.getOperationSystem(),
+                count,
                 channelStatus
         );
         
