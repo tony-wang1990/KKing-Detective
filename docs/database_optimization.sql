@@ -10,7 +10,7 @@ CREATE INDEX IF NOT EXISTS idx_login_attempts_ip ON login_attempts(ip_address);
 CREATE INDEX IF NOT EXISTS idx_login_attempts_time ON login_attempts(attempt_time);
 
 -- OCI KV table index (for defense_mode queries)
-CREATE INDEX IF NOT EXISTS idx_oci_kv_key ON oci_kv(kkey);
+CREATE INDEX IF NOT EXISTS idx_oci_kv_code ON oci_kv(code);
 
 -- Optimize existing queries
 ANALYZE ip_blacklist;

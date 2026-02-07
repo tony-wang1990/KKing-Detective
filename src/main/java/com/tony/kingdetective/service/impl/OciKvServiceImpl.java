@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 public class OciKvServiceImpl extends ServiceImpl<OciKvMapper, OciKv> implements IOciKvService {
     @Override
     public OciKv getByKey(String key) {
-        return lambdaQuery().eq(OciKv::getKkey, key).one();
+        return lambdaQuery().eq(OciKv::getCode, key).one();
     }
 }
 
