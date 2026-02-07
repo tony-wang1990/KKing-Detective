@@ -368,51 +368,51 @@ public class OciTask implements ApplicationRunner {
     private void initMapData() {
         virtualExecutor.execute(() -> {
             try {
-                log.info("正在初始化地图数据，调用 ipapi.co API...");
-                String jsonStr = HttpUtil.get("https://ipapi.co/json");
+                log.info("正在初始化地图数据，调用 ip-api.com API...");
+                String jsonStr = HttpUtil.get("http://ip-api.com/json/?fields=status,message,country,regionName,city,lat,lon,isp,as,query");
                 
                 // 验证返回内容是否为有效JSON
                 if (jsonStr == null || jsonStr.trim().isEmpty()) {
-                    log.warn("ipapi.co API 返回空内容，跳过地图数据初始化");
+                    log.warn("ip-api.com API 返回空内容，跳过地图数据初始化");
                     return;
                 }
                 
                 // 检查是否返回HTML而不是JSON
                 if (jsonStr.trim().startsWith("<")) {
-                    log.warn("ipapi.co API 返回HTML而非JSON，可能被限流或服务异常。返回内容前100字符：{}", 
+                    log.warn("ip-api.com API 返回HTML而非JSON，可能服务异常。返回内容前100字符：{}", 
                             jsonStr.substring(0, Math.min(100, jsonStr.length())));
                     return;
                 }
                 
                 JSONObject json = JSONUtil.parseObj(jsonStr);
                 
-                // 检查是否包含错误信息
-                if (json.containsKey("error") && json.getBool("error")) {
-                    log.warn("ipapi.co API 返回错误：{}", json.getStr("reason"));
+                // 检查API返回状态
+                if (!"success".equals(json.getStr("status"))) {
+                    log.warn("ip-api.com API 返回失败：{}", json.getStr("message"));
                     return;
                 }
                 
                 // 验证必要字段
-                if (!json.containsKey("ip") || !json.containsKey("latitude") || !json.containsKey("longitude")) {
-                    log.warn("ipapi.co API 返回的JSON缺少必要字段。返回内容：{}", jsonStr);
+                if (!json.containsKey("query") || !json.containsKey("lat") || !json.containsKey("lon")) {
+                    log.warn("ip-api.com API 返回的JSON缺少必要字段。返回内容：{}", jsonStr);
                     return;
                 }
                 
                 IpData ipData = new IpData();
                 ipData.setId(IdUtil.getSnowflakeNextIdStr());
-                ipData.setIp(json.getStr("ip"));
+                ipData.setIp(json.getStr("query"));  // ip-api.com uses "query" for IP
                 ipData.setCountry(json.getStr("country"));
-                ipData.setArea(json.getStr("region"));
+                ipData.setArea(json.getStr("regionName"));  // ip-api.com uses "regionName"
                 ipData.setCity(json.getStr("city"));
-                ipData.setOrg(json.getStr("org"));
-                ipData.setAsn(json.getStr("asn"));
-                ipData.setLat(Double.valueOf(json.getStr("latitude")));
-                ipData.setLng(Double.valueOf(json.getStr("longitude")));
+                ipData.setOrg(json.getStr("isp"));  // ip-api.com uses "isp" for organization
+                ipData.setAsn(json.getStr("as"));  // ip-api.com uses "as" for ASN
+                ipData.setLat(json.getDouble("lat"));  // ip-api.com returns numbers, not strings
+                ipData.setLng(json.getDouble("lon"));  // ip-api.com uses "lon" instead of "lng"
                 
                 List<IpData> ipDataList = ipDataService.list(new LambdaQueryWrapper<IpData>()
-                        .eq(IpData::getIp, json.getStr("ip")));
+                        .eq(IpData::getIp, json.getStr("query")));
                 if (CollectionUtil.isNotEmpty(ipDataList)) {
-                    ipDataService.remove(new LambdaQueryWrapper<IpData>().eq(IpData::getIp, json.getStr("ip")));
+                    ipDataService.remove(new LambdaQueryWrapper<IpData>().eq(IpData::getIp, json.getStr("query")));
                 }
                 ipDataService.save(ipData);
                 log.info("✅ 新增地图IP数据：{} ({}, {}) 成功", ipData.getIp(), ipData.getCity(), ipData.getCountry());
