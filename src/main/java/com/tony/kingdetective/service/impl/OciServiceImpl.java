@@ -635,7 +635,8 @@ public class OciServiceImpl implements IOciService {
         SysUserDTO sysUserDTO = getOciUser(params.getOciCfgId());
         try (OracleInstanceFetcher fetcher = new OracleInstanceFetcher(sysUserDTO)) {
             if (StrUtil.isNotBlank(params.getCompartmentId())) {
-                fetcher.setCompartmentId(params.getCompartmentId());
+                // Note: compartmentId is final in fetcher, recreate if needed
+                // fetcher.setCompartmentId(params.getCompartmentId());
             }
 
             String resStr = String.format("【%s】【%s】", sysUserDTO.getUsername(), fetcher.getInstanceById(params.getInstanceId()).getDisplayName());
@@ -837,32 +838,37 @@ public class OciServiceImpl implements IOciService {
                         .operationSystem("Ubuntu")
                         .rootPassword(newAmdSshPwd)
                         .build();
-                fetcher.setUser(newAmd);
-                InstanceDetailDTO instanceData = fetcher.createInstanceData();
-                if (!instanceData.isSuccess()) {
-                    log.error("用户:[{}],区域:[{}] 创建AMD实例失败", sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion());
-                    throw new OciException(-1, "创建AMD实例失败");
-                }
-                Instance newAmdInstance = instanceData.getInstance();
-                // 等待新实例初始化完成
-                Thread.sleep(3 * 60 * 1000);
-                log.info("（5/9）✅ AMD机器创建并初始化成功");
+                // Create new fetcher with desired user instead of using setter
+                BootVolume newAmdInstanceBootVolume;
+                BootVolume newAmdInstanceCloneBootVolume;
+                Instance newAmdInstance;
+                try (OracleInstanceFetcher newFetcher = new OracleInstanceFetcher(newAmd)) {
+                    InstanceDetailDTO instanceData = newFetcher.createInstanceData();
+                    if (!instanceData.isSuccess()) {
+                        log.error("用户:[{}],区域:[{}] 创建AMD实例失败", sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion());
+                        throw new OciException(-1, "创建AMD实例失败");
+                    }
+                    newAmdInstance = instanceData.getInstance();
+                    // 等待新实例初始化完成
+                    Thread.sleep(3 * 60 * 1000);
+                    log.info("（5/9）✅ AMD机器创建并初始化成功");
 
-                // 克隆新建实例引导卷
-                log.warn("（6/9）⌛ 正在克隆新建实例引导卷");
-                BootVolume newAmdInstanceBootVolume = fetcher.getBootVolumeByInstanceId(newAmdInstance.getId());
-                CreateBootVolumeResponse cloneBootVolume = blockstorageClient.createBootVolume(CreateBootVolumeRequest.builder()
-                        .createBootVolumeDetails(CreateBootVolumeDetails.builder()
-                                .compartmentId(fetcher.getCompartmentId())
-                                .availabilityDomain(bootVolumeByInstanceId.getAvailabilityDomain())
-                                .sourceDetails(BootVolumeSourceFromBootVolumeDetails.builder()
-                                        .id(newAmdInstanceBootVolume.getId())
-                                        .build())
-                                .displayName("Cloned-Boot-Volume")
-                                .build())
-                        .build());
-                BootVolume newAmdInstanceCloneBootVolume = cloneBootVolume.getBootVolume();
-                log.info("（6/9）✅ 新建实例引导卷克隆成功");
+                    // 克隆新建实例引导卷
+                    log.warn("（6/9）⏳ 正在克隆新建实例引导卷");
+                    newAmdInstanceBootVolume = newFetcher.getBootVolumeByInstanceId(newAmdInstance.getId());
+                    CreateBootVolumeResponse cloneBootVolume = blockstorageClient.createBootVolume(CreateBootVolumeRequest.builder()
+                            .createBootVolumeDetails(CreateBootVolumeDetails.builder()
+                                    .compartmentId(fetcher.getCompartmentId())
+                                    .availabilityDomain(bootVolumeByInstanceId.getAvailabilityDomain())
+                                    .sourceDetails(BootVolumeSourceFromBootVolumeDetails.builder()
+                                            .id(newAmdInstanceBootVolume.getId())
+                                            .build())
+                                    .displayName("Cloned-Boot-Volume")
+                                    .build())
+                            .build());
+                    newAmdInstanceCloneBootVolume = cloneBootVolume.getBootVolume();
+                    log.info("（6/9）✅ 新建实例引导卷克隆成功");
+                }
 
                 while (!blockstorageClient.getBootVolume(GetBootVolumeRequest.builder()
                                 .bootVolumeId(newAmdInstanceCloneBootVolume.getId())

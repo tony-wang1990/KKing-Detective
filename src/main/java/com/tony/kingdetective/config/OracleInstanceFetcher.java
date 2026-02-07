@@ -1,11 +1,15 @@
 package com.tony.kingdetective.config;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import com.oracle.bmc.auth.AuthenticationDetailsProvider;
 import com.oracle.bmc.auth.SimpleAuthenticationDetailsProvider;
 import com.oracle.bmc.core.*;
 import com.oracle.bmc.core.model.*;
 import com.oracle.bmc.computeinstanceagent.ComputeInstanceAgentClient;
+import com.oracle.bmc.monitoring.MonitoringClient;
+import com.oracle.bmc.networkloadbalancer.NetworkLoadBalancerClient;
 import com.oracle.bmc.core.requests.*;
 import com.oracle.bmc.core.responses.*;
 import com.oracle.bmc.identity.IdentityClient;
@@ -44,6 +48,9 @@ import java.util.stream.Collectors;
 @lombok.Getter
 public class OracleInstanceFetcher implements AutoCloseable {
 
+    private static final String CIDR_BLOCK = "10.0.0.0/16";
+    private static final Map<String, Object> TASK_MAP = new ConcurrentHashMap<>();
+
     private final String compartmentId;
     private final SysUserDTO user;
     private final AuthenticationDetailsProvider provider;
@@ -56,6 +63,8 @@ public class OracleInstanceFetcher implements AutoCloseable {
     private final BlockstorageClient blockstorageClient;
     private final IdentityDomainsClient identityDomainsClient;
     private final ComputeInstanceAgentClient computeInstanceAgentClient;
+    private final MonitoringClient monitoringClient;
+    private final NetworkLoadBalancerClient networkLoadBalancerClient;
 
     public OracleInstanceFetcher(SysUserDTO user) {
         this.user = user;
@@ -78,6 +87,8 @@ public class OracleInstanceFetcher implements AutoCloseable {
         this.blockstorageClient = BlockstorageClient.builder().build(provider);
         this.identityDomainsClient = IdentityDomainsClient.builder().build(provider);
         this.computeInstanceAgentClient = ComputeInstanceAgentClient.builder().build(provider);
+        this.monitoringClient = MonitoringClient.builder().build(provider);
+        this.networkLoadBalancerClient = NetworkLoadBalancerClient.builder().build(provider);
     }
 
     @Override
@@ -90,6 +101,8 @@ public class OracleInstanceFetcher implements AutoCloseable {
         if (blockstorageClient != null) blockstorageClient.close();
         if (identityDomainsClient != null) identityDomainsClient.close();
         if (computeInstanceAgentClient != null) computeInstanceAgentClient.close();
+        if (monitoringClient != null) monitoringClient.close();
+        if (networkLoadBalancerClient != null) networkLoadBalancerClient.close();
     }
 
 

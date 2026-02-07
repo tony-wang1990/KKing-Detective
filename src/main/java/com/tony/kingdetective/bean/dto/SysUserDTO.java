@@ -46,6 +46,7 @@ public class SysUserDTO {
         private String userId;
         private String fingerprint;
         private String privateKeyPath;
+        private String privateKey; // Added: in-memory private key content
         private String region;
         private String compartmentId;
         private Boolean deleted;

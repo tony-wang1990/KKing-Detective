@@ -293,7 +293,6 @@ class OccupyMemoryAutoHandler extends AbstractCallbackHandler {
                         com.oracle.bmc.computeinstanceagent.requests.CreateInstanceAgentCommandRequest.builder()
                         .createInstanceAgentCommandDetails(com.oracle.bmc.computeinstanceagent.model.CreateInstanceAgentCommandDetails.builder()
                                 .compartmentId(fetcher.getCompartmentId())
-                                .executionTimeTimeoutInSeconds(300)
                                 .displayName("MemoryOccupy-" + System.currentTimeMillis())
                                 .target(com.oracle.bmc.computeinstanceagent.model.InstanceAgentCommandTarget.builder()
                                         .instanceId(instance.getOcId())

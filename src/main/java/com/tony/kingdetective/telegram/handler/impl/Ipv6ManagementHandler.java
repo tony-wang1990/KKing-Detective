@@ -629,7 +629,7 @@ class Ipv6AutoEnableHandler extends AbstractCallbackHandler {
                 if (vcn.getIpv6CidrBlocks() == null || vcn.getIpv6CidrBlocks().isEmpty()) {
                     UpdateVcnRequest updateVcnRequest = UpdateVcnRequest.builder()
                             .vcnId(vcnId)
-                            .updateVcnDetails(UpdateVcnDetails.builder().isIpv6Enabled(true).build())
+                            .updateVcnDetails(UpdateVcnDetails.builder().ipv6Enabled(true).build())
                             .build();
                     vcn = fetcher.getVirtualNetworkClient().updateVcn(updateVcnRequest).getVcn();
                     // Wait a bit for propagation? usually fast.

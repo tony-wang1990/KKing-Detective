@@ -24,6 +24,9 @@ public class InstanceSelectionStorage {
     // Mapping: chatId -> List of instances (for index-based access)
     private final Map<Long, List<SysUserDTO.CloudInstance>> instanceCache = new ConcurrentHashMap<>();
     
+    // Mapping: chatId -> selected instance index
+    private final Map<Long, Integer> selectedIndexMap = new ConcurrentHashMap<>();
+    
     private InstanceSelectionStorage() {
     }
     
@@ -64,6 +67,40 @@ public class InstanceSelectionStorage {
      */
     public List<SysUserDTO.CloudInstance> getCachedInstances(long chatId) {
         return instanceCache.getOrDefault(chatId, new ArrayList<>());
+    }
+    
+    /**
+     * Get instance cache (alias for getCachedInstances for compatibility)
+     * 
+     * @param chatId Chat ID
+     * @return List of instances or empty list
+     */
+    public List<SysUserDTO.CloudInstance> getInstanceCache(long chatId) {
+        return getCachedInstances(chatId);
+    }
+    
+    /**
+     * Set selected instance index
+     * 
+     * @param chatId Chat ID
+     * @param index Instance index
+     */
+    public void setSelectedInstanceIndex(long chatId, int index) {
+        selectedIndexMap.put(chatId, index);
+    }
+    
+    /**
+     * Get selected instance (by stored index)
+     * 
+     * @param chatId Chat ID
+     * @return CloudInstance or null if not found
+     */
+    public SysUserDTO.CloudInstance getSelectedInstance(long chatId) {
+        Integer index = selectedIndexMap.get(chatId);
+        if (index != null) {
+            return getInstanceByIndex(chatId, index);
+        }
+        return null;
     }
     
     /**
