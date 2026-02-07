@@ -94,6 +94,10 @@
             <groupId>com.oracle.oci.sdk</groupId>
             <artifactId>oci-java-sdk-computeinstanceagent</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.oracle.oci.sdk</groupId>
+            <artifactId>oci-java-sdk-autoscaling</artifactId>
+        </dependency>
 
 
         <!-- sqlite???èμ–???-->
