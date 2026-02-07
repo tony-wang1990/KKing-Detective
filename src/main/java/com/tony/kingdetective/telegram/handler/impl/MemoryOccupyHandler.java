@@ -211,6 +211,9 @@ class OccupyMemoryInstanceHandler extends AbstractCallbackHandler {
                 message.toString(),
                 new InlineKeyboardMarkup(List.of(
                         new InlineKeyboardRow(
+                                KeyboardBuilder.button("🚀 自动执行 (Beta)", "occupy_memory_auto:" + instanceIndex)
+                        ),
+                        new InlineKeyboardRow(
                                 KeyboardBuilder.button("◀️ 返回", "memory_occupy:" + ociCfgId)
                         ),
                         KeyboardBuilder.buildCancelRow()
@@ -221,6 +224,125 @@ class OccupyMemoryInstanceHandler extends AbstractCallbackHandler {
     @Override
     public String getCallbackPattern() {
         return "occupy_memory_instance:";
+    }
+}
+
+/**
+ * Auto execute memory occupy script via OCI Agent
+ */
+@Slf4j
+@Component
+class OccupyMemoryAutoHandler extends AbstractCallbackHandler {
+    
+    @Override
+    public BotApiMethod<? extends Serializable> handle(CallbackQuery callbackQuery, TelegramClient telegramClient) {
+        String callbackData = callbackQuery.getData();
+        int instanceIndex = Integer.parseInt(callbackData.split(":")[1]);
+        long chatId = callbackQuery.getMessage().getChatId();
+        
+        InstanceSelectionStorage storage = InstanceSelectionStorage.getInstance();
+        SysUserDTO.CloudInstance instance = storage.getInstanceByIndex(chatId, instanceIndex);
+        String ociCfgId = storage.getConfigContext(chatId);
+        
+        if (instance == null) {
+            return buildEditMessage(callbackQuery, "❌ 实例不存在", new InlineKeyboardMarkup(List.of(KeyboardBuilder.buildCancelRow())));
+        }
+
+        // Send processing message
+        try {
+            telegramClient.execute(org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText.builder()
+                    .chatId(chatId)
+                    .messageId(callbackQuery.getMessage().getMessageId())
+                    .text("⏳ 正在发送指令到云助手 Agent...\n\n(若是首次使用，需确保实例中已安装并启动 Oracle Cloud Agent)")
+                    .build());
+        } catch (Exception ignored) {}
+        
+        ISysService sysService = SpringUtil.getBean(ISysService.class);
+        
+        try {
+            SysUserDTO sysUserDTO = sysService.getOciUser(ociCfgId);
+            
+            try (OracleInstanceFetcher fetcher = new OracleInstanceFetcher(sysUserDTO)) {
+                // Prepare script content
+                // Note: OCI Agent Command runs as 'opc' usually. Script uses sudo.
+                String scriptContent = 
+                        "#!/bin/bash\n" +
+                        "TOTAL_MEM=$(free -m | awk '/^Mem:/{print $2}')\n" +
+                        "TARGET_MEM=$((TOTAL_MEM * 25 / 100))\n" +
+                        "pkill -f 'stress.*--vm-bytes' || true\n" +
+                        "if ! command -v stress &> /dev/null; then\n" +
+                        "    if command -v apt-get &> /dev/null; then\n" +
+                        "        sudo apt-get update && sudo apt-get install -y stress\n" +
+                        "    elif command -v yum &> /dev/null; then\n" +
+                        "        sudo yum install -y stress\n" +
+                        "    fi\n" +
+                        "fi\n" +
+                        "nohup stress --vm 1 --vm-bytes ${TARGET_MEM}M --vm-keep > /dev/null 2>&1 &";
+                
+                com.oracle.bmc.core.model.InstanceAgentCommandContent content = 
+                        com.oracle.bmc.core.model.InstanceAgentCommandContent.builder()
+                        .source(com.oracle.bmc.core.model.InstanceAgentCommandSource.builder()
+                                .sourceType(com.oracle.bmc.core.model.InstanceAgentCommandSource.SourceType.Text)
+                                .text(scriptContent)
+                                .build())
+                        .output(com.oracle.bmc.core.model.InstanceAgentCommandOutputViaObjectStorageTuple.builder()
+                                .build()) // No output storage bucket
+                        .build();
+
+                com.oracle.bmc.core.requests.CreateInstanceAgentCommandRequest request = 
+                        com.oracle.bmc.core.requests.CreateInstanceAgentCommandRequest.builder()
+                        .createInstanceAgentCommandDetails(com.oracle.bmc.core.model.CreateInstanceAgentCommandDetails.builder()
+                                .compartmentId(fetcher.getCompartmentId())
+                                .executionTimeTimeoutInSeconds(300)
+                                .displayName("MemoryOccupy-" + System.currentTimeMillis())
+                                .target(com.oracle.bmc.core.model.InstanceAgentCommandTarget.builder()
+                                        .instanceId(instance.getOcId())
+                                        .build())
+                                .content(content)
+                                .build())
+                        .build();
+                        
+                com.oracle.bmc.core.responses.CreateInstanceAgentCommandResponse response = 
+                        fetcher.getComputeManagementClient().createInstanceAgentCommand(request);
+                
+                return buildEditMessage(
+                        callbackQuery,
+                        String.format(
+                                "✅ **指令发送成功！**\n\n" +
+                                "实例: %s\n" +
+                                "CommandId: ...%s\n\n" +
+                                "Oracle Cloud Agent 已接收指令，将在后台执行。\n" +
+                                "请稍后 (约1-2分钟) 检查实例内存使用情况。",
+                                instance.getName(),
+                                response.getInstanceAgentCommand().getId().substring(response.getInstanceAgentCommand().getId().length() - 6)
+                        ),
+                        new InlineKeyboardMarkup(List.of(
+                                new InlineKeyboardRow(
+                                        KeyboardBuilder.button("◀️ 返回列表", "memory_occupy:" + ociCfgId)
+                                ),
+                                KeyboardBuilder.buildCancelRow()
+                        ))
+                );
+            }
+            
+        } catch (Exception e) {
+            log.error("Failed to auto execute memory occupy", e);
+            return buildEditMessage(
+                    callbackQuery,
+                    "❌ 指令发送失败\n\n" + e.getMessage() + "\n\n💡 失败原因可能是：\n1. 实例未安装/启动 Oracle Cloud Agent\n2. 实例 Agent 插件未启用 Run Command 功能\n3. 权限不足",
+                    new InlineKeyboardMarkup(List.of(
+                            new InlineKeyboardRow(
+                                    KeyboardBuilder.button("◀️ 返回", "memory_occupy:" + ociCfgId)
+                            ),
+                            KeyboardBuilder.buildCancelRow()
+                    ))
+            );
+        }
+    }
+
+    @Override
+    public String getCallbackPattern() {
+        return "occupy_memory_auto:";
     }
 }
 

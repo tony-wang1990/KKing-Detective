@@ -1,119 +1,26 @@
-package com.tony.kingdetective.config;
+import com.oracle.bmc.core.ComputeManagementClient;
 
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.spring.SpringUtil;
-import com.oracle.bmc.Region;
-import com.oracle.bmc.auth.SimpleAuthenticationDetailsProvider;
-import com.oracle.bmc.core.BlockstorageClient;
-import com.oracle.bmc.core.ComputeClient;
-import com.oracle.bmc.core.ComputeWaiters;
-import com.oracle.bmc.core.VirtualNetworkClient;
-import com.oracle.bmc.core.model.*;
-import com.oracle.bmc.core.requests.*;
-import com.oracle.bmc.core.responses.*;
-import com.oracle.bmc.identity.IdentityClient;
-import com.oracle.bmc.identity.model.*;
-import com.oracle.bmc.identity.requests.*;
-import com.oracle.bmc.identity.responses.*;
-import com.oracle.bmc.identitydomains.IdentityDomainsClient;
-import com.oracle.bmc.model.BmcException;
-import com.oracle.bmc.monitoring.MonitoringClient;
-import com.oracle.bmc.networkloadbalancer.NetworkLoadBalancerClient;
-import com.oracle.bmc.workrequests.WorkRequestClient;
-import com.tony.kingdetective.bean.constant.CacheConstant;
-import com.tony.kingdetective.bean.dto.InstanceCfgDTO;
-import com.tony.kingdetective.bean.dto.InstanceDetailDTO;
-import com.tony.kingdetective.bean.dto.SysUserDTO;
-import com.tony.kingdetective.bean.params.oci.securityrule.UpdateSecurityRuleListParams;
-import com.tony.kingdetective.bean.response.oci.cfg.OciCfgDetailsRsp;
-import com.tony.kingdetective.enums.*;
-import com.tony.kingdetective.exception.OciException;
-import com.tony.kingdetective.utils.CommonUtils;
-import com.tony.kingdetective.utils.CustomExpiryGuavaCache;
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
-
-import java.io.*;
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static com.oracle.bmc.core.model.CreatePublicIpDetails.Lifetime.Ephemeral;
-import static com.tony.kingdetective.service.impl.OciServiceImpl.TASK_MAP;
-
-/**
- * <p>
- * OracleInstanceFetcher
- * </p >
- *
- * @author yuhui.fan
- * @since 2024/11/1 15:55
- */
-@Slf4j
-@Data
-public class OracleInstanceFetcher implements Closeable {
+// ...
 
     private final ComputeClient computeClient;
+    private final ComputeManagementClient computeManagementClient; // Add this
     private final IdentityClient identityClient;
-    private final WorkRequestClient workRequestClient;
-    private final VirtualNetworkClient virtualNetworkClient;
-    private final BlockstorageClient blockstorageClient;
-    private final MonitoringClient monitoringClient;
-    private final NetworkLoadBalancerClient networkLoadBalancerClient;
-    private final IdentityDomainsClient identityDomainsClient;
-    private final SimpleAuthenticationDetailsProvider authenticationDetailsProvider;
-    private SysUserDTO user;
-    private String compartmentId;
-
-    private static final String CIDR_BLOCK = "10.0.0.0/16";
+// ...
 
     @Override
     public void close() {
         computeClient.close();
+        computeManagementClient.close(); // Add this
         identityClient.close();
-        workRequestClient.close();
-        virtualNetworkClient.close();
-        blockstorageClient.close();
-        monitoringClient.close();
-        networkLoadBalancerClient.close();
-        identityDomainsClient.close();
-    }
+// ...
 
     public OracleInstanceFetcher(SysUserDTO user) {
-        this.user = user;
-        SysUserDTO.OciCfg ociCfg = user.getOciCfg();
-        SimpleAuthenticationDetailsProvider provider = SimpleAuthenticationDetailsProvider.builder()
-                .tenantId(ociCfg.getTenantId())
-                .userId(ociCfg.getUserId())
-                .fingerprint(ociCfg.getFingerprint())
-                .privateKeySupplier(() -> {
-                    try (FileInputStream fis = new FileInputStream(ociCfg.getPrivateKeyPath());
-                         ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-                        byte[] buffer = new byte[1024];
-                        int bytesRead;
-                        while ((bytesRead = fis.read(buffer)) != -1) {
-                            baos.write(buffer, 0, bytesRead);
-                        }
-                        return new ByteArrayInputStream(baos.toByteArray());
-                    } catch (Exception e) {
-                        throw new RuntimeException("获取密钥失败");
-                    }
-                })
-                .region(Region.valueOf(ociCfg.getRegion()))
-                .build();
-        this.authenticationDetailsProvider = provider;
-
+// ...
         identityClient = IdentityClient.builder().build(provider);
         computeClient = ComputeClient.builder().build(provider);
+        computeManagementClient = ComputeManagementClient.builder().build(provider); // Add this
         blockstorageClient = BlockstorageClient.builder().build(provider);
-        workRequestClient = WorkRequestClient.builder().build(provider);
-        virtualNetworkClient = VirtualNetworkClient.builder().build(provider);
-        monitoringClient = MonitoringClient.builder().build(provider);
-        networkLoadBalancerClient = NetworkLoadBalancerClient.builder().build(provider);
-        identityDomainsClient = IdentityDomainsClient.builder().build(provider);
-        compartmentId = StrUtil.isBlank(ociCfg.getCompartmentId()) ? findRootCompartment(identityClient, provider.getTenantId()) : ociCfg.getCompartmentId();
-    }
+// ...
 
     synchronized public InstanceDetailDTO createInstanceData() {
         InstanceDetailDTO instanceDetailDTO = new InstanceDetailDTO();
