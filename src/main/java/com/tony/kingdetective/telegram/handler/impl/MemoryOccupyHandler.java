@@ -279,31 +279,31 @@ class OccupyMemoryAutoHandler extends AbstractCallbackHandler {
                         "fi\n" +
                         "nohup stress --vm 1 --vm-bytes ${TARGET_MEM}M --vm-keep > /dev/null 2>&1 &";
                 
-                com.oracle.bmc.computemanagement.model.InstanceAgentCommandContent content = 
-                        com.oracle.bmc.computemanagement.model.InstanceAgentCommandContent.builder()
-                        .source(com.oracle.bmc.computemanagement.model.InstanceAgentCommandSource.builder()
-                                .sourceType(com.oracle.bmc.computemanagement.model.InstanceAgentCommandSource.SourceType.Text)
+                com.oracle.bmc.computeinstanceagent.model.InstanceAgentCommandContent content = 
+                        com.oracle.bmc.computeinstanceagent.model.InstanceAgentCommandContent.builder()
+                        .source(com.oracle.bmc.computeinstanceagent.model.InstanceAgentCommandSource.builder()
+                                .sourceType(com.oracle.bmc.computeinstanceagent.model.InstanceAgentCommandSource.SourceType.Text)
                                 .text(scriptContent)
                                 .build())
-                        .output(com.oracle.bmc.computemanagement.model.InstanceAgentCommandOutputViaObjectStorageTuple.builder()
+                        .output(com.oracle.bmc.computeinstanceagent.model.InstanceAgentCommandOutputViaObjectStorageTuple.builder()
                                 .build()) // No output storage bucket
                         .build();
 
-                com.oracle.bmc.computemanagement.requests.CreateInstanceAgentCommandRequest request = 
-                        com.oracle.bmc.computemanagement.requests.CreateInstanceAgentCommandRequest.builder()
-                        .createInstanceAgentCommandDetails(com.oracle.bmc.computemanagement.model.CreateInstanceAgentCommandDetails.builder()
+                com.oracle.bmc.computeinstanceagent.requests.CreateInstanceAgentCommandRequest request = 
+                        com.oracle.bmc.computeinstanceagent.requests.CreateInstanceAgentCommandRequest.builder()
+                        .createInstanceAgentCommandDetails(com.oracle.bmc.computeinstanceagent.model.CreateInstanceAgentCommandDetails.builder()
                                 .compartmentId(fetcher.getCompartmentId())
                                 .executionTimeTimeoutInSeconds(300)
                                 .displayName("MemoryOccupy-" + System.currentTimeMillis())
-                                .target(com.oracle.bmc.computemanagement.model.InstanceAgentCommandTarget.builder()
+                                .target(com.oracle.bmc.computeinstanceagent.model.InstanceAgentCommandTarget.builder()
                                         .instanceId(instance.getOcId())
                                         .build())
                                 .content(content)
                                 .build())
                         .build();
                         
-                com.oracle.bmc.computemanagement.responses.CreateInstanceAgentCommandResponse response = 
-                        fetcher.getComputeManagementClient().createInstanceAgentCommand(request);
+                com.oracle.bmc.computeinstanceagent.responses.CreateInstanceAgentCommandResponse response = 
+                        fetcher.getComputeInstanceAgentClient().createInstanceAgentCommand(request);
                 
                 return buildEditMessage(
                         callbackQuery,

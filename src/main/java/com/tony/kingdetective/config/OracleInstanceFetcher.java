@@ -5,7 +5,7 @@ import com.oracle.bmc.auth.AuthenticationDetailsProvider;
 import com.oracle.bmc.auth.SimpleAuthenticationDetailsProvider;
 import com.oracle.bmc.core.*;
 import com.oracle.bmc.core.model.*;
-import com.oracle.bmc.computemanagement.ComputeManagementClient;
+import com.oracle.bmc.computeinstanceagent.ComputeInstanceAgentClient;
 import com.oracle.bmc.core.requests.*;
 import com.oracle.bmc.core.responses.*;
 import com.oracle.bmc.identity.IdentityClient;
@@ -55,6 +55,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
     private final IdentityClient identityClient;
     private final BlockstorageClient blockstorageClient;
     private final IdentityDomainsClient identityDomainsClient;
+    private final ComputeInstanceAgentClient computeInstanceAgentClient;
 
     public OracleInstanceFetcher(SysUserDTO user) {
         this.user = user;
@@ -76,6 +77,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
         this.computeManagementClient = ComputeManagementClient.builder().build(provider);
         this.blockstorageClient = BlockstorageClient.builder().build(provider);
         this.identityDomainsClient = IdentityDomainsClient.builder().build(provider);
+        this.computeInstanceAgentClient = ComputeInstanceAgentClient.builder().build(provider);
     }
 
     @Override
@@ -87,6 +89,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
         if (identityClient != null) identityClient.close();
         if (blockstorageClient != null) blockstorageClient.close();
         if (identityDomainsClient != null) identityDomainsClient.close();
+        if (computeInstanceAgentClient != null) computeInstanceAgentClient.close();
     }
 
 
@@ -276,6 +279,10 @@ public class OracleInstanceFetcher implements AutoCloseable {
 
     public IdentityDomainsClient getIdentityDomainsClient() {
         return identityDomainsClient;
+    }
+
+    public ComputeInstanceAgentClient getComputeInstanceAgentClient() {
+        return computeInstanceAgentClient;
     }
 
     public SysUserDTO getUser() {
