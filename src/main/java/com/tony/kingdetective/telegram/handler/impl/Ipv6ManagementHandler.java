@@ -627,44 +627,31 @@ class Ipv6AutoEnableHandler extends AbstractCallbackHandler {
                 
                 // 2. Enable VCN IPv6 if needed
                 if (vcn.getIpv6CidrBlocks() == null || vcn.getIpv6CidrBlocks().isEmpty()) {
-                    try {
-                        // Update progress message
-                        telegramClient.execute(org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText.builder()
-                                .chatId(chatId)
-                                .messageId(callbackQuery.getMessage().getMessageId())
-                                .text("⏳ 正在为VCN启用IPv6...\\n\\n1. ✓ 检查 VCN IPv6 状态\\n2. ⏳ 开启 VCN IPv6\\n3. 待处理 开启子网 IPv6\\n4. 待处理 分配地址")
-                                .build());
-                        
-                        // Add IPv6 CIDR to VCN using Oracle GUA auto-allocation
-                        com.oracle.bmc.core.requests.AddVcnIpv6CidrRequest addIpv6Request = 
-                                com.oracle.bmc.core.requests.AddVcnIpv6CidrRequest.builder()
-                                .vcnId(vcnId)
-                                .addVcnIpv6CidrDetails(com.oracle.bmc.core.model.AddVcnIpv6CidrDetails.builder()
-                                        .isOracleGuaAllocationEnabled(true)  // Let Oracle auto-assign IPv6 /56 prefix
-                                        .build())
-                                .build();
-                        
-                        fetcher.getVirtualNetworkClient().addVcnIpv6Cidr(addIpv6Request);
-                        
-                        // Wait for VCN IPv6 to be assigned
-                        Thread.sleep(3000);
-                        
-                        // Refresh VCN info
-                        vcn = fetcher.getVirtualNetworkClient().getVcn(GetVcnRequest.builder().vcnId(vcnId).build()).getVcn();
-                        
-                        if (vcn.getIpv6CidrBlocks() == null || vcn.getIpv6CidrBlocks().isEmpty()) {
-                            return buildEditMessage(callbackQuery, 
-                                "❌ 启用VCN IPv6失败，请稍后重试或手动在OCI控制台启用。", 
-                                new InlineKeyboardMarkup(List.of(KeyboardBuilder.buildCancelRow())));
-                        }
-                        
-                        log.info("VCN IPv6 enabled successfully: {}", vcn.getIpv6CidrBlocks().get(0));
-                    } catch (Exception e) {
-                        log.error("Failed to enable VCN IPv6", e);
-                        return buildEditMessage(callbackQuery, 
-                            "❌ 启用VCN IPv6时出错: " + e.getMessage(), 
-                            new InlineKeyboardMarkup(List.of(KeyboardBuilder.buildCancelRow())));
-                    }
+                    // VCN doesn't have IPv6 enabled, show instructions to user
+                    String warningMessage = "⚠️ *VCN 未启用 IPv6*\\n\\n" +
+                            "检测到该 VCN 还未启用 IPv6，请按以下步骤手动启用：\\n\\n" +
+                            "*步骤 1: 启用 VCN IPv6*\\n" +
+                            "1. 登录 OCI 控制台\\n" +
+                            "2. 进入 VCN 详情页\\n" +
+                            "3. 点击 '添加 IPv6 CIDR 块'\\n" +
+                            "4. 选择 'Oracle GUA IPv6 前缀'\\n" +
+                            "5. 点击确认\\n\\n" +
+                            "*步骤 2: 启用子网 IPv6*\\n" +
+                            "1. 进入子网详情页\\n" +
+                            "2. 点击 '添加 IPv6 CIDR 块'\\n" +
+                            "3. 选择 IPv6 前缀\\n" +
+                            "4. 点击确认\\n\\n" +
+                            "✅ 完成后，再次点击 '🔄 自动启用' 即可为实例分配 IPv6 地址。";
+                    
+                    return buildEditMessage(callbackQuery, 
+                        warningMessage,
+                        new InlineKeyboardMarkup(List.of(
+                            new InlineKeyboardRow(
+                                KeyboardBuilder.button("◀️ 返回", "ipv6_management:" + ociCfgId)
+                            ),
+                            KeyboardBuilder.buildCancelRow()
+                        )));
+
                 }
                 
                 // 3. Enable Subnet IPv6 if needed
