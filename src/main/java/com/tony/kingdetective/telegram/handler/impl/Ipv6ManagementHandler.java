@@ -626,17 +626,22 @@ class Ipv6AutoEnableHandler extends AbstractCallbackHandler {
                 Vcn vcn = fetcher.getVirtualNetworkClient().getVcn(GetVcnRequest.builder().vcnId(vcnId).build()).getVcn();
                 
                 // 2. Enable VCN IPv6 if needed
+                // TODO: This requires AddVcnIpv6Cidr API, not UpdateVcn
+                // Temporarily disabled until proper implementation
+                /*
                 if (vcn.getIpv6CidrBlocks() == null || vcn.getIpv6CidrBlocks().isEmpty()) {
                     // Request Oracle to assign an IPv6 CIDR block
-                    UpdateVcnRequest updateVcnRequest = UpdateVcnRequest.builder()
-                            .vcnId(vcnId)
-                            .updateVcnDetails(UpdateVcnDetails.builder()
-                                    .ipv6PrivateCidrBlocks(java.util.Collections.singletonList(""))  // Empty string requests auto-assignment
-                                    .build())
-                            .build();
-                    vcn = fetcher.getVirtualNetworkClient().updateVcn(updateVcnRequest).getVcn();
-                    // Wait a bit for propagation? usually fast.
-                    try { Thread.sleep(2000); } catch (InterruptedException e) {}
+                    // Need to use AddVcnIpv6CidrRequest instead of UpdateVcnRequest
+                    editMessageText.append("⚠️ VCN IPv6 not enabled. Please enable it manually in OCI Console.\\n");
+                    return;
+                }
+                */
+                if (vcn.getIpv6CidrBlocks() == null || vcn.getIpv6CidrBlocks().isEmpty()) {
+                    editMessageText.append("⚠️ VCN IPv6 not enabled. Please enable IPv6 for VCN manually in OCI Console first.\\n");
+                    editMessage(callbackQuery.getMessage().getChatId(), 
+                               callbackQuery.getMessage().getMessageId(), 
+                               editMessageText.toString());
+                    return;
                 }
                 
                 // 3. Enable Subnet IPv6 if needed
