@@ -100,7 +100,7 @@
         </dependency>
         <dependency>
             <groupId>com.oracle.oci.sdk</groupId>
-            <artifactId>oci-java-sdk-compute-management</artifactId>
+            <artifactId>oci-java-sdk-compute</artifactId>
             <version>${oci-version}</version>
         </dependency>
 
