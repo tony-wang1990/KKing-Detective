@@ -62,6 +62,7 @@ public class OracleInstanceFetcher implements Closeable {
     private final MonitoringClient monitoringClient;
     private final NetworkLoadBalancerClient networkLoadBalancerClient;
     private final IdentityDomainsClient identityDomainsClient;
+    private final SimpleAuthenticationDetailsProvider authenticationDetailsProvider;
     private SysUserDTO user;
     private String compartmentId;
 
@@ -101,6 +102,7 @@ public class OracleInstanceFetcher implements Closeable {
                 })
                 .region(Region.valueOf(ociCfg.getRegion()))
                 .build();
+        this.authenticationDetailsProvider = provider;
 
         identityClient = IdentityClient.builder().build(provider);
         computeClient = ComputeClient.builder().build(provider);

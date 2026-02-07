@@ -61,7 +61,7 @@ public class CostQueryHandler extends AbstractCallbackHandler {
             
             try (OracleInstanceFetcher fetcher = new OracleInstanceFetcher(user)) {
                 UsageapiClient usageClient = UsageapiClient.builder()
-                        .build(fetcher.getIdentityClient().getAuthenticationDetailsProvider());
+                        .build(fetcher.getAuthenticationDetailsProvider());
                 
                 // Calculate date range (last 3 months)
                 LocalDate endDate = LocalDate.now();

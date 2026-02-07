@@ -119,7 +119,7 @@ class ReportEnableHandler extends AbstractCallbackHandler {
             OciKv reportKv = kvService.getByKey(REPORT_KEY);
             if (reportKv == null) {
                 reportKv = new OciKv();
-                reportKv.setKkey(REPORT_KEY);
+                reportKv.setCode(REPORT_KEY);
                 reportKv.setValue("true");
                 kvService.save(reportKv);
             } else {

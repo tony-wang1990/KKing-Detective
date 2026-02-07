@@ -112,7 +112,7 @@ class AutoRestartEnableHandler extends AbstractCallbackHandler {
             OciKv autoRestartKv = kvService.getByKey(AUTO_RESTART_KEY);
             if (autoRestartKv == null) {
                 autoRestartKv = new OciKv();
-                autoRestartKv.setKkey(AUTO_RESTART_KEY);
+                autoRestartKv.setCode(AUTO_RESTART_KEY);
                 autoRestartKv.setValue("true");
                 kvService.save(autoRestartKv);
             } else {

@@ -111,7 +111,7 @@ class MonitorEnableHandler extends AbstractCallbackHandler {
             OciKv monitorKv = kvService.getByKey(MONITOR_KEY);
             if (monitorKv == null) {
                 monitorKv = new OciKv();
-                monitorKv.setKkey(MONITOR_KEY);
+                monitorKv.setCode(MONITOR_KEY);
                 monitorKv.setValue("true");
                 kvService.save(monitorKv);
             } else {

@@ -48,6 +48,7 @@ public class SysUserDTO {
         private String privateKeyPath;
         private String region;
         private String compartmentId;
+        private Boolean deleted;
     }
 
     @Builder
@@ -58,6 +59,7 @@ public class SysUserDTO {
         private String ocId;
         private List<String> publicIp;
         private String shape;
+        private String subnetId;
 //    private String volumeSize;
     }
 }

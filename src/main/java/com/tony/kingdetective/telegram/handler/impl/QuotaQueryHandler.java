@@ -60,7 +60,7 @@ public class QuotaQueryHandler extends AbstractCallbackHandler {
             
             try (OracleInstanceFetcher fetcher = new OracleInstanceFetcher(user)) {
                 LimitsClient limitsClient = LimitsClient.builder()
-                        .build(fetcher.getIdentityClient().getAuthenticationDetailsProvider());
+                        .build(fetcher.getAuthenticationDetailsProvider());
                 
                 // Get availability domains
                 List<AvailabilityDomain> ads = fetcher.getAvailabilityDomains();

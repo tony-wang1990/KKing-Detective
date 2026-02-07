@@ -236,7 +236,7 @@ class OccupyMemoryAllHandler extends AbstractCallbackHandler {
         long chatId = callbackQuery.getMessage().getChatId();
         InstanceSelectionStorage storage = InstanceSelectionStorage.getInstance();
         String ociCfgId = storage.getConfigContext(chatId);
-        List<SysUserDTO.CloudInstance> instances = storage.getInstanceCache(chatId);
+        List<SysUserDTO.CloudInstance> instances = storage.getCachedInstances(chatId);
         
         if (CollectionUtil.isEmpty(instances)) {
             return buildEditMessage(
