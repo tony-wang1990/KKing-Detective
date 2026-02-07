@@ -23,6 +23,56 @@ bash <(wget -qO- https://raw.githubusercontent.com/tony-wang1990/King-Detective/
 - **默认账号：** `admin`
 - **默认密码：** `admin123456`
 
+---
+
+## 🔄 一键更新（保留所有数据）
+
+### ⚠️ 重要说明
+
+**更新不会丢失任何数据！**
+- ✅ 保留账户密码配置
+- ✅ 保留OCI私钥文件
+- ✅ 保留所有历史记录
+- ✅ 自动备份数据库
+
+### 更新步骤
+
+在服务器上执行以下命令：
+
+```bash
+# 设置你的配置信息（替换为你的实际值）
+export BOT_TOKEN="你的Telegram_Bot_Token"
+export ADMIN_USERNAME="你的管理员用户名"
+export ADMIN_PASSWORD="你的管理员密码"
+
+# 下载并执行更新脚本
+wget https://raw.githubusercontent.com/tony-wang1990/King-Detective/main/update.sh
+bash update.sh
+```
+
+**或者一行命令：**
+
+```bash
+BOT_TOKEN="你的Token" ADMIN_USERNAME="你的用户名" ADMIN_PASSWORD="你的密码" bash <(wget -qO- https://raw.githubusercontent.com/tony-wang1990/King-Detective/main/update.sh)
+```
+
+### 更新流程
+
+脚本会自动：
+1. 📋 备份现有数据库
+2. 🛑 停止旧容器
+3. ⬇️ 拉取最新Docker镜像
+4. 🚀 启动新容器（挂载原有数据卷）
+5. ✅ 验证服务状态
+
+### 数据保存位置
+
+- **数据库：** `/root/king-detective/data/king-detective.db`
+- **私钥：** `/root/king-detective/keys/`
+- **备份：** `/root/king-detective/data/king-detective.db.backup.*`
+
+---
+
 ## 🔄 版本管理
 
 ### 查看版本信息
@@ -35,18 +85,7 @@ bash <(wget -qO- https://raw.githubusercontent.com/tony-wang1990/King-Detective/
 #### Web面板
 - 登录后台即可查看版本信息
 
-### 一键更新
-
-#### 方式1：Bot一键更新
-1. 点击 **🛡️ 版本信息**
-2. 如果有新版本，点击 **🔄 点击更新至最新版本**
-3. 等待1-2分钟自动完成
-
-#### 方式2：命令行更新
-在VPS上重新执行安装脚本即可：
-```bash
-bash <(wget -qO- https://raw.githubusercontent.com/tony-wang1990/King-Detective/main/scripts/install.sh)
-```
+---
 
 ## ⚙️ 修改账号密码
 
@@ -65,4 +104,11 @@ web:
 cd /app/king-detective
 docker-compose restart king-detective
 ```
+
+---
+
+## 📝 更多文档
+
+- **详细更新说明：** [UPDATE.md](./UPDATE.md)
+- **问题排查：** 查看容器日志 `docker logs -f king-detective`
 
