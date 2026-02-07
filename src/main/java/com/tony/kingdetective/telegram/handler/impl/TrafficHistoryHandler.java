@@ -2,15 +2,22 @@ package com.tony.kingdetective.telegram.handler.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import com.oracle.bmc.core.model.VnicAttachment;
+import com.oracle.bmc.core.requests.GetVnicRequest;
+import com.oracle.bmc.core.requests.ListVnicAttachmentsRequest;
+import com.oracle.bmc.core.responses.GetVnicResponse;
+import com.oracle.bmc.core.responses.ListVnicAttachmentsResponse;
 import com.oracle.bmc.monitoring.MonitoringClient;
 import com.oracle.bmc.monitoring.model.*;
 import com.oracle.bmc.monitoring.requests.SummarizeMetricsDataRequest;
 import com.oracle.bmc.monitoring.responses.SummarizeMetricsDataResponse;
 import com.tony.kingdetective.bean.dto.SysUserDTO;
 import com.tony.kingdetective.config.OracleInstanceFetcher;
+import com.tony.kingdetective.service.IInstanceService;
 import com.tony.kingdetective.service.ISysService;
 import com.tony.kingdetective.telegram.builder.KeyboardBuilder;
 import com.tony.kingdetective.telegram.handler.AbstractCallbackHandler;
+import com.tony.kingdetective.telegram.storage.InstanceSelectionStorage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.botapimethods.BotApiMethod;
@@ -25,9 +32,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 /**
- * Traffic history handler - enhanced traffic statistics with time range selection
- * 
- * @author antigravity-ai
+ * Traffic history handler - Step 1: Select Instance
  */
 @Slf4j
 @Component
@@ -35,27 +40,86 @@ public class TrafficHistoryHandler extends AbstractCallbackHandler {
     
     @Override
     public BotApiMethod<? extends Serializable> handle(CallbackQuery callbackQuery, TelegramClient telegramClient) {
-        // Show time range selection
-        return buildEditMessage(
-                callbackQuery,
-                "【流量历史查询】\n\n" +
-                "请选择查询时间范围：",
-                new InlineKeyboardMarkup(List.of(
-                        new InlineKeyboardRow(
-                                KeyboardBuilder.button("📊 近1个月", "traffic_history:30")
-                        ),
-                        new InlineKeyboardRow(
-                                KeyboardBuilder.button("📊 近3个月", "traffic_history:90")
-                        ),
-                        new InlineKeyboardRow(
-                                KeyboardBuilder.button("📊 近6个月", "traffic_history:180")
-                        ),
-                        KeyboardBuilder.buildBackToMainMenuRow(),
-                        KeyboardBuilder.buildCancelRow()
-                ))
-        );
+        String callbackData = callbackQuery.getData();
+        long chatId = callbackQuery.getMessage().getChatId();
+        ISysService sysService = SpringUtil.getBean(ISysService.class);
+        
+        try {
+            List<SysUserDTO> users = sysService.list();
+            if (CollectionUtil.isEmpty(users)) {
+                return buildEditMessage(callbackQuery, "❌ 未找到 OCI 配置", new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu()));
+            }
+
+            // If only one user or specific config selected
+            String ociCfgId;
+            if (callbackData.contains(":")) {
+                ociCfgId = callbackData.split(":")[1];
+            } else if (users.size() == 1) {
+                ociCfgId = users.get(0).getOciCfg().getId();
+            } else {
+                // Show Config Selector
+                return buildConfigSelector(callbackQuery, users);
+            }
+
+            // List Instances
+            IInstanceService instanceService = SpringUtil.getBean(IInstanceService.class);
+            SysUserDTO sysUserDTO = sysService.getOciUser(ociCfgId);
+            List<SysUserDTO.CloudInstance> instances = instanceService.listRunningInstances(sysUserDTO);
+            
+            if (CollectionUtil.isEmpty(instances)) {
+                return buildEditMessage(
+                        callbackQuery,
+                        "❌ 该配置下无运行中的实例",
+                        new InlineKeyboardMarkup(List.of(
+                                new InlineKeyboardRow(KeyboardBuilder.button("◀️ 返回主菜单", "back_to_main")),
+                                KeyboardBuilder.buildCancelRow()
+                        ))
+                );
+            }
+            
+            InstanceSelectionStorage.getInstance().setInstanceCache(chatId, instances);
+            InstanceSelectionStorage.getInstance().setConfigContext(chatId, ociCfgId);
+            
+            return buildInstanceListMessage(callbackQuery, instances, ociCfgId);
+            
+        } catch (Exception e) {
+            log.error("Traffic History Error", e);
+            return buildEditMessage(callbackQuery, "❌ 获取列表失败: " + e.getMessage(), new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu()));
+        }
     }
     
+    private BotApiMethod<? extends Serializable> buildConfigSelector(CallbackQuery callbackQuery, List<SysUserDTO> users) {
+        StringBuilder message = new StringBuilder("【流量历史查询】\n\n请选择 OCI 配置：\n\n");
+        List<InlineKeyboardRow> rows = new ArrayList<>();
+        for (SysUserDTO user : users) {
+            rows.add(new InlineKeyboardRow(
+                    KeyboardBuilder.button(user.getUsername() + " (" + user.getOciCfg().getRegion() + ")", 
+                            "traffic_history_config:" + user.getOciCfg().getId())
+            ));
+        }
+        rows.add(KeyboardBuilder.buildBackToMainMenuRow());
+        rows.add(KeyboardBuilder.buildCancelRow());
+        return buildEditMessage(callbackQuery, message.toString(), new InlineKeyboardMarkup(rows));
+    }
+    
+    private BotApiMethod<? extends Serializable> buildInstanceListMessage(CallbackQuery callbackQuery, List<SysUserDTO.CloudInstance> instances, String ociCfgId) {
+        StringBuilder message = new StringBuilder("【流量历史查询】\n\n请选择要查询的实例：\n\n");
+        List<InlineKeyboardRow> rows = new ArrayList<>();
+        
+        for (int i = 0; i < instances.size(); i++) {
+            SysUserDTO.CloudInstance instance = instances.get(i);
+            message.append(String.format("%d. %s (%s)\n", i + 1, instance.getName(), instance.getRegion()));
+            rows.add(new InlineKeyboardRow(
+                    KeyboardBuilder.button("📊 " + instance.getName(), "traffic_history_instance:" + i)
+            ));
+        }
+        
+        rows.add(new InlineKeyboardRow(KeyboardBuilder.button("◀️ 返回配置列表", "traffic_history")));
+        rows.add(KeyboardBuilder.buildCancelRow());
+        
+        return buildEditMessage(callbackQuery, message.toString(), new InlineKeyboardMarkup(rows));
+    }
+
     @Override
     public String getCallbackPattern() {
         return "traffic_history";
@@ -63,7 +127,58 @@ public class TrafficHistoryHandler extends AbstractCallbackHandler {
 }
 
 /**
- * Traffic history query handler with specific time range
+ * Handle Config Selection (Redirection)
+ */
+@Component
+class TrafficHistoryConfigHandler extends TrafficHistoryHandler {
+    @Override
+    public String getCallbackPattern() {
+        return "traffic_history_config:";
+    }
+}
+
+/**
+ * Step 2: Select Time Range
+ */
+@Slf4j
+@Component
+class TrafficHistoryInstanceHandler extends AbstractCallbackHandler {
+    
+    @Override
+    public BotApiMethod<? extends Serializable> handle(CallbackQuery callbackQuery, TelegramClient telegramClient) {
+        int index = Integer.parseInt(callbackQuery.getData().split(":")[1]);
+        long chatId = callbackQuery.getMessage().getChatId();
+        
+        InstanceSelectionStorage storage = InstanceSelectionStorage.getInstance();
+        storage.setSelectedInstanceIndex(chatId, index);
+        SysUserDTO.CloudInstance instance = storage.getInstanceByIndex(chatId, index);
+        
+        if (instance == null) {
+             return buildEditMessage(callbackQuery, "❌ 实例信息已过期，请重新选择", new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu()));
+        }
+        
+        return buildEditMessage(
+                callbackQuery,
+                String.format("【流量查询 - %s】\n\n请选择查询时间范围：", instance.getName()),
+                new InlineKeyboardMarkup(List.of(
+                        new InlineKeyboardRow(KeyboardBuilder.button("📅 近 24 小时", "traffic_history_query:1")),
+                        new InlineKeyboardRow(KeyboardBuilder.button("📅 近 7 天", "traffic_history_query:7")),
+                        new InlineKeyboardRow(KeyboardBuilder.button("📅 近 30 天", "traffic_history_query:30")),
+                        new InlineKeyboardRow(KeyboardBuilder.button("📅 近 90 天", "traffic_history_query:90")),
+                        new InlineKeyboardRow(KeyboardBuilder.button("◀️ 返回实例列表", "traffic_history_config:" + storage.getConfigContext(chatId))),
+                        KeyboardBuilder.buildCancelRow()
+                ))
+        );
+    }
+
+    @Override
+    public String getCallbackPattern() {
+        return "traffic_history_instance:";
+    }
+}
+
+/**
+ * Step 3: Execute Query
  */
 @Slf4j
 @Component
@@ -71,183 +186,173 @@ class TrafficHistoryQueryHandler extends AbstractCallbackHandler {
     
     @Override
     public BotApiMethod<? extends Serializable> handle(CallbackQuery callbackQuery, TelegramClient telegramClient) {
-        String callbackData = callbackQuery.getData();
-        int days = Integer.parseInt(callbackData.split(":")[1]);
+        int days = Integer.parseInt(callbackQuery.getData().split(":")[1]);
+        long chatId = callbackQuery.getMessage().getChatId();
+        
+        // Instant feedback
+        try {
+            telegramClient.execute(org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText.builder()
+                    .chatId(chatId)
+                    .messageId(callbackQuery.getMessage().getMessageId())
+                    .text("⏳ 正在从 Oracle Cloud 查询监控数据，请稍候...")
+                    .build());
+        } catch (Exception ignored) {}
+        
+        InstanceSelectionStorage storage = InstanceSelectionStorage.getInstance();
+        SysUserDTO.CloudInstance instance = storage.getSelectedInstance(chatId);
+        String ociCfgId = storage.getConfigContext(chatId);
+        
+        if (instance == null) return buildEditMessage(callbackQuery, "❌ 会话过期", new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu()));
         
         ISysService sysService = SpringUtil.getBean(ISysService.class);
-        
         try {
-            List<SysUserDTO> users = sysService.list();
-            if (CollectionUtil.isEmpty(users)) {
-                return buildEditMessage(
-                        callbackQuery,
-                        "❌ 未找到任何 OCI 配置",
-                        new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
+            SysUserDTO sysUserDTO = sysService.getOciUser(ociCfgId);
+            try (OracleInstanceFetcher fetcher = new OracleInstanceFetcher(sysUserDTO)) {
+                
+                // 1. Get VNIC ID
+                String vnicId = getVnicId(fetcher, instance);
+                if (vnicId == null) {
+                     return buildEditMessage(callbackQuery, "❌ 无法获取实例网卡信息 (VNIC ID)", buildRetryKeyboard(days));
+                }
+                
+                // 2. Query Metrics
+                Date endTime = Date.from(Instant.now());
+                Date startTime = Date.from(Instant.now().minus(days, ChronoUnit.DAYS));
+                // Use 1h resolution for > 1 day, 1m for 1 day
+                String resolution = days > 1 ? "1h" : "1m";
+                
+                TrafficStats stats = queryTrafficMetrics(fetcher, vnicId, startTime, endTime, resolution);
+                
+                String msg = String.format(
+                        "📊 **流量统计报告**\n\n" +
+                        "实例: %s\n" +
+                        "区域: %s\n" +
+                        "时间: 近 %d 天\n\n" +
+                        "⬇️ **入站流量**: %s\n" +
+                        "⬆️ **出站流量**: %s\n" +
+                        "🔁 **总计流量**: %s\n\n" +
+                        "💡 数据来源: OCI Monitoring (oci_vcn)",
+                        instance.getName(), instance.getRegion(), days,
+                        formatBytes(stats.inboundBytes),
+                        formatBytes(stats.outboundBytes),
+                        formatBytes(stats.totalBytes)
                 );
+                
+                return buildEditMessage(callbackQuery, msg, buildRetryKeyboard(days));
             }
-            
-            StringBuilder message = new StringBuilder();
-            message.append(String.format("【流量历史 - 近%d天】\n\n", days));
-            
-            Date endTime = Date.from(Instant.now());
-            Date startTime = Date.from(Instant.now().minus(days, ChronoUnit.DAYS));
-            
-            for (SysUserDTO user : users) {
-                try (OracleInstanceFetcher fetcher = new OracleInstanceFetcher(user)) {
-                    message.append(String.format("📌 %s (%s)\n", 
-                            user.getUsername(), 
-                            user.getOciCfg().getRegion()));
-                    
-                    // Query traffic metrics
-                    TrafficStats stats = queryTrafficMetrics(fetcher, startTime, endTime);
-                    
-                    if (stats.hasData) {
-                        message.append(String.format("⬇ 入站: %s\n", formatBytes(stats.inboundBytes)));
-                        message.append(String.format("⬆ 出站: %s\n", formatBytes(stats.outboundBytes)));
-                        message.append(String.format("📊 总计: %s\n", formatBytes(stats.totalBytes)));
-                    } else {
-                        message.append("📊 暂无流量数据\n");
-                    }
-                    
-                    message.append("\n");
-                    
-                } catch (Exception e) {
-                    log.error("Failed to query traffic for user: {}", user.getUsername(), e);
-                    message.append(String.format("❌ 查询失败: %s\n\n", e.getMessage()));
-                }
-            }
-            
-            message.append("━━━━━━━━━━━━━━━━\n");
-            message.append("💡 数据来自 OCI Monitoring API");
-            
-            return buildEditMessage(
-                    callbackQuery,
-                    message.toString(),
-                    new InlineKeyboardMarkup(List.of(
-                            new InlineKeyboardRow(
-                                    KeyboardBuilder.button("🔄 刷新", "traffic_history:" + days),
-                                    KeyboardBuilder.button("◀️ 返回", "traffic_history")
-                            ),
-                            KeyboardBuilder.buildBackToMainMenuRow(),
-                            KeyboardBuilder.buildCancelRow()
-                    ))
-            );
-            
         } catch (Exception e) {
-            log.error("Failed to query traffic history", e);
-            return buildEditMessage(
-                    callbackQuery,
-                    "❌ 查询失败: " + e.getMessage(),
-                    new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
-            );
+            log.error("Traffic Query Failed", e);
+            return buildEditMessage(callbackQuery, "❌ 查询失败: " + e.getMessage(), buildRetryKeyboard(days));
         }
     }
     
-    /**
-     * Query traffic metrics from OCI Monitoring
-     */
-    private TrafficStats queryTrafficMetrics(OracleInstanceFetcher fetcher, Date startTime, Date endTime) {
-        TrafficStats stats = new TrafficStats();
-        
+    private InlineKeyboardMarkup buildRetryKeyboard(int days) {
+        return new InlineKeyboardMarkup(List.of(
+                new InlineKeyboardRow(
+                        KeyboardBuilder.button("🔄 刷新", "traffic_history_query:" + days),
+                        KeyboardBuilder.button("◀️ 返回", "traffic_history") // Go loop back to start or instance select
+                ),
+                KeyboardBuilder.buildCancelRow()
+        ));
+    }
+    
+    private String getVnicId(OracleInstanceFetcher fetcher, SysUserDTO.CloudInstance instance) {
         try {
-            MonitoringClient monitoringClient = fetcher.getMonitoringClient();
-            String compartmentId = fetcher.getCompartmentId();
-            
-            // Query network bytes in (inbound)
-            SummarizeMetricsDataDetails inboundDetails = SummarizeMetricsDataDetails.builder()
-                    .namespace("oci_vcn")
-                    .query("VnicFromNetworkBytes[1m].sum()")
-                    .startTime(startTime)
-                    .endTime(endTime)
-                    .resolution("1h")
+            ListVnicAttachmentsRequest request = ListVnicAttachmentsRequest.builder()
+                    .compartmentId(fetcher.getCompartmentId())
+                    .instanceId(instance.getOcId())
                     .build();
-            
-            SummarizeMetricsDataRequest inboundRequest = SummarizeMetricsDataRequest.builder()
-                    .compartmentId(compartmentId)
-                    .summarizeMetricsDataDetails(inboundDetails)
-                    .build();
-            
-            SummarizeMetricsDataResponse inboundResponse = monitoringClient.summarizeMetricsData(inboundRequest);
-            
-            // Query network bytes out (outbound)
-            SummarizeMetricsDataDetails outboundDetails = SummarizeMetricsDataDetails.builder()
-                    .namespace("oci_vcn")
-                    .query("VnicToNetworkBytes[1m].sum()")
-                    .startTime(startTime)
-                    .endTime(endTime)
-                    .resolution("1h")
-                    .build();
-            
-            SummarizeMetricsDataRequest outboundRequest = SummarizeMetricsDataRequest.builder()
-                    .compartmentId(compartmentId)
-                    .summarizeMetricsDataDetails(outboundDetails)
-                    .build();
-            
-            SummarizeMetricsDataResponse outboundResponse = monitoringClient.summarizeMetricsData(outboundRequest);
-            
-            // Calculate totals
-            stats.inboundBytes = calculateTotal(inboundResponse.getItems());
-            stats.outboundBytes = calculateTotal(outboundResponse.getItems());
-            stats.totalBytes = stats.inboundBytes + stats.outboundBytes;
-            stats.hasData = true;
-            
+            ListVnicAttachmentsResponse response = fetcher.getComputeClient().listVnicAttachments(request);
+            if (!response.getItems().isEmpty()) {
+                return response.getItems().get(0).getVnicId();
+            }
         } catch (Exception e) {
-            log.warn("Failed to query metrics: {}", e.getMessage());
-            stats.hasData = false;
+            log.warn("Failed to get VNIC: {}", e.getMessage());
         }
-        
-        return stats;
+        return null;
     }
     
-    /**
-     * Calculate total bytes from metric data
-     */
+    private TrafficStats queryTrafficMetrics(OracleInstanceFetcher fetcher, String vnicId, Date startTime, Date endTime, String resolution) {
+         TrafficStats stats = new TrafficStats();
+         try {
+             MonitoringClient client = fetcher.getMonitoringClient();
+             String compartmentId = fetcher.getCompartmentId();
+             
+             // Inbound (BytesFromNetwork ? No, VnicFromNetworkBytes)
+             // Namespace: oci_vcn
+             // Metric: VnicFromNetworkBytes
+             // Dimension: resourceId = vnicId
+             
+             Map<String, String> dimensions = new HashMap<>();
+             dimensions.put("resourceId", vnicId);
+             
+             SummarizeMetricsDataDetails inboundDetails = SummarizeMetricsDataDetails.builder()
+                     .namespace("oci_vcn")
+                     .query("VnicFromNetworkBytes[1h].sum()") // Using 1h interval for sum
+                     .startTime(startTime)
+                     .endTime(endTime)
+                     .resolution(resolution)
+                     .build();
+             // Note: OCI API requires filtering by dimension in the query string or filter object?
+             // Actually, for SummarizeMetricsData, we usually put it in the query:
+             // "VnicFromNetworkBytes[1h]{resourceId = \"...\"}.sum()"
+             
+             String queryIn = String.format("VnicFromNetworkBytes[%s]{resourceId = \"%s\"}.sum()", resolution, vnicId);
+             String queryOut = String.format("VnicToNetworkBytes[%s]{resourceId = \"%s\"}.sum()", resolution, vnicId);
+             
+             stats.inboundBytes = executeQuery(client, compartmentId, "oci_vcn", queryIn, startTime, endTime, resolution);
+             stats.outboundBytes = executeQuery(client, compartmentId, "oci_vcn", queryOut, startTime, endTime, resolution);
+             stats.totalBytes = stats.inboundBytes + stats.outboundBytes;
+             
+         } catch (Exception e) {
+             log.error("Metric Query Error", e);
+             throw e;
+         }
+         return stats;
+    }
+    
+    private long executeQuery(MonitoringClient client, String compartmentId, String namespace, String query, Date start, Date end, String resolution) {
+        SummarizeMetricsDataDetails details = SummarizeMetricsDataDetails.builder()
+                .namespace(namespace)
+                .query(query)
+                .startTime(start)
+                .endTime(end)
+                .resolution(resolution)
+                .build();
+        SummarizeMetricsDataRequest request = SummarizeMetricsDataRequest.builder()
+                .compartmentId(compartmentId)
+                .summarizeMetricsDataDetails(details)
+                .build();
+        SummarizeMetricsDataResponse response = client.summarizeMetricsData(request);
+        return calculateTotal(response.getItems());
+    }
+
     private long calculateTotal(List<MetricData> metricDataList) {
-        if (metricDataList == null || metricDataList.isEmpty()) {
-            return 0;
-        }
-        
+        if (metricDataList == null) return 0;
         long total = 0;
-        for (MetricData metricData : metricDataList) {
-            List<AggregatedDatapoint> datapoints = metricData.getAggregatedDatapoints();
-            if (datapoints != null) {
-                for (AggregatedDatapoint dp : datapoints) {
-                    if (dp.getValue() != null) {
-                        total += dp.getValue().longValue();
-                    }
-                }
+        for (MetricData md : metricDataList) {
+            for (AggregatedDatapoint dp : md.getAggregatedDatapoints()) {
+                if (dp.getValue() != null) total += dp.getValue().longValue();
             }
         }
         return total;
     }
-    
-    /**
-     * Format bytes to human readable string
-     */
+
     private String formatBytes(long bytes) {
-        if (bytes < 1024) {
-            return bytes + " B";
-        } else if (bytes < 1024 * 1024) {
-            return String.format("%.2f KB", bytes / 1024.0);
-        } else if (bytes < 1024 * 1024 * 1024) {
-            return String.format("%.2f MB", bytes / (1024.0 * 1024));
-        } else {
-            return String.format("%.2f GB", bytes / (1024.0 * 1024 * 1024));
-        }
+        if (bytes < 1024) return bytes + " B";
+        int exp = (int) (Math.log(bytes) / Math.log(1024));
+        String pre = "KMGTPE".charAt(exp-1) + "";
+        return String.format("%.2f %sB", bytes / Math.pow(1024, exp), pre);
     }
-    
+
     @Override
     public String getCallbackPattern() {
-        return "traffic_history:";
+        return "traffic_history_query:";
     }
     
-    /**
-     * Traffic statistics container
-     */
     private static class TrafficStats {
         long inboundBytes = 0;
         long outboundBytes = 0;
         long totalBytes = 0;
-        boolean hasData = false;
     }
 }
