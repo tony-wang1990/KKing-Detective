@@ -368,8 +368,36 @@ public class OciTask implements ApplicationRunner {
     private void initMapData() {
         virtualExecutor.execute(() -> {
             try {
-                String jsonStr = HttpUtil.get(String.format("https://ipapi.co/json"));
+                log.info("正在初始化地图数据，调用 ipapi.co API...");
+                String jsonStr = HttpUtil.get("https://ipapi.co/json");
+                
+                // 验证返回内容是否为有效JSON
+                if (jsonStr == null || jsonStr.trim().isEmpty()) {
+                    log.warn("ipapi.co API 返回空内容，跳过地图数据初始化");
+                    return;
+                }
+                
+                // 检查是否返回HTML而不是JSON
+                if (jsonStr.trim().startsWith("<")) {
+                    log.warn("ipapi.co API 返回HTML而非JSON，可能被限流或服务异常。返回内容前100字符：{}", 
+                            jsonStr.substring(0, Math.min(100, jsonStr.length())));
+                    return;
+                }
+                
                 JSONObject json = JSONUtil.parseObj(jsonStr);
+                
+                // 检查是否包含错误信息
+                if (json.containsKey("error") && json.getBool("error")) {
+                    log.warn("ipapi.co API 返回错误：{}", json.getStr("reason"));
+                    return;
+                }
+                
+                // 验证必要字段
+                if (!json.containsKey("ip") || !json.containsKey("latitude") || !json.containsKey("longitude")) {
+                    log.warn("ipapi.co API 返回的JSON缺少必要字段。返回内容：{}", jsonStr);
+                    return;
+                }
+                
                 IpData ipData = new IpData();
                 ipData.setId(IdUtil.getSnowflakeNextIdStr());
                 ipData.setIp(json.getStr("ip"));
@@ -380,15 +408,16 @@ public class OciTask implements ApplicationRunner {
                 ipData.setAsn(json.getStr("asn"));
                 ipData.setLat(Double.valueOf(json.getStr("latitude")));
                 ipData.setLng(Double.valueOf(json.getStr("longitude")));
+                
                 List<IpData> ipDataList = ipDataService.list(new LambdaQueryWrapper<IpData>()
                         .eq(IpData::getIp, json.getStr("ip")));
                 if (CollectionUtil.isNotEmpty(ipDataList)) {
                     ipDataService.remove(new LambdaQueryWrapper<IpData>().eq(IpData::getIp, json.getStr("ip")));
                 }
                 ipDataService.save(ipData);
-                log.info("新增地图IP数据：{} 成功", ipData.getIp());
+                log.info("✅ 新增地图IP数据：{} ({}, {}) 成功", ipData.getIp(), ipData.getCity(), ipData.getCountry());
             } catch (Exception e) {
-                log.error("初始化地图数据失败，跳过该步骤：{}", e.getMessage());
+                log.error("初始化地图数据失败，跳过该步骤。错误详情：{}", e.getMessage(), e);
                 // 不抛出异常，避免影响其他启动任务
             }
         });
