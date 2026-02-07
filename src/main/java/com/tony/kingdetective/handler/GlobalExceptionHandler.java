@@ -3,12 +3,19 @@ package com.tony.kingdetective.handler;
 import com.oracle.bmc.model.BmcException;
 import com.tony.kingdetective.bean.vo.ErrorResponse;
 import com.tony.kingdetective.exception.OciException;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
+
+import java.io.IOException;
 
 /**
  * 全局异常处理器
@@ -100,6 +107,35 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(response);
+    }
+
+    /**
+     * Handle validation exceptions
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseBody
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        String message = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+        log.warn("Validation failed: {}", message);
+
+        ErrorResponse response = ErrorResponse.builder()
+                .code(400)
+                .message(message)
+                .timestamp(System.currentTimeMillis())
+                .build();
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
+
+    /**
+     * Handle SPA routing (404 -> index.html)
+     */
+    @ExceptionHandler(NoResourceFoundException.class)
+    public void handleNoResourceFoundException(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Forward to index.html for SPA support
+        request.getRequestDispatcher("/index.html").forward(request, response);
     }
     
     /**
