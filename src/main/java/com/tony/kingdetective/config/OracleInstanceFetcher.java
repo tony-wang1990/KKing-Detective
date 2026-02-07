@@ -74,6 +74,20 @@ public class OracleInstanceFetcher implements AutoCloseable {
         this.user = user;
         this.compartmentId = user.getOciCfg().getTenantId();
         
+        // Validate required OCI configuration fields
+        if (user.getOciCfg().getPrivateKey() == null || user.getOciCfg().getPrivateKey().trim().isEmpty()) {
+            throw new IllegalArgumentException("OCI私钥配置为空，请在【系统配置】中完善OCI配置信息");
+        }
+        if (user.getOciCfg().getTenantId() == null || user.getOciCfg().getTenantId().trim().isEmpty()) {
+            throw new IllegalArgumentException("OCI租户ID配置为空，请在【系统配置】中完善OCI配置信息");
+        }
+        if (user.getOciCfg().getUserId() == null || user.getOciCfg().getUserId().trim().isEmpty()) {
+            throw new IllegalArgumentException("OCI用户ID配置为空，请在【系统配置】中完善OCI配置信息");
+        }
+        if (user.getOciCfg().getFingerprint() == null || user.getOciCfg().getFingerprint().trim().isEmpty()) {
+            throw new IllegalArgumentException("OCI指纹配置为空，请在【系统配置】中完善OCI配置信息");
+        }
+        
         Supplier<InputStream> privateKeySupplier = () -> new ByteArrayInputStream(user.getOciCfg().getPrivateKey().getBytes(StandardCharsets.UTF_8));
         this.provider = SimpleAuthenticationDetailsProvider.builder()
                 .tenantId(user.getOciCfg().getTenantId())
