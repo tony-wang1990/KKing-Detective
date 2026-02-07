@@ -367,25 +367,30 @@ public class OciTask implements ApplicationRunner {
 
     private void initMapData() {
         virtualExecutor.execute(() -> {
-            String jsonStr = HttpUtil.get(String.format("https://ipapi.co/json"));
-            JSONObject json = JSONUtil.parseObj(jsonStr);
-            IpData ipData = new IpData();
-            ipData.setId(IdUtil.getSnowflakeNextIdStr());
-            ipData.setIp(json.getStr("ip"));
-            ipData.setCountry(json.getStr("country"));
-            ipData.setArea(json.getStr("region"));
-            ipData.setCity(json.getStr("city"));
-            ipData.setOrg(json.getStr("org"));
-            ipData.setAsn(json.getStr("asn"));
-            ipData.setLat(Double.valueOf(json.getStr("latitude")));
-            ipData.setLng(Double.valueOf(json.getStr("longitude")));
-            List<IpData> ipDataList = ipDataService.list(new LambdaQueryWrapper<IpData>()
-                    .eq(IpData::getIp, json.getStr("ip")));
-            if (CollectionUtil.isNotEmpty(ipDataList)) {
-                ipDataService.remove(new LambdaQueryWrapper<IpData>().eq(IpData::getIp, json.getStr("ip")));
+            try {
+                String jsonStr = HttpUtil.get(String.format("https://ipapi.co/json"));
+                JSONObject json = JSONUtil.parseObj(jsonStr);
+                IpData ipData = new IpData();
+                ipData.setId(IdUtil.getSnowflakeNextIdStr());
+                ipData.setIp(json.getStr("ip"));
+                ipData.setCountry(json.getStr("country"));
+                ipData.setArea(json.getStr("region"));
+                ipData.setCity(json.getStr("city"));
+                ipData.setOrg(json.getStr("org"));
+                ipData.setAsn(json.getStr("asn"));
+                ipData.setLat(Double.valueOf(json.getStr("latitude")));
+                ipData.setLng(Double.valueOf(json.getStr("longitude")));
+                List<IpData> ipDataList = ipDataService.list(new LambdaQueryWrapper<IpData>()
+                        .eq(IpData::getIp, json.getStr("ip")));
+                if (CollectionUtil.isNotEmpty(ipDataList)) {
+                    ipDataService.remove(new LambdaQueryWrapper<IpData>().eq(IpData::getIp, json.getStr("ip")));
+                }
+                ipDataService.save(ipData);
+                log.info("新增地图IP数据：{} 成功", ipData.getIp());
+            } catch (Exception e) {
+                log.error("初始化地图数据失败，跳过该步骤：{}", e.getMessage());
+                // 不抛出异常，避免影响其他启动任务
             }
-            ipDataService.save(ipData);
-            log.info("新增地图IP数据：{} 成功", ipData.getIp());
         });
     }
 }
