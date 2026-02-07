@@ -60,7 +60,7 @@ public class AccountManagementHandler extends AbstractCallbackHandler {
             
             for (int i = 0; i < users.size(); i++) {
                 OciUser user = users.get(i);
-                String status = user.getDeleted() == 1 ? "❌ 已禁用" : "✅ 正常";
+                String status = (user.getDeleted() != null && user.getDeleted() == 1) ? "❌ 已禁用" : "✅ 正常";
                 
                 message.append(String.format(
                         "%d. %s\n" +
@@ -145,7 +145,7 @@ class AccountDetailHandler extends AbstractCallbackHandler {
             StringBuilder message = new StringBuilder();
             message.append("【账户详情】\n\n");
             message.append(String.format("账户名: %s\n", user.getUsername()));
-            message.append(String.format("状态: %s\n", user.getDeleted() == 1 ? "❌ 已禁用" : "✅ 正常"));
+            message.append(String.format("状态: %s\n", (user.getDeleted() != null && user.getDeleted() == 1) ? "❌ 已禁用" : "✅ 正常"));
             message.append(String.format("主区域: %s\n", user.getOciRegion()));
             message.append(String.format("租户ID: %s\n", user.getTenantId()));
             message.append(String.format("用户ID: %s\n", user.getUserId()));
@@ -155,7 +155,7 @@ class AccountDetailHandler extends AbstractCallbackHandler {
             List<InlineKeyboardRow> keyboard = new ArrayList<>();
             
             // Enable/Disable button
-            if (user.getDeleted() == 1) {
+            if (user.getDeleted() != null && user.getDeleted() == 1) {
                 keyboard.add(new InlineKeyboardRow(
                         KeyboardBuilder.button("✅ 启用账户", "account_enable:" + accountId)
                 ));

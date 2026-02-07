@@ -155,9 +155,13 @@ public class QuotaQueryHandler extends AbstractCallbackHandler {
             
             QuotaInfo info = new QuotaInfo();
             info.name = displayName;
-            info.limit = availability.getLimit() != null ? availability.getLimit().intValue() : 0;
-            info.used = availability.getUsed() != null ? availability.getUsed().intValue() : 0;
-            info.available = availability.getAvailable() != null ? availability.getAvailable().intValue() : 0;
+            // ResourceAvailability doesn't have getLimit(), use available field directly
+            Long available = availability.getAvailable();
+            Long used = availability.getUsed();
+            info.available = available != null ? available.intValue() : 0;
+            info.used = used != null ? used.intValue() : 0;
+            info.limit = info.available + info.used; // Calculated limit
+
             
             quotas.put(limitName, info);
             

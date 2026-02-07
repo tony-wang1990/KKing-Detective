@@ -234,7 +234,7 @@ class RegionExpandAllHandler extends AbstractCallbackHandler {
             int totalUnsubscribed = 0;
             
             for (SysUserDTO user : users) {
-                if (user.getOciCfg().getDeleted() == 1) {
+                if (Boolean.TRUE.equals(user.getOciCfg().getDeleted())) {
                     continue;
                 }
                 

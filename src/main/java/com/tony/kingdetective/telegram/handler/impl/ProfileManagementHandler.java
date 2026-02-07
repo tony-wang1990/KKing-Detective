@@ -66,7 +66,7 @@ public class ProfileManagementHandler extends AbstractCallbackHandler {
                         i + 1,
                         user.getUsername(),
                         user.getOciRegion(),
-                        user.getDeleted() == 1 ? "禁用" : "正常"
+                        user.getDeleted() != null && user.getDeleted() == 1 ? "禁用" : "正常"
                 ));
                 
                 keyboard.add(new InlineKeyboardRow(
@@ -285,7 +285,7 @@ class ProfileGenerateAllHandler extends AbstractCallbackHandler {
             StringBuilder configContent = new StringBuilder();
             
             for (OciUser user : users) {
-                if (user.getDeleted() == 1) {
+                if (user.getDeleted() != null && user.getDeleted() == 1) {
                     continue; // Skip disabled accounts
                 }
                 
