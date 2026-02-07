@@ -23,7 +23,7 @@ import java.util.List;
  * @author: Tony Wang
  * @date: 2024/3/30 18:03
  */
-@Slf4f
+@Slf4j
 @Component
 public class AuthInterceptor implements HandlerInterceptor {
     

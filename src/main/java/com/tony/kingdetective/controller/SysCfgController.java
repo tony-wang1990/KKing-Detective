@@ -25,7 +25,7 @@ import jakarta.servlet.http.HttpServletRequest;
  * @author: Tony Wang
  * @date: 2024/11/30 17:07
  */
-@Slf4f
+@Slf4j
 @RestController
 @RequestMapping(path = "/api/sys")
 public class SysCfgController {
