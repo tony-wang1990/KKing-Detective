@@ -11,4 +11,6 @@ import com.tony.kingdetective.bean.entity.OciUser;
 */
 public interface IOciKvService extends IService<OciKv> {
 
+    OciKv getByKey(String key);
+
 }

@@ -62,4 +62,6 @@ public interface ISysService {
      * @return Google Client ID
      */
     String getGoogleClientId();
+
+    java.util.List<SysUserDTO> list();
 }

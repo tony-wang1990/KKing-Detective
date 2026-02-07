@@ -3,7 +3,7 @@ package com.tony.kingdetective.telegram.handler.impl;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.oracle.bmc.identity.IdentityClient;
-import com.oracle.bmc.identity.model.MfaTotpDevice;
+import com.oracle.bmc.identity.model.MfaTotpDeviceSummary;
 import com.oracle.bmc.identity.requests.DeleteMfaTotpDeviceRequest;
 import com.oracle.bmc.identity.requests.ListMfaTotpDevicesRequest;
 import com.oracle.bmc.identity.responses.ListMfaTotpDevicesResponse;
@@ -63,7 +63,7 @@ public class Clear2FADevicesHandler extends AbstractCallbackHandler {
                             .build();
                     
                     ListMfaTotpDevicesResponse listResponse = identityClient.listMfaTotpDevices(listRequest);
-                    List<MfaTotpDevice> devices = listResponse.getItems();
+                    List<MfaTotpDeviceSummary> devices = listResponse.getItems();
                     
                     message.append(String.format("📌 %s: ", user.getUsername()));
                     
@@ -154,11 +154,11 @@ class ConfirmClear2FAHandler extends AbstractCallbackHandler {
                             .build();
                     
                     ListMfaTotpDevicesResponse listResponse = identityClient.listMfaTotpDevices(listRequest);
-                    List<MfaTotpDevice> devices = listResponse.getItems();
+                    List<MfaTotpDeviceSummary> devices = listResponse.getItems();
                     
                     message.append(String.format("📌 %s:\n", user.getUsername()));
                     
-                    for (MfaTotpDevice device : devices) {
+                    for (MfaTotpDeviceSummary device : devices) {
                         try {
                             DeleteMfaTotpDeviceRequest deleteRequest = DeleteMfaTotpDeviceRequest.builder()
                                     .userId(userId)

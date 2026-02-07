@@ -680,6 +680,25 @@ public class SysServiceImpl implements ISysService {
     }
 
     @Override
+    public List<SysUserDTO> list() {
+        List<OciUser> users = userService.list();
+        if (CollectionUtil.isEmpty(users)) {
+            return Collections.emptyList();
+        }
+        return users.stream().map(ociUser -> SysUserDTO.builder()
+                .ociCfg(SysUserDTO.OciCfg.builder()
+                        .id(ociUser.getId())
+                        .userId(ociUser.getOciUserId())
+                        .tenantId(ociUser.getOciTenantId())
+                        .region(ociUser.getOciRegion())
+                        .fingerprint(ociUser.getOciFingerprint())
+                        .privateKeyPath(ociUser.getOciKeyPath())
+                        .build())
+                .username(ociUser.getUsername())
+                .build()).collect(Collectors.toList());
+    }
+
+    @Override
     public SysUserDTO getOciUser(String ociCfgId) {
         OciUser ociUser = userService.getById(ociCfgId);
         return SysUserDTO.builder()

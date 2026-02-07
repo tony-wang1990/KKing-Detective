@@ -41,7 +41,29 @@ public class OciUser implements Serializable {
 
     private String ociKeyPath;
 
+    @TableField("deleted")
+    private Integer deleted;
+
     private LocalDateTime createTime;
+
+    public String getUserId() { return this.ociUserId; }
+    public String getTenantId() { return this.ociTenantId; }
+    public String getFingerprint() { return this.ociFingerprint; }
+
+    public String getPrivateKey() {
+        if (this.ociKeyPath != null && cn.hutool.core.io.FileUtil.exist(this.ociKeyPath)) {
+            return cn.hutool.core.io.FileUtil.readUtf8String(this.ociKeyPath);
+        }
+        return null;
+    }
+
+    public void setDeleted(int deleted) {
+        this.deleted = deleted;
+    }
+
+    public Integer getDeleted() {
+        return this.deleted;
+    }
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

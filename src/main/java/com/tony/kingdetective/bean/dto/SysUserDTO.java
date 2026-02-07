@@ -41,6 +41,7 @@ public class SysUserDTO {
     @Data
     @Builder
     public static class OciCfg {
+        private String id;
         private String tenantId;
         private String userId;
         private String fingerprint;
