@@ -627,9 +627,12 @@ class Ipv6AutoEnableHandler extends AbstractCallbackHandler {
                 
                 // 2. Enable VCN IPv6 if needed
                 if (vcn.getIpv6CidrBlocks() == null || vcn.getIpv6CidrBlocks().isEmpty()) {
+                    // Request Oracle to assign an IPv6 CIDR block
                     UpdateVcnRequest updateVcnRequest = UpdateVcnRequest.builder()
                             .vcnId(vcnId)
-                            .updateVcnDetails(UpdateVcnDetails.builder().isIpv6Enabled(true).build())
+                            .updateVcnDetails(UpdateVcnDetails.builder()
+                                    .ipv6PrivateCidrBlocks(java.util.Collections.singletonList(""))  // Empty string requests auto-assignment
+                                    .build())
                             .build();
                     vcn = fetcher.getVirtualNetworkClient().updateVcn(updateVcnRequest).getVcn();
                     // Wait a bit for propagation? usually fast.

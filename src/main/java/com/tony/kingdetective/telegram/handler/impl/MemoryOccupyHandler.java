@@ -284,10 +284,7 @@ class OccupyMemoryAutoHandler extends AbstractCallbackHandler {
                         .source(com.oracle.bmc.computeinstanceagent.model.InstanceAgentCommandSourceViaTextDetails.builder()
                                 .text(scriptContent)
                                 .build())
-                        .output(com.oracle.bmc.computeinstanceagent.model.InstanceAgentCommandOutputViaObjectStorageUriDetails.builder()
-                                .bucketName("")  // No output storage bucket
-                                .objectName("")
-                                .build())
+                        // No output needed for this command
                         .build();
 
                 com.oracle.bmc.computeinstanceagent.requests.CreateInstanceAgentCommandRequest request = 
