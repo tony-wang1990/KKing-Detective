@@ -113,6 +113,7 @@ class MonitorEnableHandler extends AbstractCallbackHandler {
                 monitorKv = new OciKv();
                 monitorKv.setCode(MONITOR_KEY);
                 monitorKv.setValue("true");
+                monitorKv.setType("SYSTEM"); // Fix: Set type for NOT NULL constraint
                 kvService.save(monitorKv);
             } else {
                 monitorKv.setValue("true");

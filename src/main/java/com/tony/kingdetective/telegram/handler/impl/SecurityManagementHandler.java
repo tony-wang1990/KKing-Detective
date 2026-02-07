@@ -121,6 +121,7 @@ class DefenseModeToggleHandler extends AbstractCallbackHandler {
                 defenseModeKv = new OciKv();
                 defenseModeKv.setCode(DEFENSE_MODE_KEY);
                 defenseModeKv.setValue(String.valueOf(newStatus));
+                defenseModeKv.setType("SYSTEM"); // Fix: Set type to satisfy NOT NULL constraint
                 kvService.save(defenseModeKv);
             } else {
                 defenseModeKv.setValue(String.valueOf(newStatus));

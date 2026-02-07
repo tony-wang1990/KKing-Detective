@@ -121,6 +121,7 @@ class ReportEnableHandler extends AbstractCallbackHandler {
                 reportKv = new OciKv();
                 reportKv.setCode(REPORT_KEY);
                 reportKv.setValue("true");
+                reportKv.setType("SYSTEM"); // Fix: Set type for NOT NULL constraint
                 kvService.save(reportKv);
             } else {
                 reportKv.setValue("true");
