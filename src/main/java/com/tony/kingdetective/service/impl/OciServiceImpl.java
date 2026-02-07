@@ -832,6 +832,7 @@ public class OciServiceImpl implements IOciService {
                                 .region(sysUserDTO.getOciCfg().getRegion())
                                 .fingerprint(sysUserDTO.getOciCfg().getFingerprint())
                                 .privateKeyPath(sysUserDTO.getOciCfg().getPrivateKeyPath())
+                                .privateKey(sysUserDTO.getOciCfg().getPrivateKey())
                                 .build())
                         .username(sysUserDTO.getUsername())
                         .ocpus(1.0F)
@@ -947,6 +948,7 @@ public class OciServiceImpl implements IOciService {
                         .region(ociUser.getOciRegion())
                         .fingerprint(ociUser.getOciFingerprint())
                         .privateKeyPath(ociUser.getOciKeyPath())
+                        .privateKey(ociUser.getPrivateKey())
                         .build())
                 .username(ociUser.getUsername())
                 .build();
