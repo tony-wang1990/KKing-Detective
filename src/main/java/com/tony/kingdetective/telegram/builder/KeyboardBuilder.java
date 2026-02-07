@@ -21,7 +21,14 @@ public class KeyboardBuilder {
      */
     public static List<InlineKeyboardRow> buildMainMenu() {
         return Arrays.asList(
-                // Row 1: 账户与核心查询
+                // Row 1: 快捷抢机器（最重要功能）
+                new InlineKeyboardRow(
+                        InlineKeyboardButton.builder()
+                                .text("🚀 一键抢机")
+                                .callbackData("config_list")
+                                .build()
+                ),
+                // Row 2: 账户与核心查询
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
                                 .text("1. 账户管理")
