@@ -8,6 +8,7 @@
 *.key
 *.pem
 .secret_key
+my-update.sh
 
 # ==========================
 # Application Configuration
