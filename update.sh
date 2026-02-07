@@ -1,127 +1,131 @@
 #!/bin/bash
 
-# King-Detective v4.0.0 一键更新脚本
-# 作者: Antigravity AI
-# 日期: 2026-02-07
+# King-Detective 一键更新脚本
+# 保留所有数据：账户、密码、私钥、配置
 
-set -e  # 遇到错误立即停止
+set -e
 
-# 颜色定义
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
-
-# 配置
-CONTAINER_NAME="king-detective"
-IMAGE_NAME="ghcr.io/tony-wang1990/king-detective:latest"
-PORT="9527"
-
-echo -e "${GREEN}================================${NC}"
-echo -e "${GREEN}King-Detective v4.0 一键更新${NC}"
-echo -e "${GREEN}================================${NC}"
+echo "========================================"
+echo "   King-Detective 一键更新脚本"
+echo "========================================"
 echo ""
 
-# 步骤1: 检查容器是否存在
-echo -e "${YELLOW}[1/6]${NC} 检查现有容器..."
-if ! docker ps | grep -q "$CONTAINER_NAME"; then
-    echo -e "${RED}错误: 未找到运行中的 $CONTAINER_NAME 容器${NC}"
+# 配置变量
+CONTAINER_NAME="king-detective"
+IMAGE_NAME="ghcr.io/tony-wang1990/king-detective:main"
+DATA_DIR="/root/king-detective/data"
+KEYS_DIR="/root/king-detective/keys"
+
+# 从环境变量读取敏感配置（请在服务器上设置这些环境变量）
+# 示例：export BOT_TOKEN="你的token"
+#      export ADMIN_USERNAME="你的用户名"
+#      export ADMIN_PASSWORD="你的密码"
+
+if [ -z "$BOT_TOKEN" ]; then
+    echo "❌ 错误: 未设置环境变量 BOT_TOKEN"
+    echo ""
+    echo "请先设置环境变量："
+    echo "  export BOT_TOKEN=\"你的Telegram Bot Token\""
+    echo "  export ADMIN_USERNAME=\"你的管理员用户名\""
+    echo "  export ADMIN_PASSWORD=\"你的管理员密码\""
+    echo ""
+    echo "或者直接在命令行运行："
+    echo "  BOT_TOKEN=\"xxx\" ADMIN_USERNAME=\"xxx\" ADMIN_PASSWORD=\"xxx\" bash update.sh"
     exit 1
 fi
-echo -e "${GREEN}✓ 找到容器${NC}"
 
-# 步骤2: 备份数据库
-echo -e "${YELLOW}[2/6]${NC} 备份数据库..."
-BACKUP_FILE="king-detective.db.backup-$(date +%Y%m%d-%H%M%S)"
-docker exec $CONTAINER_NAME cp /app/king-detective.db /app/$BACKUP_FILE 2>/dev/null || {
-    echo -e "${YELLOW}警告: 无法在容器内备份，尝试从主机备份...${NC}"
-    if [ -f "./king-detective.db" ]; then
-        cp "./king-detective.db" "./$BACKUP_FILE"
-    elif [ -f "./data/king-detective.db" ]; then
-        cp "./data/king-detective.db" "./data/$BACKUP_FILE"
-    fi
-}
-echo -e "${GREEN}✓ 备份完成: $BACKUP_FILE${NC}"
+if [ -z "$ADMIN_USERNAME" ]; then
+    echo "❌ 错误: 未设置环境变量 ADMIN_USERNAME"
+    exit 1
+fi
 
-# 步骤3: 获取旧容器配置
-echo -e "${YELLOW}[3/6]${NC} 保存容器配置..."
-OLD_CONTAINER_ID=$(docker ps | grep "$CONTAINER_NAME" | awk '{print $1}')
-echo -e "${GREEN}✓ 容器ID: $OLD_CONTAINER_ID${NC}"
+if [ -z "$ADMIN_PASSWORD" ]; then
+    echo "❌ 错误: 未设置环境变量 ADMIN_PASSWORD"
+    exit 1
+fi
 
-# 步骤4: 停止并删除旧容器
-echo -e "${YELLOW}[4/6]${NC} 停止旧容器..."
-docker stop $CONTAINER_NAME
-docker rm $CONTAINER_NAME
-echo -e "${GREEN}✓ 旧容器已删除${NC}"
-
-# 步骤5: 拉取最新镜像
-echo -e "${YELLOW}[5/6]${NC} 拉取最新镜像（可能需要1-2分钟）..."
-docker pull $IMAGE_NAME
-echo -e "${GREEN}✓ 镜像拉取完成${NC}"
-
-# 步骤6: 启动新容器
-echo -e "${YELLOW}[6/6]${NC} 启动新容器..."
-
-# 尝试检测数据目录
-DATA_DIR=""
-if [ -d "/root/king-detective/data" ]; then
-    DATA_DIR="/root/king-detective/data"
-elif [ -d "./data" ]; then
-    DATA_DIR="$(pwd)/data"
-elif [ -d "/root/data" ]; then
-    DATA_DIR="/root/data"
-else
-    DATA_DIR="$(pwd)/data"
+echo "📦 步骤 1/5: 检查数据目录..."
+if [ ! -d "$DATA_DIR" ]; then
+    echo "⚠️  数据目录不存在，创建: $DATA_DIR"
     mkdir -p "$DATA_DIR"
 fi
 
-docker run -d \
-  --name $CONTAINER_NAME \
-  --restart unless-stopped \
-  -p $PORT:$PORT \
-  -v $DATA_DIR:/app \
-  $IMAGE_NAME
+if [ ! -d "$KEYS_DIR" ]; then
+    echo "⚠️  私钥目录不存在，创建: $KEYS_DIR"
+    mkdir -p "$KEYS_DIR"
+fi
 
-echo -e "${GREEN}✓ 新容器已启动${NC}"
+# 检查数据库文件
+if [ -f "$DATA_DIR/king-detective.db" ]; then
+    echo "✅ 数据库文件存在"
+    # 备份数据库
+    BACKUP_FILE="$DATA_DIR/king-detective.db.backup.$(date +%Y%m%d_%H%M%S)"
+    cp "$DATA_DIR/king-detective.db" "$BACKUP_FILE"
+    echo "📋 已备份数据库到: $BACKUP_FILE"
+else
+    echo "⚠️  数据库文件不存在（首次安装正常）"
+fi
 
-# 等待5秒让容器启动
 echo ""
-echo -e "${YELLOW}等待容器启动...${NC}"
+echo "🛑 步骤 2/5: 停止旧容器..."
+if docker ps -a --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
+    docker stop "$CONTAINER_NAME" 2>/dev/null || true
+    docker rm "$CONTAINER_NAME" 2>/dev/null || true
+    echo "✅ 已停止并删除旧容器"
+else
+    echo "ℹ️  容器不存在（首次安装正常）"
+fi
+
+echo ""
+echo "⬇️  步骤 3/5: 拉取最新镜像..."
+docker pull "$IMAGE_NAME"
+
+echo ""
+echo "🚀 步骤 4/5: 启动新容器..."
+docker run -d \
+  --name "$CONTAINER_NAME" \
+  -p 9527:9527 \
+  -e ADMIN_USERNAME="$ADMIN_USERNAME" \
+  -e ADMIN_PASSWORD="$ADMIN_PASSWORD" \
+  -e TELEGRAM_BOT_TOKEN="$BOT_TOKEN" \
+  -v "$DATA_DIR:/app/king-detective/data" \
+  -v "$KEYS_DIR:/app/king-detective/keys" \
+  --restart unless-stopped \
+  "$IMAGE_NAME"
+
+echo "✅ 容器已启动"
+
+echo ""
+echo "⏳ 步骤 5/5: 等待服务启动..."
 sleep 5
 
-# 验证
 echo ""
-echo -e "${GREEN}================================${NC}"
-echo -e "${GREEN}验证更新结果${NC}"
-echo -e "${GREEN}================================${NC}"
-
-# 检查容器状态
-if docker ps | grep -q "$CONTAINER_NAME"; then
-    echo -e "${GREEN}✓ 容器运行正常${NC}"
+echo "📊 检查容器状态..."
+if docker ps --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
+    echo "✅ 容器运行中"
+    echo ""
+    echo "📋 最近日志："
+    docker logs "$CONTAINER_NAME" --tail 10
 else
-    echo -e "${RED}✗ 容器未运行!${NC}"
-    echo "查看日志："
-    docker logs $CONTAINER_NAME --tail=50
+    echo "❌ 容器未运行，查看错误日志："
+    docker logs "$CONTAINER_NAME" --tail 30
     exit 1
 fi
 
-# 显示日志
 echo ""
-echo -e "${YELLOW}最近的日志:${NC}"
-docker logs $CONTAINER_NAME --tail=30
-
+echo "========================================"
+echo "✅ 更新完成！"
+echo "========================================"
 echo ""
-echo -e "${GREEN}================================${NC}"
-echo -e "${GREEN}更新完成! 🎉${NC}"
-echo -e "${GREEN}================================${NC}"
+echo "📁 数据保留位置："
+echo "   - 数据库: $DATA_DIR/king-detective.db"
+echo "   - 私钥: $KEYS_DIR/"
 echo ""
-echo -e "✅ 版本: v4.0.0"
-echo -e "✅ 容器: $CONTAINER_NAME"
-echo -e "✅ 端口: $PORT"
-echo -e "✅ 备份: $BACKUP_FILE"
+echo "🔗 访问地址: http://你的服务器IP:9527"
+echo "🤖 Telegram Bot: @你的Bot用户名"
 echo ""
-echo -e "${YELLOW}下一步:${NC}"
-echo -e "1. 给你的 Telegram Bot 发送 /start 测试"
-echo -e "2. 查看完整日志: ${GREEN}docker logs $CONTAINER_NAME${NC}"
-echo -e "3. 如有问题，运行回滚脚本恢复"
+echo "💡 常用命令："
+echo "   查看日志: docker logs -f $CONTAINER_NAME"
+echo "   重启容器: docker restart $CONTAINER_NAME"
+echo "   停止容器: docker stop $CONTAINER_NAME"
 echo ""
