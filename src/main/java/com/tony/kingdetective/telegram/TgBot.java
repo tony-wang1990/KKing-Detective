@@ -110,6 +110,12 @@ public class TgBot implements LongPollingSingleThreadUpdateConsumer {
                 handleBackupPasswordInput(chatId, messageText);
             } else if (sessionType == ConfigSessionStorage.SessionType.RESTORE_PASSWORD) {
                 handleRestorePasswordInput(chatId, messageText);
+            } else if (sessionType == ConfigSessionStorage.SessionType.ADD_ACCOUNT_CONFIG) {
+                handleAddAccountConfigInput(chatId, messageText);
+            } else if (sessionType == ConfigSessionStorage.SessionType.ADD_ACCOUNT_KEY) {
+                handleAddAccountKeyInput(chatId, messageText);
+            } else if (sessionType == ConfigSessionStorage.SessionType.ADD_ACCOUNT_REMARK) {
+                handleAddAccountRemarkInput(chatId, messageText);
             }
             return;
         }
@@ -446,10 +452,18 @@ public class TgBot implements LongPollingSingleThreadUpdateConsumer {
         
         ConfigSessionStorage configStorage = ConfigSessionStorage.getInstance();
         
-        // 检查是否处于恢复模式
+        // 检查是否处于恢复模式 或 添加账户模式
+        ConfigSessionStorage.SessionType sessionType = configStorage.getSessionType(chatId);
         if (!configStorage.hasActiveSession(chatId) || 
-            configStorage.getSessionType(chatId) != ConfigSessionStorage.SessionType.RESTORE_PASSWORD) {
-            sendMessage(chatId, "❌ 请先在备份恢复菜单中点击「开始恢复」按钮");
+            (sessionType != ConfigSessionStorage.SessionType.RESTORE_PASSWORD && 
+             sessionType != ConfigSessionStorage.SessionType.ADD_ACCOUNT_KEY)) {
+            sendMessage(chatId, "❌ 请先在相关菜单中发起操作");
+            return;
+        }
+        
+        // Handle Account Key Upload
+        if (sessionType == ConfigSessionStorage.SessionType.ADD_ACCOUNT_KEY) {
+            handleAddAccountKeyFile(update, chatId);
             return;
         }
         
@@ -670,6 +684,223 @@ public class TgBot implements LongPollingSingleThreadUpdateConsumer {
             log.error("Failed to handle AI chat", e);
             sendMessage(chatId, "❌ 处理失败: " + e.getMessage(), false);
         }
+    }
+
+    // ==========================================
+    // Account Addition Logic
+    // ==========================================
+
+    /**
+     * 第一步：处理 OCI Config 输入
+     */
+    private void handleAddAccountConfigInput(long chatId, String text) {
+        ConfigSessionStorage storage = ConfigSessionStorage.getInstance();
+        try {
+            // Simple parsing logic (Validation)
+            String user = getValueFromConfig(text, "user");
+            String fingerprint = getValueFromConfig(text, "fingerprint");
+            String tenancy = getValueFromConfig(text, "tenancy");
+            String region = getValueFromConfig(text, "region");
+
+            if (user == null || fingerprint == null || tenancy == null || region == null) {
+                sendMessage(chatId, 
+                    "❌ *配置格式错误*\n\n" +
+                    "未检测到必要的字段 (user, fingerprint, tenancy, region)。\n" +
+                    "请检查复制的内容是否完整。\n\n" +
+                    "请重新输入，或发送 /cancel 取消。"
+                , true);
+                return;
+            }
+            
+            // Store parsed data
+            java.util.Map<String, Object> data = new java.util.HashMap<>();
+            data.put("user", user);
+            data.put("fingerprint", fingerprint);
+            data.put("tenancy", tenancy);
+            data.put("region", region);
+            data.put("rawConfig", text); // Keep raw config if needed later
+            
+            // Transition to next step
+            storage.startAddAccountKey(chatId, data);
+            
+            sendMessage(chatId, 
+                "✅ *配置已识别*\n\n" +
+                "🔑 *第二步：上传私钥*\n\n" +
+                "请发送私钥文件 (`.pem`) 或直接发送私钥内容文本。\n\n" +
+                "格式示例：\n" +
+                "`-----BEGIN PRIVATE KEY-----...`"
+            , true);
+
+        } catch (Exception e) {
+            log.error("Failed to parse config input", e);
+            sendMessage(chatId, "❌ 处理配置失败: " + e.getMessage());
+        }
+    }
+
+    /**
+     * 第二步：处理私钥文本输入
+     */
+    private void handleAddAccountKeyInput(long chatId, String text) {
+        if (!text.contains("BEGIN") && !text.contains("PRIVATE KEY")) {
+            sendMessage(chatId, "❌ *非法的私钥格式*\n\n请确保包含 `-----BEGIN ... PRIVATE KEY-----` 头。", true);
+            return;
+        }
+        processAccountKey(chatId, text);
+    }
+
+    /**
+     * 第二步：处理私钥文件上传
+     */
+    private void handleAddAccountKeyFile(Update update, long chatId) {
+        try {
+            org.telegram.telegrambots.meta.api.objects.Document document = update.getMessage().getDocument();
+            
+            // Download file
+            String fileId = document.getFileId();
+            org.telegram.telegrambots.meta.api.methods.GetFile getFile = new org.telegram.telegrambots.meta.api.methods.GetFile(fileId);
+            org.telegram.telegrambots.meta.api.objects.File tgFile = telegramClient.execute(getFile);
+            java.io.File downloadedFile = telegramClient.downloadFile(tgFile);
+            
+            // Read content
+            String keyContent = cn.hutool.core.io.FileUtil.readUtf8String(downloadedFile);
+            
+            // Validate content
+            if (!keyContent.contains("BEGIN") && !keyContent.contains("PRIVATE KEY")) {
+                sendMessage(chatId, "❌ *文件无效*\n\n文件内容不是有效的私钥格式。", true);
+                return;
+            }
+            
+            processAccountKey(chatId, keyContent);
+            
+        } catch (Exception e) {
+            log.error("Failed to handle key file", e);
+            sendMessage(chatId, "❌ 读取文件失败: " + e.getMessage());
+        }
+    }
+
+    /**
+     * 处理私钥通用逻辑 (保存并进入下一步)
+     */
+    private void processAccountKey(long chatId, String keyContent) {
+        ConfigSessionStorage storage = ConfigSessionStorage.getInstance();
+        ConfigSessionStorage.SessionState state = storage.getSessionState(chatId);
+        
+        if (state == null) {
+            sendMessage(chatId, "❌ 会话已过期，请重新开始。");
+            return;
+        }
+
+        // Save key content to session data temporarily
+        state.getData().put("keyContent", keyContent);
+        
+        // Transition to next step
+        storage.startAddAccountRemark(chatId, state.getData());
+        
+        sendMessage(chatId, 
+            "✅ *私钥已接收*\n\n" +
+            "🏷️ *第三步：设置备注名*\n\n" +
+            "给这个账户起个名字（例如：`US-SanJose` 或 `我的甲骨文1号`）。\n" +
+            "这将用于在菜单中显示。"
+        , true);
+    }
+
+    /**
+     * 第三步：处理备注输入并完成添加
+     */
+    private void handleAddAccountRemarkInput(long chatId, String remark) {
+        ConfigSessionStorage storage = ConfigSessionStorage.getInstance();
+        ConfigSessionStorage.SessionState state = storage.getSessionState(chatId);
+        
+        if (state == null) {
+            sendMessage(chatId, "❌ 会话已过期，请重新开始。");
+            return;
+        }
+        
+        try {
+            sendMessage(chatId, "⏳ 正在验证并保存...");
+            
+            // Retrieve data
+            java.util.Map<String, Object> data = state.getData();
+            String userOctId = (String) data.get("user");
+            String fingerprint = (String) data.get("fingerprint");
+            String tenancy = (String) data.get("tenancy");
+            String region = (String) data.get("region");
+            String keyContent = (String) data.get("keyContent");
+            
+            // Save Key File
+            // Key file naming convention: ~/.oci/oci_api_key_{username}_{timestamp}.pem
+            String userHome = System.getProperty("user.home");
+            String keyDir = userHome + java.io.File.separator + ".oci";
+            if (!cn.hutool.core.io.FileUtil.exist(keyDir)) {
+                cn.hutool.core.io.FileUtil.mkdir(keyDir);
+            }
+            
+            // Clean remark to be filename safe
+            String safeRemark = remark.replaceAll("[^a-zA-Z0-9_-]", "_");
+            String keyFileName = String.format("oci_api_key_%s_%d.pem", safeRemark, System.currentTimeMillis());
+            String keyPath = keyDir + java.io.File.separator + keyFileName;
+            
+            cn.hutool.core.io.FileUtil.writeUtf8String(keyContent, keyPath);
+            // Set permissions (600) for security (Linux only, but good practice)
+            try {
+                if (!System.getProperty("os.name").toLowerCase().contains("win")) {
+                    java.nio.file.Files.setPosixFilePermissions(java.nio.file.Paths.get(keyPath), 
+                        java.util.Set.of(java.nio.file.attribute.PosixFilePermission.OWNER_READ, java.nio.file.attribute.PosixFilePermission.OWNER_WRITE));
+                }
+            } catch (Exception ignored) {}
+
+            // Save User to DB
+            com.tony.kingdetective.service.IOciUserService userService = SpringUtil.getBean(com.tony.kingdetective.service.IOciUserService.class);
+            
+            com.tony.kingdetective.bean.entity.OciUser ociUser = new com.tony.kingdetective.bean.entity.OciUser();
+            ociUser.setId(cn.hutool.core.util.IdUtil.getSnowflakeNextIdStr());
+            ociUser.setUsername(remark);
+            ociUser.setOciTenantId(tenancy);
+            ociUser.setOciUserId(userOctId);
+            ociUser.setOciFingerprint(fingerprint);
+            ociUser.setOciRegion(region);
+            ociUser.setOciKeyPath(keyPath);
+            ociUser.setTenantName(remark); // Default tenant name to remark
+            ociUser.setCreateTime(java.time.LocalDateTime.now());
+            ociUser.setDeleted(0);
+            
+            userService.save(ociUser);
+            
+            // Check connectivity (Optional enhancement: actually test the connection here)
+            // For now, assume success if saved.
+            
+            sendMessage(chatId, 
+                String.format("🎉 *账户添加成功！*\n\n" +
+                              "备注名: %s\n" +
+                              "区域: %s\n" +
+                              "状态: ✅ 已保存\n\n" +
+                              "您可以点击下方按钮管理该账户。", remark, region),
+                true
+            );
+            
+            // Clear session
+            storage.clearSession(chatId);
+            
+            // Show new account list
+            // (We could trigger AccountManagementHandler here, but simple message is safer)
+
+        } catch (Exception e) {
+            log.error("Failed to save new account", e);
+            sendMessage(chatId, "❌ 保存失败: " + e.getMessage());
+            // Don't clear session so user can retry remark or key if needed? No, fail fast.
+            storage.clearSession(chatId);
+        }
+    }
+
+    private String getValueFromConfig(String text, String key) {
+        String[] lines = text.split("\n");
+        for (String line : lines) {
+            line = line.trim();
+            if (line.startsWith(key + "=") || line.startsWith(key + " =")) {
+                return line.split("=", 2)[1].trim();
+            }
+        }
+        return null;
     }
 
     /**

@@ -109,11 +109,52 @@ public class ConfigSessionStorage {
     }
     
     /**
+     * Start add account config session
+     */
+    public void startAddAccountConfig(long chatId) {
+        SessionState state = new SessionState();
+        state.setType(SessionType.ADD_ACCOUNT_CONFIG);
+        sessions.put(chatId, state);
+        log.debug("Started add account config session for chatId: {}", chatId);
+    }
+
+    /**
+     * Start add account key session
+     */
+    public void startAddAccountKey(long chatId, Map<String, Object> previousData) {
+        SessionState state = new SessionState();
+        state.setType(SessionType.ADD_ACCOUNT_KEY);
+        if (previousData != null) {
+            state.setData(previousData);
+        }
+        sessions.put(chatId, state);
+        log.debug("Started add account key session for chatId: {}", chatId);
+    }
+    
+    /**
+     * Start add account remark session
+     */
+    public void startAddAccountRemark(long chatId, Map<String, Object> previousData) {
+        SessionState state = new SessionState();
+        state.setType(SessionType.ADD_ACCOUNT_REMARK);
+        if (previousData != null) {
+            state.setData(previousData);
+        }
+        sessions.put(chatId, state);
+        log.debug("Started add account remark session for chatId: {}", chatId);
+    }
+
+    // ... existing methods ...
+
+    /**
      * Session type enum
      */
     public enum SessionType {
         VNC_CONFIG,
         BACKUP_PASSWORD,
-        RESTORE_PASSWORD
+        RESTORE_PASSWORD,
+        ADD_ACCOUNT_CONFIG,
+        ADD_ACCOUNT_KEY,
+        ADD_ACCOUNT_REMARK
     }
 }
