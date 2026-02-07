@@ -92,7 +92,7 @@
         </dependency>
         <dependency>
             <groupId>com.oracle.oci.sdk</groupId>
-            <artifactId>oci-java-sdk-compute</artifactId>
+            <artifactId>oci-java-sdk-computeinstanceagent</artifactId>
         </dependency>
 
 
