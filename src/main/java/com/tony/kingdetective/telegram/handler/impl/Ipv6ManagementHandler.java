@@ -629,9 +629,9 @@ class Ipv6AutoEnableHandler extends AbstractCallbackHandler {
                 // TODO: This requires AddVcnIpv6Cidr API, not UpdateVcn
                 // Temporarily disabled until proper implementation
                 if (vcn.getIpv6CidrBlocks() == null || vcn.getIpv6CidrBlocks().isEmpty()) {
-                    String warningMsg = "⚠️ VCN IPv6 not enabled. Please enable IPv6 for VCN manually in OCI Console first.";
-                    sendMessage(chatId, warningMsg);
-                    return null;
+                    return buildEditMessage(callbackQuery, 
+                        "⚠️ VCN IPv6 not enabled. Please enable IPv6 for VCN manually in OCI Console first.", 
+                        new InlineKeyboardMarkup(List.of(KeyboardBuilder.buildCancelRow())));
                 }
                 
                 // 3. Enable Subnet IPv6 if needed
