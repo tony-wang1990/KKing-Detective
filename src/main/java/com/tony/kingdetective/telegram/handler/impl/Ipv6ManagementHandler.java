@@ -378,6 +378,29 @@ class Ipv6AddHandler extends AbstractCallbackHandler {
                 GetVnicResponse getVnicResponse = fetcher.getVirtualNetworkClient().getVnic(getVnicRequest);
                 Vnic vnic = getVnicResponse.getVnic();
                 
+                // Check if Subnet has IPv6 enabled
+                GetSubnetRequest getSubnetRequest = GetSubnetRequest.builder()
+                        .subnetId(vnic.getSubnetId())
+                        .build();
+                GetSubnetResponse getSubnetResponse = fetcher.getVirtualNetworkClient().getSubnet(getSubnetRequest);
+                Subnet subnet = getSubnetResponse.getSubnet();
+                
+                if (subnet.getIpv6CidrBlocks() == null || subnet.getIpv6CidrBlocks().isEmpty()) {
+                    return buildEditMessage(
+                            callbackQuery,
+                            "❌ **子网未启用 IPv6**\n\n" +
+                            "该实例所在的子网 (" + subnet.getDisplayName() + ") 未配置 IPv6 CIDR。\n\n" +
+                            "💡 **解决方法**：\n" +
+                            "请登录 Oracle Cloud 控制台，找到 VCN -> Subnets，编辑该子网并勾选 'Enable IPv6 CIDR Block'。",
+                            new InlineKeyboardMarkup(List.of(
+                                    new InlineKeyboardRow(
+                                            KeyboardBuilder.button("◀️ 返回", "ipv6_management:" + ociCfgId)
+                                    ),
+                                    KeyboardBuilder.buildCancelRow()
+                            ))
+                    );
+                }
+                
                 // Create IPv6
                 CreateIpv6Details ipv6Details = CreateIpv6Details.builder()
                         .vnicId(vnicId)
