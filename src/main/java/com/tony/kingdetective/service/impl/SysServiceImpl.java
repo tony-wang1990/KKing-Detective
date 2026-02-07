@@ -693,6 +693,7 @@ public class SysServiceImpl implements ISysService {
                         .region(ociUser.getOciRegion())
                         .fingerprint(ociUser.getOciFingerprint())
                         .privateKeyPath(ociUser.getOciKeyPath())
+                        .privateKey(ociUser.getPrivateKey())
                         .build())
                 .username(ociUser.getUsername())
                 .build()).collect(Collectors.toList());
@@ -708,6 +709,7 @@ public class SysServiceImpl implements ISysService {
                         .region(ociUser.getOciRegion())
                         .fingerprint(ociUser.getOciFingerprint())
                         .privateKeyPath(ociUser.getOciKeyPath())
+                        .privateKey(ociUser.getPrivateKey())
                         .build())
                 .username(ociUser.getUsername())
                 .build();
@@ -723,6 +725,7 @@ public class SysServiceImpl implements ISysService {
                         .region(StrUtil.isBlank(region) ? ociUser.getOciRegion() : region)
                         .fingerprint(ociUser.getOciFingerprint())
                         .privateKeyPath(ociUser.getOciKeyPath())
+                        .privateKey(ociUser.getPrivateKey())
                         .compartmentId(compartmentId)
                         .build())
                 .username(ociUser.getUsername())
@@ -1006,6 +1009,7 @@ public class SysServiceImpl implements ISysService {
                                             .region(ociUser.getOciRegion())
                                             .fingerprint(ociUser.getOciFingerprint())
                                             .privateKeyPath(ociUser.getOciKeyPath())
+                                            .privateKey(ociUser.getPrivateKey())
                                             .build())
                                     .taskId(task.getId())
                                     .username(ociUser.getUsername())

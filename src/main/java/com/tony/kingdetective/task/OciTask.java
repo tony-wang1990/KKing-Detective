@@ -178,6 +178,7 @@ public class OciTask implements ApplicationRunner {
                                                 .region(StrUtil.isBlank(task.getOciRegion()) ? ociUser.getOciRegion() : task.getOciRegion())
                                                 .fingerprint(ociUser.getOciFingerprint())
                                                 .privateKeyPath(ociUser.getOciKeyPath())
+                                                .privateKey(ociUser.getPrivateKey())
                                                 .build())
                                         .taskId(task.getId())
                                         .username(ociUser.getUsername())

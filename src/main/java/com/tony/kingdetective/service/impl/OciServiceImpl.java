@@ -173,6 +173,7 @@ public class OciServiceImpl implements IOciService {
                         .tenantId(ociUser.getOciTenantId())
                         .region(ociUser.getOciRegion())
                         .privateKeyPath(ociUser.getOciKeyPath())
+                        .privateKey(ociUser.getPrivateKey())
                         .build())
                 .build();
         try (OracleInstanceFetcher fetcher = new OracleInstanceFetcher(sysUserDTO)) {
@@ -227,6 +228,7 @@ public class OciServiceImpl implements IOciService {
                         .region(ociUser.getOciRegion())
                         .fingerprint(ociUser.getOciFingerprint())
                         .privateKeyPath(ociUser.getOciKeyPath())
+                        .privateKey(ociUser.getPrivateKey())
                         .build())
                 .taskId(taskId)
                 .username(ociUser.getUsername())
@@ -474,6 +476,7 @@ public class OciServiceImpl implements IOciService {
                                     .tenantId(ociUser.getOciTenantId())
                                     .region(ociUser.getOciRegion())
                                     .privateKeyPath(ociUser.getOciKeyPath())
+                                    .privateKey(ociUser.getPrivateKey())
                                     .build())
                             .build();
                     try (OracleInstanceFetcher ociFetcher = new OracleInstanceFetcher(sysUserDTO)) {
