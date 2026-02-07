@@ -63,15 +63,20 @@ public class CostQueryHandler extends AbstractCallbackHandler {
                 UsageapiClient usageClient = UsageapiClient.builder()
                         .build(fetcher.getAuthenticationDetailsProvider());
                 
-                // Calculate date range (last 3 months)
-                LocalDate endDate = LocalDate.now();
+import java.time.ZoneOffset;
+
+// ...
+
+                // Calculate date range (last 3 months) in UTC
+                LocalDate endDate = LocalDate.now(ZoneOffset.UTC);
                 LocalDate startDate = endDate.minusMonths(3);
                 
                 // Query usage data
                 RequestSummarizedUsagesDetails requestDetails = RequestSummarizedUsagesDetails.builder()
                         .tenantId(user.getOciCfg().getTenantId())
-                        .timeUsageStarted(Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant()))
-                        .timeUsageEnded(Date.from(endDate.atStartOfDay(ZoneId.systemDefault()).toInstant()))
+                        // OCI Usage API requires start/end time to be 00:00:00 UTC
+                        .timeUsageStarted(Date.from(startDate.atStartOfDay(ZoneOffset.UTC).toInstant()))
+                        .timeUsageEnded(Date.from(endDate.atStartOfDay(ZoneOffset.UTC).toInstant()))
                         .granularity(RequestSummarizedUsagesDetails.Granularity.Monthly)
                         .queryType(RequestSummarizedUsagesDetails.QueryType.Cost)
                         .groupBy(Arrays.asList("service"))
