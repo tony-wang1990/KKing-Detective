@@ -173,10 +173,27 @@ class OpenPortsInstanceHandler extends AbstractCallbackHandler {
                 
                 // Get VCN for the instance's subnet
                 String subnetId = instance.getSubnetId();
+                
+                // Fallback: fetch subnet ID from VNIC if not present in instance object
+                if (subnetId == null || subnetId.isEmpty()) {
+                    ListVnicAttachmentsRequest vnicRequest = ListVnicAttachmentsRequest.builder()
+                            .compartmentId(fetcher.getCompartmentId())
+                            .instanceId(instance.getOcId())
+                            .build();
+                    ListVnicAttachmentsResponse vnicResponse = fetcher.getComputeClient().listVnicAttachments(vnicRequest);
+                    
+                    if (!vnicResponse.getItems().isEmpty()) {
+                        String vnicId = vnicResponse.getItems().get(0).getVnicId();
+                        GetVnicRequest getVnicRequest = GetVnicRequest.builder().vnicId(vnicId).build();
+                        GetVnicResponse getVnicResponse = fetcher.getVirtualNetworkClient().getVnic(getVnicRequest);
+                        subnetId = getVnicResponse.getVnic().getSubnetId();
+                    }
+                }
+                
                 if (subnetId == null || subnetId.isEmpty()) {
                     return buildEditMessage(
                             callbackQuery,
-                            "❌ 实例未关联子网",
+                            "❌ 实例未关联子网 (无法获取 VNIC 信息)",
                             new InlineKeyboardMarkup(List.of(
                                     new InlineKeyboardRow(
                                             KeyboardBuilder.button("◀️ 返回", "open_all_ports:" + ociCfgId)
@@ -287,6 +304,181 @@ class OpenPortsInstanceHandler extends AbstractCallbackHandler {
     @Override
     public String getCallbackPattern() {
         return "open_ports_instance:";
+    }
+}
+
+/**
+ * Open all ports for ALL instances (Batch)
+ */
+@Slf4j
+@Component
+class OpenPortsAllHandler extends AbstractCallbackHandler {
+    
+    @Override
+    public BotApiMethod<? extends Serializable> handle(CallbackQuery callbackQuery, TelegramClient telegramClient) {
+        long chatId = callbackQuery.getMessage().getChatId();
+        
+        InstanceSelectionStorage storage = InstanceSelectionStorage.getInstance();
+        String ociCfgId = storage.getConfigContext(chatId);
+        List<SysUserDTO.CloudInstance> instances = storage.getInstanceCache(chatId);
+        
+        if (CollectionUtil.isEmpty(instances)) {
+             return buildEditMessage(
+                    callbackQuery,
+                    "❌ 暂无实例缓存，请重新获取列表",
+                    new InlineKeyboardMarkup(List.of(KeyboardBuilder.buildCancelRow()))
+            );
+        }
+
+        // Send processing message
+        try {
+            telegramClient.execute(org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText.builder()
+                    .chatId(chatId)
+                    .messageId(callbackQuery.getMessage().getMessageId())
+                    .text("⏳ 正在批量开放端口，请稍候...")
+                    .build());
+        } catch (Exception ignored) {}
+        
+        ISysService sysService = SpringUtil.getBean(ISysService.class);
+        
+        try {
+            SysUserDTO sysUserDTO = sysService.getOciUser(ociCfgId);
+            
+            int successCount = 0;
+            int totalVcnUpdated = 0;
+            java.util.Set<String> processedVcnIds = new java.util.HashSet<>();
+            
+            try (OracleInstanceFetcher fetcher = new OracleInstanceFetcher(sysUserDTO)) {
+                VirtualNetworkClient vnClient = fetcher.getVirtualNetworkClient();
+                
+                for (SysUserDTO.CloudInstance instance : instances) {
+                    try {
+                        // 1. Get Subnet ID (Robust logic)
+                        String subnetId = instance.getSubnetId();
+                        if (subnetId == null || subnetId.isEmpty()) {
+                            ListVnicAttachmentsRequest vnicRequest = ListVnicAttachmentsRequest.builder()
+                                    .compartmentId(fetcher.getCompartmentId())
+                                    .instanceId(instance.getOcId())
+                                    .build();
+                            ListVnicAttachmentsResponse vnicResponse = fetcher.getComputeClient().listVnicAttachments(vnicRequest);
+                            if (!vnicResponse.getItems().isEmpty()) {
+                                String vnicId = vnicResponse.getItems().get(0).getVnicId();
+                                GetVnicRequest getVnicRequest = GetVnicRequest.builder().vnicId(vnicId).build();
+                                GetVnicResponse getVnicResponse = fetcher.getVirtualNetworkClient().getVnic(getVnicRequest);
+                                subnetId = getVnicResponse.getVnic().getSubnetId();
+                            }
+                        }
+                        
+                        if (subnetId == null) continue; // Skip if still null
+                        
+                        // 2. Get VCN ID
+                        GetSubnetRequest getSubnetReq = GetSubnetRequest.builder().subnetId(subnetId).build();
+                        String vcnId = vnClient.getSubnet(getSubnetReq).getSubnet().getVcnId();
+                        
+                        // Avoid re-processing same VCN
+                        if (processedVcnIds.contains(vcnId)) {
+                            successCount++;
+                            continue;
+                        }
+                        
+                        // 3. Update Security Lists for this VCN
+                        ListSecurityListsRequest listSecReq = ListSecurityListsRequest.builder()
+                                .compartmentId(fetcher.getCompartmentId())
+                                .vcnId(vcnId)
+                                .build();
+                        ListSecurityListsResponse listSecResp = vnClient.listSecurityLists(listSecReq);
+                        
+                        boolean vcnUpdated = false;
+                        for (SecurityList secList : listSecResp.getItems()) {
+                             // Create rule to allow all traffic
+                            IngressSecurityRule ingressRule = IngressSecurityRule.builder()
+                                    .protocol("all")
+                                    .source("0.0.0.0/0")
+                                    .description("Allow all ingress traffic")
+                                    .build();
+                            
+                            EgressSecurityRule egressRule = EgressSecurityRule.builder()
+                                    .protocol("all")    
+                                    .destination("0.0.0.0/0")
+                                    .description("Allow all egress traffic")
+                                    .build();
+                            
+                            List<IngressSecurityRule> ingressRules = new ArrayList<>(secList.getIngressSecurityRules());
+                            List<EgressSecurityRule> egressRules = new ArrayList<>(secList.getEgressSecurityRules());
+                            
+                            boolean hasIngressAll = ingressRules.stream()
+                                    .anyMatch(r -> "all".equals(r.getProtocol()) && "0.0.0.0/0".equals(r.getSource()));
+                            boolean hasEgressAll = egressRules.stream()
+                                    .anyMatch(r -> "all".equals(r.getProtocol()) && "0.0.0.0/0".equals(r.getDestination()));
+                            
+                            if (!hasIngressAll) {
+                                ingressRules.add(ingressRule);
+                            }
+                            if (!hasEgressAll) {
+                                egressRules.add(egressRule);
+                            }
+                            
+                            if (!hasIngressAll || !hasEgressAll) {
+                                UpdateSecurityListRequest updateReq = UpdateSecurityListRequest.builder()
+                                        .securityListId(secList.getId())
+                                        .updateSecurityListDetails(UpdateSecurityListDetails.builder()
+                                                .ingressSecurityRules(ingressRules)
+                                                .egressSecurityRules(egressRules)
+                                                .build())
+                                        .build();
+                                vnClient.updateSecurityList(updateReq);
+                                vcnUpdated = true;
+                            }
+                        }
+                        
+                        processedVcnIds.add(vcnId);
+                        successCount++;
+                        if (vcnUpdated) totalVcnUpdated++;
+                        
+                    } catch (Exception e) {
+                        log.warn("Failed to process instance {} for open ports: {}", instance.getName(), e.getMessage());
+                    }
+                }
+            }
+            
+            return buildEditMessage(
+                    callbackQuery,
+                    String.format(
+                            "✅ **批量操作完成！**\n\n" +
+                            "尝试处理: %d 个实例\n" +
+                            "成功覆盖: %d 个实例\n" +
+                            "更新网络: %d 个 VCN\n\n" +
+                            "所有关联的安全组规则已更新为允许所有流量。",
+                            instances.size(),
+                            successCount,
+                            totalVcnUpdated
+                    ),
+                    new InlineKeyboardMarkup(List.of(
+                            new InlineKeyboardRow(
+                                    KeyboardBuilder.button("◀️ 返回列表", "open_all_ports:" + ociCfgId)
+                            ),
+                            KeyboardBuilder.buildCancelRow()
+                    ))
+            );
+            
+        } catch (Exception e) {
+             log.error("Failed to batch open ports", e);
+            return buildEditMessage(
+                    callbackQuery,
+                    "❌ 批量开放失败\n\n" + e.getMessage(),
+                    new InlineKeyboardMarkup(List.of(
+                            new InlineKeyboardRow(
+                                    KeyboardBuilder.button("◀️ 返回", "open_all_ports:" + ociCfgId)
+                            ),
+                            KeyboardBuilder.buildCancelRow()
+                    ))
+            );
+        }
+    }
+
+    @Override
+    public String getCallbackPattern() {
+        return "open_ports_all";
     }
 }
 
