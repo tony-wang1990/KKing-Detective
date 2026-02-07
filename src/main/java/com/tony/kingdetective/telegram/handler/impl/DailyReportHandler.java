@@ -33,6 +33,7 @@ import java.util.List;
 public class DailyReportHandler extends AbstractCallbackHandler {
     
     private static final String REPORT_KEY = "daily_report_enabled";
+    private static final String REPORT_TIME_KEY = "daily_report_time";
     
     @Override
     public BotApiMethod<? extends Serializable> handle(CallbackQuery callbackQuery, TelegramClient telegramClient) {
@@ -42,6 +43,10 @@ public class DailyReportHandler extends AbstractCallbackHandler {
             // Check current report status
             OciKv reportKv = kvService.getByKey(REPORT_KEY);
             boolean isEnabled = reportKv != null && "true".equals(reportKv.getValue());
+            
+            // Get report time
+            OciKv timeKv = kvService.getByKey(REPORT_TIME_KEY);
+            String reportTime = (timeKv != null && timeKv.getValue() != null) ? timeKv.getValue() : "09";
             
             StringBuilder message = new StringBuilder();
             message.append("【每日报告】\n\n");
@@ -54,7 +59,7 @@ public class DailyReportHandler extends AbstractCallbackHandler {
             message.append("• 配额使用率\n");
             message.append("• 异常事件提醒\n\n");
             
-            message.append("⏰ 发送时间: 每天 09:00\n\n");
+            message.append(String.format("⏰ 发送时间: 每天 %s:00\n\n", reportTime));
             
             if (isEnabled) {
                 message.append("💡 每天早上会自动发送报告\n");
@@ -110,6 +115,7 @@ public class DailyReportHandler extends AbstractCallbackHandler {
 class ReportEnableHandler extends AbstractCallbackHandler {
     
     private static final String REPORT_KEY = "daily_report_enabled";
+    private static final String REPORT_TIME_KEY = "daily_report_time";
     
     @Override
     public BotApiMethod<? extends Serializable> handle(CallbackQuery callbackQuery, TelegramClient telegramClient) {
@@ -128,10 +134,14 @@ class ReportEnableHandler extends AbstractCallbackHandler {
                 kvService.updateById(reportKv);
             }
             
+            // Get report time
+            OciKv timeKv = kvService.getByKey(REPORT_TIME_KEY);
+            String reportTime = (timeKv != null && timeKv.getValue() != null) ? timeKv.getValue() : "09";
+            
             return buildEditMessage(
                     callbackQuery,
                     "✅ 每日报告已开启\n\n" +
-                    "系统将在每天 09:00 发送资源报告\n\n" +
+                    String.format("系统将在每天 %s:00 发送资源报告\n\n", reportTime) +
                     "报告内容包括:\n" +
                     "• 实例状态统计\n" +
                     "• 流量使用情况\n" +
@@ -243,7 +253,6 @@ class ReportTodayHandler extends AbstractCallbackHandler {
             
             int totalInstances = 0;
             int runningInstances = 0;
-            int stoppedInstances = 0;
             
             for (SysUserDTO user : users) {
                 if (Boolean.TRUE.equals(user.getOciCfg().getDeleted())) {
@@ -310,11 +319,23 @@ class ReportTodayHandler extends AbstractCallbackHandler {
 @Component
 class ReportScheduleHandler extends AbstractCallbackHandler {
     
+    private static final String REPORT_TIME_KEY = "daily_report_time";
+    
     @Override
     public BotApiMethod<? extends Serializable> handle(CallbackQuery callbackQuery, TelegramClient telegramClient) {
+        IOciKvService kvService = SpringUtil.getBean(IOciKvService.class);
+        String reportTime = "09";
+        
+        try {
+            OciKv timeKv = kvService.getByKey(REPORT_TIME_KEY);
+            if (timeKv != null && timeKv.getValue() != null) {
+                reportTime = timeKv.getValue();
+            }
+        } catch (Exception ignored) {}
+        
         StringBuilder message = new StringBuilder();
         message.append("【报告时间设置】\n\n");
-        message.append("当前发送时间: 09:00\n\n");
+        message.append(String.format("当前发送时间: %s:00\n\n", reportTime));
         message.append("选择新的发送时间:\n");
         
         List<InlineKeyboardRow> keyboard = List.of(
