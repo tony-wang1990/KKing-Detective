@@ -626,12 +626,45 @@ class Ipv6AutoEnableHandler extends AbstractCallbackHandler {
                 Vcn vcn = fetcher.getVirtualNetworkClient().getVcn(GetVcnRequest.builder().vcnId(vcnId).build()).getVcn();
                 
                 // 2. Enable VCN IPv6 if needed
-                // TODO: This requires AddVcnIpv6Cidr API, not UpdateVcn
-                // Temporarily disabled until proper implementation
                 if (vcn.getIpv6CidrBlocks() == null || vcn.getIpv6CidrBlocks().isEmpty()) {
-                    return buildEditMessage(callbackQuery, 
-                        "⚠️ VCN IPv6 not enabled. Please enable IPv6 for VCN manually in OCI Console first.", 
-                        new InlineKeyboardMarkup(List.of(KeyboardBuilder.buildCancelRow())));
+                    try {
+                        // Update progress message
+                        telegramClient.execute(org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText.builder()
+                                .chatId(chatId)
+                                .messageId(callbackQuery.getMessage().getMessageId())
+                                .text("⏳ 正在为VCN启用IPv6...\\n\\n1. ✓ 检查 VCN IPv6 状态\\n2. ⏳ 开启 VCN IPv6\\n3. 待处理 开启子网 IPv6\\n4. 待处理 分配地址")
+                                .build());
+                        
+                        // Add IPv6 CIDR to VCN using Oracle GUA auto-allocation
+                        com.oracle.bmc.core.requests.AddVcnIpv6CidrRequest addIpv6Request = 
+                                com.oracle.bmc.core.requests.AddVcnIpv6CidrRequest.builder()
+                                .vcnId(vcnId)
+                                .addVcnIpv6CidrDetails(com.oracle.bmc.core.model.AddVcnIpv6CidrDetails.builder()
+                                        .isOracleGuaAllocationEnabled(true)  // Let Oracle auto-assign IPv6 /56 prefix
+                                        .build())
+                                .build();
+                        
+                        fetcher.getVirtualNetworkClient().addVcnIpv6Cidr(addIpv6Request);
+                        
+                        // Wait for VCN IPv6 to be assigned
+                        Thread.sleep(3000);
+                        
+                        // Refresh VCN info
+                        vcn = fetcher.getVirtualNetworkClient().getVcn(GetVcnRequest.builder().vcnId(vcnId).build()).getVcn();
+                        
+                        if (vcn.getIpv6CidrBlocks() == null || vcn.getIpv6CidrBlocks().isEmpty()) {
+                            return buildEditMessage(callbackQuery, 
+                                "❌ 启用VCN IPv6失败，请稍后重试或手动在OCI控制台启用。", 
+                                new InlineKeyboardMarkup(List.of(KeyboardBuilder.buildCancelRow())));
+                        }
+                        
+                        log.info("VCN IPv6 enabled successfully: {}", vcn.getIpv6CidrBlocks().get(0));
+                    } catch (Exception e) {
+                        log.error("Failed to enable VCN IPv6", e);
+                        return buildEditMessage(callbackQuery, 
+                            "❌ 启用VCN IPv6时出错: " + e.getMessage(), 
+                            new InlineKeyboardMarkup(List.of(KeyboardBuilder.buildCancelRow())));
+                    }
                 }
                 
                 // 3. Enable Subnet IPv6 if needed
