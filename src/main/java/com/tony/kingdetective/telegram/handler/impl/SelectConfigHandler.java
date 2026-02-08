@@ -42,56 +42,9 @@ public class SelectConfigHandler extends AbstractCallbackHandler {
             );
         }
         
-        List<InlineKeyboardRow> keyboard = new ArrayList<>();
-        
-        // 添加"创建实例"、"实例管理"和"引导卷管理"选项
-        keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button(
-                        "🚀 创建实例",
-                        "show_create_plans:" + userId
-                )
-        ));
-        
-        keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button(
-                        "📋 实例管理",
-                        "instance_management:" + userId
-                ),
-                KeyboardBuilder.button(
-                        "💾 引导卷管理",
-                        "boot_volume_management:" + userId
-                )
-        ));
-
-        // 返回按钮
-        keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("◀️ 返回配置列表", "config_list")
-        ));
-        keyboard.add(KeyboardBuilder.buildCancelRow());
-        
-        // Format tenant create time
-        String tenantCreateTimeStr = user.getTenantCreateTime() != null 
-                ? user.getTenantCreateTime().toString().replace("T", " ")
-                : "未知";
-        
-        String message = String.format(
-                "【配置操作】\n\n" +
-                "🔑 配置名：%s\n" +
-                "🌏 区域：%s\n" +
-                "👤 租户名：%s\n" +
-                "📅 租户创建时间：%s\n\n" +
-                "请选择操作：",
-                user.getUsername(),
-                user.getOciRegion(),
-                user.getTenantName() != null ? user.getTenantName() : "未知",
-                tenantCreateTimeStr
-        );
-        
-        return buildEditMessage(
-                callbackQuery,
-                message,
-                new InlineKeyboardMarkup(keyboard)
-        );
+        // Directly show create plans instead of config operations menu
+        ShowCreatePlansHandler plansHandler = SpringUtil.getBean(ShowCreatePlansHandler.class);
+        return plansHandler.handle(callbackQuery, telegramClient);
     }
     
     @Override

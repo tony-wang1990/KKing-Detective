@@ -312,28 +312,57 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
     }
     
     private InstancePlan getPlanByType(String planType) {
-        if ("plan1".equals(planType)) {
-            // AMD 1C1G
-            return InstancePlan.builder()
-                    .ocpus(1)
-                    .memory(1)
-                    .disk(50)
-                    .architecture("AMD")
-                    .operationSystem("Ubuntu")
-                    .interval(instanceCreationConfig.getRetryIntervalSeconds())
-                    .createNumbers(1)
-                    .build();
-        } else {
-            // ARM 1C6G
-            return InstancePlan.builder()
-                    .ocpus(1)
-                    .memory(6)
-                    .disk(50)
-                    .architecture("ARM")
-                    .operationSystem("Ubuntu")
-                    .interval(instanceCreationConfig.getRetryIntervalSeconds())
-                    .createNumbers(1)
-                    .build();
+        switch (planType) {
+            case "plan1":
+                // AMD 1C1G50G
+                return InstancePlan.builder()
+                        .ocpus(1)
+                        .memory(1)
+                        .disk(50)
+                        .architecture("AMD")
+                        .operationSystem("Ubuntu")
+                        .interval(instanceCreationConfig.getRetryIntervalSeconds())
+                        .createNumbers(1)
+                        .build();
+            
+            case "plan2":
+                // ARM 1C6G50G
+                return InstancePlan.builder()
+                        .ocpus(1)
+                        .memory(6)
+                        .disk(50)
+                        .architecture("ARM")
+                        .operationSystem("Ubuntu")
+                        .interval(instanceCreationConfig.getRetryIntervalSeconds())
+                        .createNumbers(1)
+                        .build();
+            
+            case "plan3":
+                // ARM 2C12G50G (NEW)
+                return InstancePlan.builder()
+                        .ocpus(2)
+                        .memory(12)
+                        .disk(50)
+                        .architecture("ARM")
+                        .operationSystem("Ubuntu")
+                        .interval(instanceCreationConfig.getRetryIntervalSeconds())
+                        .createNumbers(1)
+                        .build();
+            
+            case "plan4":
+                // ARM 4C24G100G (NEW)
+                return InstancePlan.builder()
+                        .ocpus(4)
+                        .memory(24)
+                        .disk(100)
+                        .architecture("ARM")
+                        .operationSystem("Ubuntu")
+                        .interval(instanceCreationConfig.getRetryIntervalSeconds())
+                        .createNumbers(1)
+                        .build();
+            
+            default:
+                throw new IllegalArgumentException("Invalid plan type: " + planType);
         }
     }
     

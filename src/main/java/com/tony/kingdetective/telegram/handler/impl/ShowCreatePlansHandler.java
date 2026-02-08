@@ -44,25 +44,41 @@ public class ShowCreatePlansHandler extends AbstractCallbackHandler {
         
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
         
-        // Plan 1: AMD 1C1G
+        // Plan 1: AMD 1C1G50G
         keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button(
-                        "💻 方案1: 1台1核1G50G(AMD/Ubuntu/80s)",
+                        "💻 方案1: 1核1G50G (AMD)",
                         "create_instance:" + userId + ":plan1"
                 )
         ));
         
-        // Plan 2: ARM 1C6G
+        // Plan 2: ARM 1C6G50G
         keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button(
-                        "🖥 方案2: 1台1核6G50G(ARM/Ubuntu/80s)",
+                        "🖥 方案2: 1核6G50G (ARM)",
                         "create_instance:" + userId + ":plan2"
                 )
         ));
         
-        // Back button
+        // Plan 3: ARM 2C12G50G (NEW)
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("◀️ 返回", "select_config:" + userId)
+                KeyboardBuilder.button(
+                        "🚀 方案3: 2核12G50G (ARM)",
+                        "create_instance:" + userId + ":plan3"
+                )
+        ));
+        
+        // Plan 4: ARM 4C24G100G (NEW)
+        keyboard.add(new InlineKeyboardRow(
+                KeyboardBuilder.button(
+                        "⚡ 方案4: 4核24G100G (ARM)",
+                        "create_instance:" + userId + ":plan4"
+                )
+        ));
+        
+        // Back button - now goes back to config list since we skipped config operations
+        keyboard.add(new InlineKeyboardRow(
+                KeyboardBuilder.button("◀️ 返回配置列表", "config_list")
         ));
         keyboard.add(KeyboardBuilder.buildCancelRow());
         
