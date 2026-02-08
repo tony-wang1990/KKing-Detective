@@ -19,6 +19,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 
+import org.springframework.beans.factory.annotation.Value;
 import java.io.Serializable;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;

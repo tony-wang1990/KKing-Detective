@@ -3,8 +3,8 @@ package com.tony.kingdetective.telegram.handler.impl;
 import cn.hutool.extra.spring.SpringUtil;
 import com.tony.kingdetective.bean.entity.OciUser;
 import com.tony.kingdetective.config.InstanceCreationConfig;
-import com.tony.kingdetective.model.InstancePlan;
-import com.tony.kingdetective.service.IInstanceCreationService;
+import com.tony.kingdetective.telegram.model.InstancePlan;
+import com.tony.kingdetective.telegram.service.InstanceCreationService;
 import com.tony.kingdetective.service.IOciUserService;
 import com.tony.kingdetective.telegram.builder.KeyboardBuilder;
 import com.tony.kingdetective.telegram.handler.AbstractCallbackHandler;
@@ -223,23 +223,23 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
         
         keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button(
-                        "⚡ 30秒 (激进)",
-                        "create_instance:" + userId + ":" + planType + ":" + count + ":30"
+                        "⚡ 15秒 (激进)",
+                        "create_instance:" + userId + ":" + planType + ":" + count + ":15"
                 ),
                 KeyboardBuilder.button(
-                        "🚀 60秒 (推荐)",
-                        "create_instance:" + userId + ":" + planType + ":" + count + ":60"
+                        "🚀 30秒 (推荐)",
+                        "create_instance:" + userId + ":" + planType + ":" + count + ":30"
                 )
         ));
         
         keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button(
-                        "⏰ 80秒 (默认)",
-                        "create_instance:" + userId + ":" + planType + ":" + count + ":80"
+                        "⏰ 45秒 (稳定)",
+                        "create_instance:" + userId + ":" + planType + ":" + count + ":45"
                 ),
                 KeyboardBuilder.button(
-                        "🐌 120秒 (保守)",
-                        "create_instance:" + userId + ":" + planType + ":" + count + ":120"
+                        "🐌 60秒 (保守)",
+                        "create_instance:" + userId + ":" + planType + ":" + count + ":60"
                 )
         ));
         
