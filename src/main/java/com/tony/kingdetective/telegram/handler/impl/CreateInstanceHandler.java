@@ -51,20 +51,29 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
             String userId = parts[1];
             String planType = parts[2];
             
-            // Check if we have count and broadcast parameters (final confirmation)
-            if (parts.length > 4) {
+            // Check if we have all parameters (final confirmation: userId:planType:count:interval:broadcast)
+            if (parts.length > 5) {
                 int count = Integer.parseInt(parts[3]);
-                boolean joinChannelBroadcast = Boolean.parseBoolean(parts[4]);
-                log.info("Executing instance creation: userId={}, planType={}, count={}, broadcast={}", 
-                    userId, planType, count, joinChannelBroadcast);
-                return executeInstanceCreation(callbackQuery, telegramClient, userId, planType, count, joinChannelBroadcast);
+                int interval = Integer.parseInt(parts[4]);
+                boolean joinChannelBroadcast = Boolean.parseBoolean(parts[5]);
+                log.info("Executing instance creation: userId={}, planType={}, count={}, interval={}, broadcast={}", 
+                    userId, planType, count, interval, joinChannelBroadcast);
+                return executeInstanceCreation(callbackQuery, telegramClient, userId, planType, count, interval, joinChannelBroadcast);
             }
             
-            // Check if we have count parameter (broadcast selection step)
+            // Check if we have count and interval (broadcast selection step)
+            if (parts.length > 4) {
+                int count = Integer.parseInt(parts[3]);
+                int interval = Integer.parseInt(parts[4]);
+                log.info("Showing broadcast options: userId={}, planType={}, count={}, interval={}", userId, planType, count, interval);
+                return showBroadcastOptions(callbackQuery, userId, planType, count, interval);
+            }
+            
+            // Check if we have count parameter (interval selection step)
             if (parts.length > 3) {
                 int count = Integer.parseInt(parts[3]);
-                log.info("Showing broadcast options: userId={}, planType={}, count={}", userId, planType, count);
-                return showBroadcastOptions(callbackQuery, userId, planType, count);
+                log.info("Showing interval options: userId={}, planType={}, count={}", userId, planType, count);
+                return showIntervalOptions(callbackQuery, userId, planType, count);
             }
             
             // This is the initial plan selection, show quantity options
@@ -150,15 +159,116 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
     }
     
     /**
-     * Show broadcast options after quantity selection
+     * Show retry interval selection options
      */
-    private BotApiMethod<? extends Serializable> showBroadcastOptions(
+    private BotApiMethod<? extends Serializable> showIntervalOptions(
             CallbackQuery callbackQuery,
             String userId,
             String planType,
             int count) {
         
-        log.info("showBroadcastOptions: userId={}, planType={}, count={}", userId, planType, count);
+        log.info("showIntervalOptions: userId={}, planType={}, count={}", userId, planType, count);
+        
+        IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
+        OciUser user = userService.getById(userId);
+        
+        if (user == null) {
+            log.warn("showIntervalOptions: User not found: userId={}", userId);
+            return buildEditMessage(
+                    callbackQuery,
+                    "❌ 配置不存在",
+                    new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
+            );
+        }
+        
+        log.debug("showIntervalOptions: User found: username={}", user.getUsername());
+        
+        // 获取方案详情
+        InstancePlan plan = getPlanByType(planType);
+        
+        // Get plan display name
+        String planName = switch (planType) {
+            case "plan1" -> "方案1";
+            case "plan2" -> "方案2";
+            case "plan3" -> "方案3";
+            case "plan4" -> "方案4";
+            default -> planType;
+        };
+        
+        // Build message asking about retry interval
+        String message = String.format(
+                "【选择抢机间隔】\n\n" +
+                "🔑 配置名：%s\n" +
+                "🌏 区域：%s\n" +
+                "💻 方案：%s\n" +
+                "⚙️ 配置：%dC%dG%dG\n" +
+                "🏗️ 架构：%s\n" +
+                "💿 系统：%s\n" +
+                "🔢 数量：%d台\n\n" +
+                "⏱️ 请选择抢机重试间隔：\n" +
+                "(间隔越短成功率越高但消耗资源也越多)",
+                user.getUsername(),
+                user.getOciRegion(),
+                planName,
+                plan.getOcpus(),
+                plan.getMemory(),
+                plan.getDisk(),
+                plan.getArchitecture(),
+                plan.getOperationSystem(),
+                count
+        );
+        
+        // Build keyboard with interval options
+        List<InlineKeyboardRow> keyboard = new ArrayList<>();
+        
+        keyboard.add(new InlineKeyboardRow(
+                KeyboardBuilder.button(
+                        "⚡ 30秒 (激进)",
+                        "create_instance:" + userId + ":" + planType + ":" + count + ":30"
+                ),
+                KeyboardBuilder.button(
+                        "🚀 60秒 (推荐)",
+                        "create_instance:" + userId + ":" + planType + ":" + count + ":60"
+                )
+        ));
+        
+        keyboard.add(new InlineKeyboardRow(
+                KeyboardBuilder.button(
+                        "⏰ 80秒 (默认)",
+                        "create_instance:" + userId + ":" + planType + ":" + count + ":80"
+                ),
+                KeyboardBuilder.button(
+                        "🐌 120秒 (保守)",
+                        "create_instance:" + userId + ":" + planType + ":" + count + ":120"
+                )
+        ));
+        
+        keyboard.add(new InlineKeyboardRow(
+                KeyboardBuilder.button("◀️ 返回", "create_instance:" + userId + ":" + planType)
+        ));
+        keyboard.add(KeyboardBuilder.buildCancelRow());
+        
+        log.debug("showIntervalOptions: Built message with {} keyboard rows", keyboard.size());
+        EditMessageText result = buildEditMessage(
+                callbackQuery,
+                message,
+                new InlineKeyboardMarkup(keyboard)
+        );
+        log.info("showIntervalOptions: Successfully built EditMessageText for userId={}, count={}", userId, count);
+        return result;
+    }
+    
+    /**
+     * Show broadcast options after quantity and interval selection
+     */
+    private BotApiMethod<? extends Serializable> showBroadcastOptions(
+            CallbackQuery callbackQuery,
+            String userId,
+            String planType,
+            int count,
+            int interval) {
+        
+        log.info("showBroadcastOptions: userId={}, planType={}, count={}, interval={}", userId, planType, count, interval);
         
         IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
         OciUser user = userService.getById(userId);
@@ -177,6 +287,15 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
         // 获取方案详情
         InstancePlan plan = getPlanByType(planType);
         
+        // Get plan display name
+        String planName = switch (planType) {
+            case "plan1" -> "方案1";
+            case "plan2" -> "方案2";
+            case "plan3" -> "方案3";
+            case "plan4" -> "方案4";
+            default -> planType;
+        };
+        
         // Build message asking about channel broadcast
         String message = String.format(
                 "【开机方案确认】\n\n" +
@@ -186,18 +305,20 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
                 "⚙️ 配置：%dC%dG%dG\n" +
                 "🏗️ 架构：%s\n" +
                 "💿 系统：%s\n" +
-                "🔢 数量：%d台\n\n" +
+                "🔢 数量：%d台\n" +
+                "⏱️ 重试间隔：%d秒\n\n" +
                 "📢 是否向 TG 频道推送开机成功信息？\n" +
-                "（开启后，开机成功时会自动向频道发送放货信息）",
+                "(开启后，开机成功时会自动向频道发送放货信息)",
                 user.getUsername(),
                 user.getOciRegion(),
-                planType.equals("plan1") ? "方案1" : "方案2",
+                planName,
                 plan.getOcpus(),
                 plan.getMemory(),
                 plan.getDisk(),
                 plan.getArchitecture(),
                 plan.getOperationSystem(),
-                count
+                count,
+                interval
         );
         
         // Build keyboard with options
@@ -206,19 +327,19 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
         keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button(
                         "✅ 开启频道推送",
-                        "create_instance:" + userId + ":" + planType + ":" + count + ":true"
+                        "create_instance:" + userId + ":" + planType + ":" + count + ":" + interval + ":true"
                 )
         ));
         
         keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button(
                         "❌ 关闭频道推送",
-                        "create_instance:" + userId + ":" + planType + ":" + count + ":false"
+                        "create_instance:" + userId + ":" + planType + ":" + count + ":" + interval + ":false"
                 )
         ));
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("◀️ 返回", "create_instance:" + userId + ":" + planType)
+                KeyboardBuilder.button("◀️ 返回", "create_instance:" + userId + ":" + planType + ":" + count)
         ));
         keyboard.add(KeyboardBuilder.buildCancelRow());
         
@@ -228,7 +349,7 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
                 message,
                 new InlineKeyboardMarkup(keyboard)
         );
-        log.info("showBroadcastOptions: Successfully built EditMessageText for userId={}, count={}", userId, count);
+        log.info("showBroadcastOptions: Successfully built EditMessageText for userId={}, count={}, interval={}", userId, count, interval);
         return result;
     }
     
@@ -241,6 +362,7 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
             String userId, 
             String planType,
             int count,
+            int interval,
             boolean joinChannelBroadcast) {
         
         IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
@@ -257,7 +379,17 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
         // 获取方案详情
         InstancePlan plan = getPlanByType(planType);
         plan.setCreateNumbers(count);  // Set the actual count
+        plan.setInterval(interval);  // Set the selected interval
         plan.setJoinChannelBroadcast(joinChannelBroadcast);
+        
+        // Get plan display name
+        String planName = switch (planType) {
+            case "plan1" -> "方案1";
+            case "plan2" -> "方案2";
+            case "plan3" -> "方案3";
+            case "plan4" -> "方案4";
+            default -> planType;
+        };
         
         // 启动异步创建
         InstanceCreationService creationService = SpringUtil.getBean(InstanceCreationService.class);
@@ -283,17 +415,19 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
                 "🏗️ 架构：%s\n" +
                 "💿 系统：%s\n" +
                 "🔢 数量：%d台\n" +
+                "⏱️ 重试间隔：%d秒\n" +
                 "📢 频道推送：%s\n\n" +
                 "请稍候，任务已提交...",
                 user.getUsername(),
                 user.getOciRegion(),
-                planType.equals("plan1") ? "方案1" : "方案2",
+                planName,
                 plan.getOcpus(),
                 plan.getMemory(),
                 plan.getDisk(),
                 plan.getArchitecture(),
                 plan.getOperationSystem(),
                 count,
+                interval,
                 channelStatus
         );
         
