@@ -702,6 +702,9 @@ public class SysServiceImpl implements ISysService {
     @Override
     public SysUserDTO getOciUser(String ociCfgId) {
         OciUser ociUser = userService.getById(ociCfgId);
+        if (ociUser == null) {
+            throw new OciException(-1, "未找到该 OCI 配置，请确认是否已删除");
+        }
         return SysUserDTO.builder()
                 .ociCfg(SysUserDTO.OciCfg.builder()
                         .userId(ociUser.getOciUserId())
@@ -718,6 +721,9 @@ public class SysServiceImpl implements ISysService {
     @Override
     public SysUserDTO getOciUser(String ociCfgId, String region, String compartmentId) {
         OciUser ociUser = userService.getById(ociCfgId);
+        if (ociUser == null) {
+            throw new OciException(-1, "未找到该 OCI 配置，请确认是否已删除");
+        }
         return SysUserDTO.builder()
                 .ociCfg(SysUserDTO.OciCfg.builder()
                         .userId(ociUser.getOciUserId())

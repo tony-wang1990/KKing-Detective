@@ -136,13 +136,13 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
         
         // Add quantity buttons (1-4 in two rows)
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("1台", "create_instance:" + userId + ":" + planType + ":1"),
-                KeyboardBuilder.button("2台", "create_instance:" + userId + ":" + planType + ":2")
+                KeyboardBuilder.button("1台", "ci:" + userId + ":" + planType + ":1"),
+                KeyboardBuilder.button("2台", "ci:" + userId + ":" + planType + ":2")
         ));
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("3台", "create_instance:" + userId + ":" + planType + ":3"),
-                KeyboardBuilder.button("4台", "create_instance:" + userId + ":" + planType + ":4")
+                KeyboardBuilder.button("3台", "ci:" + userId + ":" + planType + ":3"),
+                KeyboardBuilder.button("4台", "ci:" + userId + ":" + planType + ":4")
         ));
         
         keyboard.add(new InlineKeyboardRow(
@@ -226,22 +226,22 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
         keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button(
                         "⚡ 15秒 (激进)",
-                        "create_instance:" + userId + ":" + planType + ":" + count + ":15"
+                        "ci:" + userId + ":" + planType + ":" + count + ":15"
                 ),
                 KeyboardBuilder.button(
                         "🚀 30秒 (推荐)",
-                        "create_instance:" + userId + ":" + planType + ":" + count + ":30"
+                        "ci:" + userId + ":" + planType + ":" + count + ":30"
                 )
         ));
         
         keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button(
                         "⏰ 45秒 (稳定)",
-                        "create_instance:" + userId + ":" + planType + ":" + count + ":45"
+                        "ci:" + userId + ":" + planType + ":" + count + ":45"
                 ),
                 KeyboardBuilder.button(
                         "🐌 60秒 (保守)",
-                        "create_instance:" + userId + ":" + planType + ":" + count + ":60"
+                        "ci:" + userId + ":" + planType + ":" + count + ":60"
                 )
         ));
         
@@ -329,19 +329,19 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
         keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button(
                         "✅ 开启频道推送",
-                        "create_instance:" + userId + ":" + planType + ":" + count + ":" + interval + ":true"
+                        "ci:" + userId + ":" + planType + ":" + count + ":" + interval + ":true"
                 )
         ));
         
         keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button(
                         "❌ 关闭频道推送",
-                        "create_instance:" + userId + ":" + planType + ":" + count + ":" + interval + ":false"
+                        "ci:" + userId + ":" + planType + ":" + count + ":" + interval + ":false"
                 )
         ));
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("◀️ 返回", "create_instance:" + userId + ":" + planType + ":" + count)
+                KeyboardBuilder.button("◀️ 返回", "ci:" + userId + ":" + planType + ":" + count)
         ));
         keyboard.add(KeyboardBuilder.buildCancelRow());
         
@@ -504,6 +504,6 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
     
     @Override
     public String getCallbackPattern() {
-        return "create_instance:";
+        return "ci:";
     }
 }

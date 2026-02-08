@@ -48,7 +48,7 @@ public class ShowCreatePlansHandler extends AbstractCallbackHandler {
         keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button(
                         "💻 方案1: 1核1G50G (AMD)",
-                        "create_instance:" + userId + ":plan1"
+                        "ci:" + userId + ":plan1"
                 )
         ));
         
@@ -56,7 +56,7 @@ public class ShowCreatePlansHandler extends AbstractCallbackHandler {
         keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button(
                         "🖥 方案2: 1核6G50G (ARM)",
-                        "create_instance:" + userId + ":plan2"
+                        "ci:" + userId + ":plan2"
                 )
         ));
         
@@ -64,7 +64,7 @@ public class ShowCreatePlansHandler extends AbstractCallbackHandler {
         keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button(
                         "🚀 方案3: 2核12G50G (ARM)",
-                        "create_instance:" + userId + ":plan3"
+                        "ci:" + userId + ":plan3"
                 )
         ));
         
@@ -72,7 +72,7 @@ public class ShowCreatePlansHandler extends AbstractCallbackHandler {
         keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button(
                         "⚡ 方案4: 4核24G100G (ARM)",
-                        "create_instance:" + userId + ":plan4"
+                        "ci:" + userId + ":plan4"
                 )
         ));
         
