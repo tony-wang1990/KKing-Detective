@@ -33,25 +33,44 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
     @Override
     public BotApiMethod<? extends Serializable> handle(CallbackQuery callbackQuery, TelegramClient telegramClient) {
         String callbackData = callbackQuery.getData();
-        String[] parts = callbackData.split(":");
-        String userId = parts[1];
-        String planType = parts[2];
+        log.info("CreateInstanceHandler.handle() called with callbackData: {}", callbackData);
         
-        // Check if we have count and broadcast parameters (final confirmation)
-        if (parts.length > 4) {
-            int count = Integer.parseInt(parts[3]);
-            boolean joinChannelBroadcast = Boolean.parseBoolean(parts[4]);
-            return executeInstanceCreation(callbackQuery, telegramClient, userId, planType, count, joinChannelBroadcast);
+        try {
+            String[] parts = callbackData.split(":");
+            log.debug("Callback parts: length={}, parts={}", parts.length, String.join(", ", parts));
+            
+            if (parts.length < 3) {
+                log.error("Invalid callback data format: {}", callbackData);
+                return null;
+            }
+            
+            String userId = parts[1];
+            String planType = parts[2];
+            
+            // Check if we have count and broadcast parameters (final confirmation)
+            if (parts.length > 4) {
+                int count = Integer.parseInt(parts[3]);
+                boolean joinChannelBroadcast = Boolean.parseBoolean(parts[4]);
+                log.info("Executing instance creation: userId={}, planType={}, count={}, broadcast={}", 
+                    userId, planType, count, joinChannelBroadcast);
+                return executeInstanceCreation(callbackQuery, telegramClient, userId, planType, count, joinChannelBroadcast);
+            }
+            
+            // Check if we have count parameter (broadcast selection step)
+            if (parts.length > 3) {
+                int count = Integer.parseInt(parts[3]);
+                log.info("Showing broadcast options: userId={}, planType={}, count={}", userId, planType, count);
+                return showBroadcastOptions(callbackQuery, userId, planType, count);
+            }
+            
+            // This is the initial plan selection, show quantity options
+            log.info("Showing quantity options: userId={}, planType={}", userId, planType);
+            return showQuantityOptions(callbackQuery, userId, planType);
+            
+        } catch (Exception e) {
+            log.error("Error handling callback in CreateInstanceHandler: callbackData={}", callbackData, e);
+            return null;
         }
-        
-        // Check if we have count parameter (broadcast selection step)
-        if (parts.length > 3) {
-            int count = Integer.parseInt(parts[3]);
-            return showBroadcastOptions(callbackQuery, userId, planType, count);
-        }
-        
-        // This is the initial plan selection, show quantity options
-        return showQuantityOptions(callbackQuery, userId, planType);
     }
     
     /**
@@ -62,10 +81,13 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
             String userId,
             String planType) {
         
+        log.debug("showQuantityOptions: userId={}, planType={}", userId, planType);
+        
         IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
         OciUser user = userService.getById(userId);
         
         if (user == null) {
+            log.warn("User not found: userId={}", userId);
             return buildEditMessage(
                     callbackQuery,
                     "❌ 配置不存在",
@@ -73,6 +95,7 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
             );
         }
         
+        log.debug("User found: username={}, region={}", user.getUsername(), user.getOciRegion());
         InstancePlan plan = getPlanByType(planType);
         
         String message = String.format(
@@ -112,11 +135,14 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
         ));
         keyboard.add(KeyboardBuilder.buildCancelRow());
         
-        return buildEditMessage(
+        log.debug("showQuantityOptions: Built message with {} keyboard rows", keyboard.size());
+        EditMessageText result = buildEditMessage(
                 callbackQuery,
                 message,
                 new InlineKeyboardMarkup(keyboard)
         );
+        log.info("showQuantityOptions: Successfully built EditMessageText for userId={}", userId);
+        return result;
     }
     
     /**
@@ -128,16 +154,21 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
             String planType,
             int count) {
         
+        log.info("showBroadcastOptions: userId={}, planType={}, count={}", userId, planType, count);
+        
         IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
         OciUser user = userService.getById(userId);
         
         if (user == null) {
+            log.warn("showBroadcastOptions: User not found: userId={}", userId);
             return buildEditMessage(
                     callbackQuery,
                     "❌ 配置不存在",
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }
+        
+        log.debug("showBroadcastOptions: User found: username={}", user.getUsername());
         
         // 获取方案详情
         InstancePlan plan = getPlanByType(planType);
@@ -187,11 +218,14 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
         ));
         keyboard.add(KeyboardBuilder.buildCancelRow());
         
-        return buildEditMessage(
+        log.debug("showBroadcastOptions: Built message with {} keyboard rows", keyboard.size());
+        EditMessageText result = buildEditMessage(
                 callbackQuery,
                 message,
                 new InlineKeyboardMarkup(keyboard)
         );
+        log.info("showBroadcastOptions: Successfully built EditMessageText for userId={}, count={}", userId, count);
+        return result;
     }
     
     /**

@@ -932,9 +932,12 @@ public class TgBot implements LongPollingSingleThreadUpdateConsumer {
     private void handleCallbackQuery(Update update) {
         String callbackData = update.getCallbackQuery().getData();
         long chatId = update.getCallbackQuery().getMessage().getChatId();
+        
+        log.info("Handling callback query: callbackData={}, chatId={}", callbackData, chatId);
 
         // 检查权限
         if (!isAuthorized(chatId)) {
+            log.warn("Unauthorized callback attempt: chatId={}", chatId);
             sendUnauthorizedMessage(chatId);
             return;
         }
@@ -946,21 +949,42 @@ public class TgBot implements LongPollingSingleThreadUpdateConsumer {
                 CallbackHandler handler = factory.getHandler(callbackData).orElse(null);
 
                 if (handler != null) {
+                    log.info("Found handler for callback: handler={}, callbackData={}", 
+                        handler.getClass().getSimpleName(), callbackData);
+                    
                     BotApiMethod<? extends Serializable> response = handler.handle(
                             update.getCallbackQuery(),
                             telegramClient
                     );
 
                     if (response != null) {
+                        log.debug("Executing response from handler: responseType={}", response.getClass().getSimpleName());
                         telegramClient.execute(response);
+                        log.info("Successfully executed callback response: callbackData={}", callbackData);
+                    } else {
+                        log.warn("Handler returned null response: handler={}, callbackData={}", 
+                            handler.getClass().getSimpleName(), callbackData);
                     }
                 } else {
-                    log.warn("未找到处理回调数据的处理器: {}", callbackData);
+                    log.warn("未找到处理回调数据的处理器: callbackData={}", callbackData);
                 }
             } catch (TelegramApiException e) {
-                log.error("处理回调查询失败: callbackData={}", callbackData, e);
+                log.error("处理回调查询失败: callbackData={}, error={}", callbackData, e.getMessage(), e);
+                // Try to notify user about the error
+                try {
+                    sendMessage(chatId, "❌ 处理请求时发生错误，请重试");
+                } catch (Exception ex) {
+                    log.error("Failed to send error message to user", ex);
+                }
             } catch (Exception e) {
-                log.error("处理回调时发生意外错误: callbackData={}", callbackData, e);
+                log.error("处理回调时发生意外错误: callbackData={}, errorType={}, message={}", 
+                    callbackData, e.getClass().getSimpleName(), e.getMessage(), e);
+                // Try to notify user about the error
+                try {
+                    sendMessage(chatId, "❌ 系统错误，请重试或联系管理员");
+                } catch (Exception ex) {
+                    log.error("Failed to send error message to user", ex);
+                }
             }
         });
     }
