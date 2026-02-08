@@ -31,6 +31,9 @@ WORKDIR /app/king-detective
 
 COPY --from=builder /app/king-detective.jar .
 
+# Declare volumes for persistent data
+VOLUME ["/app/king-detective/data", "/app/king-detective/keys"]
+
 EXPOSE 9527
 
 CMD exec java \

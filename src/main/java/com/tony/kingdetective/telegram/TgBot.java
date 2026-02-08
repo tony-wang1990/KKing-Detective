@@ -40,6 +40,9 @@ public class TgBot implements LongPollingSingleThreadUpdateConsumer {
     private final String BOT_TOKEN;
     private final String CHAT_ID;
     private final TelegramClient telegramClient;
+    
+    @Value("${oci-cfg.key-dir-path}")
+    private String keyDirPath;
 
     public TgBot(String botToken, String chatId) {
         BOT_TOKEN = botToken;
@@ -827,10 +830,10 @@ public class TgBot implements LongPollingSingleThreadUpdateConsumer {
             String region = (String) data.get("region");
             String keyContent = (String) data.get("keyContent");
             
-            // Save Key File
-            // Key file naming convention: ~/.oci/oci_api_key_{username}_{timestamp}.pem
-            String userHome = System.getProperty("user.home");
-            String keyDir = userHome + java.io.File.separator + ".oci";
+            // Save Key File to persistent volume-mounted directory
+            // Key file naming convention: {configured-dir}/oci_api_key_{username}_{timestamp}.pem
+            // Use configured keyDirPath instead of ~/.oci to ensure persistence across container updates
+            String keyDir = keyDirPath;
             if (!cn.hutool.core.io.FileUtil.exist(keyDir)) {
                 cn.hutool.core.io.FileUtil.mkdir(keyDir);
             }
