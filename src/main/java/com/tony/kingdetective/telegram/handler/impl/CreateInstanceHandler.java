@@ -2,19 +2,20 @@ package com.tony.kingdetective.telegram.handler.impl;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.tony.kingdetective.bean.entity.OciUser;
+import com.tony.kingdetective.config.InstanceCreationConfig;
+import com.tony.kingdetective.model.InstancePlan;
+import com.tony.kingdetective.service.IInstanceCreationService;
 import com.tony.kingdetective.service.IOciUserService;
 import com.tony.kingdetective.telegram.builder.KeyboardBuilder;
 import com.tony.kingdetective.telegram.handler.AbstractCallbackHandler;
-import com.tony.kingdetective.telegram.model.InstancePlan;
-import com.tony.kingdetective.telegram.service.InstanceCreationService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.botapimethods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardRow;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 
 import java.io.Serializable;
@@ -29,6 +30,9 @@ import java.util.List;
 @Slf4j
 @Component
 public class CreateInstanceHandler extends AbstractCallbackHandler {
+    
+    @Autowired
+    private InstanceCreationConfig instanceCreationConfig;
     
     @Override
     public BotApiMethod<? extends Serializable> handle(CallbackQuery callbackQuery, TelegramClient telegramClient) {
@@ -316,7 +320,7 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
                     .disk(50)
                     .architecture("AMD")
                     .operationSystem("Ubuntu")
-                    .interval(80)
+                    .interval(instanceCreationConfig.getRetryIntervalSeconds())
                     .createNumbers(1)
                     .build();
         } else {
@@ -327,7 +331,7 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
                     .disk(50)
                     .architecture("ARM")
                     .operationSystem("Ubuntu")
-                    .interval(80)
+                    .interval(instanceCreationConfig.getRetryIntervalSeconds())
                     .createNumbers(1)
                     .build();
         }

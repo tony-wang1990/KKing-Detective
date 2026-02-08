@@ -146,16 +146,25 @@ class TrafficHistoryInstanceHandler extends AbstractCallbackHandler {
     
     @Override
     public BotApiMethod<? extends Serializable> handle(CallbackQuery callbackQuery, TelegramClient telegramClient) {
-        int index = Integer.parseInt(callbackQuery.getData().split(":")[1]);
+        String callbackData = callbackQuery.getData();
+        int index = Integer.parseInt(callbackData.split(":")[1]);
         long chatId = callbackQuery.getMessage().getChatId();
+        
+        log.info("Traffic history instance selected: chatId={}, index={}, callbackData={}", chatId, index, callbackData);
         
         InstanceSelectionStorage storage = InstanceSelectionStorage.getInstance();
         storage.setSelectedInstanceIndex(chatId, index);
         SysUserDTO.CloudInstance instance = storage.getInstanceByIndex(chatId, index);
         
         if (instance == null) {
-             return buildEditMessage(callbackQuery, "❌ 实例信息已过期，请重新选择", new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu()));
+            log.error("Instance is null: chatId={}, index={}", chatId, index);
+            return buildEditMessage(callbackQuery, "❌ 实例信息已过期，请重新选择", new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu()));
         }
+        
+        log.info("Instance found: chatId={}, instanceName={}, instanceId={}", chatId, instance.getName(), instance.getOcId());
+        
+        String configContext = storage.getConfigContext(chatId);
+        log.info("Config context: chatId={}, ociCfgId={}", chatId, configContext);
         
         return buildEditMessage(
                 callbackQuery,
