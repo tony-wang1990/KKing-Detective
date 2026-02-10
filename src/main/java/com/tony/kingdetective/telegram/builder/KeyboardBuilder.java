@@ -210,8 +210,7 @@ public class KeyboardBuilder {
      * @return InlineKeyboardMarkup
      */
     public static InlineKeyboardMarkup buildAccountSelectionKeyboard(List<String> accounts) {
-        InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
-        List<InlineKeyboardRow> keyboard = markup.getKeyboard();
+        List<InlineKeyboardRow> keyboard = new ArrayList<>();
 
         for (String accountId : accounts) {
             InlineKeyboardRow row = new InlineKeyboardRow();
@@ -230,7 +229,7 @@ public class KeyboardBuilder {
                 .build());
         keyboard.add(backRow);
 
-        return markup;
+        return new InlineKeyboardMarkup(keyboard);
     }
 
     /**
@@ -241,8 +240,7 @@ public class KeyboardBuilder {
      * @return InlineKeyboardMarkup
      */
     public static InlineKeyboardMarkup buildConfirmationKeyboard(String confirmCallback, String cancelCallback) {
-        InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
-        List<InlineKeyboardRow> keyboard = markup.getKeyboard();
+        List<InlineKeyboardRow> keyboard = new ArrayList<>();
 
         InlineKeyboardRow row = new InlineKeyboardRow();
         row.add(InlineKeyboardButton.builder()
@@ -255,7 +253,7 @@ public class KeyboardBuilder {
                 .build());
 
         keyboard.add(row);
-        return markup;
+        return new InlineKeyboardMarkup(keyboard);
     }
 
     /**
@@ -264,8 +262,7 @@ public class KeyboardBuilder {
      * @return InlineKeyboardMarkup
      */
     public static InlineKeyboardMarkup buildBackKeyboard() {
-        InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
-        List<InlineKeyboardRow> keyboard = markup.getKeyboard();
+        List<InlineKeyboardRow> keyboard = new ArrayList<>();
 
         InlineKeyboardRow row = new InlineKeyboardRow();
         row.add(InlineKeyboardButton.builder()
@@ -274,7 +271,7 @@ public class KeyboardBuilder {
                 .build());
 
         keyboard.add(row);
-        return markup;
+        return new InlineKeyboardMarkup(keyboard);
     }
 
     /**
@@ -283,8 +280,7 @@ public class KeyboardBuilder {
      * @return InlineKeyboardMarkup
      */
     public static InlineKeyboardMarkup buildEmptyKeyboard() {
-        InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
-        return markup;
+        return new InlineKeyboardMarkup(new ArrayList<>());
     }
 
     /**
@@ -294,9 +290,7 @@ public class KeyboardBuilder {
      * @return InlineKeyboardMarkup
      */
     public static InlineKeyboardMarkup fromRows(List<InlineKeyboardRow> rows) {
-        InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
-        markup.setKeyboard(rows);
-        return markup;
+        return new InlineKeyboardMarkup(rows);
     }
 
     /**
@@ -311,6 +305,54 @@ public class KeyboardBuilder {
                         .callbackData("cancel")
                         .build()
         );
+    }
+
+    /**
+     * 构建返回主菜单行
+     *
+     * @return InlineKeyboardRow
+     */
+    public static InlineKeyboardRow buildBackToMainMenuRow() {
+        return new InlineKeyboardRow(
+                InlineKeyboardButton.builder()
+                        .text("« 返回主菜单")
+                        .callbackData("cancel")
+                        .build()
+        );
+    }
+
+    /**
+     * 构建分页行
+     *
+     * @param currentPage 当前页
+     * @param totalPages 总页数
+     * @param prevCallback 上一页回调
+     * @param nextCallback 下一页回调
+     * @return InlineKeyboardRow
+     */
+    public static InlineKeyboardRow buildPaginationRow(int currentPage, int totalPages, String prevCallback, String nextCallback) {
+        InlineKeyboardRow row = new InlineKeyboardRow();
+        
+        if (currentPage > 1) {
+            row.add(InlineKeyboardButton.builder()
+                    .text("◀️ 上一页")
+                    .callbackData(prevCallback)
+                    .build());
+        }
+        
+        row.add(InlineKeyboardButton.builder()
+                .text(currentPage + "/" + totalPages)
+                .callbackData("page_info")
+                .build());
+        
+        if (currentPage < totalPages) {
+            row.add(InlineKeyboardButton.builder()
+                    .text("下一页 ▶️")
+                    .callbackData(nextCallback)
+                    .build());
+        }
+        
+        return row;
     }
 
     /**
