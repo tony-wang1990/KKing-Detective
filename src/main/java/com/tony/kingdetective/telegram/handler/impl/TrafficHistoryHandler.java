@@ -14,6 +14,7 @@ import com.oracle.bmc.monitoring.responses.SummarizeMetricsDataResponse;
 import com.tony.kingdetective.bean.dto.SysUserDTO;
 import com.tony.kingdetective.config.OracleInstanceFetcher;
 import com.tony.kingdetective.service.IInstanceService;
+import com.tony.kingdetective.service.IOciUserService;
 import com.tony.kingdetective.service.ISysService;
 import com.tony.kingdetective.telegram.builder.KeyboardBuilder;
 import com.tony.kingdetective.telegram.handler.AbstractCallbackHandler;
@@ -47,6 +48,8 @@ public class TrafficHistoryHandler extends AbstractCallbackHandler {
         try {
             List<SysUserDTO> users = sysService.list();
             if (CollectionUtil.isEmpty(users)) {
+                // Clear stale cache if no configs exist
+                InstanceSelectionStorage.getInstance().clearAll(chatId);
                 return buildEditMessage(callbackQuery, "❌ 未找到 OCI 配置", new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu()));
             }
 
@@ -54,6 +57,17 @@ public class TrafficHistoryHandler extends AbstractCallbackHandler {
             String ociCfgId;
             if (callbackData.contains(":")) {
                 ociCfgId = callbackData.split(":")[1];
+                // Validate that the config still exists
+                IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
+                if (userService.getById(ociCfgId) == null) {
+                    // Config was deleted, clear cache and show current configs
+                    InstanceSelectionStorage.getInstance().clearAll(chatId);
+                    if (users.size() == 1) {
+                        ociCfgId = users.get(0).getOciCfg().getId();
+                    } else {
+                        return buildConfigSelector(callbackQuery, users);
+                    }
+                }
             } else if (users.size() == 1) {
                 ociCfgId = users.get(0).getOciCfg().getId();
             } else {
@@ -211,7 +225,21 @@ class TrafficHistoryQueryHandler extends AbstractCallbackHandler {
         SysUserDTO.CloudInstance instance = storage.getSelectedInstance(chatId);
         String ociCfgId = storage.getConfigContext(chatId);
         
-        if (instance == null) return buildEditMessage(callbackQuery, "❌ 会话过期", new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu()));
+        if (instance == null) {
+            storage.clearAll(chatId);
+            return buildEditMessage(callbackQuery, "❌ 会话过期，请重新选择", new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu()));
+        }
+        
+        // Validate that ociCfgId exists
+        IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
+        if (ociCfgId == null || userService.getById(ociCfgId) == null) {
+            storage.clearAll(chatId);
+            return buildEditMessage(
+                callbackQuery, 
+                "❌ OCI 配置已被删除，请返回主菜单重新选择", 
+                new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
+            );
+        }
         
         ISysService sysService = SpringUtil.getBean(ISysService.class);
         try {
