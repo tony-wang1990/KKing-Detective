@@ -21,187 +21,243 @@ public class KeyboardBuilder {
      */
     public static List<InlineKeyboardRow> buildMainMenu() {
         return Arrays.asList(
-                // Row 1: 快捷抢机器（最重要功能）
+                // 快捷功能（顶部）
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
                                 .text("🚀 一键抢机")
                                 .callbackData("config_list")
                                 .build()
                 ),
-                // Row 2: 账户与核心查询
+                
+                // 分类：实例管理
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
-                                .text("1. 账户管理")
-                                .callbackData("account_management")
-                                .build(),
-                        InlineKeyboardButton.builder()
-                                .text("2. 配额查询")
-                                .callbackData("quota_query")
-                                .build(),
-                        InlineKeyboardButton.builder()
-                                .text("3. 消费查询")
-                                .callbackData("cost_query")
+                                .text("━━━━━ 💼 实例管理 ━━━━━")
+                                .callbackData("noop")
                                 .build()
                 ),
-                // Row 2: 实例与配置
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
-                                .text("4. Profile管理")
-                                .callbackData("profile_management")
-                                .build(),
-                        InlineKeyboardButton.builder()
-                                .text("5. IPv6管理")
-                                .callbackData("ipv6_config_select")
-                                .build()
-                ),
-                // Row 3: 快捷操作与状态
-                new InlineKeyboardRow(
-                        InlineKeyboardButton.builder()
-                                .text("6. 快捷开机")
+                                .text("快捷开机")
                                 .callbackData("quick_start")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("7. 一键测活")
+                                .text("一键测活")
                                 .callbackData("check_alive")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("8. 实例升降级")
+                                .text("实例升降级")
                                 .callbackData("shape_change_select")
                                 .build()
                 ),
-                // Row 4: 网络操作
+                
+                // 分类：网络管理
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
-                                .text("9. 自动换IP")
+                                .text("━━━━━ 🌐 网络管理 ━━━━━")
+                                .callbackData("noop")
+                                .build()
+                ),
+                new InlineKeyboardRow(
+                        InlineKeyboardButton.builder()
+                                .text("自动换IP")
                                 .callbackData("auto_ip_change_select")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("10. 开放端口")
+                                .text("开放端口")
                                 .callbackData("open_all_ports_select")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("11. SSH 管理")
+                                .text("SSH管理")
                                 .callbackData("ssh_management")
                                 .build()
                 ),
-                // Row 5: 资源与流量
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
-                                .text("12. 资源占用")
-                                .callbackData("instance_resource_usage_select")
+                                .text("IPv6管理")
+                                .callbackData("ipv6_config_select")
+                                .build()
+                ),
+                
+                // 分类：资源监控
+                new InlineKeyboardRow(
+                        InlineKeyboardButton.builder()
+                                .text("━━━━━ 📊 资源监控 ━━━━━")
+                                .callbackData("noop")
+                                .build()
+                ),
+                new InlineKeyboardRow(
+                        InlineKeyboardButton.builder()
+                                .text("配额查询")
+                                .callbackData("quota_query")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("13. 内存占用")
+                                .text("消费查询")
+                                .callbackData("cost_query")
+                                .build(),
+                        InlineKeyboardButton.builder()
+                                .text("资源占用")
+                                .callbackData("instance_resource_usage_select")
+                                .build()
+                ),
+                new InlineKeyboardRow(
+                        InlineKeyboardButton.builder()
+                                .text("内存占用")
                                 .callbackData("memory_occupy_select")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("14. 流量历史")
+                                .text("流量历史")
                                 .callbackData("traffic_history")
+                                .build(),
+                        InlineKeyboardButton.builder()
+                                .text("流量统计")
+                                .callbackData("traffic_statistics")
                                 .build()
                 ),
-                // Row 6: 监控与自动化
+                
+                // 分类：自动化任务
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
-                                .text("15. 监控通知")
+                                .text("━━━━━ 🤖 自动化任务 ━━━━━")
+                                .callbackData("noop")
+                                .build()
+                ),
+                new InlineKeyboardRow(
+                        InlineKeyboardButton.builder()
+                                .text("监控通知")
                                 .callbackData("instance_monitoring")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("16. 监控自启")
+                                .text("监控自启")
                                 .callbackData("auto_restart_monitoring")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("17. 每日日报")
+                                .text("每日日报")
                                 .callbackData("daily_report")
                                 .build()
                 ),
-                // Row 7: 安全与MFA
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
-                                .text("18. 安全管理")
+                                .text("任务管理")
+                                .callbackData("task_management")
+                                .build()
+                ),
+                
+                // 分类：安全管理
+                new InlineKeyboardRow(
+                        InlineKeyboardButton.builder()
+                                .text("━━━━━ 🔐 安全管理 ━━━━━")
+                                .callbackData("noop")
+                                .build()
+                ),
+                new InlineKeyboardRow(
+                        InlineKeyboardButton.builder()
+                                .text("安全管理")
                                 .callbackData("security_management")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("19. MFA 管理")
+                                .text("MFA管理")
                                 .callbackData("mfa_management")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("20. 清除2FA")
+                                .text("清除2FA")
                                 .callbackData("clear_2fa_devices")
                                 .build()
                 ),
-                // Row 8: 系统维护
+                
+                // 分类：账户配置
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
-                                .text("21. 禁用被封户")
+                                .text("━━━━━ 👤 账户配置 ━━━━━")
+                                .callbackData("noop")
+                                .build()
+                ),
+                new InlineKeyboardRow(
+                        InlineKeyboardButton.builder()
+                                .text("账户管理")
+                                .callbackData("account_management")
+                                .build(),
+                        InlineKeyboardButton.builder()
+                                .text("Profile管理")
+                                .callbackData("profile_management")
+                                .build(),
+                        InlineKeyboardButton.builder()
+                                .text("区域拓展")
+                                .callbackData("auto_region_expansion")
+                                .build()
+                ),
+                
+                // 分类：系统工具
+                new InlineKeyboardRow(
+                        InlineKeyboardButton.builder()
+                                .text("━━━━━ 🛠️ 系统工具 ━━━━━")
+                                .callbackData("noop")
+                                .build()
+                ),
+                new InlineKeyboardRow(
+                        InlineKeyboardButton.builder()
+                                .text("禁用被封户")
                                 .callbackData("disable_banned_accounts")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("22. 批量查邮")
+                                .text("批量查邮")
                                 .callbackData("batch_email_query")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("23. 版本信息")
-                                .callbackData("version_info")
+                                .text("订阅信息")
+                                .callbackData("subscription_info")
                                 .build()
                 ),
-                // Row 9: 辅助功能
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
-                                .text("24. 订阅信息")
-                                .callbackData("subscription_info")
+                                .text("版本信息")
+                                .callbackData("version_info")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("25. 区域拓展")
-                                .callbackData("auto_region_expansion")
-                                .build(),
-                         InlineKeyboardButton.builder()
-                                .text("26. AI 聊天")
-                                .callbackData("ai_chat")
-                                .build()
-                ),
-                // Row 10: 日志与统计
-                 new InlineKeyboardRow(
-                        InlineKeyboardButton.builder()
-                                .text("27. 流量统计")
-                                .callbackData("traffic_statistics")
-                                .build(),
-                        InlineKeyboardButton.builder()
-                                .text("28. 日志查询")
+                                .text("日志查询")
                                 .callbackData("log_query")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("29. 任务管理")
-                                .callbackData("task_management")
-                                .build()
-                 ),
-                 // Row 11: 更多工具
-                 new InlineKeyboardRow(
-                        InlineKeyboardButton.builder()
-                                .text("30. VNC 配置")
+                                .text("VNC配置")
                                 .callbackData("vnc_config")
-                                .build(),
-                        InlineKeyboardButton.builder()
-                                .text("31. 备份恢复")
-                                .callbackData("backup_restore")
                                 .build()
-                 ),
-                // Row 12: 外部链接
+                ),
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
-                                .text("32. 通知频道")
+                                .text("备份恢复")
+                                .callbackData("backup_restore")
+                                .build(),
+                        InlineKeyboardButton.builder()
+                                .text("AI聊天")
+                                .callbackData("ai_chat")
+                                .build()
+                ),
+                
+                // 分类：外部链接
+                new InlineKeyboardRow(
+                        InlineKeyboardButton.builder()
+                                .text("━━━━━ 🔗 外部链接 ━━━━━")
+                                .callbackData("noop")
+                                .build()
+                ),
+                new InlineKeyboardRow(
+                        InlineKeyboardButton.builder()
+                                .text("通知频道")
                                 .url("https://t.me/Woci_detective")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("33. 放货查询")
+                                .text("放货查询")
                                 .url("https://check.oci-helper.de5.net")
                                 .build()
                 ),
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
-                                .text("34. 开源地址（帮忙点点star⭐）")
+                                .text("开源地址（帮忙点点star⭐）")
                                 .url("https://github.com/tony-wang1990/king-detective")
                                 .build()
                 ),
+                
+                // 底部关闭按钮
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
                                 .text("❌ 关闭窗口")
