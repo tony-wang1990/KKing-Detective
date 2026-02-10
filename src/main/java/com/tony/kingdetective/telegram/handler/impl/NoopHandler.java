@@ -20,9 +20,9 @@ public class NoopHandler extends AbstractCallbackHandler {
     
     @Override
     public BotApiMethod<? extends Serializable> handle(CallbackQuery callbackQuery, TelegramClient telegramClient) {
-        // Do nothing - just acknowledge the callback
-        log.debug("Noop handler called for callback: {}", callbackQuery.getData());
-        return answerCallbackQuery(callbackQuery, null);
+        // Do nothing - category title button clicked, just return null
+        log.debug("Category title button clicked: {}", callbackQuery.getData());
+        return null;
     }
     
     @Override
