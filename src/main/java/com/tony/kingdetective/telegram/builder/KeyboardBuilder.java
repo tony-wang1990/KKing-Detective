@@ -298,4 +298,46 @@ public class KeyboardBuilder {
         markup.setKeyboard(rows);
         return markup;
     }
+
+    /**
+     * 构建取消行（返回主菜单）
+     *
+     * @return InlineKeyboardRow
+     */
+    public static InlineKeyboardRow buildCancelRow() {
+        return new InlineKeyboardRow(
+                InlineKeyboardButton.builder()
+                        .text("❌ 关闭窗口")
+                        .callbackData("cancel")
+                        .build()
+        );
+    }
+
+    /**
+     * 快捷方法：创建按钮
+     *
+     * @param text 按钮文本
+     * @param callbackData 回调数据
+     * @return InlineKeyboardButton
+     */
+    public static InlineKeyboardButton button(String text, String callbackData) {
+        return InlineKeyboardButton.builder()
+                .text(text)
+                .callbackData(callbackData)
+                .build();
+    }
+
+    /**
+     * 快捷方法：创建URL按钮
+     *
+     * @param text 按钮文本
+     * @param url URL地址
+     * @return InlineKeyboardButton
+     */
+    public static InlineKeyboardButton urlButton(String text, String url) {
+        return InlineKeyboardButton.builder()
+                .text(text)
+                .url(url)
+                .build();
+    }
 }
