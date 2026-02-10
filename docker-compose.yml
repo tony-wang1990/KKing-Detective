@@ -2,15 +2,17 @@ version: '3.3'
 
 services:
   watcher:
-    image: ghcr.io/tony-wang1990/king-detective-watcher:main
+    image: alpine:latest
     container_name: king-detective-watcher
     restart: always
+    command: sh /scripts/watcher.sh
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /usr/local/bin/docker-compose:/usr/local/bin/docker-compose
-      - /app/king-detective/docker-compose.yml:/app/king-detective/docker-compose.yml
-      - /app/king-detective/update_version_trigger.flag:/app/king-detective/update_version_trigger.flag
-      - /app/king-detective/king-detective.db:/app/king-detective/king-detective.db
+      - /usr/bin/docker:/usr/bin/docker
+      - ./:/app/king-detective
+      - ./scripts/watcher.sh:/scripts/watcher.sh:ro
+    environment:
+      - TZ=Asia/Shanghai
 
   king-detective:
     image: ghcr.io/tony-wang1990/king-detective:main
