@@ -21,35 +21,32 @@ jobs:
         with:
           fetch-depth: 0
       
-      - name: Get latest tag
-        id: get_latest_tag
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      
+      - name: Get version from pom.xml
+        id: get_version
         run: |
-          latest_tag=$(git tag -l "v*" --sort=-v:refname | head -n 1)
-          if [ -z "$latest_tag" ]; then
-            latest_tag="v2.00"
-          fi
-          echo "latest_tag=$latest_tag" >> $GITHUB_OUTPUT
-          echo "Latest tag: $latest_tag"
+          version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "current_version=$version" >> $GITHUB_OUTPUT
+          echo "Current version from pom.xml: $version"
       
       - name: Calculate new version
         id: calc_version
         run: |
-          latest_tag="${{ steps.get_latest_tag.outputs.latest_tag }}"
-          # Remove 'v' prefix
-          version_num=${latest_tag#v}
-          # Split by dot: 2.00 -> major=2, minor=00
-          major=$(echo $version_num | cut -d'.' -f1)
-          minor=$(echo $version_num | cut -d'.' -f2)
-          # Increment: remove leading zeros, add 1, pad to 2 digits
-          minor_int=$((10#$minor + 1))
-          if [ $minor_int -ge 100 ]; then
-            major=$((major + 1))
-            minor_int=0
-          fi
-          new_minor=$(printf "%02d" $minor_int)
-          new_tag="v${major}.${new_minor}"
+          current_version="${{ steps.get_version.outputs.current_version }}"
+          # Split semantic version: 4.1.1 -> major=4, minor=1, patch=1
+          IFS='.' read -r major minor patch <<< "$current_version"
+          # Increment patch version
+          new_patch=$((patch + 1))
+          new_version="${major}.${minor}.${new_patch}"
+          new_tag="v${new_version}"
           echo "new_tag=$new_tag" >> $GITHUB_OUTPUT
-          echo "New version: $new_tag (from $latest_tag)"
+          echo "new_version=$new_version" >> $GITHUB_OUTPUT
+          echo "New version: $new_tag (from v$current_version)"
       
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1

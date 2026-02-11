@@ -4,6 +4,13 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.tony</groupId>
     <artifactId>king-detective</artifactId>
+    
+    <!-- 版本号管理说明 (Semantic Versioning):
+         格式: major.minor.patch (例如: 4.1.1)
+         - patch (修订号): 由 GitHub Actions 自动递增 (Bug修复、小改动)
+         - minor (次版本号): 需手动更新 pom.xml (新功能、向后兼容)
+         - major (主版本号): 需手动更新 pom.xml (重大更新、不兼容变更)
+    -->
     <version>4.1.1</version>
     <name>king-detective</name>
     <description>King Detective - W??￠é?? OCI Management Panel</description>
