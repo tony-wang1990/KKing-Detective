@@ -24,7 +24,7 @@ services:
       - ./application.yml:/app/king-detective/application.yml
       - ./king-detective.db:/app/king-detective/king-detective.db
       - ./keys:/app/king-detective/keys
-      - ./update_version_trigger.flag:/app/king-detective/update_version_trigger.flag
+      - ./:/app/king-detective
     networks:
       - app-network
 
