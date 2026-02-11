@@ -1,11 +1,17 @@
 #!/bin/sh
 set -e
 
-# 安装必要工具（仅首次运行时）
-if ! command -v curl &> /dev/null || ! command -v sqlite3 &> /dev/null; then
-    echo "📦 安装curl和sqlite..."
-    apk add --no-cache curl sqlite
+# 安装必要工具
+echo "📦 安装必要工具 (docker-cli, curl, sqlite)..."
+if ! command -v docker &> /dev/null; then
+    # Docker CLI 未安装，一起安装所有工具
+    apk add --no-cache docker-cli curl sqlite
+else
+    # Docker CLI 已安装，只安装其他工具
+    apk add --no-cache curl sqlite 2>/dev/null || true
 fi
+echo "✅ 工具安装完成"
+
 
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "🔍 King-Detective Watcher v1.0"

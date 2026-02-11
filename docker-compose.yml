@@ -8,11 +8,11 @@ services:
     command: sh /scripts/watcher.sh
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /usr/bin/docker:/usr/bin/docker
       - ./:/app/king-detective
       - ./scripts/watcher.sh:/scripts/watcher.sh:ro
     environment:
       - TZ=Asia/Shanghai
+
 
   king-detective:
     image: ghcr.io/tony-wang1990/king-detective:main
