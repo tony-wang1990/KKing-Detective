@@ -107,17 +107,18 @@ public class OciTask implements ApplicationRunner {
             OciKv tgToken = kvService.getOne(new LambdaQueryWrapper<OciKv>().eq(OciKv::getCode, SysCfgEnum.SYS_TG_BOT_TOKEN.getCode()));
             OciKv tgChatId = kvService.getOne(new LambdaQueryWrapper<OciKv>().eq(OciKv::getCode, SysCfgEnum.SYS_TG_CHAT_ID.getCode()));
             if (null == tgToken || null == tgChatId) {
+                log.warn("TG Bot token or chat ID not configured, skipping TG Bot startup");
                 return;
             }
             if (StrUtil.isNotBlank(tgToken.getValue()) && StrUtil.isNotBlank(tgChatId.getValue())) {
                 botsApplication = new TelegramBotsLongPollingApplication();
                 try {
                     botsApplication.registerBot(tgToken.getValue(), new TgBot(tgToken.getValue(), tgChatId.getValue()));
-                    Thread.currentThread().join();
+                    log.info("TG Bot successfully started with chatId: {}", tgChatId.getValue());
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    log.error("Failed to start TG Bot", e);
                 }
-                log.info("TG Bot successfully started");
+                // Virtual thread continues to run, no need for join()
             }
         });
     }
