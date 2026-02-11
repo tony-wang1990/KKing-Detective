@@ -1108,6 +1108,7 @@ public class SysServiceImpl implements ISysService {
                     log.error("TG Bot Application close error", e);
                 }
             }
+            return; // Early return when parameters are blank
         }
         virtualExecutor.execute(() -> {
             if (StrUtil.isNotBlank(botToken) && StrUtil.isNotBlank(chatId)) {
@@ -1121,9 +1122,10 @@ public class SysServiceImpl implements ISysService {
                 botsApplication = new TelegramBotsLongPollingApplication();
                 try {
                     botsApplication.registerBot(botToken, new TgBot(botToken, chatId));
-                    Thread.currentThread().join();
+                    log.info("TG Bot started successfully with chatId: {}", chatId);
+                    // Virtual thread continues to run, no need to join()
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    log.error("Failed to start TG Bot", e);
                 }
             }
         });
