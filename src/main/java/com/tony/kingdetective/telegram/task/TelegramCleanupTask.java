@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  * Telegram Bot Scheduled Tasks
  * Clean up expired connections and sessions
  * 
- * @author yohann
+ * @author Tony Wang
  */
 @Slf4j
 @Component

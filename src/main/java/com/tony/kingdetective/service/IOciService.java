@@ -19,7 +19,7 @@ import com.tony.kingdetective.bean.response.oci.cfg.OciUserListRsp;
  * IOciService
  * </p >
  *
- * @author yohann
+ * @author Tony Wang
  * @since 2024/11/12 11:15
  */
 public interface IOciService {

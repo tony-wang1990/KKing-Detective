@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * AI Chat Session Storage
  * Thread-safe singleton storage for managing AI chat sessions
  * 
- * @author yohann
+ * @author Tony Wang
  */
 public class ChatSessionStorage {
     

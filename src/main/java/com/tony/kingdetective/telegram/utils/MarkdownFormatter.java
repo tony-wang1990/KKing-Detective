@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
  * Markdown Formatter Utility for Telegram Bot
  * Provides proper Markdown formatting and escaping
  * 
- * @author yohann
+ * @author Tony Wang
  */
 public class MarkdownFormatter {
     

@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * SSH Connection Storage
  * Thread-safe singleton storage for managing SSH connection info
  * 
- * @author yohann
+ * @author Tony Wang
  */
 public class SshConnectionStorage {
     

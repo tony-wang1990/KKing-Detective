@@ -5,7 +5,7 @@ package com.tony.kingdetective.bean;
  * Tuple2
  * </p >
  *
- * @author yohann
+ * @author Tony Wang
  * @since 2024/4/12 11:04
  */
 public class Tuple2<T1, T2> {

@@ -31,7 +31,7 @@ import jakarta.annotation.Resource;
  * OciController
  * </p >
  *
- * @author yohann
+ * @author Tony Wang
  * @since 2024/11/12 17:17
  */
 @RestController
@@ -75,7 +75,7 @@ public class OciController {
     @PostMapping(path = "/createInstance")
     public ResponseData<Void> createInstance(@Validated @RequestBody CreateInstanceParams params) {
         ociService.createInstance(params);
-        return ResponseData.successData("创建开机任务成功");
+        return ResponseData.successData("创建开机任务成�?);
     }
 
     @PostMapping(path = "/details")
@@ -92,7 +92,7 @@ public class OciController {
     @PostMapping(path = "/stopCreate")
     public ResponseData<Void> stopCreate(@Validated @RequestBody StopCreateParams params) {
         ociService.stopCreate(params);
-        return ResponseData.successData("停止开机任务成功");
+        return ResponseData.successData("停止开机任务成�?);
     }
 
     @PostMapping(path = "/stopChangeIp")
@@ -103,37 +103,37 @@ public class OciController {
 
     @PostMapping(path = "/createTaskPage")
     public ResponseData<Page<CreateTaskRsp>> createTaskPage(@Validated @RequestBody CreateTaskPageParams params) {
-        return ResponseData.successData(ociService.createTaskPage(params), "获取开机任务列表成功");
+        return ResponseData.successData(ociService.createTaskPage(params), "获取开机任务列表成�?);
     }
 
     @PostMapping(path = "/stopCreateBatch")
     public ResponseData<Void> stopCreateBatch(@Validated @RequestBody IdListParams params) {
         ociService.stopCreateBatch(params);
-        return ResponseData.successData("停止开机任务成功");
+        return ResponseData.successData("停止开机任务成�?);
     }
 
     @PostMapping(path = "/createInstanceBatch")
     public ResponseData<Void> createInstanceBatch(@Validated @RequestBody CreateInstanceBatchParams params) {
         ociService.createInstanceBatch(params);
-        return ResponseData.successData("批量创建开机任务成功");
+        return ResponseData.successData("批量创建开机任务成�?);
     }
 
     @PostMapping(path = "/updateInstanceState")
     public ResponseData<Void> updateInstanceState(@Validated @RequestBody UpdateInstanceStateParams params) {
         ociService.updateInstanceState(params);
-        return ResponseData.successData("更新实例状态成功");
+        return ResponseData.successData("更新实例状态成�?);
     }
 
     @PostMapping(path = "/sendCaptcha")
     public ResponseData<Void> sendCaptcha(@Validated @RequestBody SendCaptchaParams params) {
         ociService.sendCaptcha(params);
-        return ResponseData.successData("验证码已发送，请查看TG或钉钉消息");
+        return ResponseData.successData("验证码已发送，请查看TG或钉钉消�?);
     }
 
     @PostMapping(path = "/terminateInstance")
     public ResponseData<Void> terminateInstance(@Validated @RequestBody TerminateInstanceParams params) {
         ociService.terminateInstance(params);
-        return ResponseData.successData("终止实例命令已下发");
+        return ResponseData.successData("终止实例命令已下�?);
     }
 
     @PostMapping(path = "/releaseSecurityRule")
@@ -150,7 +150,7 @@ public class OciController {
     @PostMapping(path = "/createIpv6")
     public ResponseData<Void> createIpv6(@Validated @RequestBody CreateIpv6Params params) {
         ociService.createIpv6(params);
-        return ResponseData.successData("为实例附加 IPV6 成功");
+        return ResponseData.successData("为实例附�?IPV6 成功");
     }
 
     @PostMapping(path = "/updateInstanceName")
@@ -168,7 +168,7 @@ public class OciController {
     @PostMapping(path = "/updateBootVolumeCfg")
     public ResponseData<Void> updateBootVolumeCfg(@Validated @RequestBody UpdateBootVolumeCfgParams params) {
         ociService.updateBootVolumeCfg(params);
-        return ResponseData.successData("修改引导卷配置成功");
+        return ResponseData.successData("修改引导卷配置成�?);
     }
 
     @PostMapping(path = "/checkAlive")
@@ -190,7 +190,7 @@ public class OciController {
     @PostMapping(path = "/oneClick500M")
     public ResponseData<Void> oneClick500M(@Validated @RequestBody CreateNetworkLoadBalancerParams params) {
         instanceService.oneClick500M(params);
-        return ResponseData.successData("一键开启下行500Mbps任务下发成功");
+        return ResponseData.successData("一键开启下�?00Mbps任务下发成功");
     }
 
     @PostMapping(path = "/oneClickClose500M")

@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * VNC configuration session storage
  * Manages temporary VNC configuration state during setup
  * 
- * @author yohann
+ * @author Tony Wang
  */
 @Slf4j
 public class VncConfigStorage {

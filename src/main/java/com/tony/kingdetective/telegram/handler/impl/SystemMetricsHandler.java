@@ -26,7 +26,7 @@ import java.util.List;
  * System metrics callback handler
  * Query server resource usage (CPU, Memory, Disk, Network, etc.)
  * 
- * @author yohann
+ * @author Tony Wang
  */
 @Slf4j
 @Component
@@ -67,7 +67,7 @@ public class SystemMetricsHandler extends AbstractCallbackHandler {
             
             return buildEditMessage(
                 callbackQuery,
-                "❌ 获取系统资源信息失败: " + e.getMessage(),
+                "�?获取系统资源信息失败: " + e.getMessage(),
                 new InlineKeyboardMarkup(keyboard)
             );
         }
@@ -110,7 +110,7 @@ public class SystemMetricsHandler extends AbstractCallbackHandler {
         sb.append(getUptimeInfo(os));
         
         sb.append("\n");
-        sb.append("⏰ 更新时间: ");
+        sb.append("�?更新时间: ");
         sb.append(Instant.now().atZone(ZoneId.systemDefault()).format(TIME_FORMATTER));
         
         return sb.toString();
@@ -121,7 +121,7 @@ public class SystemMetricsHandler extends AbstractCallbackHandler {
      */
     private String getSystemInfo(OperatingSystem os, HardwareAbstractionLayer hardware) {
         StringBuilder sb = new StringBuilder();
-        sb.append("🖥️ 系统信息\n");
+        sb.append("🖥�?系统信息\n");
         
         // Try to detect if running in Docker
         boolean isDocker = isRunningInDocker();
@@ -131,13 +131,13 @@ public class SystemMetricsHandler extends AbstractCallbackHandler {
             // Try to read host OS info from mounted file
             String hostOs = getHostOsInfo();
             if (hostOs != null) {
-                sb.append("  宿主机: ").append(hostOs).append("\n");
+                sb.append("  宿主�? ").append(hostOs).append("\n");
             }
         }
         
         sb.append("  容器OS: ").append(os.getFamily()).append(" ").append(os.getVersionInfo().getVersion()).append("\n");
         sb.append("  架构: ").append(System.getProperty("os.arch")).append("\n");
-        sb.append("  处理器: ").append(hardware.getProcessor().getProcessorIdentifier().getName()).append("\n");
+        sb.append("  处理�? ").append(hardware.getProcessor().getProcessorIdentifier().getName()).append("\n");
         return sb.toString();
     }
     
@@ -215,7 +215,7 @@ public class SystemMetricsHandler extends AbstractCallbackHandler {
      */
     private String getCpuInfo(CentralProcessor processor) {
         StringBuilder sb = new StringBuilder();
-        sb.append("💻 服务器 CPU 使用率\n");
+        sb.append("💻 服务�?CPU 使用率\n");
         
         // Get CPU usage
         long[] prevTicks = processor.getSystemCpuLoadTicks();
@@ -226,9 +226,9 @@ public class SystemMetricsHandler extends AbstractCallbackHandler {
         }
         double cpuUsage = processor.getSystemCpuLoadBetweenTicks(prevTicks) * 100;
         
-        sb.append("  核心数: ").append(processor.getLogicalProcessorCount()).append("\n");
-        sb.append("  使用率: ").append(String.format("%.2f", cpuUsage)).append("%\n");
-        sb.append("  空闲率: ").append(String.format("%.2f", 100 - cpuUsage)).append("%\n");
+        sb.append("  核心�? ").append(processor.getLogicalProcessorCount()).append("\n");
+        sb.append("  使用�? ").append(String.format("%.2f", cpuUsage)).append("%\n");
+        sb.append("  空闲�? ").append(String.format("%.2f", 100 - cpuUsage)).append("%\n");
         
         // Visual progress bar
         sb.append("  ").append(generateProgressBar(cpuUsage, 100));
@@ -248,10 +248,10 @@ public class SystemMetricsHandler extends AbstractCallbackHandler {
         long usedMemory = totalMemory - availableMemory;
         double usedPercentage = ((double) usedMemory / totalMemory) * 100;
         
-        sb.append("  总容量: ").append(formatBytes(totalMemory)).append("\n");
-        sb.append("  已使用: ").append(formatBytes(usedMemory)).append("\n");
+        sb.append("  总容�? ").append(formatBytes(totalMemory)).append("\n");
+        sb.append("  已使�? ").append(formatBytes(usedMemory)).append("\n");
         sb.append("  可用: ").append(formatBytes(availableMemory)).append("\n");
-        sb.append("  使用率: ").append(String.format("%.2f", usedPercentage)).append("%\n");
+        sb.append("  使用�? ").append(String.format("%.2f", usedPercentage)).append("%\n");
         sb.append("  ").append(generateProgressBar(usedPercentage, 100));
         
         return sb.toString();
@@ -284,10 +284,10 @@ public class SystemMetricsHandler extends AbstractCallbackHandler {
         
         double usedPercentage = ((double) used / total) * 100;
         
-        sb.append("  总容量: ").append(formatBytes(total)).append("\n");
-        sb.append("  已使用: ").append(formatBytes(used)).append("\n");
+        sb.append("  总容�? ").append(formatBytes(total)).append("\n");
+        sb.append("  已使�? ").append(formatBytes(used)).append("\n");
         sb.append("  可用: ").append(formatBytes(usable)).append("\n");
-        sb.append("  使用率: ").append(String.format("%.2f", usedPercentage)).append("%\n");
+        sb.append("  使用�? ").append(String.format("%.2f", usedPercentage)).append("%\n");
         sb.append("  ").append(generateProgressBar(usedPercentage, 100));
         
         return sb.toString();
@@ -324,13 +324,13 @@ public class SystemMetricsHandler extends AbstractCallbackHandler {
             }
             
             sb.append("  接收: ").append(formatBytes(primaryIF.getBytesRecv())).append("\n");
-            sb.append("  发送: ").append(formatBytes(primaryIF.getBytesSent())).append("\n");
+            sb.append("  发�? ").append(formatBytes(primaryIF.getBytesSent())).append("\n");
             sb.append("  收包: ").append(primaryIF.getPacketsRecv()).append("\n");
             sb.append("  发包: ").append(primaryIF.getPacketsSent()).append("\n");
             
             if (primaryIF.getInErrors() > 0 || primaryIF.getOutErrors() > 0) {
-                sb.append("  错误: ").append("入=").append(primaryIF.getInErrors())
-                  .append(" 出=").append(primaryIF.getOutErrors()).append("\n");
+                sb.append("  错误: ").append("�?").append(primaryIF.getInErrors())
+                  .append(" �?").append(primaryIF.getOutErrors()).append("\n");
             }
         } else {
             sb.append("  ⚠️ 未检测到活动网络接口\n");
@@ -394,7 +394,7 @@ public class SystemMetricsHandler extends AbstractCallbackHandler {
         
         sb.append("  ");
         if (days > 0) {
-            sb.append(days).append(" 天 ");
+            sb.append(days).append(" �?");
         }
         sb.append(hours).append(" 小时 ");
         sb.append(minutes).append(" 分钟 ");
@@ -441,9 +441,9 @@ public class SystemMetricsHandler extends AbstractCallbackHandler {
         StringBuilder bar = new StringBuilder("[");
         for (int i = 0; i < totalBars; i++) {
             if (i < filledBars) {
-                bar.append("█");
+                bar.append("�?);
             } else {
-                bar.append("░");
+                bar.append("�?);
             }
         }
         bar.append("]\n");

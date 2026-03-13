@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Instance management handler
  * 
- * @author yohann
+ * @author Tony Wang
  */
 @Slf4j
 @Component
@@ -53,10 +53,10 @@ public class InstanceManagementHandler extends AbstractCallbackHandler {
             if (CollectionUtil.isEmpty(instances)) {
                 return buildEditMessage(
                         callbackQuery,
-                        "❌ 暂无运行中的实例",
+                        "�?暂无运行中的实例",
                         new InlineKeyboardMarkup(List.of(
                                 new InlineKeyboardRow(
-                                        KeyboardBuilder.button("◀️ 返回", "select_config:" + ociCfgId)
+                                        KeyboardBuilder.button("◀�?返回", "select_config:" + ociCfgId)
                                 ),
                                 KeyboardBuilder.buildCancelRow()
                         ))
@@ -72,10 +72,10 @@ public class InstanceManagementHandler extends AbstractCallbackHandler {
             log.error("Failed to list running instances for ociCfgId: {}", ociCfgId, e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 获取实例列表失败：" + e.getMessage(),
+                    "�?获取实例列表失败�? + e.getMessage(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "select_config:" + ociCfgId)
+                                    KeyboardBuilder.button("◀�?返回", "select_config:" + ociCfgId)
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -95,7 +95,7 @@ public class InstanceManagementHandler extends AbstractCallbackHandler {
         InstanceSelectionStorage storage = InstanceSelectionStorage.getInstance();
         
         StringBuilder message = new StringBuilder("【实例管理】\n\n");
-        message.append(String.format("共 %d 个运行中的实例：\n\n", instances.size()));
+        message.append(String.format("�?%d 个运行中的实例：\n\n", instances.size()));
         
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
         
@@ -106,7 +106,7 @@ public class InstanceManagementHandler extends AbstractCallbackHandler {
             
             // Format public IPs
             String publicIps = CollectionUtil.isEmpty(instance.getPublicIp()) 
-                    ? "无" 
+                    ? "�? 
                     : String.join(", ", instance.getPublicIp());
             
             message.append(String.format(
@@ -115,7 +115,7 @@ public class InstanceManagementHandler extends AbstractCallbackHandler {
                     "   ID: ...%s\n" +
                     "   Shape: %s\n" +
                     "   公网IP: %s\n\n",
-                    isSelected ? "☑️" : "⬜",
+                    isSelected ? "☑️" : "�?,
                     i + 1,
                     instance.getName(),
                     instance.getRegion(),
@@ -128,13 +128,13 @@ public class InstanceManagementHandler extends AbstractCallbackHandler {
             if (i % 2 == 0) {
                 InlineKeyboardRow row = new InlineKeyboardRow();
                 row.add(KeyboardBuilder.button(
-                        String.format("%s 实例%d", isSelected ? "☑️" : "⬜", i + 1),
+                        String.format("%s 实例%d", isSelected ? "☑️" : "�?, i + 1),
                         "toggle_instance:" + i  // Use index
                 ));
                 keyboard.add(row);
             } else {
                 keyboard.get(keyboard.size() - 1).add(KeyboardBuilder.button(
-                        String.format("%s 实例%d", isSelected ? "☑️" : "⬜", i + 1),
+                        String.format("%s 实例%d", isSelected ? "☑️" : "�?, i + 1),
                         "toggle_instance:" + i  // Use index
                 ));
             }
@@ -142,8 +142,8 @@ public class InstanceManagementHandler extends AbstractCallbackHandler {
         
         // Add batch operation buttons
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("✅ 全选", "select_all_instances"),
-                KeyboardBuilder.button("⬜ 取消全选", "deselect_all_instances")
+                KeyboardBuilder.button("�?全�?, "select_all_instances"),
+                KeyboardBuilder.button("�?取消全�?, "deselect_all_instances")
         ));
         
         keyboard.add(new InlineKeyboardRow(
@@ -159,12 +159,12 @@ public class InstanceManagementHandler extends AbstractCallbackHandler {
         }
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("🗑 终止选中的实例", "confirm_terminate_instances")
+                KeyboardBuilder.button("🗑 终止选中的实�?, "confirm_terminate_instances")
         ));
         
         // Back button
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("◀️ 返回", "select_config:" + ociCfgId)
+                KeyboardBuilder.button("◀�?返回", "select_config:" + ociCfgId)
         ));
         keyboard.add(KeyboardBuilder.buildCancelRow());
         
@@ -184,7 +184,7 @@ public class InstanceManagementHandler extends AbstractCallbackHandler {
 /**
  * Toggle instance selection handler
  * 
- * @author yohann
+ * @author Tony Wang
  */
 @Slf4j
 @Component
@@ -204,7 +204,7 @@ class ToggleInstanceHandler extends AbstractCallbackHandler {
             try {
                 telegramClient.execute(AnswerCallbackQuery.builder()
                         .callbackQueryId(callbackQuery.getId())
-                        .text("实例不存在")
+                        .text("实例不存�?)
                         .showAlert(true)
                         .build());
             } catch (TelegramApiException e) {
@@ -240,7 +240,7 @@ class ToggleInstanceHandler extends AbstractCallbackHandler {
         if (ociCfgId == null) {
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 配置上下文丢失，请重新进入实例管理",
+                    "�?配置上下文丢失，请重新进入实例管�?,
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }
@@ -251,10 +251,10 @@ class ToggleInstanceHandler extends AbstractCallbackHandler {
         if (CollectionUtil.isEmpty(instances)) {
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 实例缓存丢失，请重新进入实例管理",
+                    "�?实例缓存丢失，请重新进入实例管理",
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "select_config:" + ociCfgId)
+                                    KeyboardBuilder.button("◀�?返回", "select_config:" + ociCfgId)
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -276,7 +276,7 @@ class ToggleInstanceHandler extends AbstractCallbackHandler {
         InstanceSelectionStorage storage = InstanceSelectionStorage.getInstance();
         
         StringBuilder message = new StringBuilder("【实例管理】\n\n");
-        message.append(String.format("共 %d 个运行中的实例：\n\n", instances.size()));
+        message.append(String.format("�?%d 个运行中的实例：\n\n", instances.size()));
         
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
         
@@ -287,7 +287,7 @@ class ToggleInstanceHandler extends AbstractCallbackHandler {
             
             // Format public IPs
             String publicIps = CollectionUtil.isEmpty(instance.getPublicIp()) 
-                    ? "无" 
+                    ? "�? 
                     : String.join(", ", instance.getPublicIp());
             
             message.append(String.format(
@@ -296,7 +296,7 @@ class ToggleInstanceHandler extends AbstractCallbackHandler {
                     "   ID: ...%s\n" +
                     "   Shape: %s\n" +
                     "   公网IP: %s\n\n",
-                    isSelected ? "☑️" : "⬜",
+                    isSelected ? "☑️" : "�?,
                     i + 1,
                     instance.getName(),
                     instance.getRegion(),
@@ -309,13 +309,13 @@ class ToggleInstanceHandler extends AbstractCallbackHandler {
             if (i % 2 == 0) {
                 InlineKeyboardRow row = new InlineKeyboardRow();
                 row.add(KeyboardBuilder.button(
-                        String.format("%s 实例%d", isSelected ? "☑️" : "⬜", i + 1),
+                        String.format("%s 实例%d", isSelected ? "☑️" : "�?, i + 1),
                         "toggle_instance:" + i
                 ));
                 keyboard.add(row);
             } else {
                 keyboard.get(keyboard.size() - 1).add(KeyboardBuilder.button(
-                        String.format("%s 实例%d", isSelected ? "☑️" : "⬜", i + 1),
+                        String.format("%s 实例%d", isSelected ? "☑️" : "�?, i + 1),
                         "toggle_instance:" + i
                 ));
             }
@@ -323,8 +323,8 @@ class ToggleInstanceHandler extends AbstractCallbackHandler {
         
         // Add batch operation buttons
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("✅ 全选", "select_all_instances"),
-                KeyboardBuilder.button("⬜ 取消全选", "deselect_all_instances")
+                KeyboardBuilder.button("�?全�?, "select_all_instances"),
+                KeyboardBuilder.button("�?取消全�?, "deselect_all_instances")
         ));
         
         keyboard.add(new InlineKeyboardRow(
@@ -340,12 +340,12 @@ class ToggleInstanceHandler extends AbstractCallbackHandler {
         }
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("🗑 终止选中的实例", "confirm_terminate_instances")
+                KeyboardBuilder.button("🗑 终止选中的实�?, "confirm_terminate_instances")
         ));
         
         // Back button
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("◀️ 返回", "select_config:" + ociCfgId)
+                KeyboardBuilder.button("◀�?返回", "select_config:" + ociCfgId)
         ));
         keyboard.add(KeyboardBuilder.buildCancelRow());
         
@@ -365,7 +365,7 @@ class ToggleInstanceHandler extends AbstractCallbackHandler {
 /**
  * Select all instances handler
  * 
- * @author yohann
+ * @author Tony Wang
  */
 @Slf4j
 @Component
@@ -386,7 +386,7 @@ class SelectAllInstancesHandler extends AbstractCallbackHandler {
             try {
                 telegramClient.execute(AnswerCallbackQuery.builder()
                         .callbackQueryId(callbackQuery.getId())
-                        .text(String.format("已全选 %d 个实例", instances.size()))
+                        .text(String.format("已全�?%d 个实�?, instances.size()))
                         .showAlert(false)
                         .build());
             } catch (TelegramApiException e) {
@@ -408,7 +408,7 @@ class SelectAllInstancesHandler extends AbstractCallbackHandler {
 /**
  * Deselect all instances handler
  * 
- * @author yohann
+ * @author Tony Wang
  */
 @Slf4j
 @Component
@@ -446,7 +446,7 @@ class DeselectAllInstancesHandler extends AbstractCallbackHandler {
 /**
  * Refresh instances handler
  * 
- * @author yohann
+ * @author Tony Wang
  */
 @Slf4j
 @Component
@@ -462,7 +462,7 @@ class RefreshInstancesHandler extends AbstractCallbackHandler {
             try {
                 telegramClient.execute(AnswerCallbackQuery.builder()
                         .callbackQueryId(callbackQuery.getId())
-                        .text("配置上下文丢失，请重新进入实例管理")
+                        .text("配置上下文丢失，请重新进入实例管�?)
                         .showAlert(true)
                         .build());
             } catch (TelegramApiException e) {
@@ -493,10 +493,10 @@ class RefreshInstancesHandler extends AbstractCallbackHandler {
             if (CollectionUtil.isEmpty(instances)) {
                 return buildEditMessage(
                         callbackQuery,
-                        "❌ 暂无运行中的实例",
+                        "�?暂无运行中的实例",
                         new InlineKeyboardMarkup(List.of(
                                 new InlineKeyboardRow(
-                                        KeyboardBuilder.button("◀️ 返回", "select_config:" + ociCfgId)
+                                        KeyboardBuilder.button("◀�?返回", "select_config:" + ociCfgId)
                                 ),
                                 KeyboardBuilder.buildCancelRow()
                         ))
@@ -511,7 +511,7 @@ class RefreshInstancesHandler extends AbstractCallbackHandler {
             InstanceSelectionStorage storage2 = InstanceSelectionStorage.getInstance();
             
             StringBuilder message = new StringBuilder("【实例管理】\n\n");
-            message.append(String.format("共 %d 个运行中的实例：\n", instances.size()));
+            message.append(String.format("�?%d 个运行中的实例：\n", instances.size()));
             message.append("🔄 刷新时间: ");
             message.append(java.time.LocalDateTime.now().format(
                     java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")));
@@ -526,7 +526,7 @@ class RefreshInstancesHandler extends AbstractCallbackHandler {
                 
                 // Format public IPs
                 String publicIps = CollectionUtil.isEmpty(instance.getPublicIp()) 
-                        ? "无" 
+                        ? "�? 
                         : String.join(", ", instance.getPublicIp());
                 
                 message.append(String.format(
@@ -535,7 +535,7 @@ class RefreshInstancesHandler extends AbstractCallbackHandler {
                         "   ID: ...%s\n" +
                         "   Shape: %s\n" +
                         "   公网IP: %s\n\n",
-                        isSelected ? "☑️" : "⬜",
+                        isSelected ? "☑️" : "�?,
                         i + 1,
                         instance.getName(),
                         instance.getRegion(),
@@ -548,13 +548,13 @@ class RefreshInstancesHandler extends AbstractCallbackHandler {
                 if (i % 2 == 0) {
                     InlineKeyboardRow row = new InlineKeyboardRow();
                     row.add(KeyboardBuilder.button(
-                            String.format("%s 实例%d", isSelected ? "☑️" : "⬜", i + 1),
+                            String.format("%s 实例%d", isSelected ? "☑️" : "�?, i + 1),
                             "toggle_instance:" + i  // Use index
                     ));
                     keyboard.add(row);
                 } else {
                     keyboard.get(keyboard.size() - 1).add(KeyboardBuilder.button(
-                            String.format("%s 实例%d", isSelected ? "☑️" : "⬜", i + 1),
+                            String.format("%s 实例%d", isSelected ? "☑️" : "�?, i + 1),
                             "toggle_instance:" + i  // Use index
                     ));
                 }
@@ -562,8 +562,8 @@ class RefreshInstancesHandler extends AbstractCallbackHandler {
             
             // Add batch operation buttons
             keyboard.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("✅ 全选", "select_all_instances"),
-                    KeyboardBuilder.button("⬜ 取消全选", "deselect_all_instances")
+                    KeyboardBuilder.button("�?全�?, "select_all_instances"),
+                    KeyboardBuilder.button("�?取消全�?, "deselect_all_instances")
             ));
             
             keyboard.add(new InlineKeyboardRow(
@@ -579,12 +579,12 @@ class RefreshInstancesHandler extends AbstractCallbackHandler {
             }
             
             keyboard.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("🗑 终止选中的实例", "confirm_terminate_instances")
+                    KeyboardBuilder.button("🗑 终止选中的实�?, "confirm_terminate_instances")
             ));
             
             // Back button
             keyboard.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("◀️ 返回", "select_config:" + ociCfgId)
+                    KeyboardBuilder.button("◀�?返回", "select_config:" + ociCfgId)
             ));
             keyboard.add(KeyboardBuilder.buildCancelRow());
             
@@ -600,7 +600,7 @@ class RefreshInstancesHandler extends AbstractCallbackHandler {
             try {
                 telegramClient.execute(AnswerCallbackQuery.builder()
                         .callbackQueryId(callbackQuery.getId())
-                        .text("刷新失败：" + e.getMessage())
+                        .text("刷新失败�? + e.getMessage())
                         .showAlert(true)
                         .build());
             } catch (TelegramApiException ex) {
@@ -620,7 +620,7 @@ class RefreshInstancesHandler extends AbstractCallbackHandler {
 /**
  * Start VNC connection handler
  * 
- * @author yohann
+ * @author Tony Wang
  */
 @Slf4j
 @Component
@@ -638,7 +638,7 @@ class StartVncConnectionHandler extends AbstractCallbackHandler {
             try {
                 telegramClient.execute(AnswerCallbackQuery.builder()
                         .callbackQueryId(callbackQuery.getId())
-                        .text("请先选择一个实例")
+                        .text("请先选择一个实�?)
                         .showAlert(true)
                         .build());
             } catch (TelegramApiException e) {
@@ -654,7 +654,7 @@ class StartVncConnectionHandler extends AbstractCallbackHandler {
             try {
                 telegramClient.execute(AnswerCallbackQuery.builder()
                         .callbackQueryId(callbackQuery.getId())
-                        .text("配置上下文丢失，请重新进入实例管理")
+                        .text("配置上下文丢失，请重新进入实例管�?)
                         .showAlert(true)
                         .build());
             } catch (TelegramApiException e) {
@@ -677,7 +677,7 @@ class StartVncConnectionHandler extends AbstractCallbackHandler {
             try {
                 telegramClient.execute(AnswerCallbackQuery.builder()
                         .callbackQueryId(callbackQuery.getId())
-                        .text("实例不存在")
+                        .text("实例不存�?)
                         .showAlert(true)
                         .build());
             } catch (TelegramApiException e) {
@@ -739,10 +739,10 @@ class StartVncConnectionHandler extends AbstractCallbackHandler {
                 if (hostPublicIp == null) {
                     return buildEditMessage(
                             callbackQuery,
-                            "❌ 无法获取宿主机公网IP，请稍后重试",
+                            "�?无法获取宿主机公网IP，请稍后重试",
                             new InlineKeyboardMarkup(java.util.List.of(
                                     new InlineKeyboardRow(
-                                            KeyboardBuilder.button("◀️ 返回", "instance_management:" + ociCfgId)
+                                            KeyboardBuilder.button("◀�?返回", "instance_management:" + ociCfgId)
                                     ),
                                     KeyboardBuilder.buildCancelRow()
                             ))
@@ -756,18 +756,18 @@ class StartVncConnectionHandler extends AbstractCallbackHandler {
                         
             // Determine VNC path based on URL format
             // Different URL formats require different VNC viewer paths:
-            // - IP:port format (e.g., http://1.2.3.4:6080) → /vnc.html
-            // - HTTP domain (e.g., http://vnc.example.com) → /vnc.html
-            // - HTTPS domain (e.g., https://vnc.example.com) → /myvnc/vnc.html
+            // - IP:port format (e.g., http://1.2.3.4:6080) �?/vnc.html
+            // - HTTP domain (e.g., http://vnc.example.com) �?/vnc.html
+            // - HTTPS domain (e.g., https://vnc.example.com) �?/myvnc/vnc.html
             String vncPath;
             if (isDefaultUrl || isIpPortFormat(vncUrl)) {
-                // Default or IP:port format → use /vnc.html
+                // Default or IP:port format �?use /vnc.html
                 vncPath = "/vnc.html?autoconnect=true";
             } else if (vncUrl.startsWith("https://")) {
-                // HTTPS (domain-based) → use /myvnc/vnc.html
+                // HTTPS (domain-based) �?use /myvnc/vnc.html
                 vncPath = "/myvnc/vnc.html?autoconnect=true";
             } else {
-                // HTTP (non-IP or domain) → use /vnc.html as fallback
+                // HTTP (non-IP or domain) �?use /vnc.html as fallback
                 vncPath = "/vnc.html?autoconnect=true";
             }
             
@@ -775,12 +775,12 @@ class StartVncConnectionHandler extends AbstractCallbackHandler {
             
             // Build success message
             String message = String.format(
-                    "✅ VNC 连接已启动\n\n" +
+                    "�?VNC 连接已启动\n\n" +
                     "实例: %s\n" +
                     "区域: %s\n" +
                     "ID: ...%s\n\n" +
                     "VNC 连接地址:\n%s\n\n" +
-                    "⚠️ 请确保已配置反向代理或放行相应端口",
+                    "⚠️ 请确保已配置反向代理或放行相应端�?,
                     instance.getName(),
                     instance.getRegion(),
                     instanceId.substring(Math.max(0, instanceId.length() - 8)),
@@ -792,7 +792,7 @@ class StartVncConnectionHandler extends AbstractCallbackHandler {
                     message,
                     new InlineKeyboardMarkup(java.util.List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回实例列表", "instance_management:" + ociCfgId)
+                                    KeyboardBuilder.button("◀�?返回实例列表", "instance_management:" + ociCfgId)
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -803,10 +803,10 @@ class StartVncConnectionHandler extends AbstractCallbackHandler {
             
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 启动 VNC 连接失败：" + e.getMessage(),
+                    "�?启动 VNC 连接失败�? + e.getMessage(),
                     new InlineKeyboardMarkup(java.util.List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回实例列表", "instance_management:" + ociCfgId)
+                                    KeyboardBuilder.button("◀�?返回实例列表", "instance_management:" + ociCfgId)
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))

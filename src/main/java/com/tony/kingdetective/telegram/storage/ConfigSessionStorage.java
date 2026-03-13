@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Manages different types of configuration sessions (VNC, Backup, etc.)
  * to avoid conflicts with AI chat and other features
  * 
- * @author yohann
+ * @author Tony Wang
  */
 @Slf4j
 public class ConfigSessionStorage {

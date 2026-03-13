@@ -7,7 +7,7 @@ import com.tony.kingdetective.enums.ErrorEnum;
  * OciException
  * </p >
  *
- * @author yohann
+ * @author Tony Wang
  * @since 2024/11/7 18:57
  */
 public class OciException extends RuntimeException {

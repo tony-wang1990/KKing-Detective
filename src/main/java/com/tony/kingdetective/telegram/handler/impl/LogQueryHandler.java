@@ -20,7 +20,7 @@ import java.util.LinkedList;
  * Log query callback handler
  * Query the latest 100 log entries and send as a file
  *
- * @author yohann
+ * @author Tony Wang
  */
 @Slf4j
 @Component
@@ -37,7 +37,7 @@ public class LogQueryHandler extends AbstractCallbackHandler {
             // Send loading message
             telegramClient.execute(buildEditMessage(
                     callbackQuery,
-                    "📋 正在获取日志文件，请稍候..."
+                    "📋 正在获取日志文件，请稍�?.."
             ));
 
             // Read last 100 lines from log file
@@ -46,7 +46,7 @@ public class LogQueryHandler extends AbstractCallbackHandler {
             if (!logFile.exists()) {
                 return buildEditMessage(
                         callbackQuery,
-                        "❌ 日志文件不存在: " + LOG_FILE_PATH
+                        "�?日志文件不存�? " + LOG_FILE_PATH
                 );
             }
 
@@ -56,7 +56,7 @@ public class LogQueryHandler extends AbstractCallbackHandler {
             if (logContent == null) {
                 return buildEditMessage(
                         callbackQuery,
-                        "❌ 读取日志文件失败"
+                        "�?读取日志文件失败"
                 );
             }
 
@@ -67,28 +67,28 @@ public class LogQueryHandler extends AbstractCallbackHandler {
             SendDocument sendDocument = SendDocument.builder()
                     .chatId(chatId)
                     .document(new InputFile(new ByteArrayInputStream(logContent), fileName))
-                    .caption("📋 最近 " + MAX_LINES + " 条日志记录\n"
-                            + "⏰ 生成时间: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                    .caption("📋 最�?" + MAX_LINES + " 条日志记录\n"
+                            + "�?生成时间: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                     .build();
 
             telegramClient.execute(sendDocument);
 
-                log.info("日志文件发送成功: {}", fileName);
+                log.info("日志文件发送成�? {}", fileName);
 
             // Return null since we already sent the document
             return null;
 
         } catch (TelegramApiException e) {
-            log.error("发送日志文件失败", e);
+            log.error("发送日志文件失�?, e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 发送日志文件失败: " + e.getMessage()
+                    "�?发送日志文件失�? " + e.getMessage()
             );
         } catch (Exception e) {
             log.error("处理日志查询请求失败", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 处理日志查询请求失败: " + e.getMessage()
+                    "�?处理日志查询请求失败: " + e.getMessage()
             );
         }
     }

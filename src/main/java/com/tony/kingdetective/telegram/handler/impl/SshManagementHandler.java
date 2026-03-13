@@ -23,7 +23,7 @@ import java.util.List;
  * SSH Management Handler
  * Handles SSH connection menu and operations
  * 
- * @author yohann
+ * @author Tony Wang
  */
 @Slf4j
 @Component
@@ -44,13 +44,13 @@ public class SshManagementHandler extends AbstractCallbackHandler {
             text = String.format(
                 "🔌 *SSH 连接管理*\n\n" +
                 "📌 当前连接：\n" +
-                "• 主机: %s:%d\n" +
-                "• 用户: %s\n" +
-                "• 状态: ✅ 已配置\n\n" +
+                "�?主机: %s:%d\n" +
+                "�?用户: %s\n" +
+                "�?状�? �?已配置\n\n" +
                 "💡 使用说明：\n" +
-                "发送 /ssh [命令] 来执行 SSH 命令\n" +
+                "发�?/ssh [命令] 来执�?SSH 命令\n" +
                 "例如: /ssh ls -la\n\n" +
-                "⚙️ 请选择功能：",
+                "⚙️ 请选择功能�?,
                 info.getHost(),
                 info.getPort(),
                 info.getUsername()
@@ -65,7 +65,7 @@ public class SshManagementHandler extends AbstractCallbackHandler {
             ));
             
             keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("🗑️ 删除连接", "ssh_disconnect")
+                KeyboardBuilder.button("🗑�?删除连接", "ssh_disconnect")
             ));
         } else {
             text = "🔌 *SSH 连接管理*\n\n" +
@@ -74,10 +74,10 @@ public class SshManagementHandler extends AbstractCallbackHandler {
                    "点击下方按钮配置 SSH 连接信息\n" +
                    "配置格式：host port username password\n" +
                    "例如: 192.168.1.100 22 root mypassword\n\n" +
-                   "⚙️ 请选择功能：";
+                   "⚙️ 请选择功能�?;
             
             keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("➕ 配置连接", "ssh_setup")
+                KeyboardBuilder.button("�?配置连接", "ssh_setup")
             ));
         }
         
@@ -114,13 +114,13 @@ class SshSetupHandler extends AbstractCallbackHandler {
                      "📝 示例：\n" +
                      "/ssh_config 192.168.1.100 22 root mypassword\n\n" +
                      "⚠️ 注意：\n" +
-                     "• 参数之间用空格分隔\n" +
-                     "• 端口号默认为 22\n" +
-                     "• 密码会被安全存储，不会被记录";
+                     "�?参数之间用空格分隔\n" +
+                     "�?端口号默认为 22\n" +
+                     "�?密码会被安全存储，不会被记录";
         
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
         keyboard.add(new InlineKeyboardRow(
-            KeyboardBuilder.button("◀️ 返回", "ssh_management")
+            KeyboardBuilder.button("◀�?返回", "ssh_management")
         ));
         keyboard.add(KeyboardBuilder.buildCancelRow());
         
@@ -152,9 +152,9 @@ class SshTestHandler extends AbstractCallbackHandler {
         if (!storage.hasConnection(chatId)) {
             return buildEditMessage(
                 callbackQuery,
-                "❌ 未配置 SSH 连接\n\n请先配置连接信息",
+                "�?未配�?SSH 连接\n\n请先配置连接信息",
                 new InlineKeyboardMarkup(List.of(
-                    new InlineKeyboardRow(KeyboardBuilder.button("◀️ 返回", "ssh_management"))
+                    new InlineKeyboardRow(KeyboardBuilder.button("◀�?返回", "ssh_management"))
                 ))
             );
         }
@@ -183,24 +183,24 @@ class SshTestHandler extends AbstractCallbackHandler {
         String text;
         if (success) {
             text = String.format(
-                "✅ *连接测试成功*\n\n" +
+                "�?*连接测试成功*\n\n" +
                 "主机: %s:%d\n" +
                 "用户: %s\n\n" +
-                "SSH 连接正常，可以执行命令了！",
+                "SSH 连接正常，可以执行命令了�?,
                 info.getHost(),
                 info.getPort(),
                 info.getUsername()
             );
         } else {
             text = String.format(
-                "❌ *连接测试失败*\n\n" +
+                "�?*连接测试失败*\n\n" +
                 "主机: %s:%d\n" +
                 "用户: %s\n\n" +
                 "请检查：\n" +
-                "• 主机地址和端口是否正确\n" +
-                "• 用户名和密码是否正确\n" +
-                "• 网络连接是否正常\n" +
-                "• SSH 服务是否开启",
+                "�?主机地址和端口是否正确\n" +
+                "�?用户名和密码是否正确\n" +
+                "�?网络连接是否正常\n" +
+                "�?SSH 服务是否开�?,
                 info.getHost(),
                 info.getPort(),
                 info.getUsername()
@@ -209,7 +209,7 @@ class SshTestHandler extends AbstractCallbackHandler {
         
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
         keyboard.add(new InlineKeyboardRow(
-            KeyboardBuilder.button("◀️ 返回", "ssh_management")
+            KeyboardBuilder.button("◀�?返回", "ssh_management")
         ));
         keyboard.add(KeyboardBuilder.buildCancelRow());
         
@@ -249,11 +249,11 @@ class SshDisconnectHandler extends AbstractCallbackHandler {
         storage.removeConnection(chatId);
         log.info("SSH connection removed: chatId={}", chatId);
         
-        String text = "✅ SSH 连接信息已删除\n\n需要使用时可以重新配置";
+        String text = "�?SSH 连接信息已删除\n\n需要使用时可以重新配置";
         
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
         keyboard.add(new InlineKeyboardRow(
-            KeyboardBuilder.button("◀️ 返回", "ssh_management")
+            KeyboardBuilder.button("◀�?返回", "ssh_management")
         ));
         keyboard.add(KeyboardBuilder.buildCancelRow());
         

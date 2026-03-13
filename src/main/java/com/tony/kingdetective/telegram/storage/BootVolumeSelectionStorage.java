@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Telegram Bot boot volume selection storage
  * Thread-safe singleton storage for boot volume selection
  * 
- * @author yohann
+ * @author Tony Wang
  */
 public class BootVolumeSelectionStorage {
     

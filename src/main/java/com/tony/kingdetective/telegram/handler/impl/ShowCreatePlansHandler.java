@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Show create instance plans handler
  * 
- * @author yohann
+ * @author Tony Wang
  */
 @Slf4j
 @Component
@@ -37,7 +37,7 @@ public class ShowCreatePlansHandler extends AbstractCallbackHandler {
         if (user == null) {
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 配置不存在",
+                    "�?配置不存�?,
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }
@@ -47,7 +47,7 @@ public class ShowCreatePlansHandler extends AbstractCallbackHandler {
         // Plan 1: AMD 1C1G50G
         keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button(
-                        "💻 方案1: 1核1G50G (AMD)",
+                        "💻 方案1: 1�?G50G (AMD)",
                         "ci:" + userId + ":plan1"
                 )
         ));
@@ -55,7 +55,7 @@ public class ShowCreatePlansHandler extends AbstractCallbackHandler {
         // Plan 2: ARM 1C6G50G
         keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button(
-                        "🖥 方案2: 1核6G50G (ARM)",
+                        "🖥 方案2: 1�?G50G (ARM)",
                         "ci:" + userId + ":plan2"
                 )
         ));
@@ -63,7 +63,7 @@ public class ShowCreatePlansHandler extends AbstractCallbackHandler {
         // Plan 3: ARM 2C12G50G (NEW)
         keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button(
-                        "🚀 方案3: 2核12G50G (ARM)",
+                        "🚀 方案3: 2�?2G50G (ARM)",
                         "ci:" + userId + ":plan3"
                 )
         ));
@@ -71,14 +71,14 @@ public class ShowCreatePlansHandler extends AbstractCallbackHandler {
         // Plan 4: ARM 4C24G100G (NEW)
         keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button(
-                        "⚡ 方案4: 4核24G100G (ARM)",
+                        "�?方案4: 4�?4G100G (ARM)",
                         "ci:" + userId + ":plan4"
                 )
         ));
         
         // Back button - now goes back to config list since we skipped config operations
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("◀️ 返回配置列表", "config_list")
+                KeyboardBuilder.button("◀�?返回配置列表", "config_list")
         ));
         keyboard.add(KeyboardBuilder.buildCancelRow());
         
@@ -90,9 +90,9 @@ public class ShowCreatePlansHandler extends AbstractCallbackHandler {
         String message = String.format(
                 "【选择开机方案】\n\n" +
                 "🔑 配置名：%s\n" +
-                "🌏 区域：%s\n" +
+                "🌏 区域�?s\n" +
                 "👤 租户名：%s\n" +
-                "📅 租户创建时间：%s\n\n" +
+                "📅 租户创建时间�?s\n\n" +
                 "请选择开机方案：",
                 user.getUsername(),
                 user.getOciRegion(),

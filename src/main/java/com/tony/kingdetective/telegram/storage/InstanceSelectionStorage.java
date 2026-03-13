@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Telegram Bot instance selection storage
  * Thread-safe singleton storage for instance selection
  * 
- * @author yohann
+ * @author Tony Wang
  */
 public class InstanceSelectionStorage {
     
