@@ -70,6 +70,7 @@ public class TextSessionDispatcher {
             case ADD_ACCOUNT_REMARK -> handleAddAccountRemarkInput(chatId, text, sender);
             case SSH_PUBKEY_INPUT -> handleSshPubkeyInput(chatId, text, sender);
             case ALERT_EMAIL_INPUT -> handleAlertEmailInput(chatId, text, sender);
+            case INSTANCE_TAG_INPUT -> handleInstanceTagInput(chatId, text, sender);
             default -> {
                 return false;
             }
@@ -562,6 +563,89 @@ public class TextSessionDispatcher {
         } catch (Exception e) {
             log.error("Failed to save alert email", e);
             sender.send(chatId, "❌ 配置失败: " + e.getMessage());
+        }
+    }
+
+    // ─────────────────────────────────────────────
+    // 实例标签管理
+    // ─────────────────────────────────────────────
+
+    private void handleInstanceTagInput(long chatId, String text, TgMessageSender sender) {
+        ConfigSessionStorage storage = ConfigSessionStorage.getInstance();
+        ConfigSessionStorage.SessionState state = storage.getSessionState(chatId);
+        if (state == null) {
+            sender.send(chatId, "❌ 会话已过期");
+            return;
+        }
+
+        text = text.trim();
+        if (!text.contains("=")) {
+            sender.send(chatId, "❌ 格式错误，请使用 `key=value` 的形式发送");
+            return;
+        }
+
+        String[] parts = text.split("=", 2);
+        String key = parts[0].trim();
+        String val = parts[1].trim();
+        if (key.isEmpty()) {
+            sender.send(chatId, "❌ 标签键不能为空");
+            return;
+        }
+
+        String userId = (String) state.getData().get("userId");
+        String instanceId = (String) state.getData().get("instanceId");
+
+        sender.send(chatId, "⏳ 正在保存标签...");
+        try {
+            IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
+            OciUser user = userService.getById(userId);
+            if (user == null) {
+                sender.send(chatId, "❌ 账户不存在");
+                storage.clearSession(chatId);
+                return;
+            }
+
+            SysUserDTO dto = SysUserDTO.builder()
+                .ociCfg(SysUserDTO.OciCfg.builder()
+                    .userId(user.getOciUserId())
+                    .tenantId(user.getOciTenantId())
+                    .region(user.getOciRegion())
+                    .fingerprint(user.getOciFingerprint())
+                    .privateKeyPath(user.getOciKeyPath())
+                    .build())
+                .username(user.getUsername())
+                .build();
+
+            try (com.tony.kingdetective.config.OracleInstanceFetcher fetcher = new com.tony.kingdetective.config.OracleInstanceFetcher(dto)) {
+                var instance = fetcher.getComputeClient().getInstance(
+                    com.oracle.bmc.core.requests.GetInstanceRequest.builder()
+                        .instanceId(instanceId)
+                        .build()
+                ).getInstance();
+
+                java.util.Map<String, String> tags = new HashMap<>();
+                if (instance.getFreeformTags() != null) {
+                    tags.putAll(instance.getFreeformTags());
+                }
+                tags.put(key, val);
+
+                fetcher.getComputeClient().updateInstance(
+                    com.oracle.bmc.core.requests.UpdateInstanceRequest.builder()
+                        .instanceId(instanceId)
+                        .updateInstanceDetails(
+                            com.oracle.bmc.core.model.UpdateInstanceDetails.builder()
+                                .freeformTags(tags)
+                                .build()
+                        )
+                        .build()
+                );
+            }
+
+            storage.clearSession(chatId);
+            sender.sendMd(chatId, "✅ *标签已添加*\n\n`" + key + "` = `" + val + "`");
+        } catch (Exception e) {
+            log.error("Failed to add tag", e);
+            sender.send(chatId, "❌ 保存失败: " + e.getMessage());
         }
     }
 
