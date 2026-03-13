@@ -68,6 +68,8 @@ public class TextSessionDispatcher {
             case ADD_ACCOUNT_CONFIG -> handleAddAccountConfigInput(chatId, text, sender);
             case ADD_ACCOUNT_KEY -> handleAddAccountKeyInput(chatId, text, sender);
             case ADD_ACCOUNT_REMARK -> handleAddAccountRemarkInput(chatId, text, sender);
+            case SSH_PUBKEY_INPUT -> handleSshPubkeyInput(chatId, text, sender);
+            case ALERT_EMAIL_INPUT -> handleAlertEmailInput(chatId, text, sender);
             default -> {
                 return false;
             }
@@ -461,6 +463,105 @@ public class TextSessionDispatcher {
             log.error("Failed to save new account", e);
             sender.send(chatId, "❌ 保存失败: " + e.getMessage());
             storage.clearSession(chatId);
+        }
+    }
+
+    // ─────────────────────────────────────────────
+    // SSH 公钥上传
+    // ─────────────────────────────────────────────
+
+    private void handleSshPubkeyInput(long chatId, String text, TgMessageSender sender) {
+        ConfigSessionStorage storage = ConfigSessionStorage.getInstance();
+        ConfigSessionStorage.SessionState state = storage.getSessionState(chatId);
+        if (state == null) {
+            sender.send(chatId, "❌ 会话已过期");
+            return;
+        }
+        
+        String userId = (String) state.getData().get("userId");
+        text = text.trim();
+        if (!text.startsWith("ssh-rsa") && !text.startsWith("ssh-ed25519") && !text.startsWith("ecdsa-sha2-nistp256")) {
+            sender.send(chatId, "❌ 无效的公钥格式，必须以 ssh-rsa / ssh-ed25519 等开头");
+            return;
+        }
+
+        sender.send(chatId, "⏳ 正在上传公钥...");
+        try {
+            IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
+            OciUser user = userService.getById(userId);
+            if (user == null) {
+                sender.send(chatId, "❌ 账户不存在");
+                storage.clearSession(chatId);
+                return;
+            }
+
+            SysUserDTO dto = SysUserDTO.builder()
+                .ociCfg(SysUserDTO.OciCfg.builder()
+                    .userId(user.getOciUserId())
+                    .tenantId(user.getOciTenantId())
+                    .region(user.getOciRegion())
+                    .fingerprint(user.getOciFingerprint())
+                    .privateKeyPath(user.getOciKeyPath())
+                    .build())
+                .username(user.getUsername())
+                .build();
+
+            try (com.tony.kingdetective.config.OracleInstanceFetcher fetcher = new com.tony.kingdetective.config.OracleInstanceFetcher(dto)) {
+                fetcher.getIdentityClient().uploadApiKey(
+                    com.oracle.bmc.identity.requests.UploadApiKeyRequest.builder()
+                        .userId(user.getOciUserId())
+                        .createApiKeyDetails(
+                            com.oracle.bmc.identity.model.CreateApiKeyDetails.builder()
+                                .key(text)
+                                .build()
+                        )
+                        .build()
+                );
+            }
+            storage.clearSession(chatId);
+            sender.sendMd(chatId, "✅ *公钥已成功上传*");
+        } catch (Exception e) {
+            log.error("Failed to upload ssh pubkey", e);
+            sender.send(chatId, "❌ 上传失败: " + e.getMessage());
+        }
+    }
+
+    // ─────────────────────────────────────────────
+    // 告警邮箱设置
+    // ─────────────────────────────────────────────
+
+    private void handleAlertEmailInput(long chatId, String email, TgMessageSender sender) {
+        ConfigSessionStorage storage = ConfigSessionStorage.getInstance();
+        email = email.trim();
+        
+        if (!email.contains("@") || !email.contains(".")) {
+            sender.send(chatId, "❌ 邮箱格式不正确，请重新输入");
+            return;
+        }
+
+        try {
+            IOciKvService kvService = SpringUtil.getBean(IOciKvService.class);
+            LambdaQueryWrapper<OciKv> wrapper = new LambdaQueryWrapper<>();
+            wrapper.eq(OciKv::getCode, "sys-alert-email");
+            OciKv config = kvService.getOne(wrapper);
+
+            if (config != null) {
+                config.setValue(email);
+                kvService.updateById(config);
+            } else {
+                config = new OciKv();
+                config.setId(IdUtil.getSnowflakeNextIdStr());
+                config.setCode("sys-alert-email");
+                config.setValue(email);
+                config.setType(SysCfgTypeEnum.SYS_INIT_CFG.getCode());
+                kvService.save(config);
+            }
+
+            storage.clearSession(chatId);
+            sender.sendMd(chatId, "✅ *告警邮箱配置成功*\n\n当前邮箱：`" + email + "`");
+        } catch (Exception e) {
+            log.error("Failed to save alert email", e);
+            sender.send(chatId, "❌ 配置失败: " + e.getMessage());
         }
     }
 

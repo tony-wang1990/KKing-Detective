@@ -155,6 +155,8 @@ public class ConfigSessionStorage {
         RESTORE_PASSWORD,
         ADD_ACCOUNT_CONFIG,
         ADD_ACCOUNT_KEY,
-        ADD_ACCOUNT_REMARK
+        ADD_ACCOUNT_REMARK,
+        SSH_PUBKEY_INPUT,
+        ALERT_EMAIL_INPUT
     }
 }
