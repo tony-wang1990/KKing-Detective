@@ -153,10 +153,8 @@ public class BandwidthAdjustHandler extends AbstractCallbackHandler {
                 ).getInstance();
 
                 UpdateInstanceShapeConfigDetails shapeConfig = UpdateInstanceShapeConfigDetails.builder()
-                    .ocpus(instance.getShapeConfig().getOcpus())
+                    .ocpus((float) targetBandwidth)
                     .memoryInGBs(instance.getShapeConfig().getMemoryInGBs())
-                    // 通过修改 baseline 调整网络性能配置，暂且通过 OCPU 同步网络性能作为近似方案 (注: OCI网络和CPU正相关)
-                    // 后续可扩展更多细致控制
                     .build();
 
                 // 实际在 OCI API 中，带宽只能随 OCPU 容量线性增长。除非直接调用 Vnic 接口。

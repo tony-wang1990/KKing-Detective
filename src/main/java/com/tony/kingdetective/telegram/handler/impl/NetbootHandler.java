@@ -2,7 +2,6 @@ package com.tony.kingdetective.telegram.handler.impl;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.oracle.bmc.core.model.UpdateInstanceDetails;
-import com.oracle.bmc.core.model.UpdateLaunchOptions;
 import com.oracle.bmc.core.requests.InstanceActionRequest;
 import com.oracle.bmc.core.requests.UpdateInstanceRequest;
 import com.tony.kingdetective.bean.dto.SysUserDTO;
@@ -112,11 +111,6 @@ public class NetbootHandler extends AbstractCallbackHandler {
                         .instanceId(instanceId)
                         .updateInstanceDetails(
                             UpdateInstanceDetails.builder()
-                                .launchOptions(
-                                    UpdateLaunchOptions.builder()
-                                        .isPvEncryptionInTransitEnabled(true)
-                                        .build()
-                                )
                                 .ipxeScript(IPXE_SCRIPT)
                                 .build()
                         )

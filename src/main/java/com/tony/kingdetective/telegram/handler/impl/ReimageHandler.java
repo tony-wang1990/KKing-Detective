@@ -185,6 +185,21 @@ public class ReimageHandler extends AbstractCallbackHandler {
                     return;
                 }
 
+                // 1.5 获取 BootVolume 信息
+                var bootVolumeAttachments = fetcher.getComputeClient().listBootVolumeAttachments(
+                    com.oracle.bmc.core.requests.ListBootVolumeAttachmentsRequest.builder()
+                        .availabilityDomain(oldInstance.getAvailabilityDomain())
+                        .compartmentId(fetcher.getCompartmentId())
+                        .instanceId(instanceId)
+                        .build()
+                ).getItems();
+                String bootVolumeId = bootVolumeAttachments.isEmpty() ? null : bootVolumeAttachments.get(0).getBootVolumeId();
+
+                if (bootVolumeId == null) {
+                    sendMarkdownMessage(chatId, "❌ 无法获取原实例启动卷信息", telegramClient);
+                    return;
+                }
+
                 // 2. 终止实例，但保留 Boot Volume
                 fetcher.getComputeClient().terminateInstance(
                     TerminateInstanceRequest.builder()
@@ -228,11 +243,7 @@ public class ReimageHandler extends AbstractCallbackHandler {
                     .displayName(oldInstance.getDisplayName() + "-Reimaged")
                     .sourceDetails(
                         com.oracle.bmc.core.model.InstanceSourceViaBootVolumeDetails.builder()
-                            .bootVolumeId(oldInstance.getSourceDetails() != null ? 
-                                ((com.oracle.bmc.core.model.InstanceSourceViaImageDetails)oldInstance.getSourceDetails()).getImageId() 
-                                // OCI SDK 中直接获取旧的 BootVolumeId 需要查 BootVolumeAttachment，
-                                // 或者用户提供，这里简写，需要完善从 BootVolumeAttachment 获取
-                                : "[未实现直接获取BootVolumeID]")
+                            .bootVolumeId(bootVolumeId)
                             .build()
                     )
                     .createVnicDetails(
@@ -243,10 +254,14 @@ public class ReimageHandler extends AbstractCallbackHandler {
                     )
                     .build();
 
-                // 注意：原位启动卷重建需要先找到原 BootVolumeId。
-                // 暂时发送提示信息，告知该功能由于 OCI SDK sourceDetails 的复杂性，此处流程已演示核心思路
+                // 拉起新实例
+                fetcher.getComputeClient().launchInstance(
+                    LaunchInstanceRequest.builder()
+                        .launchInstanceDetails(launchDetails)
+                        .build()
+                );
                 
-                sendMarkdownMessage(chatId, "✅ 重建终止步骤完成。\n\n⚠️ 由于 API 限制，目前重新挂载原 BootVolume 需要单独选择启动卷ID。\n（功能框架已实现）", telegramClient);
+                sendMarkdownMessage(chatId, "✅ 原实例终止完毕，已提交同配置同硬盘的新实例重建请求！", telegramClient);
             }
         } catch (Exception e) {
             log.error("Failed to reimage instance", e);
