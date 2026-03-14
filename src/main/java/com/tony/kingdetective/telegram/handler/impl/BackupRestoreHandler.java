@@ -217,7 +217,7 @@ class BackupExecutePlainHandler extends AbstractCallbackHandler {
             log.error("Failed to create plain backup", e);
 
             String text = "??*??????*\n\n" +
-                    "?????"? + e.getMessage() + "\n\n" +
+                    "Error: " + e.getMessage() + "\n\n" +
                     "Processing restore...";
 
             List<InlineKeyboardRow> keyboard = new ArrayList<>();

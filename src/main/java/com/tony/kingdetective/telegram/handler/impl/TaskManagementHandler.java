@@ -156,7 +156,7 @@ public class TaskManagementHandler extends AbstractCallbackHandler {
         ));
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("? ???????"?, "stop_selected_tasks")
+                KeyboardBuilder.button("Stop Selected", "stop_selected_tasks")
         ));
         
         keyboard.add(KeyboardBuilder.buildBackToMainMenuRow());

@@ -189,7 +189,7 @@ public class ToggleTaskHandler extends AbstractCallbackHandler {
         ));
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("? ???????"?, "stop_selected_tasks")
+                KeyboardBuilder.button("Stop Selected", "stop_selected_tasks")
         ));
         
         keyboard.add(KeyboardBuilder.buildBackToMainMenuRow());
@@ -245,7 +245,7 @@ class SelectAllTasksHandler extends AbstractCallbackHandler {
         try {
             telegramClient.execute(AnswerCallbackQuery.builder()
                     .callbackQueryId(callbackQuery.getId())
-                    .text(String.format("???????"?%d ?, pageTasks.size()))
+                    .text(String.format("Tasks selected: %d", pageTasks.size()))
                     .showAlert(false)
                     .build());
         } catch (TelegramApiException e) {
@@ -363,9 +363,9 @@ class StopSelectedTasksHandler extends AbstractCallbackHandler {
         // Build result message
         String resultMessage;
         if (failedCount > 0) {
-            resultMessage = String.format("?"? %d \n? %d ?, successCount, failedCount);
+            resultMessage = String.format("Success: %d, Failed: %d", successCount, failedCount);
         } else {
-            resultMessage = String.format("?"??%d ?, successCount);
+            resultMessage = String.format("Success: %d", successCount);
         }
         
         // Answer callback
