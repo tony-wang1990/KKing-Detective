@@ -25,7 +25,7 @@ public class KeyboardBuilder {
                 // 快捷功能（顶部）
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
-                                .text("🚀 一键抢?)
+                                .text("🚀 一键抢?")
                                 .callbackData("config_list")
                                 .build()
                 ),
@@ -33,15 +33,15 @@ public class KeyboardBuilder {
                 // ========== 💼实例 + 🌐网络 ==========
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
-                                .text("快捷开?)
+                                .text("快捷开?")
                                 .callbackData("quick_start")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("一键测?)
+                                .text("一键测?")
                                 .callbackData("check_alive")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("实例升降?)
+                                .text("实例升降?")
                                 .callbackData("shape_change_select")
                                 .build(),
                         InlineKeyboardButton.builder()
@@ -55,7 +55,7 @@ public class KeyboardBuilder {
                                 .callbackData("auto_ip_change_select")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("开放端?)
+                                .text("开放端?")
                                 .callbackData("open_all_ports_select")
                                 .build(),
                         InlineKeyboardButton.builder()
@@ -139,7 +139,7 @@ public class KeyboardBuilder {
                                 .callbackData("clear_2fa_devices")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("禁用被封?)
+                                .text("禁用被封?")
                                 .callbackData("disable_banned_accounts")
                                 .build()
                 ),
@@ -225,7 +225,7 @@ public class KeyboardBuilder {
         // 添加返回按钮
         InlineKeyboardRow backRow = new InlineKeyboardRow();
         backRow.add(InlineKeyboardButton.builder()
-                .text("« 返回主菜?)
+                .text("« 返回主菜?")
                 .callbackData("back_to_main")
                 .build());
         keyboard.add(backRow);
@@ -267,7 +267,7 @@ public class KeyboardBuilder {
 
         InlineKeyboardRow row = new InlineKeyboardRow();
         row.add(InlineKeyboardButton.builder()
-                .text("« 返回主菜?)
+                .text("« 返回主菜?")
                 .callbackData("back_to_main")
                 .build());
 
@@ -316,7 +316,7 @@ public class KeyboardBuilder {
     public static InlineKeyboardRow buildBackToMainMenuRow() {
         return new InlineKeyboardRow(
                 InlineKeyboardButton.builder()
-                        .text("« 返回主菜?)
+                        .text("« 返回主菜?")
                         .callbackData("cancel")
                         .build()
         );
@@ -336,7 +336,7 @@ public class KeyboardBuilder {
         
         if (currentPage > 1) {
             row.add(InlineKeyboardButton.builder()
-                    .text("◀?上一?)
+                    .text("◀?上一?")
                     .callbackData(prevCallback)
                     .build());
         }
