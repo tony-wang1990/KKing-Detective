@@ -15,9 +15,9 @@ public enum InstanceActionEnum {
     /**
      * 
      */
-    ACTION_STOP("STOP", "关闭实例"),
-    ACTION_START("START", "启动实例"),
-    ACTION_RESET("RESET", "关闭实例然后重新打开"),
+    ACTION_STOP("STOP", "????"),
+    ACTION_START("START", "????"),
+    ACTION_RESET("RESET", "??????????"),
 
     ;
 

@@ -14,6 +14,6 @@ import jakarta.validation.constraints.NotBlank;
 @Data
 public class IdParams {
 
-    @NotBlank(message = "id不能为空")
+    @NotBlank(message = "id????")
     private String id;
 }

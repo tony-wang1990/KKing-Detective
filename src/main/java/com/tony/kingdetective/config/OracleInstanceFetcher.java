@@ -76,16 +76,16 @@ public class OracleInstanceFetcher implements AutoCloseable {
         
         // Validate required OCI configuration fields
         if (user.getOciCfg().getPrivateKey() == null || user.getOciCfg().getPrivateKey().trim().isEmpty()) {
-            throw new IllegalArgumentException("OCI私钥配置为空，请在【系统配置】中完善OCI配置信息");
+            throw new IllegalArgumentException("OCI??????????????????OCI????");
         }
         if (user.getOciCfg().getTenantId() == null || user.getOciCfg().getTenantId().trim().isEmpty()) {
-            throw new IllegalArgumentException("OCI租户ID配置为空，请在【系统配置】中完善OCI配置信息");
+            throw new IllegalArgumentException("OCI??ID????????????????OCI????");
         }
         if (user.getOciCfg().getUserId() == null || user.getOciCfg().getUserId().trim().isEmpty()) {
-            throw new IllegalArgumentException("OCI用户ID配置为空，请在【系统配置】中完善OCI配置信息");
+            throw new IllegalArgumentException("OCI??ID????????????????OCI????");
         }
         if (user.getOciCfg().getFingerprint() == null || user.getOciCfg().getFingerprint().trim().isEmpty()) {
-            throw new IllegalArgumentException("OCI指纹配置为空，请在【系统配置】中完善OCI配置信息");
+            throw new IllegalArgumentException("OCI??????????????????OCI????");
         }
         
         Supplier<InputStream> privateKeySupplier = () -> new ByteArrayInputStream(user.getOciCfg().getPrivateKey().getBytes(StandardCharsets.UTF_8));
@@ -147,7 +147,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
         String type = ArchitectureEnum.getType(user.getArchitecture());
         if (CollectionUtil.isEmpty(shapeList) || !shapeList.contains(type)) {
             instanceDetailDTO.setNoShape(true);
-            log.error("【开机任务】用户:[{}],区域:[{}],系统架构:[{}],开机失败,该区域可能不支持 CPU 架构:[{}],用户可开机的机型:[{}]",
+            log.error("????????:[{}],??:[{}],????:[{}],????,???????? CPU ??:[{}],????????:[{}]",
                     user.getUsername(), user.getOciCfg().getRegion(), user.getArchitecture(), user.getArchitecture(), shapeList);
             return instanceDetailDTO;
         }
@@ -173,7 +173,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
                         }
 
                         if (CollectionUtil.isEmpty(vcnList)) {
-                            log.info("【开机任务】用户:[{}],区域:[{}],系统架构:[{}],检测到VCN不存在,正在创建VCN...",
+                            log.info("????????:[{}],??:[{}],????:[{}],???VCN???,????VCN...",
                                     user.getUsername(), user.getOciCfg().getRegion(), user.getArchitecture());
                             String networkCidrBlock = getCidr(virtualNetworkClient, compartmentId);
                             vcn = createVcn(virtualNetworkClient, compartmentId, networkCidrBlock);
@@ -194,7 +194,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
                                         .compartmentId(compartmentId)
                                         .build()).getItems();
                                 if (CollectionUtil.isEmpty(internetGatewayList)) {
-                                    log.info("【开机任务】用户:[{}],区域:[{}],系统架构:[{}],检测到 VCN:[{}] 的 Internet 网关不存在,正在创建 Internet 网关...",
+                                    log.info("????????:[{}],??:[{}],????:[{}],??? VCN:[{}] ? Internet ?????,???? Internet ??...",
                                             user.getUsername(), user.getOciCfg().getRegion(), user.getArchitecture(), vcn.getDisplayName());
                                     internetGateway = createInternetGateway(virtualNetworkClient, compartmentId, vcn);
                                     addInternetGatewayToDefaultRouteTable(virtualNetworkClient, vcn, internetGateway);
@@ -202,7 +202,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
 
                                 List<Subnet> subnets = listSubnets(vcnItem.getId());
                                 if (CollectionUtil.isEmpty(subnets)) {
-                                    log.info("【开机任务】用户:[{}],区域:[{}],系统架构:[{}], 检测到 VCN:[{}] 的子网不存在,正在创建子网...",
+                                    log.info("????????:[{}],??:[{}],????:[{}], ??? VCN:[{}] ??????,??????...",
                                             user.getUsername(), user.getOciCfg().getRegion(), user.getArchitecture(), vcn.getDisplayName());
                                     subnet = createSubnet(virtualNetworkClient, compartmentId, availableDomain,
                                             getCidr(virtualNetworkClient, compartmentId), vcnItem);
@@ -215,7 +215,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
                                         }
                                     }
                                     if (subnet == null) {
-                                        log.info("【开机任务】用户:[{}],区域:[{}],系统架构:[{}],检测到 VCN:[{}] 不存在公有子网,正在删除私有子网并创建公有子网...",
+                                        log.info("????????:[{}],??:[{}],????:[{}],??? VCN:[{}] ???????,???????????????...",
                                                 user.getUsername(), user.getOciCfg().getRegion(), user.getArchitecture(), vcn.getDisplayName());
                                         subnets.forEach(this::deleteSubnet);
                                         subnet = createSubnet(virtualNetworkClient, compartmentId, availableDomain,
@@ -224,7 +224,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
                                     }
                                 }
                             }
-                            log.info("【开机任务】用户:[{}],区域:[{}],系统架构:[{}],默认使用 VCN:[{}] 的公有子网:[{}] 创建实例...",
+                            log.info("????????:[{}],??:[{}],????:[{}],???? VCN:[{}] ?????:[{}] ????...",
                                     user.getUsername(), user.getOciCfg().getRegion(), user.getArchitecture(), vcn.getDisplayName(), subnet.getDisplayName());
                         }
 
@@ -237,7 +237,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
                         instance = createInstance(computeClient.newWaiters(workRequestClient), launchInstanceDetails);
                         printInstance(computeClient, virtualNetworkClient, instance, instanceDetailDTO);
 
-                        log.info("【开机任务】用户:[{}],区域:[{}],系统架构:[{}],开机成功,正在为实例预配...",
+                        log.info("????????:[{}],??:[{}],????:[{}],????,???????...",
                                 user.getUsername(), user.getOciCfg().getRegion(), user.getArchitecture());
                         instanceDetailDTO.setSuccess(true);
                         instanceDetailDTO.setImage(image.getId());
@@ -258,38 +258,38 @@ public class OracleInstanceFetcher implements AutoCloseable {
                                         error.getMessage().contains(ErrorEnum.CAPACITY_HOST.getErrorType()))) {
                             size--;
                             if (size > 0) {
-                                log.warn("【开机任务】用户:[{}],区域:[{}],系统架构:[{}],容量不足,换可用区域继续执行...",
+                                log.warn("????????:[{}],??:[{}],????:[{}],????,?????????...",
                                         user.getUsername(), user.getOciCfg().getRegion(), user.getArchitecture());
                             } else {
-                                log.warn("【开机任务】用户:[{}],区域:[{}],系统架构:[{}],容量不足,[{}]秒后将重试...",
+                                log.warn("????????:[{}],??:[{}],????:[{}],????,[{}]?????...",
                                         user.getUsername(), user.getOciCfg().getRegion(), user.getArchitecture(), user.getInterval());
                                 return instanceDetailDTO;
                             }
                         } else if (error.getStatusCode() == 400 && error.getMessage().contains(ErrorEnum.LIMIT_EXCEEDED.getErrorType())) {
                             instanceDetailDTO.setOut(true);
-                            log.error("【开机任务】用户:[{}],区域:[{}],系统架构:[{}],无法创建实例,配额已经超过限制~",
+                            log.error("????????:[{}],??:[{}],????:[{}],??????,????????~",
                                     user.getUsername(), user.getOciCfg().getRegion(), user.getArchitecture(), e);
                             return instanceDetailDTO;
                         } else if (error.getStatusCode() == 429 || error.getMessage().contains(ErrorEnum.TOO_MANY_REQUESTS.getErrorType())) {
                             instanceDetailDTO.setTooManyReq(true);
-                            log.warn("【开机任务】用户:[{}],区域:[{}],系统架构:[{}],开机请求频繁,[{}]秒后将重试...",
+                            log.warn("????????:[{}],??:[{}],????:[{}],??????,[{}]?????...",
                                     user.getUsername(), user.getOciCfg().getRegion(), user.getArchitecture(), user.getInterval());
                             return instanceDetailDTO;
                         } else if (error.getStatusCode() == 401 || error.getMessage().contains(ErrorEnum.NOT_AUTHENTICATED.getErrorType())) {
                             instanceDetailDTO.setDie(true);
-                            log.error("【开机任务】用户:[{}],区域:[{}],系统架构:[{}],开机失败,可能的原因：(新生成的API暂未生效|账号已无权|账号已封禁\uD83D\uDC7B)",
+                            log.error("????????:[{}],??:[{}],????:[{}],????,??????(????API????|?????|?????\uD83D\uDC7B)",
                                     user.getUsername(), user.getOciCfg().getRegion(), user.getArchitecture());
                             return instanceDetailDTO;
                         } else {
 //                            instanceDetailDTO.setOut(true);
-                            log.error("【开机任务】用户:[{}],区域:[{}],系统架构:[{}],出现错误了,原因为:{}",
+                            log.error("????????:[{}],??:[{}],????:[{}],?????,???:{}",
                                     user.getUsername(), user.getOciCfg().getRegion(), user.getArchitecture(),
                                     e.getMessage(), e);
                             return instanceDetailDTO;
                         }
                     } else {
 //                        instanceDetailDTO.setOut(true);
-                        log.error("【开机任务】用户:[{}],区域:[{}],系统架构:[{}],出现错误了,原因为:{}",
+                        log.error("????????:[{}],??:[{}],????:[{}],?????,???:{}",
                                 user.getUsername(), user.getOciCfg().getRegion(), user.getArchitecture(),
                                 e.getMessage(), e);
                         return instanceDetailDTO;
@@ -298,12 +298,12 @@ public class OracleInstanceFetcher implements AutoCloseable {
             }
         } catch (Exception e) {
 //            instanceDetailDTO.setOut(true);
-            log.error("【开机任务】用户:[{}],区域:[{}],系统架构:[{}],出现错误了,原因为:{}",
+            log.error("????????:[{}],??:[{}],????:[{}],?????,???:{}",
                     user.getUsername(), user.getOciCfg().getRegion(), user.getArchitecture(),
                     e.getMessage(), e);
             return instanceDetailDTO;
         }
-        log.warn("【开机任务】用户:[{}],区域:[{}],系统架构:[{}],容量不足,[{}]秒后将重试...",
+        log.warn("????????:[{}],??:[{}],????:[{}],????,[{}]?????...",
                 user.getUsername(), user.getOciCfg().getRegion(), user.getArchitecture(), user.getInterval());
         return instanceDetailDTO;
     }
@@ -442,7 +442,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
                         .userId(user.getOciCfg().getUserId())
                         .build());
         String password = uIPassword.getUIPassword().getPassword();
-        log.info("用户:[{}],区域:[{}],成功创建/重置登录密码,新密码:【 {} 】",
+        log.info("??:[{}],??:[{}],????/??????,???:? {} ?",
                 user.getUsername(), user.getOciCfg().getRegion(), password);
         return password;
     }
@@ -511,8 +511,8 @@ public class OracleInstanceFetcher implements AutoCloseable {
                         .build());
         List<AvailabilityDomain> availabilityDomainList = listAvailabilityDomainsResponse.getItems();
         if (CollectionUtil.isEmpty(availabilityDomainList)) {
-            log.error("用户:[{}],区域:[{}],可用域不足", user.getUsername(), user.getOciCfg().getRegion());
-            throw new OciException(-1, "可用域不足");
+            log.error("??:[{}],??:[{}],?????", user.getUsername(), user.getOciCfg().getRegion());
+            throw new OciException(-1, "?????");
         }
         return availabilityDomainList;
     }
@@ -524,8 +524,8 @@ public class OracleInstanceFetcher implements AutoCloseable {
                         .build());
         List<AvailabilityDomain> availabilityDomainList = listAvailabilityDomainsResponse.getItems();
         if (CollectionUtil.isEmpty(availabilityDomainList)) {
-            log.error("用户:[{}],区域:[{}],可用域不足", user.getUsername(), user.getOciCfg().getRegion());
-            throw new OciException(-1, "可用域不足");
+            log.error("??:[{}],??:[{}],?????", user.getUsername(), user.getOciCfg().getRegion());
+            throw new OciException(-1, "?????");
         }
         return availabilityDomainList;
     }
@@ -1323,7 +1323,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
 
     public String reassignEphemeralPublicIp(Vnic vnic) {
         if (vnic == null) {
-            throw new RuntimeException("当前实例的VNIC不存在");
+            throw new RuntimeException("?????VNIC???");
         }
         String vnicId = vnic.getId();
         if (vnicId != null) {
@@ -1380,7 +1380,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
             publicIp = reservedPublicIp.getIpAddress();
             return publicIp;
         } catch (Exception e) {
-            log.error("【更换公共IP】用户:[{}],区域:[{}],更换IP任务异常,稍后将重试...", user.getUsername(), user.getOciCfg().getRegion());
+            log.error("?????IP???:[{}],??:[{}],??IP????,?????...", user.getUsername(), user.getOciCfg().getRegion());
         } finally {
             releaseUnusedPublicIps();
         }
@@ -1408,7 +1408,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
             }
         }
         if (null == bootVolume) {
-            throw new OciException(-1, "引导卷不存在");
+            throw new OciException(-1, "??????");
         }
         return bootVolume;
     }
@@ -1432,7 +1432,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
             }
         }
         if (CollectionUtil.isEmpty(bootVolumes)) {
-            throw new OciException(-1, "实例引导卷不存在");
+            throw new OciException(-1, "????????");
         }
         return bootVolumes;
     }
@@ -1479,7 +1479,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
             BootVolume bootVolume = getBootVolumeByInstanceId(instanceId);
             bootVolumeSize = bootVolume.getSizeInGBs() + "";
         } catch (Exception e) {
-            log.error("用户:[{}],区域:[{}],实例:[{}],连接超时或者实例的引导卷不存在~",
+            log.error("??:[{}],??:[{}],??:[{}],???????????????~",
                     user.getUsername(), user.getOciCfg().getRegion(),
                     instance.getDisplayName(), e);
         }
@@ -1501,14 +1501,14 @@ public class OracleInstanceFetcher implements AutoCloseable {
                 .state(instance.getLifecycleState().getValue())
                 .availabilityDomain(instance.getAvailabilityDomain())
                 .vnicList(listVnicByInstanceId(instanceId).stream()
-                        .map(x -> new OciCfgDetailsRsp.InstanceVnicInfo(x.getId(), x.getDisplayName() + "（" + x.getPublicIp() + "）"))
+                        .map(x -> new OciCfgDetailsRsp.InstanceVnicInfo(x.getId(), x.getDisplayName() + "?" + x.getPublicIp() + "?"))
                         .collect(Collectors.toList()))
                 .build();
     }
 
     public String updateInstanceState(String instanceId, InstanceActionEnum action) {
         if (action == null) {
-            throw new OciException(-1, "实例操作不存在");
+            throw new OciException(-1, "???????");
         }
 
         InstanceActionRequest request = InstanceActionRequest.builder()
@@ -1518,7 +1518,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
 
         InstanceActionResponse response = computeClient.instanceAction(request);
         String currentState = response.getInstance().getLifecycleState().getValue();
-        log.info("用户:[{}],区域:[{}],修改实例:[{}],状态成功！实例当前状态:[{}]",
+        log.info("??:[{}],??:[{}],????:[{}],???????????:[{}]",
                 user.getUsername(), user.getOciCfg().getRegion(),
                 response.getInstance().getDisplayName(), currentState);
         return currentState;
@@ -1577,7 +1577,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
             bootVolumeSize = bootVolume.getSizeInGBs() + "";
             bootVolumeVpu = bootVolume.getVpusPerGB() + "";
         } catch (Exception e) {
-            log.error("用户:[{}],区域:[{}],实例:[{}]的引导卷不存在~",
+            log.error("??:[{}],??:[{}],??:[{}]???????~",
                     user.getUsername(), user.getOciCfg().getRegion(),
                     instance.getDisplayName());
         }
@@ -1634,7 +1634,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
                         .build())
                 .build();
         virtualNetworkClient.updateRouteTable(updateRouteTableRequest);
-        log.info("用户:[{}],区域:[{}],更新了 VCN:[{}] 的路由表",
+        log.info("??:[{}],??:[{}],??? VCN:[{}] ????",
                 user.getUsername(), user.getOciCfg().getRegion(), vcn.getDisplayName());
     }
 
@@ -1719,9 +1719,9 @@ public class OracleInstanceFetcher implements AutoCloseable {
                         .egressSecurityRules(egressSecurityRules)
                         .build())
                 .build());
-        log.info("用户:[{}],区域:[{}],放行了 VCN:[{}] 的安全列表中[{}]的所有端口及协议",
+        log.info("??:[{}],??:[{}],??? VCN:[{}] ??????[{}]????????",
                 user.getUsername(), user.getOciCfg().getRegion(),
-                vcn.getDisplayName(), type == 0 ? "所有地址" : "IPV" + type);
+                vcn.getDisplayName(), type == 0 ? "????" : "IPV" + type);
     }
 
     public Ipv6 createIpv6(Vnic vnic, Vcn vcn) {
@@ -1730,8 +1730,8 @@ public class OracleInstanceFetcher implements AutoCloseable {
                 vcn = createVcn(virtualNetworkClient, compartmentId, CIDR_BLOCK);
                 createInternetGateway(virtualNetworkClient, compartmentId, vcn);
             } catch (Exception e) {
-                log.error("用户:[{}],区域:[{}],创建 VCN 失败", user.getUsername(), user.getOciCfg().getRegion());
-                throw new OciException(-1, "创建 VCN 失败");
+                log.error("??:[{}],??:[{}],?? VCN ??", user.getUsername(), user.getOciCfg().getRegion());
+                throw new OciException(-1, "?? VCN ??");
             }
         }
 
@@ -1748,8 +1748,8 @@ public class OracleInstanceFetcher implements AutoCloseable {
                                 .build())
                         .build());
             } catch (Exception e) {
-                log.error("添加ipv6 cidr 前缀失败", e);
-                throw new OciException(-1, "添加ipv6 cidr 前缀失败");
+                log.error("??ipv6 cidr ????", e);
+                throw new OciException(-1, "??ipv6 cidr ????");
             } finally {
                 vcn = getVcnById(vcn.getId());
                 oldIpv6CidrBlocks = vcn.getIpv6CidrBlocks();
@@ -1760,14 +1760,14 @@ public class OracleInstanceFetcher implements AutoCloseable {
         List<Subnet> oldSubnet = listSubnets(vcnId);
         if (CollectionUtil.isEmpty(oldSubnet)) {
             try {
-                log.warn("用户:[{}],区域:[{}],正在创建子网...", user.getUsername(), user.getOciCfg().getRegion());
+                log.warn("??:[{}],??:[{}],??????...", user.getUsername(), user.getOciCfg().getRegion());
                 oldSubnet.add(createSubnet(virtualNetworkClient,
                         compartmentId,
                         getAvailabilityDomains(identityClient, compartmentId).get(0),
                         CIDR_BLOCK, vcn));
             } catch (Exception e) {
-                log.error("用户:[{}],区域:[{}],创建子网失败,原因:[{}]", user.getUsername(), user.getOciCfg().getRegion(), e.getLocalizedMessage());
-                throw new OciException(-1, "创建子网失败");
+                log.error("??:[{}],??:[{}],??????,??:[{}]", user.getUsername(), user.getOciCfg().getRegion(), e.getLocalizedMessage());
+                throw new OciException(-1, "??????");
             }
         }
 
@@ -1787,8 +1787,8 @@ public class OracleInstanceFetcher implements AutoCloseable {
                         if (e.getMessage().contains("has ULA CIDR(s) assigned")) {
                             log.warn("subnet ipv6CidrBlock: [{}] exists", subnetV6Cidr);
                         } else {
-                            log.error("添加子网ipv6前缀失败", e);
-                            throw new OciException(-1, "添加子网ipv6前缀失败");
+                            log.error("????ipv6????", e);
+                            throw new OciException(-1, "????ipv6????");
                         }
                     }
                 }
@@ -1806,8 +1806,8 @@ public class OracleInstanceFetcher implements AutoCloseable {
                 InternetGateway gateway = createInternetGateway(virtualNetworkClient, compartmentId, vcn);
                 updateRouteRules(gateway, vcn);
             } catch (Exception e) {
-                log.error("用户:[{}],区域:[{}],创建网关失败,原因:{}", user.getUsername(), user.getOciCfg().getRegion(), e.getLocalizedMessage());
-                throw new OciException(-1, "创建网关失败");
+                log.error("??:[{}],??:[{}],??????,??:{}", user.getUsername(), user.getOciCfg().getRegion(), e.getLocalizedMessage());
+                throw new OciException(-1, "??????");
             }
         } else {
             for (InternetGateway gateway : listInternetGatewaysResponse.getItems()) {

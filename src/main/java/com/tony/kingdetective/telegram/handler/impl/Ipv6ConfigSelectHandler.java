@@ -39,21 +39,21 @@ public class Ipv6ConfigSelectHandler extends AbstractCallbackHandler {
             if (CollectionUtil.isEmpty(users)) {
                 return buildEditMessage(
                         callbackQuery,
-                        "❌ 未找到任何 OCI 配置\n\n请先添加 OCI 配置",
+                        "? ????? OCI ??\n\n???? OCI ??",
                         new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
                 );
             }
             
             StringBuilder message = new StringBuilder();
-            message.append("【IPv6 管理】\n\n");
-            message.append("请选择要管理的 OCI 配置：\n\n");
+            message.append("?IPv6 ???\n\n");
+            message.append("??????? OCI ???\n\n");
             
             List<InlineKeyboardRow> keyboard = new ArrayList<>();
             
             for (SysUserDTO user : users) {
                 message.append(String.format(
-                        "📌 %s\n" +
-                        "   区域: %s\n\n",
+                        "? %s\n" +
+                        "   ??: %s\n\n",
                         user.getUsername(),
                         user.getOciCfg().getRegion()
                 ));
@@ -79,7 +79,7 @@ public class Ipv6ConfigSelectHandler extends AbstractCallbackHandler {
             log.error("Failed to list OCI configs", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 获取配置列表失败: " + e.getMessage(),
+                    "? ????????: " + e.getMessage(),
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }

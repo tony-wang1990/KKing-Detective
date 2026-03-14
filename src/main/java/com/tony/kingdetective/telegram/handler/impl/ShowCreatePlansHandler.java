@@ -37,7 +37,7 @@ public class ShowCreatePlansHandler extends AbstractCallbackHandler {
         if (user == null) {
             return buildEditMessage(
                     callbackQuery,
-                    "�"??,
+                    "?"??,
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }
@@ -47,7 +47,7 @@ public class ShowCreatePlansHandler extends AbstractCallbackHandler {
         // Plan 1: AMD 1C1G50G
         keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button(
-                        "💻 方案1: 1�?G50G (AMD)",
+                        "? ??1: 1??G50G (AMD)",
                         "ci:" + userId + ":plan1"
                 )
         ));
@@ -55,7 +55,7 @@ public class ShowCreatePlansHandler extends AbstractCallbackHandler {
         // Plan 2: ARM 1C6G50G
         keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button(
-                        "🖥 方案2: 1�?G50G (ARM)",
+                        "? ??2: 1??G50G (ARM)",
                         "ci:" + userId + ":plan2"
                 )
         ));
@@ -63,7 +63,7 @@ public class ShowCreatePlansHandler extends AbstractCallbackHandler {
         // Plan 3: ARM 2C12G50G (NEW)
         keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button(
-                        "🚀 方案3: 2�?2G50G (ARM)",
+                        "? ??3: 2??2G50G (ARM)",
                         "ci:" + userId + ":plan3"
                 )
         ));
@@ -71,32 +71,32 @@ public class ShowCreatePlansHandler extends AbstractCallbackHandler {
         // Plan 4: ARM 4C24G100G (NEW)
         keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button(
-                        "�?方案4: 4�?4G100G (ARM)",
+                        "????4: 4??4G100G (ARM)",
                         "ci:" + userId + ":plan4"
                 )
         ));
         
         // Back button - now goes back to config list since we skipped config operations
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("◀�?返回配置列表", "config_list")
+                KeyboardBuilder.button("?????????", "config_list")
         ));
         keyboard.add(KeyboardBuilder.buildCancelRow());
         
         // Format tenant create time
         String tenantCreateTimeStr = user.getTenantCreateTime() != null 
                 ? user.getTenantCreateTime().toString().replace("T", " ")
-                : "未知";
+                : "??";
         
         String message = String.format(
-                "【选择开机方案】\n\n" +
-                "🔑 配置名：%s\n" +
-                "🌏 区域�?s\n" +
-                "👤 租户名：%s\n" +
-                "📅 租户创建时间�?s\n\n" +
-                "请选择开机方案：",
+                "????????\n\n" +
+                "? ????%s\n" +
+                "? ????s\n" +
+                "? ????%s\n" +
+                "? ????????s\n\n" +
+                "????????",
                 user.getUsername(),
                 user.getOciRegion(),
-                user.getTenantName() != null ? user.getTenantName() : "未知",
+                user.getTenantName() != null ? user.getTenantName() : "??",
                 tenantCreateTimeStr
         );
         

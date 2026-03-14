@@ -125,7 +125,7 @@ public class OciTask implements ApplicationRunner {
     private void cleanLogTask() {
         addAtFixedRateTask(account, () -> {
             FileUtil.writeUtf8String("", CommonUtils.LOG_FILE_PATH);
-            log.info("【日志清理任务】日志文件：{} 已清空", CommonUtils.LOG_FILE_PATH);
+            log.info("?????????????{} ???", CommonUtils.LOG_FILE_PATH);
         }, 8, 8, TimeUnit.HOURS);
     }
 
@@ -151,7 +151,7 @@ public class OciTask implements ApplicationRunner {
                         x.setTenantName(tenancy.getName());
                         x.setTenantCreateTime(LocalDateTime.parse(fetcher.getRegisteredTime(), CommonUtils.DATETIME_FMT_NORM));
                     } catch (Exception e) {
-                        log.error("更新配置：{} 失败", x.getUsername());
+                        log.error("?????{} ??", x.getUsername());
                     }
                 }).collect(Collectors.toList()));
             }
@@ -233,8 +233,8 @@ public class OciTask implements ApplicationRunner {
                 .eq(OciKv::getCode, SysCfgEnum.SYS_INFO_VERSION.getCode())
                 .eq(OciKv::getType, SysCfgTypeEnum.SYS_INFO.getCode())
                 .select(OciKv::getValue), String::valueOf);
-        log.info(String.format("【king-detective】服务启动成功~ 当前版本：%s 最新版本：%s", nowVersion, latestVersion));
-        sysService.sendMessage(String.format("【king-detective】服务启动成功🎉🎉\n\n当前版本：%s\n最新版本：%s\n发送 /start 操作机器人🤖\n放货通知频道：https://t.me/king_detective", nowVersion, latestVersion));
+        log.info(String.format("?king-detective???????~ ?????%s ?????%s", nowVersion, latestVersion));
+        sysService.sendMessage(String.format("?king-detective?????????\n\n?????%s\n?????%s\n?? /start ??????\n???????https://t.me/king_detective", nowVersion, latestVersion));
     }
 
     public static void pushVersionUpdateMsg(IOciKvService kvService, ISysService sysService) {
@@ -255,9 +255,9 @@ public class OciTask implements ApplicationRunner {
                 return;
             }
             if (!now.equals(latest)) {
-                log.warn(String.format("【king-detective】版本更新啦！！！当前版本：%s 最新版本：%s", now, latest));
+                log.warn(String.format("?king-detective??????????????%s ?????%s", now, latest));
                 if (!isPushedLatestVersion) {
-                    sysService.sendMessage(String.format("🔔【king-detective】版本更新啦！！！\n\n当前版本：%s\n最新版本：%s\n一键脚本：%s\n\n更新内容：\n%s",
+                    sysService.sendMessage(String.format("??king-detective?????????\n\n?????%s\n?????%s\n?????%s\n\n?????\n%s",
                             now, latest,
                             "bash <(wget -qO- https://github.com/tony-wang1990/king-detective/releases/latest/download/sh_king-detective_install.sh)",
                             CommonUtils.getLatestVersionBody()));
@@ -286,13 +286,13 @@ public class OciTask implements ApplicationRunner {
         }
 
         ScheduledFuture<?> scheduled = taskScheduler.schedule(() -> {
-            String message = "【每日播报】\n" +
+            String message = "??????\n" +
                     "\n" +
-                    "\uD83D\uDD58 时间：\t%s\n" +
-                    "\uD83D\uDD11 总API配置数：\t%s\n" +
-                    "❌ 失效API配置数：\t%s\n" +
-                    "⚠\uFE0F 失效的API配置：\t\n- %s\n" +
-                    "\uD83D\uDECE 正在执行的开机任务：\n" +
+                    "\uD83D\uDD58 ???\t%s\n" +
+                    "\uD83D\uDD11 ?API????\t%s\n" +
+                    "? ??API????\t%s\n" +
+                    "?\uFE0F ???API???\t\n- %s\n" +
+                    "\uD83D\uDECE ??????????\n" +
                     "%s\n";
             List<String> ids = userService.listObjs(new LambdaQueryWrapper<OciUser>()
                     .isNotNull(OciUser::getId)
@@ -316,9 +316,9 @@ public class OciTask implements ApplicationRunner {
             CompletableFuture<String> task = CompletableFuture.supplyAsync(() -> {
                 List<OciCreateTask> ociCreateTaskList = createTaskService.list();
                 if (ociCreateTaskList.isEmpty()) {
-                    return "无";
+                    return "?";
                 }
-                String template = "[%s] [%s] [%s] [%s核/%sGB/%sGB] [%s台] [%s] [%s次]";
+                String template = "[%s] [%s] [%s] [%s?/%sGB/%sGB] [%s?] [%s] [%s?]";
                 return ociCreateTaskList.parallelStream().map(x -> {
                     OciUser ociUser = userService.getById(x.getUserId());
                     Long counts = (Long) TEMP_MAP.get(CommonUtils.CREATE_COUNTS_PREFIX + x.getId());
@@ -376,7 +376,7 @@ public class OciTask implements ApplicationRunner {
                 ipDataService.remove(new LambdaQueryWrapper<IpData>().eq(IpData::getIp, json.getStr("ip")));
             }
             ipDataService.save(ipData);
-            log.info("新增地图IP数据：{} 成功", ipData.getIp());
+            log.info("????IP???{} ??", ipData.getIp());
         });
     }
 }

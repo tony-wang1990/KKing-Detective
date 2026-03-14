@@ -37,6 +37,6 @@ public class VcnController {
     @RequestMapping(path = "/remove")
     public ResponseData<Void> remove(@Validated @RequestBody RemoveVcnParams params) {
         vcnService.remove(params);
-        return ResponseData.successData("删除vcn成功");
+        return ResponseData.successData("??vcn??");
     }
 }

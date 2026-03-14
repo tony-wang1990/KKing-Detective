@@ -14,9 +14,9 @@ import java.util.List;
 @Data
 public class RemoveSecurityRuleParams {
 
-    @NotBlank(message = "api配置id不能为空")
+    @NotBlank(message = "api??id????")
     private String ociCfgId;
-    @NotBlank(message = "vcnId不能为空")
+    @NotBlank(message = "vcnId????")
     private String vcnId;
     private Integer type;
     private List<String> ruleIds;

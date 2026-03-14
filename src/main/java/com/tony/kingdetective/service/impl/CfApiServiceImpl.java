@@ -62,10 +62,10 @@ public class CfApiServiceImpl implements ICfApiService {
                 HttpResponse deleteResponse = deleteRequest.execute();
                 if (deleteResponse.getStatus() != 200) {
                     log.error("Error executing delete command");
-                    throw new OciException(-1, "清理域名：" + proxyDomain + " 的 DNS 记录失败");
+                    throw new OciException(-1, "?????" + proxyDomain + " ? DNS ????");
                 }
             }
-            log.info("√√√ 域名：" + proxyDomain + " 的dns记录已清除！ √√√");
+            log.info("??? ???" + proxyDomain + " ?dns?????? ???");
         });
     }
 
@@ -79,7 +79,7 @@ public class CfApiServiceImpl implements ICfApiService {
             HttpResponse deleteResponse = deleteRequest.execute();
             if (deleteResponse.getStatus() != 200) {
                 log.error("Error executing delete command");
-                throw new OciException(-1, "删除 DNS 记录失败，接口返回数据：" + deleteResponse.body());
+                throw new OciException(-1, "?? DNS ????????????" + deleteResponse.body());
             }
         });
     }
@@ -117,7 +117,7 @@ public class CfApiServiceImpl implements ICfApiService {
         HttpResponse response = request.execute();
         String responseBody = response.body();
         if (!Boolean.parseBoolean(String.valueOf(JSONUtil.parseObj(responseBody).get("success")))) {
-            log.error("获取：[{}] 的 DNS 记录失败，接口返回数据：{}", params.getDomain(), responseBody);
+            log.error("???[{}] ? DNS ????????????{}", params.getDomain(), responseBody);
             return Collections.emptyList();
         }
 

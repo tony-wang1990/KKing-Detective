@@ -15,7 +15,7 @@ import jakarta.validation.constraints.NotBlank;
 @Data
 public class BootVolumePageParams {
 
-    @NotBlank(message = "配置id不能为空")
+    @NotBlank(message = "??id????")
     private String ociCfgId;
     private String keyword;
     private int currentPage;

@@ -30,16 +30,16 @@ public class CheckAliveHandler extends AbstractCallbackHandler {
         // Show confirmation dialog
         return buildEditMessage(
                 callbackQuery,
-                "⚠️ 确认执行一键测活操作？\n\n此操作将测试所有OCI配置的有效性。",
+                "?? ???????????\n\n????????OCI???????",
                 InlineKeyboardMarkup.builder()
                         .keyboard(Arrays.asList(
                                 new InlineKeyboardRow(
                                         InlineKeyboardButton.builder()
-                                                .text("✅ 确认执行")
+                                                .text("? ????")
                                                 .callbackData("check_alive_confirm")
                                                 .build(),
                                         InlineKeyboardButton.builder()
-                                                .text("❌ 取消")
+                                                .text("? ??")
                                                 .callbackData("back_to_main")
                                                 .build()
                                 )

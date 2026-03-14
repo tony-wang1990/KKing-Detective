@@ -140,23 +140,23 @@ public class DuckDuckGoSearchService {
 
     public Mono<List<String>> search(String query) {
         Mono<List<String>> wikiMono = searchWikipedia(query)
-                .doOnNext(results -> log.info("关键词：[{}]，Wikipedia 搜索结果：{}", query.trim(), results))
+                .doOnNext(results -> log.info("????[{}]?Wikipedia ?????{}", query.trim(), results))
                 .onErrorResume(e -> {
-                    log.error("Wikipedia 搜索异常：{}", e.getMessage());
+                    log.error("Wikipedia ?????{}", e.getMessage());
                     return Mono.just(List.of());
                 });
 
         Mono<List<String>> duckDuckGoMono = searchDuckDuckGo(query)
-                .doOnNext(results -> log.info("关键词：[{}]，DuckDuckGo 搜索结果：{}", query.trim(), results))
+                .doOnNext(results -> log.info("????[{}]?DuckDuckGo ?????{}", query.trim(), results))
                 .onErrorResume(e -> {
-                    log.error("DuckDuckGo 搜索异常：{}", e.getMessage());
+                    log.error("DuckDuckGo ?????{}", e.getMessage());
                     return Mono.just(List.of());
                 });
 
         Mono<List<String>> duckDuckGoHtmlMono = searchHtmlDuckDuckGo(query)
-                .doOnNext(results -> log.info("关键词：[{}]，DuckDuckGo HTML 搜索结果：{}", query.trim(), results))
+                .doOnNext(results -> log.info("????[{}]?DuckDuckGo HTML ?????{}", query.trim(), results))
                 .onErrorResume(e -> {
-                    log.error("DuckDuckGo HTML 搜索异常：{}", e.getMessage());
+                    log.error("DuckDuckGo HTML ?????{}", e.getMessage());
                     return Mono.just(List.of());
                 });
 
@@ -171,7 +171,7 @@ public class DuckDuckGoSearchService {
     }
 
     public Mono<List<String>> searchWithHtml(String query) {
-        return searchHtmlDuckDuckGo(query).doOnNext(results -> log.info("关键词：[{}]，HTML 搜索结果：{}", query.trim(), results));
+        return searchHtmlDuckDuckGo(query).doOnNext(results -> log.info("????[{}]?HTML ?????{}", query.trim(), results));
     }
 
     public static void main(String[] args) {

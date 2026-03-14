@@ -15,9 +15,9 @@ import jakarta.validation.constraints.NotBlank;
 @Data
 public class LoginParams {
 
-    @NotBlank(message = "账号不能为空")
+    @NotBlank(message = "??????")
     private String account;
-    @NotBlank(message = "密码不能为空")
+    @NotBlank(message = "??????")
     private String password;
     private Integer mfaCode;
 }

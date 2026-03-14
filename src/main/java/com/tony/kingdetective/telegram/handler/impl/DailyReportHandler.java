@@ -49,37 +49,37 @@ public class DailyReportHandler extends AbstractCallbackHandler {
             String reportTime = (timeKv != null && timeKv.getValue() != null) ? timeKv.getValue() : "09";
             
             StringBuilder message = new StringBuilder();
-            message.append("【每日报告】\n\n");
-            message.append(String.format("当前状态: %s\n\n", isEnabled ? "✅ 已开启" : "❌ 已关闭"));
+            message.append("??????\n\n");
+            message.append(String.format("????: %s\n\n", isEnabled ? "? ???" : "? ???"));
             
-            message.append("📊 报告内容:\n");
-            message.append("• 所有账户资源概览\n");
-            message.append("• 实例运行状态统计\n");
-            message.append("• 当日流量使用情况\n");
-            message.append("• 配额使用率\n");
-            message.append("• 异常事件提醒\n\n");
+            message.append("? ????:\n");
+            message.append("? ????????\n");
+            message.append("? ????????\n");
+            message.append("? ????????\n");
+            message.append("? ?????\n");
+            message.append("? ??????\n\n");
             
-            message.append(String.format("⏰ 发送时间: 每天 %s:00\n\n", reportTime));
+            message.append(String.format("? ????: ?? %s:00\n\n", reportTime));
             
             if (isEnabled) {
-                message.append("💡 每天早上会自动发送报告\n");
-                message.append("帮助您掌握资源使用情况\n\n");
-                message.append("⚠️ 注意: 需要后台定时任务支持");
+                message.append("? ???????????\n");
+                message.append("???????????\n\n");
+                message.append("?? ??: ??????????");
             } else {
-                message.append("💡 开启后每天自动接收报告\n");
-                message.append("无需手动查询");
+                message.append("? ???????????\n");
+                message.append("??????");
             }
             
             List<InlineKeyboardRow> keyboard = List.of(
                     new InlineKeyboardRow(
                             KeyboardBuilder.button(
-                                    isEnabled ? "❌ 关闭报告" : "✅ 开启报告",
+                                    isEnabled ? "? ????" : "? ????",
                                     isEnabled ? "report_disable" : "report_enable"
                             )
                     ),
                     new InlineKeyboardRow(
-                            KeyboardBuilder.button("📋 查看今日报告", "report_today"),
-                            KeyboardBuilder.button("⚙️ 设置时间", "report_schedule")
+                            KeyboardBuilder.button("? ??????", "report_today"),
+                            KeyboardBuilder.button("?? ????", "report_schedule")
                     ),
                     KeyboardBuilder.buildBackToMainMenuRow(),
                     KeyboardBuilder.buildCancelRow()
@@ -95,7 +95,7 @@ public class DailyReportHandler extends AbstractCallbackHandler {
             log.error("Failed to get daily report status", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 获取报告状态失败: " + e.getMessage(),
+                    "? ????????: " + e.getMessage(),
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }
@@ -140,17 +140,17 @@ class ReportEnableHandler extends AbstractCallbackHandler {
             
             return buildEditMessage(
                     callbackQuery,
-                    "✅ 每日报告已开启\n\n" +
-                    String.format("系统将在每天 %s:00 发送资源报告\n\n", reportTime) +
-                    "报告内容包括:\n" +
-                    "• 实例状态统计\n" +
-                    "• 流量使用情况\n" +
-                    "• 配额使用率\n" +
-                    "• 异常事件提醒\n\n" +
-                    "💡 提示: 需要确保后台定时任务正在运行",
+                    "? ???????\n\n" +
+                    String.format("?????? %s:00 ??????\n\n", reportTime) +
+                    "??????:\n" +
+                    "? ??????\n" +
+                    "? ??????\n" +
+                    "? ?????\n" +
+                    "? ??????\n\n" +
+                    "? ??: ??????????????",
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "daily_report")
+                                    KeyboardBuilder.button("?? ??", "daily_report")
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -159,10 +159,10 @@ class ReportEnableHandler extends AbstractCallbackHandler {
             log.error("Failed to enable daily report", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 开启报告失败: " + e.getMessage(),
+                    "? ??????: " + e.getMessage(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "daily_report")
+                                    KeyboardBuilder.button("?? ??", "daily_report")
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -198,14 +198,14 @@ class ReportDisableHandler extends AbstractCallbackHandler {
             
             return buildEditMessage(
                     callbackQuery,
-                    "✅ 每日报告已关闭\n\n" +
-                    "系统将不再自动发送每日报告\n\n" +
-                    "💡 您随时可以:\n" +
-                    "• 重新开启自动报告\n" +
-                    "• 手动查看今日报告",
+                    "? ???????\n\n" +
+                    "?????????????\n\n" +
+                    "? ?????:\n" +
+                    "? ????????\n" +
+                    "? ????????",
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "daily_report")
+                                    KeyboardBuilder.button("?? ??", "daily_report")
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -214,10 +214,10 @@ class ReportDisableHandler extends AbstractCallbackHandler {
             log.error("Failed to disable daily report", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 关闭报告失败: " + e.getMessage(),
+                    "? ??????: " + e.getMessage(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "daily_report")
+                                    KeyboardBuilder.button("?? ??", "daily_report")
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -247,7 +247,7 @@ class ReportTodayHandler extends AbstractCallbackHandler {
             List<SysUserDTO> users = sysService.list();
             
             StringBuilder message = new StringBuilder();
-            message.append("【今日资源报告】\n");
+            message.append("????????\n");
             message.append(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
             message.append("\n\n");
             
@@ -264,28 +264,28 @@ class ReportTodayHandler extends AbstractCallbackHandler {
                     totalInstances += instances.size();
                     runningInstances += instances.size();
                     
-                    message.append(String.format("📌 %s: %d个运行中\n", 
+                    message.append(String.format("? %s: %d????\n", 
                             user.getUsername(), instances.size()));
                 } catch (Exception e) {
                     log.error("Failed to get instances for user: {}", user.getUsername(), e);
                 }
             }
             
-            message.append("\n━━━━━━━━━━━━━━━━\n");
-            message.append("📊 总体统计:\n");
-            message.append(String.format("• 总账户数: %d\n", users.size()));
-            message.append(String.format("• 运行实例: %d\n", runningInstances));
-            message.append(String.format("• 总实例数: %d\n\n", totalInstances));
+            message.append("\n????????????????\n");
+            message.append("? ????:\n");
+            message.append(String.format("? ????: %d\n", users.size()));
+            message.append(String.format("? ????: %d\n", runningInstances));
+            message.append(String.format("? ????: %d\n\n", totalInstances));
             
-            message.append("💡 详细信息请查看各功能模块");
+            message.append("? ????????????");
             
             return buildEditMessage(
                     callbackQuery,
                     message.toString(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("🔄 刷新", "report_today"),
-                                    KeyboardBuilder.button("◀️ 返回", "daily_report")
+                                    KeyboardBuilder.button("? ??", "report_today"),
+                                    KeyboardBuilder.button("?? ??", "daily_report")
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -295,10 +295,10 @@ class ReportTodayHandler extends AbstractCallbackHandler {
             log.error("Failed to generate today's report", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 生成报告失败: " + e.getMessage(),
+                    "? ??????: " + e.getMessage(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "daily_report")
+                                    KeyboardBuilder.button("?? ??", "daily_report")
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -334,25 +334,25 @@ class ReportScheduleHandler extends AbstractCallbackHandler {
         } catch (Exception ignored) {}
         
         StringBuilder message = new StringBuilder();
-        message.append("【报告时间设置】\n\n");
-        message.append(String.format("当前发送时间: %s:00\n\n", reportTime));
-        message.append("选择新的发送时间:\n");
+        message.append("????????\n\n");
+        message.append(String.format("??????: %s:00\n\n", reportTime));
+        message.append("????????:\n");
         
         List<InlineKeyboardRow> keyboard = List.of(
                 new InlineKeyboardRow(
-                        KeyboardBuilder.button("🌅 07:00", "report_time:07"),
-                        KeyboardBuilder.button("🌄 09:00", "report_time:09")
+                        KeyboardBuilder.button("? 07:00", "report_time:07"),
+                        KeyboardBuilder.button("? 09:00", "report_time:09")
                 ),
                 new InlineKeyboardRow(
-                        KeyboardBuilder.button("🌞 12:00", "report_time:12"),
-                        KeyboardBuilder.button("🌆 18:00", "report_time:18")
+                        KeyboardBuilder.button("? 12:00", "report_time:12"),
+                        KeyboardBuilder.button("? 18:00", "report_time:18")
                 ),
                 new InlineKeyboardRow(
-                        KeyboardBuilder.button("🌙 21:00", "report_time:21"),
-                        KeyboardBuilder.button("🌃 23:00", "report_time:23")
+                        KeyboardBuilder.button("? 21:00", "report_time:21"),
+                        KeyboardBuilder.button("? 23:00", "report_time:23")
                 ),
                 new InlineKeyboardRow(
-                        KeyboardBuilder.button("◀️ 返回", "daily_report")
+                        KeyboardBuilder.button("?? ??", "daily_report")
                 ),
                 KeyboardBuilder.buildCancelRow()
         );

@@ -149,47 +149,47 @@ public class OciConstants {
     public static class MessageTemplate {
         /**  */
         public static final String CREATE_SUCCESS_BROADCAST = 
-            "【开机任务】 \n\n🎉 用户：[%s] 开机成功 🎉\n\n" +
-            "📍 区域：%s\n" +
-            "💾 配置：%s | %dC%dG\n" +
-            "📊 计费：%s\n" +
-            "🌐 公网IP：%s\n" +
-            "🔐 SSH端口：%d\n\n" +
+            "?????? \n\n? ???[%s] ???? ?\n\n" +
+            "? ???%s\n" +
+            "? ???%s | %dC%dG\n" +
+            "? ???%s\n" +
+            "? ??IP?%s\n" +
+            "? SSH???%d\n\n" +
             "%s";
         
         /**  */
         public static final String CREATE_FAILURE_BROADCAST = 
-            "【开机失败】\n\n❌ 用户：[%s]\n\n" +
-            "📍 区域：%s\n" +
-            "💾 配置：%s\n" +
-            "❗错误：%s";
+            "??????\n\n? ???[%s]\n\n" +
+            "? ???%s\n" +
+            "? ???%s\n" +
+            "????%s";
         
         /**  */
         public static final String TASK_COMPLETE = 
-            "✅ 任务完成\n\n%s";
+            "? ????\n\n%s";
         
         /**  */
         public static final String TASK_FAILED = 
-            "❌ 任务失败\n\n%s\n\n错误：%s";
+            "? ????\n\n%s\n\n???%s";
         
         /** API  */
         public static final String API_CALL_FAILED = 
-            "❌ API 调用失败\n\n" +
-            "接口：%s\n" +
-            "错误：%s";
+            "? API ????\n\n" +
+            "???%s\n" +
+            "???%s";
         
         /**  */
         public static final String PERMISSION_DENIED = 
-            "❌ 权限不足\n\n" +
-            "您没有权限执行此操作";
+            "? ????\n\n" +
+            "??????????";
         
         /**  */
         public static final String OPERATION_SUCCESS = 
-            "✅ 操作成功\n\n%s";
+            "? ????\n\n%s";
         
         /**  */
         public static final String OPERATION_FAILED = 
-            "❌ 操作失败\n\n%s";
+            "? ????\n\n%s";
     }
     
     // ====================  ====================
@@ -216,6 +216,6 @@ public class OciConstants {
     
     private OciConstants() {
         // 
-        throw new AssertionError("常量类不应该被实例化");
+        throw new AssertionError("??????????");
     }
 }

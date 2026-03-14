@@ -32,10 +32,10 @@ public class EncryptionUtil {
                     : String.format("%-32s", SECRET_KEY).replace(' ', '0');
             
             aes = SecureUtil.aes(key.getBytes(StandardCharsets.UTF_8));
-            log.info("加密工具初始化成功，使用 AES-256 算法");
+            log.info("???????????? AES-256 ??");
         } catch (Exception e) {
-            log.error("加密工具初始化失败", e);
-            throw new RuntimeException("加密工具初始化失败", e);
+            log.error("?????????", e);
+            throw new RuntimeException("?????????", e);
         }
     }
     
@@ -54,8 +54,8 @@ public class EncryptionUtil {
             byte[] encrypted = aes.encrypt(plainText);
             return Base64.getEncoder().encodeToString(encrypted);
         } catch (Exception e) {
-            log.error("加密失败: {}", plainText.substring(0, Math.min(10, plainText.length())) + "...", e);
-            throw new RuntimeException("加密失败", e);
+            log.error("????: {}", plainText.substring(0, Math.min(10, plainText.length())) + "...", e);
+            throw new RuntimeException("????", e);
         }
     }
     
@@ -75,8 +75,8 @@ public class EncryptionUtil {
             byte[] decrypted = aes.decrypt(encrypted);
             return new String(decrypted, StandardCharsets.UTF_8);
         } catch (Exception e) {
-            log.error("解密失败", e);
-            throw new RuntimeException("解密失败", e);
+            log.error("????", e);
+            throw new RuntimeException("????", e);
         }
     }
     
@@ -126,7 +126,7 @@ public class EncryptionUtil {
         // 1. 
         String envKey = System.getenv("KING_DETECTIVE_SECRET_KEY");
         if (envKey != null && !envKey.isEmpty()) {
-            log.info("✅ 使用环境变量中的加密密钥");
+            log.info("? ????????????");
             return ensureKeyLength(envKey);
         }
         
@@ -136,11 +136,11 @@ public class EncryptionUtil {
             try {
                 String fileKey = java.nio.file.Files.readString(keyFile.toPath(), StandardCharsets.UTF_8).trim();
                 if (!fileKey.isEmpty()) {
-                    log.info("✅ 使用 .secret_key 文件中的加密密钥");
+                    log.info("? ?? .secret_key ????????");
                     return ensureKeyLength(fileKey);
                 }
             } catch (Exception e) {
-                log.warn("读取 .secret_key 文件失败，将生成新密钥", e);
+                log.warn("?? .secret_key ???????????", e);
             }
         }
         
@@ -148,10 +148,10 @@ public class EncryptionUtil {
         String newKey = generateRandomKey();
         try {
             java.nio.file.Files.writeString(keyFile.toPath(), newKey, StandardCharsets.UTF_8);
-            log.info("🔑 已自动生成并保存加密密钥到: {}", keyFile.getAbsolutePath());
-            log.info("⚠️  请妥善保管此文件，丢失将无法解密已加密的数据！");
+            log.info("? ?????????????: {}", keyFile.getAbsolutePath());
+            log.info("??  ???????????????????????");
         } catch (Exception e) {
-            log.error("保存密钥文件失败", e);
+            log.error("????????", e);
         }
         
         return newKey;
@@ -182,6 +182,6 @@ public class EncryptionUtil {
     }
     
     private EncryptionUtil() {
-        throw new AssertionError("工具类不应该被实例化");
+        throw new AssertionError("??????????");
     }
 }

@@ -50,7 +50,7 @@ public class TrafficHistoryHandler extends AbstractCallbackHandler {
             if (CollectionUtil.isEmpty(users)) {
                 // Clear stale cache if no configs exist
                 InstanceSelectionStorage.getInstance().clearAll(chatId);
-                return buildEditMessage(callbackQuery, "❌ 未找到 OCI 配置", new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu()));
+                return buildEditMessage(callbackQuery, "? ??? OCI ??", new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu()));
             }
 
             // If only one user or specific config selected
@@ -83,9 +83,9 @@ public class TrafficHistoryHandler extends AbstractCallbackHandler {
             if (CollectionUtil.isEmpty(instances)) {
                 return buildEditMessage(
                         callbackQuery,
-                        "❌ 该配置下无运行中的实例",
+                        "? ???????????",
                         new InlineKeyboardMarkup(List.of(
-                                new InlineKeyboardRow(KeyboardBuilder.button("◀️ 返回主菜单", "back_to_main")),
+                                new InlineKeyboardRow(KeyboardBuilder.button("?? ?????", "back_to_main")),
                                 KeyboardBuilder.buildCancelRow()
                         ))
                 );
@@ -98,12 +98,12 @@ public class TrafficHistoryHandler extends AbstractCallbackHandler {
             
         } catch (Exception e) {
             log.error("Traffic History Error", e);
-            return buildEditMessage(callbackQuery, "❌ 获取列表失败: " + e.getMessage(), new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu()));
+            return buildEditMessage(callbackQuery, "? ??????: " + e.getMessage(), new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu()));
         }
     }
     
     private BotApiMethod<? extends Serializable> buildConfigSelector(CallbackQuery callbackQuery, List<SysUserDTO> users) {
-        StringBuilder message = new StringBuilder("【流量历史查询】\n\n请选择 OCI 配置：\n\n");
+        StringBuilder message = new StringBuilder("????????\n\n??? OCI ???\n\n");
         List<InlineKeyboardRow> rows = new ArrayList<>();
         for (SysUserDTO user : users) {
             rows.add(new InlineKeyboardRow(
@@ -117,18 +117,18 @@ public class TrafficHistoryHandler extends AbstractCallbackHandler {
     }
     
     private BotApiMethod<? extends Serializable> buildInstanceListMessage(CallbackQuery callbackQuery, List<SysUserDTO.CloudInstance> instances, String ociCfgId) {
-        StringBuilder message = new StringBuilder("【流量历史查询】\n\n请选择要查询的实例：\n\n");
+        StringBuilder message = new StringBuilder("????????\n\n??????????\n\n");
         List<InlineKeyboardRow> rows = new ArrayList<>();
         
         for (int i = 0; i < instances.size(); i++) {
             SysUserDTO.CloudInstance instance = instances.get(i);
             message.append(String.format("%d. %s (%s)\n", i + 1, instance.getName(), instance.getRegion()));
             rows.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("📊 " + instance.getName(), "traffic_history_instance:" + i)
+                    KeyboardBuilder.button("? " + instance.getName(), "traffic_history_instance:" + i)
             ));
         }
         
-        rows.add(new InlineKeyboardRow(KeyboardBuilder.button("◀️ 返回配置列表", "traffic_history")));
+        rows.add(new InlineKeyboardRow(KeyboardBuilder.button("?? ??????", "traffic_history")));
         rows.add(KeyboardBuilder.buildCancelRow());
         
         return buildEditMessage(callbackQuery, message.toString(), new InlineKeyboardMarkup(rows));
@@ -172,7 +172,7 @@ class TrafficHistoryInstanceHandler extends AbstractCallbackHandler {
         
         if (instance == null) {
             log.error("Instance is null: chatId={}, index={}", chatId, index);
-            return buildEditMessage(callbackQuery, "❌ 实例信息已过期，请重新选择", new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu()));
+            return buildEditMessage(callbackQuery, "? ?????????????", new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu()));
         }
         
         log.info("Instance found: chatId={}, instanceName={}, instanceId={}", chatId, instance.getName(), instance.getOcId());
@@ -182,13 +182,13 @@ class TrafficHistoryInstanceHandler extends AbstractCallbackHandler {
         
         return buildEditMessage(
                 callbackQuery,
-                String.format("【流量查询 - %s】\n\n请选择查询时间范围：", instance.getName()),
+                String.format("????? - %s?\n\n??????????", instance.getName()),
                 new InlineKeyboardMarkup(List.of(
-                        new InlineKeyboardRow(KeyboardBuilder.button("📅 近 24 小时", "traffic_history_query:1")),
-                        new InlineKeyboardRow(KeyboardBuilder.button("📅 近 7 天", "traffic_history_query:7")),
-                        new InlineKeyboardRow(KeyboardBuilder.button("📅 近 30 天", "traffic_history_query:30")),
-                        new InlineKeyboardRow(KeyboardBuilder.button("📅 近 90 天", "traffic_history_query:90")),
-                        new InlineKeyboardRow(KeyboardBuilder.button("◀️ 返回实例列表", "traffic_history_config:" + storage.getConfigContext(chatId))),
+                        new InlineKeyboardRow(KeyboardBuilder.button("? ? 24 ??", "traffic_history_query:1")),
+                        new InlineKeyboardRow(KeyboardBuilder.button("? ? 7 ?", "traffic_history_query:7")),
+                        new InlineKeyboardRow(KeyboardBuilder.button("? ? 30 ?", "traffic_history_query:30")),
+                        new InlineKeyboardRow(KeyboardBuilder.button("? ? 90 ?", "traffic_history_query:90")),
+                        new InlineKeyboardRow(KeyboardBuilder.button("?? ??????", "traffic_history_config:" + storage.getConfigContext(chatId))),
                         KeyboardBuilder.buildCancelRow()
                 ))
         );
@@ -217,7 +217,7 @@ class TrafficHistoryQueryHandler extends AbstractCallbackHandler {
             telegramClient.execute(org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText.builder()
                     .chatId(chatId)
                     .messageId(callbackQuery.getMessage().getMessageId())
-                    .text("⏳ 正在从 Oracle Cloud 查询监控数据，请稍候...")
+                    .text("? ??? Oracle Cloud ??????????...")
                     .build());
         } catch (Exception ignored) {}
         
@@ -227,7 +227,7 @@ class TrafficHistoryQueryHandler extends AbstractCallbackHandler {
         
         if (instance == null) {
             storage.clearAll(chatId);
-            return buildEditMessage(callbackQuery, "❌ 会话过期，请重新选择", new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu()));
+            return buildEditMessage(callbackQuery, "? ??????????", new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu()));
         }
         
         // Validate that ociCfgId exists
@@ -236,7 +236,7 @@ class TrafficHistoryQueryHandler extends AbstractCallbackHandler {
             storage.clearAll(chatId);
             return buildEditMessage(
                 callbackQuery, 
-                "❌ OCI 配置已被删除，请返回主菜单重新选择", 
+                "? OCI ?????????????????", 
                 new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }
@@ -249,7 +249,7 @@ class TrafficHistoryQueryHandler extends AbstractCallbackHandler {
                 // 1. Get VNIC ID
                 String vnicId = getVnicId(fetcher, instance);
                 if (vnicId == null) {
-                     return buildEditMessage(callbackQuery, "❌ 无法获取实例网卡信息 (VNIC ID)", buildRetryKeyboard(days));
+                     return buildEditMessage(callbackQuery, "? ?????????? (VNIC ID)", buildRetryKeyboard(days));
                 }
                 
                 // 2. Query Metrics
@@ -261,14 +261,14 @@ class TrafficHistoryQueryHandler extends AbstractCallbackHandler {
                 TrafficStats stats = queryTrafficMetrics(fetcher, vnicId, startTime, endTime, resolution);
                 
                 String msg = String.format(
-                        "📊 **流量统计报告**\n\n" +
-                        "实例: %s\n" +
-                        "区域: %s\n" +
-                        "时间: 近 %d 天\n\n" +
-                        "⬇️ **入站流量**: %s\n" +
-                        "⬆️ **出站流量**: %s\n" +
-                        "🔁 **总计流量**: %s\n\n" +
-                        "💡 数据来源: OCI Monitoring (oci_vcn)",
+                        "? **??????**\n\n" +
+                        "??: %s\n" +
+                        "??: %s\n" +
+                        "??: ? %d ?\n\n" +
+                        "?? **????**: %s\n" +
+                        "?? **????**: %s\n" +
+                        "? **????**: %s\n\n" +
+                        "? ????: OCI Monitoring (oci_vcn)",
                         instance.getName(), instance.getRegion(), days,
                         formatBytes(stats.inboundBytes),
                         formatBytes(stats.outboundBytes),
@@ -279,15 +279,15 @@ class TrafficHistoryQueryHandler extends AbstractCallbackHandler {
             }
         } catch (Exception e) {
             log.error("Traffic Query Failed", e);
-            return buildEditMessage(callbackQuery, "❌ 查询失败: " + e.getMessage(), buildRetryKeyboard(days));
+            return buildEditMessage(callbackQuery, "? ????: " + e.getMessage(), buildRetryKeyboard(days));
         }
     }
     
     private InlineKeyboardMarkup buildRetryKeyboard(int days) {
         return new InlineKeyboardMarkup(List.of(
                 new InlineKeyboardRow(
-                        KeyboardBuilder.button("🔄 刷新", "traffic_history_query:" + days),
-                        KeyboardBuilder.button("◀️ 返回", "traffic_history") // Go loop back to start or instance select
+                        KeyboardBuilder.button("? ??", "traffic_history_query:" + days),
+                        KeyboardBuilder.button("?? ??", "traffic_history") // Go loop back to start or instance select
                 ),
                 KeyboardBuilder.buildCancelRow()
         ));

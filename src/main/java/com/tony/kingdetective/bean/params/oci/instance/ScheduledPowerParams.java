@@ -5,10 +5,10 @@ import lombok.Data;
 
 @Data
 public class ScheduledPowerParams {
-    @NotBlank(message = "ociCfgId不能为空")
+    @NotBlank(message = "ociCfgId????")
     private String ociCfgId;
 
-    @NotBlank(message = "instanceId不能为空")
+    @NotBlank(message = "instanceId????")
     private String instanceId;
 
     private String stopTime; // Optional (e.g., "01:00"). If blank, clears schedule

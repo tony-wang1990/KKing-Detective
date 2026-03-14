@@ -48,7 +48,7 @@ public class OciController {
      */
     @PostMapping(path = "/userPage")
     public ResponseData<Page<OciUserListRsp>> userPage(@Validated @RequestBody GetOciUserListParams params) {
-        return ResponseData.successData(ociService.userPage(params), "获取用户分页成功");
+        return ResponseData.successData(ociService.userPage(params), "????????");
     }
 
     /**
@@ -56,7 +56,7 @@ public class OciController {
      */
     @PostMapping(path = "/details")
     public ResponseData<OciCfgDetailsRsp> details(@Validated @RequestBody GetOciCfgDetailsParams params) {
-        return ResponseData.successData(ociService.details(params), "获取账户详情成功");
+        return ResponseData.successData(ociService.details(params), "????????");
     }
 
     /**
@@ -65,7 +65,7 @@ public class OciController {
     @PostMapping(path = "/addCfg")
     public ResponseData<Void> addCfg(@Validated AddCfgParams params) {
         ociService.addCfg(params);
-        return ResponseData.successData("新增配置成功");
+        return ResponseData.successData("??????");
     }
 
     /**
@@ -74,7 +74,7 @@ public class OciController {
     @PostMapping(path = "/uploadCfg")
     public ResponseData<Void> uploadCfg(@Validated UploadCfgParams params) {
         ociService.uploadCfg(params);
-        return ResponseData.successData("上传配置成功");
+        return ResponseData.successData("??????");
     }
 
     /**
@@ -92,7 +92,7 @@ public class OciController {
     @PostMapping(path = "/removeCfg")
     public ResponseData<Void> removeCfg(@Validated @RequestBody IdListParams params) {
         ociService.removeCfg(params);
-        return ResponseData.successData("删除配置成功");
+        return ResponseData.successData("??????");
     }
 
     // ==================  ==================
@@ -103,7 +103,7 @@ public class OciController {
     @PostMapping(path = "/updateInstanceState")
     public ResponseData<Void> updateInstanceState(@Validated @RequestBody UpdateInstanceStateParams params) {
         instanceService.updateInstanceState(params);
-        return ResponseData.successData("操作指令已发送");
+        return ResponseData.successData("???????");
     }
 
     /**
@@ -112,7 +112,7 @@ public class OciController {
     @PostMapping(path = "/updateInstanceName")
     public ResponseData<Void> updateInstanceName(@Validated @RequestBody UpdateInstanceNameParams params) {
         instanceService.updateInstanceName(params);
-        return ResponseData.successData("修改实例名称成功");
+        return ResponseData.successData("????????");
     }
 
     /**
@@ -121,7 +121,7 @@ public class OciController {
     @PostMapping(path = "/updateInstanceCfg")
     public ResponseData<Void> updateInstanceCfg(@Validated @RequestBody UpdateInstanceCfgParams params) {
         instanceService.updateInstanceCfg(params);
-        return ResponseData.successData("修改实例配置成功");
+        return ResponseData.successData("????????");
     }
 
     /**
@@ -130,7 +130,7 @@ public class OciController {
     @PostMapping(path = "/updateInstanceShape")
     public ResponseData<Void> updateInstanceShape(@Validated @RequestBody UpdateShapeParams params) {
         instanceService.updateInstanceShape(params);
-        return ResponseData.successData("修改实例 Shape 成功");
+        return ResponseData.successData("???? Shape ??");
     }
 
     /**
@@ -138,7 +138,7 @@ public class OciController {
      */
     @PostMapping(path = "/getInstanceCfgInfo")
     public ResponseData<InstanceCfgDTO> getInstanceCfgInfo(@Validated @RequestBody GetInstanceCfgInfoParams params) {
-        return ResponseData.successData(instanceService.getInstanceCfgInfo(params), "获取实例配置成功");
+        return ResponseData.successData(instanceService.getInstanceCfgInfo(params), "????????");
     }
 
     /**
@@ -147,7 +147,7 @@ public class OciController {
     @PostMapping(path = "/terminateInstance")
     public ResponseData<Void> terminateInstance(@Validated @RequestBody TerminateInstanceParams params) {
         instanceService.terminateInstance(params);
-        return ResponseData.successData("终止实例指令已发送");
+        return ResponseData.successData("?????????");
     }
 
     /**
@@ -156,7 +156,7 @@ public class OciController {
     @PostMapping(path = "/updateTags")
     public ResponseData<Void> updateTags(@Validated @RequestBody UpdateTagsParams params) {
         instanceService.updateTags(params);
-        return ResponseData.successData("更新实例标签成功");
+        return ResponseData.successData("????????");
     }
 
     // ================== Auto Rescue ==================
@@ -167,7 +167,7 @@ public class OciController {
     @PostMapping(path = "/autoRescue")
     public ResponseData<Void> autoRescue(@Validated @RequestBody AutoRescueParams params) {
         instanceService.autoRescue(params);
-        return ResponseData.successData("救砖任务已提交，请关注任务进度");
+        return ResponseData.successData("???????????????");
     }
 
     // ==================  ==================
@@ -178,7 +178,7 @@ public class OciController {
     @PostMapping(path = "/createSnapshot")
     public ResponseData<Void> createSnapshot(@Validated @RequestBody CreateSnapshotParams params) {
         instanceService.createSnapshot(params);
-        return ResponseData.successData("已成功提交创建实例引导卷快照任务");
+        return ResponseData.successData("????????????????");
     }
 
     // ==================  ==================
@@ -188,7 +188,7 @@ public class OciController {
      */
     @PostMapping(path = "/getScheduledPower")
     public ResponseData<String> getScheduledPower(@RequestParam("id") String id) {
-        return ResponseData.successData(instanceService.getScheduledPower(id), "获取定时任务成功");
+        return ResponseData.successData(instanceService.getScheduledPower(id), "????????");
     }
 
     /**
@@ -197,7 +197,7 @@ public class OciController {
     @PostMapping(path = "/setScheduledPower")
     public ResponseData<Void> setScheduledPower(@Validated @RequestBody ScheduledPowerParams params) {
         instanceService.setScheduledPower(params.getInstanceId(), params.getOciCfgId(), params.getStopTime(), params.getStartTime());
-        return ResponseData.successData("设置定时任务成功");
+        return ResponseData.successData("????????");
     }
 
     // ================== API Keys / SSH  ==================
@@ -207,7 +207,7 @@ public class OciController {
      */
     @PostMapping(path = "/listApiKeys")
     public ResponseData<List<com.oracle.bmc.identity.model.ApiKey>> listApiKeys(@RequestParam("ociCfgId") String ociCfgId) {
-        return ResponseData.successData(instanceService.listApiKeys(ociCfgId), "获取密钥列表成功");
+        return ResponseData.successData(instanceService.listApiKeys(ociCfgId), "????????");
     }
 
     /**
@@ -216,7 +216,7 @@ public class OciController {
     @PostMapping(path = "/addApiKey")
     public ResponseData<Void> addApiKey(@Validated @RequestBody AddApiKeyParams params) {
         instanceService.addApiKey(params.getOciCfgId(), params.getPublicKeyContent());
-        return ResponseData.successData("上传公钥成功");
+        return ResponseData.successData("??????");
     }
 
     /**
@@ -225,7 +225,7 @@ public class OciController {
     @PostMapping(path = "/deleteApiKey")
     public ResponseData<Void> deleteApiKey(@Validated @RequestBody DeleteApiKeyParams params) {
         instanceService.deleteApiKey(params.getOciCfgId(), params.getFingerprint());
-        return ResponseData.successData("删除密钥成功");
+        return ResponseData.successData("??????");
     }
 
     // ==================  ==================
@@ -236,7 +236,7 @@ public class OciController {
     @PostMapping(path = "/releaseSecurityRule")
     public ResponseData<Void> releaseSecurityRule(@Validated @RequestBody ReleaseSecurityRuleParams params) {
         ociService.releaseSecurityRule(params);
-        return ResponseData.successData("安全规则放行成功");
+        return ResponseData.successData("????????");
     }
 
     // ================== IPV6 ==================
@@ -247,7 +247,7 @@ public class OciController {
     @PostMapping(path = "/createIpv6")
     public ResponseData<Void> createIpv6(@Validated @RequestBody CreateIpv6Params params) {
         ociService.createIpv6(params);
-        return ResponseData.successData("IPv6 创建成功");
+        return ResponseData.successData("IPv6 ????");
     }
 
     // ================== 500M  ==================
@@ -258,7 +258,7 @@ public class OciController {
     @PostMapping(path = "/oneClick500M")
     public ResponseData<Void> oneClick500M(@Validated @RequestBody CreateNetworkLoadBalancerParams params) {
         instanceService.oneClick500M(params);
-        return ResponseData.successData("500M 网络负载均衡器创建成功");
+        return ResponseData.successData("500M ???????????");
     }
 
     /**
@@ -267,7 +267,7 @@ public class OciController {
     @PostMapping(path = "/oneClickClose500M")
     public ResponseData<Void> oneClickClose500M(@Validated @RequestBody Close500MParams params) {
         instanceService.oneClickClose500M(params);
-        return ResponseData.successData("500M 网络负载均衡器已关闭");
+        return ResponseData.successData("500M ??????????");
     }
 
     // ==================  ==================
@@ -277,7 +277,7 @@ public class OciController {
      */
     @PostMapping(path = "/createTaskPage")
     public ResponseData<Page<CreateTaskRsp>> createTaskPage(@Validated @RequestBody CreateTaskPageParams params) {
-        return ResponseData.successData(ociService.createTaskPage(params), "获取创建任务列表成功");
+        return ResponseData.successData(ociService.createTaskPage(params), "??????????");
     }
 
     /**
@@ -286,7 +286,7 @@ public class OciController {
     @PostMapping(path = "/stopCreate")
     public ResponseData<Void> stopCreate(@Validated @RequestBody StopCreateParams params) {
         ociService.stopCreate(params);
-        return ResponseData.successData("停止抢机任务成功");
+        return ResponseData.successData("????????");
     }
 
     /**
@@ -295,7 +295,7 @@ public class OciController {
     @PostMapping(path = "/stopChangeIp")
     public ResponseData<Void> stopChangeIp(@Validated @RequestBody StopChangeIpParams params) {
         ociService.stopChangeIp(params);
-        return ResponseData.successData("停止换IP任务成功");
+        return ResponseData.successData("???IP????");
     }
 
     // ==================  ==================
@@ -306,7 +306,7 @@ public class OciController {
     @PostMapping(path = "/updateBootVolumeCfg")
     public ResponseData<Void> updateBootVolumeCfg(@Validated @RequestBody UpdateBootVolumeCfgParams params) {
         instanceService.updateBootVolumeCfg(params);
-        return ResponseData.successData("修改引导卷配置成功");
+        return ResponseData.successData("?????????");
     }
 
     // ================== VNC  ==================
@@ -316,6 +316,6 @@ public class OciController {
      */
     @PostMapping(path = "/startVnc")
     public ResponseData<String> startVnc(@Validated @RequestBody StartVncParams params) {
-        return ResponseData.successData(ociService.startVnc(params), "VNC 控制台连接已创建");
+        return ResponseData.successData(ociService.startVnc(params), "VNC ????????");
     }
 }

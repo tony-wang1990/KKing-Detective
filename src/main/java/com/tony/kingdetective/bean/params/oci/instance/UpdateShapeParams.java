@@ -12,10 +12,10 @@ import lombok.Data;
 @Data
 public class UpdateShapeParams {
 
-    @NotBlank(message = "ociCfgId不能为空")
+    @NotBlank(message = "ociCfgId????")
     private String ociCfgId;
-    @NotBlank(message = "instanceId不能为空")
+    @NotBlank(message = "instanceId????")
     private String instanceId;
-    @NotBlank(message = "shape不能为空，例：VM.Standard.A1.Flex")
+    @NotBlank(message = "shape???????VM.Standard.A1.Flex")
     private String shape;
 }

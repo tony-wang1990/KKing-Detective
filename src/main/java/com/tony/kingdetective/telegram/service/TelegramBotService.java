@@ -50,7 +50,7 @@ public class TelegramBotService {
                 .select(OciUser::getId), String::valueOf);
         
         if (CollectionUtil.isEmpty(ids)) {
-            return "暂无配置";
+            return "????";
         }
         
         List<String> failNames = ids.parallelStream().filter(id -> {
@@ -64,11 +64,11 @@ public class TelegramBotService {
         }).map(id -> sysService.getOciUser(id).getUsername()).collect(Collectors.toList());
         
         return String.format(
-                "【API测活结果】\n\n" +
-                "�?有效配置数：%s\n" +
-                "�?失效配置数：%s\n" +
-                "\uD83D\uDD11 总配置数�?s\n" +
-                "⚠\uFE0F 失效配置：\n%s",
+                "?API?????\n\n" +
+                "????????%s\n" +
+                "????????%s\n" +
+                "\uD83D\uDD11 ??????s\n" +
+                "?\uFE0F ?????\n%s",
                 ids.size() - failNames.size(),
                 failNames.size(),
                 ids.size(),
@@ -85,17 +85,17 @@ public class TelegramBotService {
         IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
         IOciCreateTaskService createTaskService = SpringUtil.getBean(IOciCreateTaskService.class);
         
-        String message = "【任务详情】\n\n" +
-                "\uD83D\uDD58 时间：\t%s\n" +
-                "\uD83D\uDECE 正在执行的开机任务：\n%s\n";
+        String message = "??????\n\n" +
+                "\uD83D\uDD58 ???\t%s\n" +
+                "\uD83D\uDECE ??????????\n%s\n";
         
         CompletableFuture<String> task = CompletableFuture.supplyAsync(() -> {
             List<OciCreateTask> ociCreateTaskList = createTaskService.list();
             if (ociCreateTaskList.isEmpty()) {
-                return "�"?;
+                return "?"?;
             }
             
-            String template = "[%s] [%s] [%s] [%s�?%sGB/%sGB] [%s台] [%s] [%s次]";
+            String template = "[%s] [%s] [%s] [%s??%sGB/%sGB] [%s?] [%s] [%s?]";
             return ociCreateTaskList.parallelStream().map(x -> {
                 OciUser ociUser = userService.getById(x.getUserId());
                 Long counts = (Long) TEMP_MAP.get(CommonUtils.CREATE_COUNTS_PREFIX + x.getId());
@@ -134,10 +134,10 @@ public class TelegramBotService {
         
         List<OciUser> ociUserList = userService.list();
         if (CollectionUtil.isEmpty(ociUserList)) {
-            return "暂无配置信息";
+            return "??????";
         }
         
-        return "【流量统计】\n\n" + Optional.ofNullable(userService.list())
+        return "??????\n\n" + Optional.ofNullable(userService.list())
                 .filter(CollectionUtil::isNotEmpty)
                 .orElseGet(Collections::emptyList)
                 .parallelStream()
@@ -149,12 +149,12 @@ public class TelegramBotService {
                         return "";
                     }
                     return String.format(
-                            "\uD83D\uDD58 时间�?s\n" +
-                            "🔑 配置名：�?s】\n" +
-                            "🌏 主区域：�?s】\n" +
-                            "\uD83D\uDDA5 实例数量：�?s�?台\n" +
-                            "�?本月入站流量总计�?s\n" +
-                            "�?本月出站流量总计�?s\n",
+                            "\uD83D\uDD58 ????s\n" +
+                            "? ??????s?\n" +
+                            "? ??????s?\n" +
+                            "\uD83D\uDDA5 ???????s???\n" +
+                            "????????????s\n" +
+                            "????????????s\n",
                             LocalDateTime.now().format(CommonUtils.DATETIME_FMT_NORM),
                             ociCfg.getUsername(),
                             ociCfg.getOciRegion(),

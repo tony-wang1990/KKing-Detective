@@ -63,11 +63,11 @@ public class ResponseData<T> {
     }
 
     public static <T> ResponseData<T> successData() {
-        return new ResponseData(true, 200, null, "请求成功");
+        return new ResponseData(true, 200, null, "????");
     }
 
     public static <T> ResponseData<T> successData(T data) {
-        return new ResponseData(true, 200, data, "请求成功");
+        return new ResponseData(true, 200, data, "????");
     }
 
     public static <T> ResponseData<T> successData(T data, String msg) {
@@ -87,7 +87,7 @@ public class ResponseData<T> {
     }
 
     public static <T> ResponseData<T> errorData(int code) {
-        return new ResponseData(false, code, null, "请求失败");
+        return new ResponseData(false, code, null, "????");
     }
 }
 

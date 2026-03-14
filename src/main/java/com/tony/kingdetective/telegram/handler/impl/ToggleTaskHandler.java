@@ -57,11 +57,11 @@ public class ToggleTaskHandler extends AbstractCallbackHandler {
         try {
             telegramClient.execute(AnswerCallbackQuery.builder()
                     .callbackQueryId(callbackQuery.getId())
-                    .text(isSelected ? "已选中" : "已取消选中")
+                    .text(isSelected ? "???" : "?????")
                     .showAlert(false)
                     .build());
         } catch (TelegramApiException e) {
-            log.error("回调查询应答失败", e);
+            log.error("????????", e);
         }
         
         // 
@@ -80,7 +80,7 @@ public class ToggleTaskHandler extends AbstractCallbackHandler {
         if (CollectionUtil.isEmpty(taskList)) {
             return buildEditMessage(
                     callbackQuery,
-                    "�"??,
+                    "?"??,
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }
@@ -121,8 +121,8 @@ public class ToggleTaskHandler extends AbstractCallbackHandler {
         // 
         List<OciCreateTask> pageTasks = taskList.subList(startIndex, endIndex);
         
-        StringBuilder message = new StringBuilder("【任务管理】\n\n");
-        message.append(String.format("�?%d 个正在执行的任务，当前第 %d/%d 页：\n\n",
+        StringBuilder message = new StringBuilder("??????\n\n");
+        message.append(String.format("??%d ???????????? %d/%d ??\n\n",
                 taskList.size(), currentPage + 1, totalPages));
         
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
@@ -141,8 +141,8 @@ public class ToggleTaskHandler extends AbstractCallbackHandler {
             
             message.append(String.format(
                     "%s %d. [%s] [%s] [%s]\n" +
-                    "   配置: %s�?%sG/%sG\n" +
-                    "   数量: %s�?| 已运�? %s | 尝试: %s次\n\n",
+                    "   ??: %s??%sG/%sG\n" +
+                    "   ??: %s??| ???? %s | ??: %s?\n\n",
                     isSelected ?" "" : "?,
                     taskNumber,
                     user.getUsername(),
@@ -160,13 +160,13 @@ public class ToggleTaskHandler extends AbstractCallbackHandler {
             if (i % 2 == 0) {
                 InlineKeyboardRow row = new InlineKeyboardRow();
                 row.add(KeyboardBuilder.button(
-                        String.format("%s 任务%d", isSelected ?" "" : "?, taskNumber),
+                        String.format("%s ??%d", isSelected ?" "" : "?, taskNumber),
                         "toggle_task:" + task.getId()
                 ));
                 keyboard.add(row);
             } else {
                 keyboard.get(keyboard.size() - 1).add(KeyboardBuilder.button(
-                        String.format("%s 任务%d", isSelected ?" "" : "?, taskNumber),
+                        String.format("%s ??%d", isSelected ?" "" : "?, taskNumber),
                         "toggle_task:" + task.getId()
                 ));
             }
@@ -184,12 +184,12 @@ public class ToggleTaskHandler extends AbstractCallbackHandler {
         
         // 
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("�"??, "select_all_tasks"),
-                KeyboardBuilder.button("�"??, "deselect_all_tasks")
+                KeyboardBuilder.button("?"??, "select_all_tasks"),
+                KeyboardBuilder.button("?"??, "deselect_all_tasks")
         ));
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("🛑 结束选中的任�"?, "stop_selected_tasks")
+                KeyboardBuilder.button("? ???????"?, "stop_selected_tasks")
         ));
         
         keyboard.add(KeyboardBuilder.buildBackToMainMenuRow());
@@ -245,11 +245,11 @@ class SelectAllTasksHandler extends AbstractCallbackHandler {
         try {
             telegramClient.execute(AnswerCallbackQuery.builder()
                     .callbackQueryId(callbackQuery.getId())
-                    .text(String.format("已全选当前页�"?%d ?, pageTasks.size()))
+                    .text(String.format("???????"?%d ?, pageTasks.size()))
                     .showAlert(false)
                     .build());
         } catch (TelegramApiException e) {
-            log.error("回调查询应答失败", e);
+            log.error("????????", e);
         }
         
         // ?ToggleTaskHandler 
@@ -283,11 +283,11 @@ class DeselectAllTasksHandler extends AbstractCallbackHandler {
         try {
             telegramClient.execute(AnswerCallbackQuery.builder()
                     .callbackQueryId(callbackQuery.getId())
-                    .text("已取消所有选中")
+                    .text("???????")
                     .showAlert(false)
                     .build());
         } catch (TelegramApiException e) {
-            log.error("回调查询应答失败", e);
+            log.error("????????", e);
         }
         
         // ?ToggleTaskHandler 
@@ -321,11 +321,11 @@ class StopSelectedTasksHandler extends AbstractCallbackHandler {
             try {
                 telegramClient.execute(AnswerCallbackQuery.builder()
                         .callbackQueryId(callbackQuery.getId())
-                        .text("请先选择要停止的任务")
+                        .text("??????????")
                         .showAlert(true)
                         .build());
             } catch (TelegramApiException e) {
-                log.error("回调查询应答失败", e);
+                log.error("????????", e);
             }
             return null;
         }
@@ -363,9 +363,9 @@ class StopSelectedTasksHandler extends AbstractCallbackHandler {
         // Build result message
         String resultMessage;
         if (failedCount > 0) {
-            resultMessage = String.format("�"? %d \n? %d ?, successCount, failedCount);
+            resultMessage = String.format("?"? %d \n? %d ?, successCount, failedCount);
         } else {
-            resultMessage = String.format("�"??%d ?, successCount);
+            resultMessage = String.format("?"??%d ?, successCount);
         }
         
         // Answer callback

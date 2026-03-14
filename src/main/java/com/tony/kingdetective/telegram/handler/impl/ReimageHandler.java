@@ -30,7 +30,7 @@ import java.util.concurrent.CompletableFuture;
 /**
  *   (Re-image) Handler
  * 
- *  Telegram  "带 Boot Volume 终止并原地重建"
+ *  Telegram  " Boot Volume "
  * 
  * @author Tony Wang
  */
@@ -61,32 +61,32 @@ public class ReimageHandler extends AbstractCallbackHandler {
         } else if (data.startsWith("reimage_execute:")) {
             return executeReimage(callbackQuery, data.substring("reimage_execute:".length()), telegramClient);
         }
-        return buildEditMessage(callbackQuery, "❌ 未知操作");
+        return buildEditMessage(callbackQuery, "? ????");
     }
 
     private BotApiMethod<? extends Serializable> showAccountList(CallbackQuery callbackQuery) {
         IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
         List<OciUser> users = userService.getEnabledOciUserList();
         if (users == null || users.isEmpty()) {
-            return buildEditMessage(callbackQuery, "❌ 暂无可用账户");
+            return buildEditMessage(callbackQuery, "? ??????");
         }
 
         List<InlineKeyboardRow> rows = new ArrayList<>();
         for (OciUser user : users) {
             rows.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("👤 " + user.getUsername(), "reimage_list:" + user.getId())
+                KeyboardBuilder.button("? " + user.getUsername(), "reimage_list:" + user.getId())
             ));
         }
         rows.add(new InlineKeyboardRow(KeyboardBuilder.buildBackToMainMenuRow()));
 
-        return buildEditMessage(callbackQuery, "🔄 *重建实例 (Re-image)*\n\n请选择要操作的账户：", new InlineKeyboardMarkup(rows));
+        return buildEditMessage(callbackQuery, "? *???? (Re-image)*\n\n??????????", new InlineKeyboardMarkup(rows));
     }
 
     private BotApiMethod<? extends Serializable> showInstanceList(CallbackQuery callbackQuery, String userId) {
         try {
             IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
             OciUser user = userService.getById(userId);
-            if (user == null) return buildEditMessage(callbackQuery, "❌ 账户不存在");
+            if (user == null) return buildEditMessage(callbackQuery, "? ?????");
 
             List<InlineKeyboardRow> rows = new ArrayList<>();
             SysUserDTO dto = buildDto(user);
@@ -99,26 +99,26 @@ public class ReimageHandler extends AbstractCallbackHandler {
                 ).getItems();
 
                 if (instances.isEmpty()) {
-                    return buildEditMessage(callbackQuery, "❌ 该账户下没有实例");
+                    return buildEditMessage(callbackQuery, "? ????????");
                 }
 
-                StringBuilder sb = new StringBuilder("🔄 *选择要重建的实例*\n\n");
+                StringBuilder sb = new StringBuilder("? *????????*\n\n");
                 for (var instance : instances) {
                     if ("TERMINATED".equals(instance.getLifecycleState().getValue()) || 
                         "TERMINATING".equals(instance.getLifecycleState().getValue())) {
                         continue;
                     }
                     rows.add(new InlineKeyboardRow(
-                        KeyboardBuilder.button("🔄 " + instance.getDisplayName(), "reimage_confirm:" + userId + ":" + instance.getId())
+                        KeyboardBuilder.button("? " + instance.getDisplayName(), "reimage_confirm:" + userId + ":" + instance.getId())
                     ));
                 }
-                rows.add(new InlineKeyboardRow(KeyboardBuilder.button("← 返回账户列表", "reimage_select")));
+                rows.add(new InlineKeyboardRow(KeyboardBuilder.button("? ??????", "reimage_select")));
                 rows.add(new InlineKeyboardRow(KeyboardBuilder.buildBackToMainMenuRow()));
                 return buildEditMessage(callbackQuery, sb.toString(), new InlineKeyboardMarkup(rows));
             }
         } catch (Exception e) {
             log.error("Failed to list instances for reimage", e);
-            return buildEditMessage(callbackQuery, "❌ 获取实例列表失败：" + e.getMessage());
+            return buildEditMessage(callbackQuery, "? ?????????" + e.getMessage());
         }
     }
 
@@ -128,12 +128,12 @@ public class ReimageHandler extends AbstractCallbackHandler {
         String instanceId = parts[1];
 
         return buildEditMessage(callbackQuery,
-            "⚠️ *即将重建该实例!*\n\n" +
-            "操作流程：\n" +
-            "1. 终止当前实例（**保留启动卷**）\n" +
-            "2. 使用原启动卷、原网络配置重新拉起一个新实例\n\n" +
-            "❗️**注意**：此操作会导致实例公网 IP 变更，短暂中断服务。\n" +
-            "\n确认继续吗？",
+            "?? *???????!*\n\n" +
+            "?????\n" +
+            "1. ???????**?????**?\n" +
+            "2. ?????????????????????\n\n" +
+            "??**??**??????????? IP ??????????\n" +
+            "\n??????",
             KeyboardBuilder.buildConfirmationKeyboard(
                 "reimage_execute:" + params,
                 "reimage_list:" + userId
@@ -143,13 +143,13 @@ public class ReimageHandler extends AbstractCallbackHandler {
 
     private BotApiMethod<? extends Serializable> executeReimage(CallbackQuery callbackQuery, String params, TelegramClient telegramClient) {
         String[] parts = params.split(":");
-        if (parts.length < 2) return buildEditMessage(callbackQuery, "❌ 参数错误");
+        if (parts.length < 2) return buildEditMessage(callbackQuery, "? ????");
         
         String userId = parts[0];
         String instanceId = parts[1];
         long chatId = callbackQuery.getMessage().getChatId();
 
-        try { telegramClient.execute(buildEditMessage(callbackQuery, "⏳ 正在提交重建任务，时间较长，请稍候...", null)); } catch (Exception ignore) {}
+        try { telegramClient.execute(buildEditMessage(callbackQuery, "? ?????????????????...", null)); } catch (Exception ignore) {}
 
         CompletableFuture.runAsync(() -> doReimage(chatId, userId, instanceId, telegramClient));
         return null;
@@ -160,7 +160,7 @@ public class ReimageHandler extends AbstractCallbackHandler {
             IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
             OciUser user = userService.getById(userId);
             if (user == null) {
-                sendMarkdownMessage(chatId, "❌ 账户不存在", telegramClient);
+                sendMarkdownMessage(chatId, "? ?????", telegramClient);
                 return;
             }
 
@@ -181,7 +181,7 @@ public class ReimageHandler extends AbstractCallbackHandler {
                 String subnetId = vnicAttachments.isEmpty() ? null : vnicAttachments.get(0).getSubnetId();
 
                 if (subnetId == null) {
-                    sendMarkdownMessage(chatId, "❌ 无法获取原子网信息", telegramClient);
+                    sendMarkdownMessage(chatId, "? ?????????", telegramClient);
                     return;
                 }
 
@@ -196,7 +196,7 @@ public class ReimageHandler extends AbstractCallbackHandler {
                 String bootVolumeId = bootVolumeAttachments.isEmpty() ? null : bootVolumeAttachments.get(0).getBootVolumeId();
 
                 if (bootVolumeId == null) {
-                    sendMarkdownMessage(chatId, "❌ 无法获取原实例启动卷信息", telegramClient);
+                    sendMarkdownMessage(chatId, "? ????????????", telegramClient);
                     return;
                 }
 
@@ -208,7 +208,7 @@ public class ReimageHandler extends AbstractCallbackHandler {
                         .build()
                 );
 
-                sendMarkdownMessage(chatId, "⏳ 实例 `" + oldInstance.getDisplayName() + "` 正在终止中，保留了启动卷... (大概需要 1-3 分钟)", telegramClient);
+                sendMarkdownMessage(chatId, "? ?? `" + oldInstance.getDisplayName() + "` ????????????... (???? 1-3 ??)", telegramClient);
 
                 //  ()
                 boolean terminated = false;
@@ -230,7 +230,7 @@ public class ReimageHandler extends AbstractCallbackHandler {
                 }
 
                 if (!terminated) {
-                    sendMarkdownMessage(chatId, "❌ 终止实例超时，请稍后手动重新拉起", telegramClient);
+                    sendMarkdownMessage(chatId, "? ????????????????", telegramClient);
                     return;
                 }
 
@@ -261,11 +261,11 @@ public class ReimageHandler extends AbstractCallbackHandler {
                         .build()
                 );
                 
-                sendMarkdownMessage(chatId, "✅ 原实例终止完毕，已提交同配置同硬盘的新实例重建请求！", telegramClient);
+                sendMarkdownMessage(chatId, "? ??????????????????????????", telegramClient);
             }
         } catch (Exception e) {
             log.error("Failed to reimage instance", e);
-            sendMarkdownMessage(chatId, "❌ 重建操作异常：" + e.getMessage(), telegramClient);
+            sendMarkdownMessage(chatId, "? ???????" + e.getMessage(), telegramClient);
         }
     }
 

@@ -15,17 +15,17 @@ import jakarta.validation.constraints.NotNull;
 @Data
 public class OciAddCfDnsRecordsParams {
 
-    @NotBlank(message = "配置ID不能为空")
+    @NotBlank(message = "??ID????")
     private String cfCfgId;
-//    @NotBlank(message = "域名前缀不能为空")
+//    @NotBlank(message = "")
     private String prefix;
-    @NotBlank(message = "类型不能为空")
+    @NotBlank(message = "??????")
     private String type;
-    @NotBlank(message = "ip地址不能为空")
+    @NotBlank(message = "ip??????")
     private String ipAddress;
-//    @NotNull(message = "是否代理不能为空")
+//    @NotNull(message = "")
     private boolean proxied;
-//    @NotNull(message = "ttl不能为空")
+//    @NotNull(message = "ttl")
 //    @Min(value = 60)
     private Integer ttl;
     private String comment;

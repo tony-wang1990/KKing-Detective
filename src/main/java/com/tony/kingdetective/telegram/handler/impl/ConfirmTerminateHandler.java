@@ -44,7 +44,7 @@ public class ConfirmTerminateHandler extends AbstractCallbackHandler {
             try {
                 telegramClient.execute(AnswerCallbackQuery.builder()
                         .callbackQueryId(callbackQuery.getId())
-                        .text("请先选择要终止的实例")
+                        .text("??????????")
                         .showAlert(true)
                         .build());
             } catch (TelegramApiException e) {
@@ -55,24 +55,24 @@ public class ConfirmTerminateHandler extends AbstractCallbackHandler {
         
         List<InlineKeyboardRow> keyboard = List.of(
                 new InlineKeyboardRow(
-                        KeyboardBuilder.button("�"??, "terminate_instances:true")
+                        KeyboardBuilder.button("?"??, "terminate_instances:true")
                 ),
                 new InlineKeyboardRow(
-                        KeyboardBuilder.button("�?不保留引导卷", "terminate_instances:false")
+                        KeyboardBuilder.button("????????", "terminate_instances:false")
                 ),
                 new InlineKeyboardRow(
-                        KeyboardBuilder.button("◀�?返回", "instance_management:" + storage.getConfigContext(chatId))
+                        KeyboardBuilder.button("?????", "instance_management:" + storage.getConfigContext(chatId))
                 ),
                 KeyboardBuilder.buildCancelRow()
         );
         
         String message = String.format(
-                "【确认终止实例】\n\n" +
-                "⚠️ 您选择�?%d 个实例，即将终止这些实例。\n\n" +
-                "请选择是否保留引导卷：\n" +
-                "�?保留：preserveBootVolume = true\n" +
-                "�?不保留：preserveBootVolume = false\n\n" +
-                "注意：此操作不可逆！",
+                "????????\n\n" +
+                "?? ?????%d ?????????????\n\n" +
+                "???????????\n" +
+                "?????preserveBootVolume = true\n" +
+                "??????preserveBootVolume = false\n\n" +
+                "??????????",
                 selectedInstances.size()
         );
         
@@ -112,7 +112,7 @@ class TerminateSelectedInstancesHandler extends AbstractCallbackHandler {
             try {
                 telegramClient.execute(AnswerCallbackQuery.builder()
                         .callbackQueryId(callbackQuery.getId())
-                        .text("没有选中的实�"?)
+                        .text("???????"?)
                         .showAlert(true)
                         .build());
             } catch (TelegramApiException e) {
@@ -125,7 +125,7 @@ class TerminateSelectedInstancesHandler extends AbstractCallbackHandler {
             try {
                 telegramClient.execute(AnswerCallbackQuery.builder()
                         .callbackQueryId(callbackQuery.getId())
-                        .text("配置上下文丢�"?)
+                        .text("???????"?)
                         .showAlert(true)
                         .build());
             } catch (TelegramApiException e) {
@@ -138,7 +138,7 @@ class TerminateSelectedInstancesHandler extends AbstractCallbackHandler {
         try {
             telegramClient.execute(AnswerCallbackQuery.builder()
                     .callbackQueryId(callbackQuery.getId())
-                    .text("正在终止实例...")
+                    .text("??????...")
                     .showAlert(false)
                     .build());
         } catch (TelegramApiException e) {
@@ -157,11 +157,11 @@ class TerminateSelectedInstancesHandler extends AbstractCallbackHandler {
         
         // Send processing message
         String processingMessage = String.format(
-                "�?正在终止 %d 个实�?..\n\n" +
-                "保留引导卷：%s\n\n" +
-                "请稍候，任务已提�?..",
+                "?????? %d ????..\n\n" +
+                "??????%s\n\n" +
+                "??????????..",
                 selectedInstances.size(),
-                preserveBootVolume ? "�? : "?
+                preserveBootVolume ? "?? : "?
         );
         
         try {
@@ -225,13 +225,13 @@ class TerminateSelectedInstancesHandler extends AbstractCallbackHandler {
             // Build result message
             if (failedCount > 0) {
                 resultMessage.append(String.format(
-                        "�?成功下发终止实例任务，终�?%d 个实例\n�?失败 %d 个实例，请稍后刷新列表查看~\n\n保留引导卷：%s",
-                        successCount, failedCount, preserveBootVolume ? "�? : "?
+                        "????????????????%d ???\n???? %d ?????????????~\n\n??????%s",
+                        successCount, failedCount, preserveBootVolume ? "?? : "?
                 ));
             } else {
                 resultMessage.append(String.format(
-                        "�?已成功下发终�?%d 个实例任务！请稍后刷新列表查看~\n\n保留引导卷：%s",
-                        successCount, preserveBootVolume ? "�? : "?
+                        "??????????%d ???????????????~\n\n??????%s",
+                        successCount, preserveBootVolume ? "?? : "?
                 ));
             }
             

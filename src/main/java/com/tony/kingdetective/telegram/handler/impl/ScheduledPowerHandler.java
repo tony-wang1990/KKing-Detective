@@ -62,29 +62,29 @@ public class ScheduledPowerHandler extends AbstractCallbackHandler {
         } else if (data.startsWith("scheduled_power_custom:")) {
             return startCustomTimeInput(callbackQuery, data.substring("scheduled_power_custom:".length()));
         }
-        return buildEditMessage(callbackQuery, "❌ 未知操作");
+        return buildEditMessage(callbackQuery, "? ????");
     }
 
     private BotApiMethod<? extends Serializable> showAccountList(CallbackQuery callbackQuery) {
         IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
         List<OciUser> users = userService.getEnabledOciUserList();
-        if (users == null || users.isEmpty()) return buildEditMessage(callbackQuery, "❌ 暂无可用账户");
+        if (users == null || users.isEmpty()) return buildEditMessage(callbackQuery, "? ??????");
 
         List<InlineKeyboardRow> rows = new ArrayList<>();
         for (OciUser user : users) {
             rows.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("👤 " + user.getUsername(), "scheduled_power_list:" + user.getId())
+                KeyboardBuilder.button("? " + user.getUsername(), "scheduled_power_list:" + user.getId())
             ));
         }
         rows.add(new InlineKeyboardRow(KeyboardBuilder.buildBackToMainMenuRow()));
-        return buildEditMessage(callbackQuery, "⏰ *定时开关机*\n\n请选择要操作的账户：", new InlineKeyboardMarkup(rows));
+        return buildEditMessage(callbackQuery, "? *?????*\n\n??????????", new InlineKeyboardMarkup(rows));
     }
 
     private BotApiMethod<? extends Serializable> showInstanceList(CallbackQuery callbackQuery, String userId) {
         try {
             IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
             OciUser user = userService.getById(userId);
-            if (user == null) return buildEditMessage(callbackQuery, "❌ 账户不存在");
+            if (user == null) return buildEditMessage(callbackQuery, "? ?????");
 
             IOciKvService kvService = SpringUtil.getBean(IOciKvService.class);
 
@@ -94,9 +94,9 @@ public class ScheduledPowerHandler extends AbstractCallbackHandler {
                         .compartmentId(fetcher.getCompartmentId())
                         .build()
                 ).getItems();
-                if (instances.isEmpty()) return buildEditMessage(callbackQuery, "❌ 该账户下无可用实例");
+                if (instances.isEmpty()) return buildEditMessage(callbackQuery, "? ?????????");
 
-                StringBuilder sb = new StringBuilder("⏰ *选择实例设置定时任务*\n\n");
+                StringBuilder sb = new StringBuilder("? *??????????*\n\n");
                 List<InlineKeyboardRow> rows = new ArrayList<>();
                 
                 for (var inst : instances) {
@@ -104,20 +104,20 @@ public class ScheduledPowerHandler extends AbstractCallbackHandler {
                     
                     String key = KV_KEY_PREFIX + inst.getId();
                     OciKv cfg = kvService.getOne(new LambdaQueryWrapper<OciKv>().eq(OciKv::getCode, key));
-                    String status = cfg != null ? " [已配]" : "";
+                    String status = cfg != null ? " [??]" : "";
                     
                     rows.add(new InlineKeyboardRow(
-                        KeyboardBuilder.button("⏰ " + inst.getDisplayName() + status, "scheduled_power_config:" + userId + ":" + inst.getId())
+                        KeyboardBuilder.button("? " + inst.getDisplayName() + status, "scheduled_power_config:" + userId + ":" + inst.getId())
                     ));
                 }
 
-                rows.add(new InlineKeyboardRow(KeyboardBuilder.button("← 返回账户列表", "scheduled_power_management")));
+                rows.add(new InlineKeyboardRow(KeyboardBuilder.button("? ??????", "scheduled_power_management")));
                 rows.add(new InlineKeyboardRow(KeyboardBuilder.buildBackToMainMenuRow()));
                 return buildEditMessage(callbackQuery, sb.toString(), new InlineKeyboardMarkup(rows));
             }
         } catch (Exception e) {
             log.error("Failed to list instances for schedule", e);
-            return buildEditMessage(callbackQuery, "❌ 获取实例失败：" + e.getMessage());
+            return buildEditMessage(callbackQuery, "? ???????" + e.getMessage());
         }
     }
 
@@ -130,30 +130,30 @@ public class ScheduledPowerHandler extends AbstractCallbackHandler {
         String key = KV_KEY_PREFIX + instanceId;
         OciKv cfg = kvService.getOne(new LambdaQueryWrapper<OciKv>().eq(OciKv::getCode, key));
 
-        String currentCfg = cfg != null ? cfg.getValue() : "未配置";
+        String currentCfg = cfg != null ? cfg.getValue() : "???";
         
         List<InlineKeyboardRow> rows = new ArrayList<>();
         rows.add(new InlineKeyboardRow(
-            KeyboardBuilder.button("🌙 晚1关，早8开 (停7h)", "scheduled_power_set:" + userId + ":" + instanceId + ":01|08")
+            KeyboardBuilder.button("? ?1???8? (?7h)", "scheduled_power_set:" + userId + ":" + instanceId + ":01|08")
         ));
         rows.add(new InlineKeyboardRow(
-            KeyboardBuilder.button("🌙 晚2关，早9开 (停7h)", "scheduled_power_set:" + userId + ":" + instanceId + ":02|09")
+            KeyboardBuilder.button("? ?2???9? (?7h)", "scheduled_power_set:" + userId + ":" + instanceId + ":02|09")
         ));
         rows.add(new InlineKeyboardRow(
-            KeyboardBuilder.button("🕑 晚23关，早7开", "scheduled_power_set:" + userId + ":" + instanceId + ":23|07")
+            KeyboardBuilder.button("? ?23???7?", "scheduled_power_set:" + userId + ":" + instanceId + ":23|07")
         ));
         rows.add(new InlineKeyboardRow(
-            KeyboardBuilder.button("✏️ 自定义时间 (输入)", "scheduled_power_custom:" + userId + ":" + instanceId)
+            KeyboardBuilder.button("?? ????? (??)", "scheduled_power_custom:" + userId + ":" + instanceId)
         ));
         rows.add(new InlineKeyboardRow(
-            KeyboardBuilder.button("🗑️ 清除定时任务", "scheduled_power_set:" + userId + ":" + instanceId + ":clear")
+            KeyboardBuilder.button("?? ??????", "scheduled_power_set:" + userId + ":" + instanceId + ":clear")
         ));
-        rows.add(new InlineKeyboardRow(KeyboardBuilder.button("← 返回实例列表", "scheduled_power_list:" + userId)));
+        rows.add(new InlineKeyboardRow(KeyboardBuilder.button("? ??????", "scheduled_power_list:" + userId)));
 
         return buildEditMessage(callbackQuery, 
-            "⏰ *定时开关机配置*\n\n" +
-            "当前配置：`" + currentCfg + "`\n\n" +
-            "说明：时间为 UTC+8 时区（小时）。选择预设或自定义输入（格式 `HH|HH`，如 `01|08` 表示 01:00 关机、08:00 开机）。",
+            "? *???????*\n\n" +
+            "?????`" + currentCfg + "`\n\n" +
+            "?????? UTC+8 ???????????????????? `HH|HH`?? `01|08` ?? 01:00 ???08:00 ????",
             new InlineKeyboardMarkup(rows)
         );
     }
@@ -171,9 +171,9 @@ public class ScheduledPowerHandler extends AbstractCallbackHandler {
             
             if ("clear".equals(action)) {
                 kvService.remove(wrapper);
-                return buildEditMessage(callbackQuery, "✅ 定时任务已清除！",
+                return buildEditMessage(callbackQuery, "? ????????",
                     KeyboardBuilder.fromRows(List.of(
-                        new InlineKeyboardRow(KeyboardBuilder.button("← 返回", "scheduled_power_config:" + userId + ":" + instanceId))
+                        new InlineKeyboardRow(KeyboardBuilder.button("? ??", "scheduled_power_config:" + userId + ":" + instanceId))
                     ))
                 );
             } else {
@@ -193,15 +193,15 @@ public class ScheduledPowerHandler extends AbstractCallbackHandler {
                     kvService.save(cfg);
                 }
 
-                return buildEditMessage(callbackQuery, "✅ 定时任务配置成功！\n\n设定为：\n- 每日 `" + times[0] + ":00` 关机\n- 每日 `" + times[1] + ":00` 开机",
+                return buildEditMessage(callbackQuery, "? ?????????\n\n????\n- ?? `" + times[0] + ":00` ??\n- ?? `" + times[1] + ":00` ??",
                     KeyboardBuilder.fromRows(List.of(
-                        new InlineKeyboardRow(KeyboardBuilder.button("← 返回", "scheduled_power_config:" + userId + ":" + instanceId))
+                        new InlineKeyboardRow(KeyboardBuilder.button("? ??", "scheduled_power_config:" + userId + ":" + instanceId))
                     ))
                 );
             }
         } catch (Exception e) {
             log.error("Failed to set schedule", e);
-            return buildEditMessage(callbackQuery, "❌ 配置失败：" + e.getMessage());
+            return buildEditMessage(callbackQuery, "? ?????" + e.getMessage());
         }
     }
 
@@ -220,12 +220,12 @@ public class ScheduledPowerHandler extends AbstractCallbackHandler {
             com.tony.kingdetective.telegram.storage.ConfigSessionStorage.SessionType.SCHEDULED_POWER_INPUT, data);
 
         return buildEditMessage(callbackQuery,
-            "⏰ *自定义定时开关机*\n\n" +
-            "请直接发送时间配置，格式：`关机小时|开机小时`\n\n" +
-            "示例：\n" +
-            "`01|08` → 每日 01:00 关机，08:00 开机\n" +
-            "`22|06` → 每日 22:00 关机，06:00 开机\n\n" +
-            "💡 时区为 UTC+8，小时范围 00-23。发送 /cancel 取消。"
+            "? *????????*\n\n" +
+            "?????????????`????|????`\n\n" +
+            "???\n" +
+            "`01|08` ? ?? 01:00 ???08:00 ??\n" +
+            "`22|06` ? ?? 22:00 ???06:00 ??\n\n" +
+            "? ??? UTC+8????? 00-23??? /cancel ???"
         );
     }
 

@@ -15,15 +15,15 @@ import jakarta.validation.constraints.NotNull;
 @Data
 public class TerminateInstanceParams {
 
-    @NotBlank(message = "配置id不能为空")
+    @NotBlank(message = "??id????")
     private String ociCfgId;
 
-    @NotBlank(message = "实例id不能为空")
+    @NotBlank(message = "??id????")
     private String instanceId;
 
-    @NotNull(message = "是否保留引导卷不能为空")
+    @NotNull(message = "???????????")
     private Integer preserveBootVolume;
 
-    @NotBlank(message = "验证码不能为空")
+    @NotBlank(message = "???????")
     private String captcha;
 }

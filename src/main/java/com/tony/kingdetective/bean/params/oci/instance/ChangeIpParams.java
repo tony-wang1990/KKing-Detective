@@ -17,18 +17,18 @@ import java.util.List;
 @Data
 public class ChangeIpParams {
 
-    @NotBlank(message = "配置id不能为空")
+    @NotBlank(message = "??id????")
     private String ociCfgId;
 
-    @NotBlank(message = "实例id不能为空")
+    @NotBlank(message = "??id????")
     private String instanceId;
 
     private List<String> cidrList;
 
-    @NotBlank(message = "vnicId不能为空")
+    @NotBlank(message = "vnicId????")
     private String vnicId;
 
-    @NotNull(message = "是否更新 Cloudflare DNS 记录不能为空")
+    @NotNull(message = "???? Cloudflare DNS ??????")
     private boolean changeCfDns;
     private String domainPrefix;
     private String selectedDomainCfgId;

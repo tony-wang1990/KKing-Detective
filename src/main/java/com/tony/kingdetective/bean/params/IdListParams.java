@@ -16,6 +16,6 @@ import java.util.List;
 @Data
 public class IdListParams {
 
-    @NotEmpty(message = "id不能为空")
+    @NotEmpty(message = "id????")
     private List<String> idList;
 }

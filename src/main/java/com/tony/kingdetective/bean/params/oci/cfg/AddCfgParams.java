@@ -17,12 +17,12 @@ import jakarta.validation.constraints.NotNull;
 @Data
 public class AddCfgParams {
 
-    @NotBlank(message = "配置名称不能为空")
+    @NotBlank(message = "????????")
     private String username;
 
-    @NotBlank(message = "配置不能为空")
+    @NotBlank(message = "??????")
     private String ociCfgStr;
 
-    @NotNull(message = "私钥不能为空")
+    @NotNull(message = "??????")
     private MultipartFile file;
 }

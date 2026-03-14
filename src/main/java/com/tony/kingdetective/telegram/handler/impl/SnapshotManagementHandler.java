@@ -71,7 +71,7 @@ public class SnapshotManagementHandler extends AbstractCallbackHandler {
         } else if (data.startsWith("snapshot_delete:")) {
             return deleteSnapshot(callbackQuery, data.substring("snapshot_delete:".length()), telegramClient);
         }
-        return buildEditMessage(callbackQuery, "❌ 未知操作");
+        return buildEditMessage(callbackQuery, "? ????");
     }
 
     //  Step 1:  
@@ -79,20 +79,20 @@ public class SnapshotManagementHandler extends AbstractCallbackHandler {
         IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
         List<OciUser> users = userService.getEnabledOciUserList();
         if (users == null || users.isEmpty()) {
-            return buildEditMessage(callbackQuery, "❌ 暂无可用账户，请先添加 OCI 账户");
+            return buildEditMessage(callbackQuery, "? ??????????? OCI ??");
         }
 
         List<InlineKeyboardRow> rows = new ArrayList<>();
         for (OciUser user : users) {
             rows.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("👤 " + user.getUsername() + " (" + user.getOciRegion() + ")",
+                KeyboardBuilder.button("? " + user.getUsername() + " (" + user.getOciRegion() + ")",
                     "snapshot_instances:" + user.getId())
             ));
         }
         rows.add(new InlineKeyboardRow(KeyboardBuilder.buildBackToMainMenuRow()));
 
         return buildEditMessage(callbackQuery,
-            "📸 *实例快照管理*\n\n请选择要管理快照的账户：",
+            "? *??????*\n\n????????????",
             new InlineKeyboardMarkup(rows)
         );
     }
@@ -102,11 +102,11 @@ public class SnapshotManagementHandler extends AbstractCallbackHandler {
         try {
             IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
             OciUser user = userService.getById(userId);
-            if (user == null) return buildEditMessage(callbackQuery, "❌ 账户不存在");
+            if (user == null) return buildEditMessage(callbackQuery, "? ?????");
 
             SysUserDTO dto = buildSysUserDTO(user);
             List<InlineKeyboardRow> rows = new ArrayList<>();
-            StringBuilder sb = new StringBuilder("📸 *选择实例*（账户：" + user.getUsername() + "）\n\n");
+            StringBuilder sb = new StringBuilder("? *????*????" + user.getUsername() + "?\n\n");
 
             try (OracleInstanceFetcher fetcher = new OracleInstanceFetcher(dto)) {
                 var instances = fetcher.getComputeClient().listInstances(
@@ -116,7 +116,7 @@ public class SnapshotManagementHandler extends AbstractCallbackHandler {
                 ).getItems();
 
                 if (instances.isEmpty()) {
-                    return buildEditMessage(callbackQuery, "❌ 该账户下没有实例");
+                    return buildEditMessage(callbackQuery, "? ????????");
                 }
 
                 for (var inst : instances) {
@@ -135,23 +135,23 @@ public class SnapshotManagementHandler extends AbstractCallbackHandler {
                     if (bvAttachments.isEmpty()) continue;
                     String bootVolumeId = bvAttachments.get(0).getBootVolumeId();
 
-                    sb.append("🖥️ `").append(inst.getDisplayName()).append("` — ").append(state).append("\n");
+                    sb.append("?? `").append(inst.getDisplayName()).append("` ? ").append(state).append("\n");
                     // callback: snapshot_list:<userId>:<instanceId>:<bootVolumeId>
                     rows.add(new InlineKeyboardRow(
                         KeyboardBuilder.button(
-                            "📸 " + truncateName(inst.getDisplayName()),
+                            "? " + truncateName(inst.getDisplayName()),
                             "snapshot_list:" + userId + ":" + inst.getId() + ":" + bootVolumeId
                         )
                     ));
                 }
             }
 
-            rows.add(new InlineKeyboardRow(KeyboardBuilder.button("← 返回账户列表", "snapshot_management")));
+            rows.add(new InlineKeyboardRow(KeyboardBuilder.button("? ??????", "snapshot_management")));
             rows.add(new InlineKeyboardRow(KeyboardBuilder.buildBackToMainMenuRow()));
             return buildEditMessage(callbackQuery, sb.toString(), new InlineKeyboardMarkup(rows));
         } catch (Exception e) {
             log.error("Failed to list instances for snapshot", e);
-            return buildEditMessage(callbackQuery, "❌ 获取实例列表失败：" + e.getMessage());
+            return buildEditMessage(callbackQuery, "? ?????????" + e.getMessage());
         }
     }
 
@@ -159,7 +159,7 @@ public class SnapshotManagementHandler extends AbstractCallbackHandler {
     private BotApiMethod<? extends Serializable> showSnapshotList(CallbackQuery callbackQuery, String params) {
         // params = <userId>:<instanceId>:<bootVolumeId>
         String[] parts = params.split(":", 3);
-        if (parts.length < 3) return buildEditMessage(callbackQuery, "❌ 参数格式错误");
+        if (parts.length < 3) return buildEditMessage(callbackQuery, "? ??????");
         String userId = parts[0];
         String instanceId = parts[1];
         String bootVolumeId = parts[2];
@@ -167,7 +167,7 @@ public class SnapshotManagementHandler extends AbstractCallbackHandler {
         try {
             IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
             OciUser user = userService.getById(userId);
-            if (user == null) return buildEditMessage(callbackQuery, "❌ 账户不存在");
+            if (user == null) return buildEditMessage(callbackQuery, "? ?????");
 
             SysUserDTO sysUserDTO = buildSysUserDTO(user);
 
@@ -187,35 +187,35 @@ public class SnapshotManagementHandler extends AbstractCallbackHandler {
 
                 //  bootVolumeId
                 rows.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("➕ 创建新快照", "snapshot_create:" + userId + ":" + bootVolumeId)
+                    KeyboardBuilder.button("? ?????", "snapshot_create:" + userId + ":" + bootVolumeId)
                 ));
 
                 if (backups.isEmpty()) {
-                    rows.add(new InlineKeyboardRow(KeyboardBuilder.button("← 返回实例列表", "snapshot_instances:" + userId)));
+                    rows.add(new InlineKeyboardRow(KeyboardBuilder.button("? ??????", "snapshot_instances:" + userId)));
                     rows.add(new InlineKeyboardRow(KeyboardBuilder.buildBackToMainMenuRow()));
-                    return buildEditMessage(callbackQuery, "📸 *快照列表*\n\n该实例暂无快照", new InlineKeyboardMarkup(rows));
+                    return buildEditMessage(callbackQuery, "? *????*\n\n???????", new InlineKeyboardMarkup(rows));
                 }
 
-                StringBuilder sb = new StringBuilder("📸 *快照列表*\n\n");
+                StringBuilder sb = new StringBuilder("? *????*\n\n");
                 int i = 1;
                 for (BootVolumeBackup backup : backups) {
                     sb.append(i++).append(". `").append(truncateName(backup.getDisplayName())).append("`\n")
-                      .append("   状态：").append(stateEmoji(backup.getLifecycleState().getValue()))
-                      .append(" | 大小：").append(backup.getSizeInGBs() != null ? backup.getSizeInGBs() + "GB" : "N/A").append("\n");
+                      .append("   ???").append(stateEmoji(backup.getLifecycleState().getValue()))
+                      .append(" | ???").append(backup.getSizeInGBs() != null ? backup.getSizeInGBs() + "GB" : "N/A").append("\n");
 
                     rows.add(new InlineKeyboardRow(
-                        KeyboardBuilder.button("🗑️ 删除 " + truncateName(backup.getDisplayName()),
+                        KeyboardBuilder.button("?? ?? " + truncateName(backup.getDisplayName()),
                             "snapshot_delete_confirm:" + backup.getId())
                     ));
                 }
-                rows.add(new InlineKeyboardRow(KeyboardBuilder.button("← 返回实例列表", "snapshot_instances:" + userId)));
+                rows.add(new InlineKeyboardRow(KeyboardBuilder.button("? ??????", "snapshot_instances:" + userId)));
                 rows.add(new InlineKeyboardRow(KeyboardBuilder.buildBackToMainMenuRow()));
 
                 return buildEditMessage(callbackQuery, sb.toString(), new InlineKeyboardMarkup(rows));
             }
         } catch (Exception e) {
             log.error("Failed to list snapshots", e);
-            return buildEditMessage(callbackQuery, "❌ 获取快照列表失败：" + e.getMessage());
+            return buildEditMessage(callbackQuery, "? ?????????" + e.getMessage());
         }
     }
 
@@ -223,14 +223,14 @@ public class SnapshotManagementHandler extends AbstractCallbackHandler {
     private BotApiMethod<? extends Serializable> createSnapshot(CallbackQuery callbackQuery, String params, TelegramClient telegramClient) {
         // params = <userId>:<bootVolumeId>
         String[] parts = params.split(":", 2);
-        if (parts.length < 2) return buildEditMessage(callbackQuery, "❌ 参数错误");
+        if (parts.length < 2) return buildEditMessage(callbackQuery, "? ????");
         String userId = parts[0];
         String bootVolumeId = parts[1];
 
         try {
             IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
             OciUser user = userService.getById(userId);
-            if (user == null) return buildEditMessage(callbackQuery, "❌ 账户不存在");
+            if (user == null) return buildEditMessage(callbackQuery, "? ?????");
 
             String snapshotName = "bot-snapshot-" + System.currentTimeMillis();
 
@@ -249,27 +249,27 @@ public class SnapshotManagementHandler extends AbstractCallbackHandler {
             }
 
             return buildEditMessage(callbackQuery,
-                "✅ *快照创建任务已提交*\n\n" +
-                "快照名称：`" + snapshotName + "`\n" +
-                "账户：" + user.getUsername() + "\n\n" +
-                "⏳ 快照创建需要几分钟，完成后可在快照列表中查看。",
+                "? *?????????*\n\n" +
+                "?????`" + snapshotName + "`\n" +
+                "???" + user.getUsername() + "\n\n" +
+                "? ???????????????????????",
                 KeyboardBuilder.fromRows(List.of(
-                    new InlineKeyboardRow(KeyboardBuilder.button("← 返回实例列表", "snapshot_instances:" + userId)),
+                    new InlineKeyboardRow(KeyboardBuilder.button("? ??????", "snapshot_instances:" + userId)),
                     new InlineKeyboardRow(KeyboardBuilder.buildBackToMainMenuRow())
                 ))
             );
         } catch (Exception e) {
             log.error("Failed to create snapshot", e);
-            return buildEditMessage(callbackQuery, "❌ 创建快照失败：" + e.getMessage());
+            return buildEditMessage(callbackQuery, "? ???????" + e.getMessage());
         }
     }
 
     //  Step 5:  
     private BotApiMethod<? extends Serializable> confirmDelete(CallbackQuery callbackQuery, String backupId) {
         return buildEditMessage(callbackQuery,
-            "⚠️ *确认删除快照？*\n\n" +
-            "快照 ID：`" + truncateName(backupId) + "`\n\n" +
-            "此操作不可撤销！",
+            "?? *???????*\n\n" +
+            "?? ID?`" + truncateName(backupId) + "`\n\n" +
+            "????????",
             KeyboardBuilder.buildConfirmationKeyboard(
                 "snapshot_delete:" + backupId,
                 "cancel"
@@ -291,18 +291,18 @@ public class SnapshotManagementHandler extends AbstractCallbackHandler {
                             .build()
                     );
                     return buildEditMessage(callbackQuery,
-                        "✅ *快照已删除*",
+                        "? *?????*",
                         KeyboardBuilder.fromRows(List.of(
-                            new InlineKeyboardRow(KeyboardBuilder.button("← 返回账户列表", "snapshot_management")),
+                            new InlineKeyboardRow(KeyboardBuilder.button("? ??????", "snapshot_management")),
                             new InlineKeyboardRow(KeyboardBuilder.buildBackToMainMenuRow())
                         ))
                     );
                 } catch (Exception ignore) {}
             }
-            return buildEditMessage(callbackQuery, "❌ 删除失败：找不到对应快照");
+            return buildEditMessage(callbackQuery, "? ????????????");
         } catch (Exception e) {
             log.error("Failed to delete snapshot: {}", backupId, e);
-            return buildEditMessage(callbackQuery, "❌ 删除失败：" + e.getMessage());
+            return buildEditMessage(callbackQuery, "? ?????" + e.getMessage());
         }
     }
 
@@ -326,11 +326,11 @@ public class SnapshotManagementHandler extends AbstractCallbackHandler {
 
     private String stateEmoji(String state) {
         return switch (state) {
-            case "AVAILABLE" -> "✅ 可用";
-            case "CREATING"  -> "⏳ 创建中";
-            case "DELETING"  -> "🗑️ 删除中";
-            case "DELETED"   -> "❌ 已删除";
-            case "FAULTY"    -> "⚠️ 异常";
+            case "AVAILABLE" -> "? ??";
+            case "CREATING"  -> "? ???";
+            case "DELETING"  -> "?? ???";
+            case "DELETED"   -> "? ???";
+            case "FAULTY"    -> "?? ??";
             default          -> state;
         };
     }

@@ -52,7 +52,7 @@ public class AlertEmailHandler extends AbstractCallbackHandler {
         } else if (data.equals("alert_email_del")) {
             return deleteEmail(callbackQuery, telegramClient);
         }
-        return buildEditMessage(callbackQuery, "❌ 未知操作");
+        return buildEditMessage(callbackQuery, "? ????");
     }
 
     private BotApiMethod<? extends Serializable> showEmailConfig(CallbackQuery callbackQuery) {
@@ -61,16 +61,16 @@ public class AlertEmailHandler extends AbstractCallbackHandler {
         wrapper.eq(OciKv::getCode, "sys-alert-email");
         OciKv emailConfig = kvService.getOne(wrapper);
 
-        String currentEmail = emailConfig != null ? emailConfig.getValue() : "未配置";
+        String currentEmail = emailConfig != null ? emailConfig.getValue() : "???";
 
         return buildEditMessage(callbackQuery,
-            "📧 *告警邮件设置*\n\n" +
-            "当系统触发重要告警（如实例死机、IP被封）时，除 Telegram 消息外，还将向此邮箱发送通知。\n\n" +
-            "📌 当前接收邮箱：`" + currentEmail + "`",
+            "? *??????*\n\n" +
+            "????????????????IP?????? Telegram ???????????????\n\n" +
+            "? ???????`" + currentEmail + "`",
             KeyboardBuilder.fromRows(List.of(
                 new InlineKeyboardRow(
-                    KeyboardBuilder.button("➕ 配置新邮箱", "alert_email_add"),
-                    KeyboardBuilder.button("🗑️ 删除配置", "alert_email_del")
+                    KeyboardBuilder.button("? ?????", "alert_email_add"),
+                    KeyboardBuilder.button("?? ????", "alert_email_del")
                 ),
                 new InlineKeyboardRow(KeyboardBuilder.buildBackToMainMenuRow())
             ))
@@ -83,9 +83,9 @@ public class AlertEmailHandler extends AbstractCallbackHandler {
         storage.startCustomSession(chatId, ConfigSessionStorage.SessionType.ALERT_EMAIL_INPUT, new HashMap<>());
 
         return buildEditMessage(callbackQuery,
-            "📧 *配置告警邮箱*\n\n" +
-            "请直接发送需要接收告警邮件的邮箱地址（如 `admin@example.com`）：\n\n" +
-            "发送 /cancel 可取消"
+            "? *??????*\n\n" +
+            "???????????????????? `admin@example.com`??\n\n" +
+            "?? /cancel ???"
         );
     }
 
@@ -97,15 +97,15 @@ public class AlertEmailHandler extends AbstractCallbackHandler {
             kvService.remove(wrapper);
 
             return buildEditMessage(callbackQuery,
-                "✅ *告警邮箱已清除*",
+                "? *???????*",
                 KeyboardBuilder.fromRows(List.of(
-                    new InlineKeyboardRow(KeyboardBuilder.button("← 返回邮件设置", "alert_email_management")),
+                    new InlineKeyboardRow(KeyboardBuilder.button("? ??????", "alert_email_management")),
                     new InlineKeyboardRow(KeyboardBuilder.buildBackToMainMenuRow())
                 ))
             );
         } catch (Exception e) {
             log.error("Failed to delete alert email", e);
-            return buildEditMessage(callbackQuery, "❌ 删除失败：" + e.getMessage());
+            return buildEditMessage(callbackQuery, "? ?????" + e.getMessage());
         }
     }
 }

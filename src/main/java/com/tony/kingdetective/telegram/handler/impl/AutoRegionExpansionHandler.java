@@ -47,21 +47,21 @@ public class AutoRegionExpansionHandler extends AbstractCallbackHandler {
             if (CollectionUtil.isEmpty(users)) {
                 return buildEditMessage(
                         callbackQuery,
-                        "❌ 未找到任何 OCI 配置",
+                        "? ????? OCI ??",
                         new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
                 );
             }
             
             StringBuilder message = new StringBuilder();
-            message.append("【自动拓展子区域】\n\n");
-            message.append("请选择要拓展的账户：\n\n");
+            message.append("?????????\n\n");
+            message.append("??????????\n\n");
             
             List<InlineKeyboardRow> keyboard = new ArrayList<>();
             
             for (SysUserDTO user : users) {
                 message.append(String.format(
-                        "📌 %s\n" +
-                        "   当前区域: %s\n\n",
+                        "? %s\n" +
+                        "   ????: %s\n\n",
                         user.getUsername(),
                         user.getOciCfg().getRegion()
                 ));
@@ -75,7 +75,7 @@ public class AutoRegionExpansionHandler extends AbstractCallbackHandler {
             }
             
             keyboard.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("🌍 全部账户", "region_expand_all")
+                    KeyboardBuilder.button("? ????", "region_expand_all")
             ));
             
             keyboard.add(KeyboardBuilder.buildBackToMainMenuRow());
@@ -91,7 +91,7 @@ public class AutoRegionExpansionHandler extends AbstractCallbackHandler {
             log.error("Failed to list accounts for region expansion", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 获取账户列表失败: " + e.getMessage(),
+                    "? ????????: " + e.getMessage(),
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }
@@ -142,15 +142,15 @@ class RegionExpandHandler extends AbstractCallbackHandler {
                         .collect(Collectors.toList());
                 
                 StringBuilder message = new StringBuilder();
-                message.append(String.format("【%s - 区域拓展】\n\n", user.getUsername()));
-                message.append(String.format("已订阅: %d 个区域\n", subscribedRegions.size()));
-                message.append(String.format("可拓展: %d 个区域\n\n", unsubscribedRegions.size()));
+                message.append(String.format("?%s - ?????\n\n", user.getUsername()));
+                message.append(String.format("???: %d ???\n", subscribedRegions.size()));
+                message.append(String.format("???: %d ???\n\n", unsubscribedRegions.size()));
                 
                 if (unsubscribedRegions.isEmpty()) {
-                    message.append("✅ 已订阅所有可用区域\n\n");
-                    message.append("当前订阅区域:\n");
+                    message.append("? ?????????\n\n");
+                    message.append("??????:\n");
                     for (String region : subscribedRegions) {
-                        message.append(String.format("  • %s\n", region));
+                        message.append(String.format("  ? %s\n", region));
                     }
                     
                     return buildEditMessage(
@@ -158,34 +158,34 @@ class RegionExpandHandler extends AbstractCallbackHandler {
                             message.toString(),
                             new InlineKeyboardMarkup(List.of(
                                     new InlineKeyboardRow(
-                                            KeyboardBuilder.button("◀️ 返回", "auto_region_expansion")
+                                            KeyboardBuilder.button("?? ??", "auto_region_expansion")
                                     ),
                                     KeyboardBuilder.buildCancelRow()
                             ))
                     );
                 }
                 
-                message.append("可拓展的区域:\n");
+                message.append("??????:\n");
                 for (Region region : unsubscribedRegions) {
-                    message.append(String.format("  • %s (%s)\n", region.getName(), region.getKey()));
+                    message.append(String.format("  ? %s (%s)\n", region.getName(), region.getKey()));
                 }
                 
-                message.append("\n⚠️ 注意:\n");
-                message.append("• 订阅新区域是自动完成的\n");
-                message.append("• Oracle会自动订阅新区域\n");
-                message.append("• 无需手动操作\n");
-                message.append("• 某些区域可能有限制\n\n");
-                message.append("💡 Oracle通常会自动为账户订阅新上线的区域");
+                message.append("\n?? ??:\n");
+                message.append("? ???????????\n");
+                message.append("? Oracle????????\n");
+                message.append("? ??????\n");
+                message.append("? ?????????\n\n");
+                message.append("? Oracle????????????????");
                 
                 return buildEditMessage(
                         callbackQuery,
                         message.toString(),
                         new InlineKeyboardMarkup(List.of(
                                 new InlineKeyboardRow(
-                                        KeyboardBuilder.button("🔄 刷新状态", "region_expand:" + ociCfgId)
+                                        KeyboardBuilder.button("? ????", "region_expand:" + ociCfgId)
                                 ),
                                 new InlineKeyboardRow(
-                                        KeyboardBuilder.button("◀️ 返回", "auto_region_expansion")
+                                        KeyboardBuilder.button("?? ??", "auto_region_expansion")
                                 ),
                                 KeyboardBuilder.buildCancelRow()
                         ))
@@ -196,10 +196,10 @@ class RegionExpandHandler extends AbstractCallbackHandler {
             log.error("Failed to expand regions", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 查询区域失败: " + e.getMessage(),
+                    "? ??????: " + e.getMessage(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "auto_region_expansion")
+                                    KeyboardBuilder.button("?? ??", "auto_region_expansion")
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -228,7 +228,7 @@ class RegionExpandAllHandler extends AbstractCallbackHandler {
             List<SysUserDTO> users = sysService.list();
             
             StringBuilder message = new StringBuilder();
-            message.append("【全部账户区域拓展】\n\n");
+            message.append("??????????\n\n");
             
             int totalSubscribed = 0;
             int totalUnsubscribed = 0;
@@ -258,9 +258,9 @@ class RegionExpandAllHandler extends AbstractCallbackHandler {
                     totalSubscribed += subscribedCount;
                     totalUnsubscribed += unsubscribedCount;
                     
-                    String status = unsubscribedCount == 0 ? "✅" : "⚠️";
+                    String status = unsubscribedCount == 0 ? "?" : "??";
                     message.append(String.format(
-                            "%s %s: %d/%d 已订阅\n",
+                            "%s %s: %d/%d ???\n",
                             status,
                             user.getUsername(),
                             subscribedCount,
@@ -269,20 +269,20 @@ class RegionExpandAllHandler extends AbstractCallbackHandler {
                     
                 } catch (Exception e) {
                     log.error("Failed to check regions for user: {}", user.getUsername(), e);
-                    message.append(String.format("❌ %s: 查询失败\n", user.getUsername()));
+                    message.append(String.format("? %s: ????\n", user.getUsername()));
                 }
             }
             
-            message.append("\n━━━━━━━━━━━━━━━━\n");
-            message.append(String.format("共 %d 个账户\n", users.size()));
-            message.append(String.format("总订阅数: %d\n", totalSubscribed));
-            message.append(String.format("可拓展数: %d\n\n", totalUnsubscribed));
+            message.append("\n????????????????\n");
+            message.append(String.format("? %d ???\n", users.size()));
+            message.append(String.format("????: %d\n", totalSubscribed));
+            message.append(String.format("????: %d\n\n", totalUnsubscribed));
             
             if (totalUnsubscribed == 0) {
-                message.append("✅ 所有账户已订阅全部可用区域");
+                message.append("? ?????????????");
             } else {
-                message.append("💡 Oracle会自动为账户订阅新区域\n");
-                message.append("💡 无需手动操作");
+                message.append("? Oracle???????????\n");
+                message.append("? ??????");
             }
             
             return buildEditMessage(
@@ -290,10 +290,10 @@ class RegionExpandAllHandler extends AbstractCallbackHandler {
                     message.toString(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("🔄 刷新", "region_expand_all")
+                                    KeyboardBuilder.button("? ??", "region_expand_all")
                             ),
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "auto_region_expansion")
+                                    KeyboardBuilder.button("?? ??", "auto_region_expansion")
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -303,10 +303,10 @@ class RegionExpandAllHandler extends AbstractCallbackHandler {
             log.error("Failed to expand all regions", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 批量查询失败: " + e.getMessage(),
+                    "? ??????: " + e.getMessage(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "auto_region_expansion")
+                                    KeyboardBuilder.button("?? ??", "auto_region_expansion")
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))

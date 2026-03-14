@@ -43,7 +43,7 @@ public class QuotaQueryHandler extends AbstractCallbackHandler {
             if (users == null || users.isEmpty()) {
                 return buildEditMessage(
                         callbackQuery,
-                        "❌ 未找到任何 OCI 配置\n\n请先添加 OCI 配置",
+                        "? ????? OCI ??\n\n???? OCI ??",
                         new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
                 );
             }
@@ -53,10 +53,10 @@ public class QuotaQueryHandler extends AbstractCallbackHandler {
             
             // Fetch quota information
             StringBuilder message = new StringBuilder();
-            message.append("【配额查询】\n\n");
-            message.append(String.format("租户: %s\n", user.getUsername()));
-            message.append(String.format("区域: %s\n\n", user.getOciCfg().getRegion()));
-            message.append("━━━━━━━━━━━━━━━━\n\n");
+            message.append("??????\n\n");
+            message.append(String.format("??: %s\n", user.getUsername()));
+            message.append(String.format("??: %s\n\n", user.getOciCfg().getRegion()));
+            message.append("????????????????\n\n");
             
             try (OracleInstanceFetcher fetcher = new OracleInstanceFetcher(user)) {
                 LimitsClient limitsClient = LimitsClient.builder()
@@ -71,29 +71,29 @@ public class QuotaQueryHandler extends AbstractCallbackHandler {
                 
                 // Compute instance quotas
                 queryQuota(limitsClient, compartmentId, ads.get(0).getName(), 
-                          "compute", "vm-standard-a1-count", "ARM实例", quotas);
+                          "compute", "vm-standard-a1-count", "ARM??", quotas);
                 queryQuota(limitsClient, compartmentId, ads.get(0).getName(),
-                          "compute", "vm-standard-e2-1-micro-count", "E2.1 Micro实例", quotas);
+                          "compute", "vm-standard-e2-1-micro-count", "E2.1 Micro??", quotas);
                 
                 // Storage quotas  
                 queryQuota(limitsClient, compartmentId, ads.get(0).getName(),
-                          "compute", "boot-volume-count", "启动卷", quotas);
+                          "compute", "boot-volume-count", "???", quotas);
                 queryQuota(limitsClient, compartmentId, ads.get(0).getName(),
-                          "compute", "volume-count", "块存储卷", quotas);
+                          "compute", "volume-count", "????", quotas);
                 
                 // VCN quotas
                 queryQuota(limitsClient, compartmentId, null,
                           "vcn", "vcn-count", "VCN", quotas);
                 queryQuota(limitsClient, compartmentId, null,
-                          "vcn", "subnet-count", "子网", quotas);
+                          "vcn", "subnet-count", "??", quotas);
                 
                 // Format output
                 for (Map.Entry<String, QuotaInfo> entry : quotas.entrySet()) {
                     QuotaInfo info = entry.getValue();
-                    message.append(String.format("📊 %s\n", info.name));
-                    message.append(String.format("   配额: %d\n", info.limit));
-                    message.append(String.format("   已用: %d\n", info.used));
-                    message.append(String.format("   剩余: %d\n", info.available));
+                    message.append(String.format("? %s\n", info.name));
+                    message.append(String.format("   ??: %d\n", info.limit));
+                    message.append(String.format("   ??: %d\n", info.used));
+                    message.append(String.format("   ??: %d\n", info.available));
                     
                     // Progress bar
                     double usage = info.limit > 0 ? (double) info.used / info.limit : 0;
@@ -107,13 +107,13 @@ public class QuotaQueryHandler extends AbstractCallbackHandler {
                 log.error("Failed to query quotas", e);
                 return buildEditMessage(
                         callbackQuery,
-                        "❌ 查询配额失败\n\n" + e.getMessage(),
+                        "? ??????\n\n" + e.getMessage(),
                         new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
                 );
             }
             
-            message.append("━━━━━━━━━━━━━━━━\n");
-            message.append("💡 配额数据来自 OCI Limits API");
+            message.append("????????????????\n");
+            message.append("? ?????? OCI Limits API");
             
             return buildEditMessage(
                     callbackQuery,
@@ -128,7 +128,7 @@ public class QuotaQueryHandler extends AbstractCallbackHandler {
             log.error("Failed to handle quota query", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 处理失败: " + e.getMessage(),
+                    "? ????: " + e.getMessage(),
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }
@@ -188,9 +188,9 @@ public class QuotaQueryHandler extends AbstractCallbackHandler {
         StringBuilder bar = new StringBuilder();
         for (int i = 0; i < total; i++) {
             if (i < filled) {
-                bar.append("█");
+                bar.append("?");
             } else {
-                bar.append("░");
+                bar.append("?");
             }
         }
         return bar.toString();

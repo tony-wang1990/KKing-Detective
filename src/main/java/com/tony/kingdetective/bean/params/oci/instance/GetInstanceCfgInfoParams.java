@@ -15,9 +15,9 @@ import jakarta.validation.constraints.NotBlank;
 @Data
 public class GetInstanceCfgInfoParams {
 
-    @NotBlank(message = "配置id不能为空")
+    @NotBlank(message = "??id????")
     private String ociCfgId;
 
-    @NotBlank(message = "实例id不能为空")
+    @NotBlank(message = "??id????")
     private String instanceId;
 }

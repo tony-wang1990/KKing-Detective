@@ -42,14 +42,14 @@ public class Clear2FADevicesHandler extends AbstractCallbackHandler {
             if (CollectionUtil.isEmpty(users)) {
                 return buildEditMessage(
                         callbackQuery,
-                        "❌ 未找到任何 OCI 配置",
+                        "? ????? OCI ??",
                         new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
                 );
             }
             
             StringBuilder message = new StringBuilder();
-            message.append("【清除所有2FA设备】\n\n");
-            message.append("⚠️ 警告: 此操作将删除所有MFA设备!\n\n");
+            message.append("?????2FA???\n\n");
+            message.append("?? ??: ????????MFA??!\n\n");
             
             int totalDevices = 0;
             
@@ -65,39 +65,39 @@ public class Clear2FADevicesHandler extends AbstractCallbackHandler {
                     ListMfaTotpDevicesResponse listResponse = identityClient.listMfaTotpDevices(listRequest);
                     List<MfaTotpDeviceSummary> devices = listResponse.getItems();
                     
-                    message.append(String.format("📌 %s: ", user.getUsername()));
+                    message.append(String.format("? %s: ", user.getUsername()));
                     
                     if (devices.isEmpty()) {
-                        message.append("无2FA设备\n");
+                        message.append("?2FA??\n");
                     } else {
-                        message.append(String.format("%d个设备\n", devices.size()));
+                        message.append(String.format("%d???\n", devices.size()));
                         totalDevices += devices.size();
                     }
                     
                 } catch (Exception e) {
                     log.error("Failed to list 2FA devices for user: {}", user.getUsername(), e);
-                    message.append(String.format("查询失败: %s\n", e.getMessage()));
+                    message.append(String.format("????: %s\n", e.getMessage()));
                 }
             }
             
-            message.append(String.format("\n共发现 %d 个2FA设备\n\n", totalDevices));
+            message.append(String.format("\n??? %d ?2FA??\n\n", totalDevices));
             
             if (totalDevices > 0) {
-                message.append("确认要删除所有2FA设备吗？");
+                message.append("???????2FA????");
                 
                 return buildEditMessage(
                         callbackQuery,
                         message.toString(),
                         new InlineKeyboardMarkup(List.of(
                                 new InlineKeyboardRow(
-                                        KeyboardBuilder.button("❌ 确认删除", "confirm_clear_2fa"),
-                                        KeyboardBuilder.button("✅ 取消", "back_to_main")
+                                        KeyboardBuilder.button("? ????", "confirm_clear_2fa"),
+                                        KeyboardBuilder.button("? ??", "back_to_main")
                                 ),
                                 KeyboardBuilder.buildCancelRow()
                         ))
                 );
             } else {
-                message.append("💡 无需清除");
+                message.append("? ????");
                 return buildEditMessage(
                         callbackQuery,
                         message.toString(),
@@ -112,7 +112,7 @@ public class Clear2FADevicesHandler extends AbstractCallbackHandler {
             log.error("Failed to check 2FA devices", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 查询失败: " + e.getMessage(),
+                    "? ????: " + e.getMessage(),
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }
@@ -139,7 +139,7 @@ class ConfirmClear2FAHandler extends AbstractCallbackHandler {
             List<SysUserDTO> users = sysService.list();
             
             StringBuilder message = new StringBuilder();
-            message.append("【清除结果】\n\n");
+            message.append("??????\n\n");
             
             int successCount = 0;
             int failCount = 0;
@@ -156,7 +156,7 @@ class ConfirmClear2FAHandler extends AbstractCallbackHandler {
                     ListMfaTotpDevicesResponse listResponse = identityClient.listMfaTotpDevices(listRequest);
                     List<MfaTotpDeviceSummary> devices = listResponse.getItems();
                     
-                    message.append(String.format("📌 %s:\n", user.getUsername()));
+                    message.append(String.format("? %s:\n", user.getUsername()));
                     
                     for (MfaTotpDeviceSummary device : devices) {
                         try {
@@ -166,11 +166,11 @@ class ConfirmClear2FAHandler extends AbstractCallbackHandler {
                                     .build();
                             
                             identityClient.deleteMfaTotpDevice(deleteRequest);
-                            message.append(String.format("  ✅ 已删除: %s\n", device.getId()));
+                            message.append(String.format("  ? ???: %s\n", device.getId()));
                             successCount++;
                             
                         } catch (Exception e) {
-                            message.append(String.format("  ❌ 删除失败: %s\n", e.getMessage()));
+                            message.append(String.format("  ? ????: %s\n", e.getMessage()));
                             failCount++;
                         }
                     }
@@ -179,13 +179,13 @@ class ConfirmClear2FAHandler extends AbstractCallbackHandler {
                     
                 } catch (Exception e) {
                     log.error("Failed to clear 2FA for user: {}", user.getUsername(), e);
-                    message.append(String.format("  ❌ 处理失败: %s\n\n", e.getMessage()));
+                    message.append(String.format("  ? ????: %s\n\n", e.getMessage()));
                     failCount++;
                 }
             }
             
-            message.append("━━━━━━━━━━━━━━━━\n");
-            message.append(String.format("✅ 成功: %d / ❌ 失败: %d\n", successCount, failCount));
+            message.append("????????????????\n");
+            message.append(String.format("? ??: %d / ? ??: %d\n", successCount, failCount));
             
             return buildEditMessage(
                     callbackQuery,
@@ -200,7 +200,7 @@ class ConfirmClear2FAHandler extends AbstractCallbackHandler {
             log.error("Failed to clear 2FA devices", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 清除失败: " + e.getMessage(),
+                    "? ????: " + e.getMessage(),
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }

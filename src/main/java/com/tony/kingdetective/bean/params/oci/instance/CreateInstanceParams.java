@@ -16,23 +16,23 @@ import jakarta.validation.constraints.NotNull;
 @Data
 public class CreateInstanceParams {
 
-    @NotBlank(message = "配置id不能为空")
+    @NotBlank(message = "??id????")
     private String userId;
-    @NotBlank(message = "CPU不能为空")
+    @NotBlank(message = "CPU????")
     private String ocpus;
-    @NotBlank(message = "内存不能为空")
+    @NotBlank(message = "??????")
     private String memory;
-    @NotNull(message = "磁盘空间不能为空")
+    @NotNull(message = "????????")
     private Integer disk;
-    @NotBlank(message = "系统架构不能为空")
+    @NotBlank(message = "????????")
     private String architecture;
-    @NotNull(message = "时间间隔不能为空")
+    @NotNull(message = "????????")
     private Integer interval;
-    @NotNull(message = "创建数目不能为空")
+    @NotNull(message = "????????")
     private Integer createNumbers;
-    @NotBlank(message = "系统类型不能为空")
+    @NotBlank(message = "????????")
     private String operationSystem;
-    @NotBlank(message = "root密码不能为空")
+    @NotBlank(message = "root??????")
     private String rootPassword;
 
     private boolean joinChannelBroadcast = true;

@@ -15,6 +15,6 @@ import jakarta.validation.constraints.NotBlank;
 @Data
 public class StopCreateParams {
 
-    @NotBlank(message = "用户配置id不能为空")
+    @NotBlank(message = "????id????")
     private String userId;
 }

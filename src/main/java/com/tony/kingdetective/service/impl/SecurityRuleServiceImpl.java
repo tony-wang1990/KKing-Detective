@@ -78,14 +78,14 @@ public class SecurityRuleServiceImpl implements ISecurityRuleService {
                         info.setIsStateless(ingressSecurityRule.getIsStateless());
                         info.setProtocol(SecurityRuleProtocolEnum.fromCode(ingressSecurityRule.getProtocol()).getDesc());
                         info.setSourceOrDestination(ingressSecurityRule.getSource());
-                        info.setTypeAndCode(ingressSecurityRule.getProtocol().equals("1") ? (null == ingressSecurityRule.getIcmpOptions() ? "全部" :
+                        info.setTypeAndCode(ingressSecurityRule.getProtocol().equals("1") ? (null == ingressSecurityRule.getIcmpOptions() ? "??" :
                                 ingressSecurityRule.getIcmpOptions().getType() +
                                         (null == ingressSecurityRule.getIcmpOptions().getCode() ? "" :
                                                 ", " + ingressSecurityRule.getIcmpOptions().getCode())) : null);
                         info.setDescription(ingressSecurityRule.getDescription());
                         List<String> protocolList = Arrays.asList("6", "17");
-                        String sourcePort = protocolList.contains(ingressSecurityRule.getProtocol()) ? "全部" : null;
-                        String destinationPort = protocolList.contains(ingressSecurityRule.getProtocol()) ? "全部" : null;
+                        String sourcePort = protocolList.contains(ingressSecurityRule.getProtocol()) ? "??" : null;
+                        String destinationPort = protocolList.contains(ingressSecurityRule.getProtocol()) ? "??" : null;
                         if ("6".equals(ingressSecurityRule.getProtocol())) {
                             if (null != ingressSecurityRule.getTcpOptions()) {
                                 if (null != ingressSecurityRule.getTcpOptions().getSourcePortRange()) {
@@ -131,14 +131,14 @@ public class SecurityRuleServiceImpl implements ISecurityRuleService {
                         info.setIsStateless(egressSecurityRule.getIsStateless());
                         info.setProtocol(SecurityRuleProtocolEnum.fromCode(egressSecurityRule.getProtocol()).getDesc());
                         info.setSourceOrDestination(egressSecurityRule.getDestination());
-                        info.setTypeAndCode(egressSecurityRule.getProtocol().equals("1") ? (null == egressSecurityRule.getIcmpOptions() ? "全部" :
+                        info.setTypeAndCode(egressSecurityRule.getProtocol().equals("1") ? (null == egressSecurityRule.getIcmpOptions() ? "??" :
                                 egressSecurityRule.getIcmpOptions().getType() +
                                         (null == egressSecurityRule.getIcmpOptions().getCode() ? "" :
                                                 ", " + egressSecurityRule.getIcmpOptions().getCode())) : null);
                         info.setDescription(egressSecurityRule.getDescription());
                         List<String> protocolList = Arrays.asList("6", "17");
-                        String sourcePort = protocolList.contains(egressSecurityRule.getProtocol()) ? "全部" : null;
-                        String destinationPort = protocolList.contains(egressSecurityRule.getProtocol()) ? "全部" : null;
+                        String sourcePort = protocolList.contains(egressSecurityRule.getProtocol()) ? "??" : null;
+                        String destinationPort = protocolList.contains(egressSecurityRule.getProtocol()) ? "??" : null;
                         if ("6".equals(egressSecurityRule.getProtocol())) {
                             if (null != egressSecurityRule.getTcpOptions()) {
                                 if (null != egressSecurityRule.getTcpOptions().getSourcePortRange()) {
@@ -175,8 +175,8 @@ public class SecurityRuleServiceImpl implements ISecurityRuleService {
                     }).collect(Collectors.toList());
                 }
             } catch (Exception e) {
-                log.error("获取安全列表规则失败", e);
-                throw new OciException(-1, "获取安全列表规则失败");
+                log.error("??????????", e);
+                throw new OciException(-1, "??????????");
             }
         }
 
@@ -230,8 +230,8 @@ public class SecurityRuleServiceImpl implements ISecurityRuleService {
             updateSecurityRuleListParams.setIngressRuleList(Collections.singletonList(ingressRule));
             fetcher.updateSecurityRuleList(vcn, updateSecurityRuleListParams);
         } catch (Exception e) {
-            log.error("新增入站规则失败", e);
-            throw new OciException(-1, "新增入站规则失败：" + e.getMessage());
+            log.error("????????", e);
+            throw new OciException(-1, "?????????" + e.getMessage());
         }
     }
 
@@ -269,8 +269,8 @@ public class SecurityRuleServiceImpl implements ISecurityRuleService {
             updateSecurityRuleListParams.setEgressRuleList(Collections.singletonList(egressRule));
             fetcher.updateSecurityRuleList(vcn, updateSecurityRuleListParams);
         } catch (Exception e) {
-            log.error("新增出站规则失败", e);
-            throw new OciException(-1, "新增出站规则失败：" + e.getMessage());
+            log.error("????????", e);
+            throw new OciException(-1, "?????????" + e.getMessage());
         }
     }
 
@@ -307,8 +307,8 @@ public class SecurityRuleServiceImpl implements ISecurityRuleService {
                             .build())
                     .build());
         } catch (Exception e) {
-            log.error("删除安全规则失败", e);
-            throw new OciException(-1, "删除安全规则失败");
+            log.error("????????", e);
+            throw new OciException(-1, "????????");
         }
         customCache.remove(CacheConstant.PREFIX_INGRESS_SECURITY_RULE_PAGE + params.getOciCfgId());
         customCache.remove(CacheConstant.PREFIX_EGRESS_SECURITY_RULE_PAGE + params.getOciCfgId());
@@ -326,7 +326,7 @@ public class SecurityRuleServiceImpl implements ISecurityRuleService {
         } else if (split.length == 2) {
             return Tuple2.of(Integer.valueOf(split[0]), Integer.valueOf(split[1]));
         } else {
-            throw new OciException(-1, "格式有误：" + portRangeStr);
+            throw new OciException(-1, "?????" + portRangeStr);
         }
     }
 }

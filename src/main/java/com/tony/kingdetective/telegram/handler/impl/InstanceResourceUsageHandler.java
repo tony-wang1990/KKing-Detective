@@ -57,10 +57,10 @@ public class InstanceResourceUsageHandler extends AbstractCallbackHandler {
             if (CollectionUtil.isEmpty(instances)) {
                 return buildEditMessage(
                         callbackQuery,
-                        "❌ 暂无运行中的实例",
+                        "? ????????",
                         new InlineKeyboardMarkup(List.of(
                                 new InlineKeyboardRow(
-                                        KeyboardBuilder.button("◀️ 返回", "select_config:" + ociCfgId)
+                                        KeyboardBuilder.button("?? ??", "select_config:" + ociCfgId)
                                 ),
                                 KeyboardBuilder.buildCancelRow()
                         ))
@@ -75,10 +75,10 @@ public class InstanceResourceUsageHandler extends AbstractCallbackHandler {
             log.error("Failed to list instances for resource usage", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 获取实例列表失败：" + e.getMessage(),
+                    "? ?????????" + e.getMessage(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "select_config:" + ociCfgId)
+                                    KeyboardBuilder.button("?? ??", "select_config:" + ociCfgId)
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -92,10 +92,10 @@ public class InstanceResourceUsageHandler extends AbstractCallbackHandler {
             String ociCfgId,
             long chatId) {
         
-        StringBuilder message = new StringBuilder("【查看客户端负载】\n\n");
-        message.append("查看实例资源占用详情\n\n");
-        message.append(String.format("共 %d 个运行中的实例\n", instances.size()));
-        message.append("选择实例查看负载：\n\n");
+        StringBuilder message = new StringBuilder("?????????\n\n");
+        message.append("??????????\n\n");
+        message.append(String.format("? %d ???????\n", instances.size()));
+        message.append("?????????\n\n");
         
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
         
@@ -104,8 +104,8 @@ public class InstanceResourceUsageHandler extends AbstractCallbackHandler {
             
             message.append(String.format(
                     "%d. %s\n" +
-                    "   配置: %s\n" +
-                    "   区域: %s\n\n",
+                    "   ??: %s\n" +
+                    "   ??: %s\n\n",
                     i + 1,
                     instance.getName(),
                     instance.getShape(),
@@ -114,14 +114,14 @@ public class InstanceResourceUsageHandler extends AbstractCallbackHandler {
             
             InlineKeyboardRow row = new InlineKeyboardRow();
             row.add(KeyboardBuilder.button(
-                    String.format("📊 实例%d", i + 1),
+                    String.format("? ??%d", i + 1),
                     "view_resource_usage:" + i
             ));
             keyboard.add(row);
         }
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("◀️ 返回", "select_config:" + ociCfgId)
+                KeyboardBuilder.button("?? ??", "select_config:" + ociCfgId)
         ));
         keyboard.add(KeyboardBuilder.buildCancelRow());
         
@@ -158,7 +158,7 @@ class ViewResourceUsageHandler extends AbstractCallbackHandler {
         if (instance == null) {
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 实例不存在",
+                    "? ?????",
                     new InlineKeyboardMarkup(List.of(KeyboardBuilder.buildCancelRow()))
             );
         }
@@ -233,64 +233,64 @@ class ViewResourceUsageHandler extends AbstractCallbackHandler {
                 
                 // Build comprehensive message
                 StringBuilder message = new StringBuilder();
-                message.append(String.format("【%s - 详细信息】\n\n", instance.getName()));
+                message.append(String.format("?%s - ?????\n\n", instance.getName()));
                 
                 // Instance Status
-                message.append("📌 实例状态\n");
-                message.append(String.format("• 状态: %s\n", getStatusEmoji(instanceDetail.getLifecycleState()) + instanceDetail.getLifecycleState()));
-                message.append(String.format("• 运行时长: %s\n", uptime));
-                message.append(String.format("• 可用域: %s\n", instanceDetail.getAvailabilityDomain()));
-                message.append(String.format("• 故障域: %s\n\n", instanceDetail.getFaultDomain() != null ? instanceDetail.getFaultDomain() : "N/A"));
+                message.append("? ????\n");
+                message.append(String.format("? ??: %s\n", getStatusEmoji(instanceDetail.getLifecycleState()) + instanceDetail.getLifecycleState()));
+                message.append(String.format("? ????: %s\n", uptime));
+                message.append(String.format("? ???: %s\n", instanceDetail.getAvailabilityDomain()));
+                message.append(String.format("? ???: %s\n\n", instanceDetail.getFaultDomain() != null ? instanceDetail.getFaultDomain() : "N/A"));
                 
                 // Hardware Configuration
-                message.append("⚙️ 硬件配置\n");
-                message.append(String.format("• 配置: %s\n", instance.getShape()));
-                message.append(String.format("• CPU核心: %s\n", getShapeCores(instance.getShape())));
-                message.append(String.format("• 内存: %s\n", getShapeMemory(instance.getShape())));
-                message.append(String.format("• 启动磁盘: %s\n\n", bootVolumeSize));
+                message.append("?? ????\n");
+                message.append(String.format("? ??: %s\n", instance.getShape()));
+                message.append(String.format("? CPU??: %s\n", getShapeCores(instance.getShape())));
+                message.append(String.format("? ??: %s\n", getShapeMemory(instance.getShape())));
+                message.append(String.format("? ????: %s\n\n", bootVolumeSize));
                 
                 // Resource Usage (1 hour average)
-                message.append("📊 资源占用 (近1小时)\n");
+                message.append("? ???? (?1??)\n");
                 
-                message.append(String.format("💻 CPU: %.2f%%\n", avgCpu));
+                message.append(String.format("? CPU: %.2f%%\n", avgCpu));
                 message.append(String.format("   %s\n", generateProgressBar(avgCpu)));
                 
-                message.append(String.format("💾 内存: %.2f%%\n", avgMem));
+                message.append(String.format("? ??: %.2f%%\n", avgMem));
                 message.append(String.format("   %s\n\n", generateProgressBar(avgMem)));
                 
                 // Disk I/O
-                message.append("💿 磁盘I/O\n");
-                message.append(String.format("• 读取: %.2f MB\n", diskRead / 1024 / 1024));
-                message.append(String.format("• 写入: %.2f MB\n\n", diskWrite / 1024 / 1024));
+                message.append("? ??I/O\n");
+                message.append(String.format("? ??: %.2f MB\n", diskRead / 1024 / 1024));
+                message.append(String.format("? ??: %.2f MB\n\n", diskWrite / 1024 / 1024));
                 
                 // Network Traffic
-                message.append("🌐 网络流量\n");
-                message.append(String.format("• 入站: %.2f MB\n", netIn / 1024 / 1024));
-                message.append(String.format("• 出站: %.2f MB\n", netOut / 1024 / 1024));
-                message.append(String.format("• 总计: %.2f MB\n\n", (netIn + netOut) / 1024 / 1024));
+                message.append("? ????\n");
+                message.append(String.format("? ??: %.2f MB\n", netIn / 1024 / 1024));
+                message.append(String.format("? ??: %.2f MB\n", netOut / 1024 / 1024));
+                message.append(String.format("? ??: %.2f MB\n\n", (netIn + netOut) / 1024 / 1024));
                 
                 // Network Info
-                message.append("🔌 网络信息\n");
+                message.append("? ????\n");
                 String publicIps = instance.getPublicIp() != null && !instance.getPublicIp().isEmpty() 
                         ? String.join(", ", instance.getPublicIp()) 
-                        : "无";
-                message.append(String.format("• 公网IP: %s\n", publicIps));
-                message.append(String.format("• 区域: %s\n\n", instance.getRegion()));
+                        : "?";
+                message.append(String.format("? ??IP: %s\n", publicIps));
+                message.append(String.format("? ??: %s\n\n", instance.getRegion()));
                 
                 // Note
-                message.append("━━━━━━━━━━━━━━━━\n");
-                message.append("💡 数据来自OCI监控\n");
-                message.append("⚠️ 温度监控不可用(云实例)");
+                message.append("????????????????\n");
+                message.append("? ????OCI??\n");
+                message.append("?? ???????(???)");
                 
                 return buildEditMessage(
                         callbackQuery,
                         message.toString(),
                         new InlineKeyboardMarkup(List.of(
                                 new InlineKeyboardRow(
-                                        KeyboardBuilder.button("🔄 刷新", "view_resource_usage:" + instanceIndex)
+                                        KeyboardBuilder.button("? ??", "view_resource_usage:" + instanceIndex)
                                 ),
                                 new InlineKeyboardRow(
-                                        KeyboardBuilder.button("◀️ 返回", "instance_resource_usage:" + ociCfgId)
+                                        KeyboardBuilder.button("?? ??", "instance_resource_usage:" + ociCfgId)
                                 ),
                                 KeyboardBuilder.buildCancelRow()
                         ))
@@ -301,10 +301,10 @@ class ViewResourceUsageHandler extends AbstractCallbackHandler {
             log.error("Failed to get resource usage", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 获取资源占用失败\n\n" + e.getMessage(),
+                    "? ????????\n\n" + e.getMessage(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "instance_resource_usage:" + ociCfgId)
+                                    KeyboardBuilder.button("?? ??", "instance_resource_usage:" + ociCfgId)
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -348,45 +348,45 @@ class ViewResourceUsageHandler extends AbstractCallbackHandler {
         long minutes = (seconds % 3600) / 60;
         
         if (days > 0) {
-            return String.format("%d天%d小时", days, hours);
+            return String.format("%d?%d??", days, hours);
         } else if (hours > 0) {
-            return String.format("%d小时%d分钟", hours, minutes);
+            return String.format("%d??%d??", hours, minutes);
         } else {
-            return String.format("%d分钟", minutes);
+            return String.format("%d??", minutes);
         }
     }
     
     private String getStatusEmoji(com.oracle.bmc.core.model.Instance.LifecycleState state) {
         switch (state) {
-            case Running: return "✅ ";
-            case Stopped: return "⏸ ";
-            case Stopping: return "⏬ ";
-            case Starting: return "⏫ ";
-            case Terminated: return "❌ ";
-            case Terminating: return "🗑 ";
-            default: return "❓ ";
+            case Running: return "? ";
+            case Stopped: return "? ";
+            case Stopping: return "? ";
+            case Starting: return "? ";
+            case Terminated: return "? ";
+            case Terminating: return "? ";
+            default: return "? ";
         }
     }
     
     private String getShapeCores(String shape) {
-        if (shape.contains("VM.Standard.E2.1.Micro")) return "1核 (ARM)";
-        if (shape.contains("VM.Standard.A1.Flex")) return "可变 (ARM)";
-        if (shape.contains("VM.Standard.E4.Flex")) return "可变 (AMD)";
-        if (shape.contains(".1")) return "1核";
-        if (shape.contains(".2")) return "2核";
-        if (shape.contains(".4")) return "4核";
-        if (shape.contains(".8")) return "8核";
-        return "查看配置";
+        if (shape.contains("VM.Standard.E2.1.Micro")) return "1? (ARM)";
+        if (shape.contains("VM.Standard.A1.Flex")) return "?? (ARM)";
+        if (shape.contains("VM.Standard.E4.Flex")) return "?? (AMD)";
+        if (shape.contains(".1")) return "1?";
+        if (shape.contains(".2")) return "2?";
+        if (shape.contains(".4")) return "4?";
+        if (shape.contains(".8")) return "8?";
+        return "????";
     }
     
     private String getShapeMemory(String shape) {
         if (shape.contains("VM.Standard.E2.1.Micro")) return "1 GB";
-        if (shape.contains("VM.Standard.A1.Flex")) return "可变";
-        if (shape.contains("VM.Standard.E4.Flex")) return "可变";
+        if (shape.contains("VM.Standard.A1.Flex")) return "??";
+        if (shape.contains("VM.Standard.E4.Flex")) return "??";
         if (shape.contains(".1")) return "8-16 GB";
         if (shape.contains(".2")) return "16-32 GB";
         if (shape.contains(".4")) return "32-64 GB";
-        return "查看配置";
+        return "????";
     }
     
     private String generateProgressBar(double percentage) {
@@ -395,9 +395,9 @@ class ViewResourceUsageHandler extends AbstractCallbackHandler {
         StringBuilder bar = new StringBuilder();
         for (int i = 0; i < total; i++) {
             if (i < filled) {
-                bar.append("█");
+                bar.append("?");
             } else {
-                bar.append("░");
+                bar.append("?");
             }
         }
         return bar.toString();
@@ -426,21 +426,21 @@ class InstanceResourceUsageConfigSelectHandler extends AbstractCallbackHandler {
             if (CollectionUtil.isEmpty(users)) {
                 return buildEditMessage(
                         callbackQuery,
-                        "❌ 未找到任何 OCI 配置",
+                        "? ????? OCI ??",
                         new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
                 );
             }
             
             StringBuilder message = new StringBuilder();
-            message.append("【查看客户端负载】\n\n");
-            message.append("请选择要查看的 OCI 配置：\n\n");
+            message.append("?????????\n\n");
+            message.append("??????? OCI ???\n\n");
             
             List<InlineKeyboardRow> keyboard = new ArrayList<>();
             
             for (SysUserDTO user : users) {
                 message.append(String.format(
-                        "📌 %s\n" +
-                        "   区域: %s\n\n",
+                        "? %s\n" +
+                        "   ??: %s\n\n",
                         user.getUsername(),
                         user.getOciCfg().getRegion()
                 ));
@@ -466,7 +466,7 @@ class InstanceResourceUsageConfigSelectHandler extends AbstractCallbackHandler {
             log.error("Failed to list OCI configs", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 获取配置列表失败: " + e.getMessage(),
+                    "? ????????: " + e.getMessage(),
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }

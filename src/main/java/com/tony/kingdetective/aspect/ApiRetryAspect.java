@@ -36,11 +36,11 @@ public class ApiRetryAspect {
         while (true) {
             attempt++;
             try {
-                log.debug("执行 API 调用: {} (尝试 {}/{})", methodName, attempt, MAX_RETRY_ATTEMPTS);
+                log.debug("?? API ??: {} (?? {}/{})", methodName, attempt, MAX_RETRY_ATTEMPTS);
                 Object result = joinPoint.proceed();
                 
                 if (attempt > 1) {
-                    log.info("API 调用成功: {} (重试 {} 次后成功)", methodName, attempt - 1);
+                    log.info("API ????: {} (?? {} ????)", methodName, attempt - 1);
                 }
                 
                 return result;
@@ -49,27 +49,27 @@ public class ApiRetryAspect {
                 boolean shouldRetry = shouldRetry(e, attempt);
                 
                 if (shouldRetry) {
-                    log.warn("API 调用失败: {}, 错误码: {}, 将在 {}ms 后重试 ({}/{})",
+                    log.warn("API ????: {}, ???: {}, ?? {}ms ??? ({}/{})",
                             methodName, e.getStatusCode(), backoffMs, attempt, MAX_RETRY_ATTEMPTS);
                     
                     try {
                         TimeUnit.MILLISECONDS.sleep(backoffMs);
                     } catch (InterruptedException ie) {
                         Thread.currentThread().interrupt();
-                        throw new RuntimeException("重试被中断", ie);
+                        throw new RuntimeException("?????", ie);
                     }
                     
                     // 
                     backoffMs = (long) (backoffMs * BACKOFF_MULTIPLIER);
                     
                 } else {
-                    log.error("API 调用失败: {}, 不再重试 (尝试 {} 次)", methodName, attempt);
+                    log.error("API ????: {}, ???? (?? {} ?)", methodName, attempt);
                     throw e;
                 }
                 
             } catch (Exception e) {
                 //  BmcException 
-                log.error("API 调用发生非预期异常: {}", methodName, e);
+                log.error("API ?????????: {}", methodName, e);
                 throw e;
             }
         }

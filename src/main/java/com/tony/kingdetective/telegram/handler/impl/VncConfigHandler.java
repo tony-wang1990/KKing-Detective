@@ -49,59 +49,59 @@ public class VncConfigHandler extends AbstractCallbackHandler {
         if (hasConfig) {
             String vncUrl = vncConfig.getValue().trim();
             text = String.format(
-                "🔧 *VNC 配置管理*\n\n" +
-                "📌 当前配置：\n" +
-                "�?VNC URL: %s\n" +
-                "�?状�? �?已配置\n\n" +
-                "💡 使用说明：\n" +
-                "�?URL 将用于所有实例的 VNC 连接。\n" +
-                "当在实例管理中选择一个实例并点击\"开启VNC连接\"时，\n" +
-                "系统会使用此 URL 生成完整�?VNC 连接地址。\n\n" +
-                "⚙️ URL 格式说明：\n" +
-                "�?IP格式: http://IP:端口 (自动使用 /vnc.html)\n" +
-                "�?域名HTTP: http://domain.com (使用 /vnc.html)\n" +
-                "�?域名HTTPS: https://domain.com (使用 /myvnc/vnc.html)\n\n" +
-                "📝 示例：\n" +
-                "�?http://192.168.1.100:6080\n" +
-                "�?http://vnc.example.com\n" +
-                "�?https://vnc.example.com\n\n" +
-                "⚠️ 注意：\n" +
-                "�?不要�?URL 末尾添加斜杠\n" +
-                "�?确保 VNC 代理服务已正确配置\n" +
-                "�?如果不配置，将自动使用宿主机IP:6080\n\n" +
-                "⚙️ 请选择功能�"?,
+                "? *VNC ????*\n\n" +
+                "? ?????\n" +
+                "??VNC URL: %s\n" +
+                "????? ?????\n\n" +
+                "? ?????\n" +
+                "??URL ???????? VNC ???\n" +
+                "????????????????\"??VNC??\"??\n" +
+                "?????? URL ??????VNC ?????\n\n" +
+                "?? URL ?????\n" +
+                "??IP??: http://IP:?? (???? /vnc.html)\n" +
+                "????HTTP: http://domain.com (?? /vnc.html)\n" +
+                "????HTTPS: https://domain.com (?? /myvnc/vnc.html)\n\n" +
+                "? ???\n" +
+                "??http://192.168.1.100:6080\n" +
+                "??http://vnc.example.com\n" +
+                "??https://vnc.example.com\n\n" +
+                "?? ???\n" +
+                "??????URL ??????\n" +
+                "???? VNC ?????????\n" +
+                "????????????????IP:6080\n\n" +
+                "?? ??????"?,
                 vncUrl
             );
             
             keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("🔄 重新配置", "vnc_setup")
+                KeyboardBuilder.button("? ????", "vnc_setup")
             ));
             
             keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("🗑�?删除配置", "vnc_delete")
+                KeyboardBuilder.button("???????", "vnc_delete")
             ));
         } else {
-            text = "🔧 *VNC 配置管理*\n\n" +
-                   "📝 当前没有配置 VNC URL\n\n" +
-                   "💡 使用说明：\n" +
-                   "配置 VNC URL 后，在实例管理中开�?VNC 连接时，\n" +
-                   "系统会使用此 URL 作为 VNC 代理地址。\n\n" +
-                   "⚙️ URL 格式说明：\n" +
-                   "�?IP格式: http://IP:端口 (自动使用 /vnc.html)\n" +
-                   "�?域名HTTP: http://domain.com (使用 /vnc.html)\n" +
-                   "�?域名HTTPS: https://domain.com (使用 /myvnc/vnc.html)\n\n" +
-                   "📝 示例：\n" +
-                   "�?http://192.168.1.100:6080\n" +
-                   "�?http://vnc.example.com\n" +
-                   "�?https://vnc.example.com\n\n" +
-                   "⚠️ 注意：\n" +
-                   "�?不要�?URL 末尾添加斜杠\n" +
-                   "�?如果不配置，将自动使用宿主机公网IP:6080\n" +
-                   "�?确保 VNC 代理服务（如 noVNC）已正确部署\n\n" +
-                   "⚙️ 请选择功能�"?;
+            text = "? *VNC ????*\n\n" +
+                   "? ?????? VNC URL\n\n" +
+                   "? ?????\n" +
+                   "?? VNC URL ???????????VNC ????\n" +
+                   "?????? URL ?? VNC ?????\n\n" +
+                   "?? URL ?????\n" +
+                   "??IP??: http://IP:?? (???? /vnc.html)\n" +
+                   "????HTTP: http://domain.com (?? /vnc.html)\n" +
+                   "????HTTPS: https://domain.com (?? /myvnc/vnc.html)\n\n" +
+                   "? ???\n" +
+                   "??http://192.168.1.100:6080\n" +
+                   "??http://vnc.example.com\n" +
+                   "??https://vnc.example.com\n\n" +
+                   "?? ???\n" +
+                   "??????URL ??????\n" +
+                   "??????????????????IP:6080\n" +
+                   "???? VNC ?????? noVNC??????\n\n" +
+                   "?? ??????"?;
             
             keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("�?配置 VNC URL", "vnc_setup")
+                KeyboardBuilder.button("???? VNC URL", "vnc_setup")
             ));
         }
         
@@ -137,26 +137,26 @@ class VncSetupHandler extends AbstractCallbackHandler {
         // Mark this chat as configuring VNC
         ConfigSessionStorage.getInstance().startVncConfig(chatId);
         
-        String text = "🔧 *配置 VNC URL*\n\n" +
-                     "请直接发�?VNC URL（不需要命令前缀）：\n\n" +
-                     "📝 格式示例：\n" +
-                     "�?http://192.168.1.100:6080\n" +
-                     "�?http://vnc.example.com\n" +
-                     "�?https://vnc.example.com\n\n" +
-                     "⚠️ 注意事项：\n" +
-                     "�?必须�?http:// �?https:// 开头\n" +
-                     "�?不要在末尾添加斜杠或路径\n" +
-                     "�?端口号是可选的（默�?0/443）\n" +
-                     "�?URL 格式会影�?VNC 路径选择：\n" +
-                     "  - IP格式 �?/vnc.html\n" +
-                     "  - HTTP域名 �?/vnc.html\n" +
-                     "  - HTTPS域名 �?/myvnc/vnc.html\n\n" +
-                     "💡 提示：\n" +
-                     "发�"?/cancel ?;
+        String text = "? *?? VNC URL*\n\n" +
+                     "??????VNC URL??????????\n\n" +
+                     "? ?????\n" +
+                     "??http://192.168.1.100:6080\n" +
+                     "??http://vnc.example.com\n" +
+                     "??https://vnc.example.com\n\n" +
+                     "?? ?????\n" +
+                     "??????http:// ??https:// ??\n" +
+                     "??????????????\n" +
+                     "?????????????0/443?\n" +
+                     "??URL ??????VNC ?????\n" +
+                     "  - IP?? ??/vnc.html\n" +
+                     "  - HTTP?? ??/vnc.html\n" +
+                     "  - HTTPS?? ??/myvnc/vnc.html\n\n" +
+                     "? ???\n" +
+                     "??"?/cancel ?;
         
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
         keyboard.add(new InlineKeyboardRow(
-            KeyboardBuilder.button("◀�?返回", "vnc_config")
+            KeyboardBuilder.button("?????", "vnc_config")
         ));
         keyboard.add(KeyboardBuilder.buildCancelRow());
         
@@ -194,14 +194,14 @@ class VncDeleteHandler extends AbstractCallbackHandler {
             
             log.info("VNC configuration deleted");
             
-            String text = "�?*VNC 配置已删�?\n\n" +
-                         "系统将使用默认配置（宿主机公网IP:6080）\n\n" +
-                         "💡 提示：\n" +
-                         "需要时可以重新配置 VNC URL";
+            String text = "??*VNC ??????\n\n" +
+                         "???????????????IP:6080?\n\n" +
+                         "? ???\n" +
+                         "????????? VNC URL";
             
             List<InlineKeyboardRow> keyboard = new ArrayList<>();
             keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("◀�?返回", "vnc_config")
+                KeyboardBuilder.button("?????", "vnc_config")
             ));
             keyboard.add(KeyboardBuilder.buildCancelRow());
             
@@ -214,12 +214,12 @@ class VncDeleteHandler extends AbstractCallbackHandler {
         } catch (Exception e) {
             log.error("Failed to delete VNC configuration", e);
             
-            String text = "�?*删除 VNC 配置失败*\n\n" +
-                         "错误信息�"? + e.getMessage();
+            String text = "??*?? VNC ????*\n\n" +
+                         "?????"? + e.getMessage();
             
             List<InlineKeyboardRow> keyboard = new ArrayList<>();
             keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("◀�?返回", "vnc_config")
+                KeyboardBuilder.button("?????", "vnc_config")
             ));
             keyboard.add(KeyboardBuilder.buildCancelRow());
             

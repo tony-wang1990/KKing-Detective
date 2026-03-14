@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(OciException.class)
     @ResponseBody
     public ResponseEntity<ErrorResponse> handleOciException(OciException e) {
-        log.error("OCI 操作异常: code={}, message={}", e.getCode(), e.getMessage(), e);
+        log.error("OCI ????: code={}, message={}", e.getCode(), e.getMessage(), e);
         
         ErrorResponse response = ErrorResponse.builder()
                 .code(e.getCode())
@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BmcException.class)
     @ResponseBody
     public ResponseEntity<ErrorResponse> handleBmcException(BmcException e) {
-        log.error("Oracle Cloud SDK 异常: statusCode={}, serviceCode={}, message={}",
+        log.error("Oracle Cloud SDK ??: statusCode={}, serviceCode={}, message={}",
                 e.getStatusCode(), e.getServiceCode(), e.getMessage(), e);
         
         String userMessage = formatBmcExceptionMessage(e);
@@ -77,11 +77,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseBody
     public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException e) {
-        log.warn("参数验证失败: {}", e.getMessage());
+        log.warn("??????: {}", e.getMessage());
         
         ErrorResponse response = ErrorResponse.builder()
                 .code(400)
-                .message("参数验证失败: " + e.getMessage())
+                .message("??????: " + e.getMessage())
                 .timestamp(System.currentTimeMillis())
                 .build();
         
@@ -96,11 +96,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NullPointerException.class)
     @ResponseBody
     public ResponseEntity<ErrorResponse> handleNullPointerException(NullPointerException e) {
-        log.error("发生空指针异常", e);
+        log.error("???????", e);
         
         ErrorResponse response = ErrorResponse.builder()
                 .code(500)
-                .message("系统内部错误：数据为空")
+                .message("???????????")
                 .timestamp(System.currentTimeMillis())
                 .build();
         
@@ -144,11 +144,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseBody
     public ResponseEntity<ErrorResponse> handleException(Exception e) {
-        log.error("发生未预期的异常", e);
+        log.error("????????", e);
         
         ErrorResponse response = ErrorResponse.builder()
                 .code(500)
-                .message("系统内部错误：" + e.getMessage())
+                .message("???????" + e.getMessage())
                 .timestamp(System.currentTimeMillis())
                 .build();
         
@@ -166,19 +166,19 @@ public class GlobalExceptionHandler {
         
         // 
         if (statusCode == 401) {
-            return "认证失败：请检查 API 密钥配置是否正确";
+            return "???????? API ????????";
         } else if (statusCode == 404) {
-            return "资源不存在：请检查资源 ID 是否正确";
+            return "??????????? ID ????";
         } else if (statusCode == 429) {
-            return "请求过于频繁：请稍后再试";
+            return "????????????";
         } else if (statusCode == 500) {
-            return "Oracle Cloud 服务器错误：请稍后重试";
+            return "Oracle Cloud ???????????";
         } else if (statusCode == 503) {
-            return "Oracle Cloud 服务暂时不可用：请稍后重试";
+            return "Oracle Cloud ?????????????";
         } else if ("LimitExceeded".equals(serviceCode)) {
-            return "配额不足：当前区域资源已达上限";
+            return "???????????????";
         } else if ("InsufficientHostCapacity".equals(serviceCode)) {
-            return "主机容量不足：当前区域暂无可用资源";
+            return "?????????????????";
         } else {
             return e.getMessage();
         }

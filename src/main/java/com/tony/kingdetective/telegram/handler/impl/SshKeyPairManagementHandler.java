@@ -65,27 +65,27 @@ public class SshKeyPairManagementHandler extends AbstractCallbackHandler {
         } else if (data.startsWith("ssh_keypair_del:")) {
             return deleteKey(callbackQuery, data.substring("ssh_keypair_del:".length()));
         }
-        return buildEditMessage(callbackQuery, "❌ 未知操作");
+        return buildEditMessage(callbackQuery, "? ????");
     }
 
     private BotApiMethod<? extends Serializable> showAccountList(CallbackQuery callbackQuery) {
         IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
         List<OciUser> users = userService.getEnabledOciUserList();
         if (users == null || users.isEmpty()) {
-            return buildEditMessage(callbackQuery, "❌ 暂无可用账户");
+            return buildEditMessage(callbackQuery, "? ??????");
         }
 
         List<InlineKeyboardRow> rows = new ArrayList<>();
         for (OciUser user : users) {
             rows.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("👤 " + user.getUsername(), "ssh_keypair_list:" + user.getId())
+                KeyboardBuilder.button("? " + user.getUsername(), "ssh_keypair_list:" + user.getId())
             ));
         }
         rows.add(new InlineKeyboardRow(KeyboardBuilder.buildBackToMainMenuRow()));
 
         return buildEditMessage(callbackQuery,
-            "🔑 *SSH 密钥对管理*\n\n选择要管理密钥的账户：\n\n" +
-            "💡 OCI API Key 用于 SDK 认证，即你上传的 RSA 公钥，每账户最多5个",
+            "? *SSH ?????*\n\n???????????\n\n" +
+            "? OCI API Key ?? SDK ???????? RSA ????????5?",
             new InlineKeyboardMarkup(rows)
         );
     }
@@ -94,7 +94,7 @@ public class SshKeyPairManagementHandler extends AbstractCallbackHandler {
         try {
             IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
             OciUser user = userService.getById(userId);
-            if (user == null) return buildEditMessage(callbackQuery, "❌ 账户不存在");
+            if (user == null) return buildEditMessage(callbackQuery, "? ?????");
 
             SysUserDTO dto = buildDto(user);
             List<InlineKeyboardRow> rows = new ArrayList<>();
@@ -107,26 +107,26 @@ public class SshKeyPairManagementHandler extends AbstractCallbackHandler {
                         .build()
                 ).getItems();
 
-                StringBuilder sb = new StringBuilder("🔑 *密钥列表*（账户：" + user.getUsername() + "）\n\n");
+                StringBuilder sb = new StringBuilder("? *????*????" + user.getUsername() + "?\n\n");
                 if (keys.isEmpty()) {
-                    sb.append("暂无密钥");
+                    sb.append("????");
                 } else {
                     int i = 1;
                     for (ApiKey key : keys) {
                         String fp = key.getFingerprint();
                         String state = key.getLifecycleState() != null ? key.getLifecycleState().getValue() : "UNKNOWN";
                         sb.append(i++).append(". `").append(fp).append("`\n")
-                          .append("   状态: ").append("ACTIVE".equals(state) ? "✅ 活跃" : "⚠️ " + state).append("\n");
+                          .append("   ??: ").append("ACTIVE".equals(state) ? "? ??" : "?? " + state).append("\n");
                         rows.add(new InlineKeyboardRow(
-                            KeyboardBuilder.button("🗑️ 删除 " + fp.substring(0, Math.min(fp.length(), 20)) + "...",
+                            KeyboardBuilder.button("?? ?? " + fp.substring(0, Math.min(fp.length(), 20)) + "...",
                                 "ssh_keypair_del_confirm:" + userId + ":" + fp)
                         ));
                     }
-                    sb.append("\n共 ").append(keys.size()).append("/5 个密钥");
+                    sb.append("\n? ").append(keys.size()).append("/5 ???");
                 }
 
                 rows.add(0, new InlineKeyboardRow(
-                    KeyboardBuilder.button("➕ 上传新公钥", "ssh_keypair_add:" + userId)
+                    KeyboardBuilder.button("? ?????", "ssh_keypair_add:" + userId)
                 ));
                 rows.add(new InlineKeyboardRow(KeyboardBuilder.buildBackToMainMenuRow()));
 
@@ -134,7 +134,7 @@ public class SshKeyPairManagementHandler extends AbstractCallbackHandler {
             }
         } catch (Exception e) {
             log.error("Failed to list API keys", e);
-            return buildEditMessage(callbackQuery, "❌ 获取密钥列表失败：" + e.getMessage());
+            return buildEditMessage(callbackQuery, "? ?????????" + e.getMessage());
         }
     }
 
@@ -148,11 +148,11 @@ public class SshKeyPairManagementHandler extends AbstractCallbackHandler {
         storage.startCustomSession(chatId, ConfigSessionStorage.SessionType.SSH_PUBKEY_INPUT, data);
 
         return buildEditMessage(callbackQuery,
-            "🔑 *上传公钥*\n\n" +
-            "请直接发送 RSA/ECDSA 公钥内容（.pub 文件内容）\n\n" +
-            "格式示例：\n" +
+            "? *????*\n\n" +
+            "????? RSA/ECDSA ?????.pub ?????\n\n" +
+            "?????\n" +
             "`ssh-rsa AAAA... user@host`\n\n" +
-            "发送 /cancel 可取消"
+            "?? /cancel ???"
         );
     }
 
@@ -161,9 +161,9 @@ public class SshKeyPairManagementHandler extends AbstractCallbackHandler {
         String userId = parts[0];
         String fingerprint = parts[1];
         return buildEditMessage(callbackQuery,
-            "⚠️ *确认删除密钥？*\n\n" +
-            "指纹：`" + fingerprint + "`\n\n" +
-            "删除后使用该密钥的 SDK 连接将失效！",
+            "?? *???????*\n\n" +
+            "???`" + fingerprint + "`\n\n" +
+            "????????? SDK ??????",
             KeyboardBuilder.buildConfirmationKeyboard(
                 "ssh_keypair_del:" + params,
                 "ssh_keypair_list:" + userId
@@ -178,7 +178,7 @@ public class SshKeyPairManagementHandler extends AbstractCallbackHandler {
         try {
             IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
             OciUser user = userService.getById(userId);
-            if (user == null) return buildEditMessage(callbackQuery, "❌ 账户不存在");
+            if (user == null) return buildEditMessage(callbackQuery, "? ?????");
 
             try (OracleInstanceFetcher fetcher = new OracleInstanceFetcher(buildDto(user))) {
                 fetcher.getIdentityClient().deleteApiKey(
@@ -190,15 +190,15 @@ public class SshKeyPairManagementHandler extends AbstractCallbackHandler {
             }
 
             return buildEditMessage(callbackQuery,
-                "✅ *密钥已删除*\n\n指纹：`" + fingerprint + "`",
+                "? *?????*\n\n???`" + fingerprint + "`",
                 KeyboardBuilder.fromRows(List.of(
-                    new InlineKeyboardRow(KeyboardBuilder.button("← 返回密钥列表", "ssh_keypair_list:" + userId)),
+                    new InlineKeyboardRow(KeyboardBuilder.button("? ??????", "ssh_keypair_list:" + userId)),
                     new InlineKeyboardRow(KeyboardBuilder.buildBackToMainMenuRow())
                 ))
             );
         } catch (Exception e) {
             log.error("Failed to delete API key: {}", fingerprint, e);
-            return buildEditMessage(callbackQuery, "❌ 删除失败：" + e.getMessage());
+            return buildEditMessage(callbackQuery, "? ?????" + e.getMessage());
         }
     }
 

@@ -94,8 +94,8 @@ public class ApiRateLimiter {
         );
         
         if (!userLimiter.tryAcquire(TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
-            log.warn("用户 {} 请求过于频繁，已触发限流", userId);
-            throw new OciException(-429, "请求过于频繁，请稍后再试");
+            log.warn("?? {} ????????????", userId);
+            throw new OciException(-429, "????????????");
         }
         
         // 2. API
@@ -105,11 +105,11 @@ public class ApiRateLimiter {
         );
         
         if (!apiLimiter.tryAcquire(TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
-            log.warn("API {} 调用过于频繁，用户: {}", apiName, userId);
-            throw new OciException(-429, String.format("【%s】调用过于频繁，请稍后再试", apiName));
+            log.warn("API {} ?????????: {}", apiName, userId);
+            throw new OciException(-429, String.format("?%s?????????????", apiName));
         }
         
-        log.debug("API {} 速率限制检查通过，用户: {}", apiName, userId);
+        log.debug("API {} ???????????: {}", apiName, userId);
     }
     
     /**
@@ -119,7 +119,7 @@ public class ApiRateLimiter {
      */
     public void resetUserLimit(String userId) {
         userLimiters.remove(userId);
-        log.info("已重置用户 {} 的速率限制", userId);
+        log.info("????? {} ?????", userId);
     }
     
     /**
@@ -129,7 +129,7 @@ public class ApiRateLimiter {
      */
     public void resetApiLimit(String apiName) {
         limiters.remove(apiName);
-        log.info("已重置 API {} 的速率限制", apiName);
+        log.info("??? API {} ?????", apiName);
     }
     
     /**
@@ -138,6 +138,6 @@ public class ApiRateLimiter {
     public void resetAll() {
         limiters.clear();
         userLimiters.clear();
-        log.info("已清空所有速率限制");
+        log.info("?????????");
     }
 }

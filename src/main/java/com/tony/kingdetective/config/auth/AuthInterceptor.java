@@ -83,11 +83,11 @@ public class AuthInterceptor implements HandlerInterceptor {
                     return true; // 
                 } else {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    throw new OciException(401, "无权限");
+                    throw new OciException(401, "???");
                 }
             } else {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                throw new OciException(401, "无权限");
+                throw new OciException(401, "???");
             }
         }
 

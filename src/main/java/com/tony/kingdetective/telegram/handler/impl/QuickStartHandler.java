@@ -43,13 +43,13 @@ public class QuickStartHandler extends AbstractCallbackHandler {
             if (CollectionUtil.isEmpty(users)) {
                 return buildEditMessage(
                         callbackQuery,
-                        "❌ 未找到任何 OCI 配置",
+                        "? ????? OCI ??",
                         new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
                 );
             }
             
             StringBuilder message = new StringBuilder();
-            message.append("【快捷开机】\n\n");
+            message.append("??????\n\n");
             
             List<InstanceInfo> stoppedInstances = new ArrayList<>();
             
@@ -82,8 +82,8 @@ public class QuickStartHandler extends AbstractCallbackHandler {
             }
             
             if (stoppedInstances.isEmpty()) {
-                message.append("✅ 所有实例都在运行中\n\n");
-                message.append("💡 无需开机");
+                message.append("? ?????????\n\n");
+                message.append("? ????");
                 
                 return buildEditMessage(
                         callbackQuery,
@@ -95,14 +95,14 @@ public class QuickStartHandler extends AbstractCallbackHandler {
                 );
             }
             
-            message.append(String.format("发现 %d 个已停止的实例:\n\n", stoppedInstances.size()));
+            message.append(String.format("?? %d ???????:\n\n", stoppedInstances.size()));
             
             for (int i = 0; i < stoppedInstances.size(); i++) {
                 InstanceInfo info = stoppedInstances.get(i);
                 message.append(String.format(
                         "%d. %s\n" +
-                        "   账户: %s\n" +
-                        "   区域: %s\n\n",
+                        "   ??: %s\n" +
+                        "   ??: %s\n\n",
                         i + 1,
                         info.instanceName,
                         info.username,
@@ -110,15 +110,15 @@ public class QuickStartHandler extends AbstractCallbackHandler {
                 ));
             }
             
-            message.append("确认要启动所有实例吗？");
+            message.append("???????????");
             
             return buildEditMessage(
                     callbackQuery,
                     message.toString(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("🚀 全部开机", "confirm_quick_start"),
-                                    KeyboardBuilder.button("❌ 取消", "back_to_main")
+                                    KeyboardBuilder.button("? ????", "confirm_quick_start"),
+                                    KeyboardBuilder.button("? ??", "back_to_main")
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -128,7 +128,7 @@ public class QuickStartHandler extends AbstractCallbackHandler {
             log.error("Failed to check stopped instances", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 查询失败: " + e.getMessage(),
+                    "? ????: " + e.getMessage(),
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }
@@ -163,7 +163,7 @@ class ConfirmQuickStartHandler extends AbstractCallbackHandler {
             List<SysUserDTO> users = sysService.list();
             
             StringBuilder message = new StringBuilder();
-            message.append("【开机结果】\n\n");
+            message.append("??????\n\n");
             
             int successCount = 0;
             int failCount = 0;
@@ -190,7 +190,7 @@ class ConfirmQuickStartHandler extends AbstractCallbackHandler {
                                 computeClient.instanceAction(actionRequest);
                                 
                                 message.append(String.format(
-                                        "✅ %s (%s)\n",
+                                        "? %s (%s)\n",
                                         instance.getDisplayName(),
                                         user.getUsername()
                                 ));
@@ -198,7 +198,7 @@ class ConfirmQuickStartHandler extends AbstractCallbackHandler {
                                 
                             } catch (Exception e) {
                                 message.append(String.format(
-                                        "❌ %s: %s\n",
+                                        "? %s: %s\n",
                                         instance.getDisplayName(),
                                         e.getMessage()
                                 ));
@@ -213,9 +213,9 @@ class ConfirmQuickStartHandler extends AbstractCallbackHandler {
                 }
             }
             
-            message.append("\n━━━━━━━━━━━━━━━━\n");
-            message.append(String.format("✅ 成功: %d / ❌ 失败: %d\n", successCount, failCount));
-            message.append("\n💡 实例启动中，请稍候片刻");
+            message.append("\n????????????????\n");
+            message.append(String.format("? ??: %d / ? ??: %d\n", successCount, failCount));
+            message.append("\n? ???????????");
             
             return buildEditMessage(
                     callbackQuery,
@@ -230,7 +230,7 @@ class ConfirmQuickStartHandler extends AbstractCallbackHandler {
             log.error("Failed to quick start", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 开机失败: " + e.getMessage(),
+                    "? ????: " + e.getMessage(),
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }

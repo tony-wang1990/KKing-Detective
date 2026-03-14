@@ -43,7 +43,7 @@ public class TgMessageSender {
             }
             telegramClient.execute(builder.build());
         } catch (TelegramApiException e) {
-            log.error("发送消息失败: chatId={}", chatId, e);
+            log.error("??????: chatId={}", chatId, e);
             // Markdown 
             if (markdown) {
                 try {
@@ -52,7 +52,7 @@ public class TgMessageSender {
                         .text(text)
                         .build());
                 } catch (TelegramApiException ex) {
-                    log.error("降级发送也失败: chatId={}", chatId, ex);
+                    log.error("???????: chatId={}", chatId, ex);
                 }
             }
         }

@@ -70,41 +70,41 @@ public class CommonUtils {
     public static final DateTimeFormatter DATETIME_FMT_NORM = DateTimeFormatter.ofPattern(DatePattern.NORM_DATETIME_PATTERN);
 
     public static final String BEGIN_CREATE_MESSAGE_TEMPLATE =
-            "【开机任务】\n\n用户：[%s] 开始执行开机任务\n" +
-                    "时间： %s\n" +
-                    "Region： %s\n" +
-                    "CPU类型： %s\n" +
-                    "CPU： %s\n" +
-                    "内存（GB）： %s\n" +
-                    "磁盘大小（GB）： %s\n" +
-                    "数量： %s\n" +
-                    "root密码： %s";
+            "??????\n\n???[%s] ????????\n" +
+                    "??? %s\n" +
+                    "Region? %s\n" +
+                    "CPU??? %s\n" +
+                    "CPU? %s\n" +
+                    "???GB?? %s\n" +
+                    "?????GB?? %s\n" +
+                    "??? %s\n" +
+                    "root??? %s";
     public static final String BEGIN_CHANGE_IP_MESSAGE_TEMPLATE =
-            "【更换IP任务】\n\n用户：[%s] 开始执行更换公网IP任务\n" +
-                    "时间： %s\n" +
-                    "区域： %s\n" +
-                    "实例： %s\n" +
-                    "当前公网IP： %s";
+            "???IP???\n\n???[%s] ????????IP??\n" +
+                    "??? %s\n" +
+                    "??? %s\n" +
+                    "??? %s\n" +
+                    "????IP? %s";
     public static final String CHANGE_IP_MESSAGE_TEMPLATE =
-            "【更换IP任务】\n\n🎉 用户：[%s] 更换公共IP成功 🎉\n" +
-                    "时间： %s\n" +
-                    "区域： %s\n" +
-                    "实例： %s\n" +
-                    "新的公网IP： %s";
+            "???IP???\n\n? ???[%s] ????IP?? ?\n" +
+                    "??? %s\n" +
+                    "??? %s\n" +
+                    "??? %s\n" +
+                    "????IP? %s";
     public static final String TERMINATE_INSTANCE_MESSAGE_TEMPLATE =
-            "【终止实例任务】\n\n用户：[%s] 正在执行终止实例任务\n" +
-                    "时间： %s\n" +
-                    "区域： %s\n" +
-                    "请耐心等待，稍后自行刷新详情查看";
+            "????????\n\n???[%s] ??????????\n" +
+                    "??? %s\n" +
+                    "??? %s\n" +
+                    "????????????????";
 
     public static final String TERMINATE_INSTANCE_CODE_MESSAGE_TEMPLATE =
-            "【验证码】\n\n用户：[%s] 正在执行终止实例任务\n" +
-                    "时间： %s\n" +
-                    "区域： %s\n" +
-                    "实例： %s\n" +
-                    "Shape： %s\n" +
-                    "验证码： %s\n" +
-                    "⭐注意：验证码有效期为5分钟，终止实例后，数据无法恢复，请谨慎操作！！！";
+            "?????\n\n???[%s] ??????????\n" +
+                    "??? %s\n" +
+                    "??? %s\n" +
+                    "??? %s\n" +
+                    "Shape? %s\n" +
+                    "???? %s\n" +
+                    "???????????5????????????????????????";
 
     public static <T> List<T> getPage(List<T> dataList, int page, int pageSize) {
         // 
@@ -170,8 +170,8 @@ public class CommonUtils {
 
             return zipFile;
         } catch (Exception e) {
-            log.error("压缩文件失败：{}", e.getLocalizedMessage());
-            throw new OciException(-1, "压缩文件失败");
+            log.error("???????{}", e.getLocalizedMessage());
+            throw new OciException(-1, "??????");
         }
     }
 
@@ -182,7 +182,7 @@ public class CommonUtils {
 
             // 
             if (zipFile.isEncrypted()) {
-                log.info("备份 ZIP 文件已加密，正在解密...");
+                log.info("?? ZIP ??????????...");
             }
 
             // 
@@ -195,8 +195,8 @@ public class CommonUtils {
             // 
 //            readFilesRecursively(outputDir);
         } catch (ZipException e) {
-            log.error("解密备份 ZIP 文件失败：{}", e.getMessage());
-            throw new OciException(-1, "解密 ZIP 文件失败");
+            log.error("???? ZIP ?????{}", e.getMessage());
+            throw new OciException(-1, "?? ZIP ????");
         }
     }
 
@@ -209,11 +209,11 @@ public class CommonUtils {
         } else {
             // 
             try {
-                log.info("读取文件: " + file.getAbsolutePath());
+                log.info("????: " + file.getAbsolutePath());
                 String content = new String(Files.readAllBytes(file.toPath()));
-                log.info("文件内容: " + content);
+                log.info("????: " + content);
             } catch (IOException e) {
-                log.info("读取文件失败：" + file.getAbsolutePath() + "，错误：" + e.getMessage());
+                log.info("???????" + file.getAbsolutePath() + "????" + e.getMessage());
             }
         }
     }
@@ -232,7 +232,7 @@ public class CommonUtils {
             encodedIssuer = URLEncoder.encode(issuer, StandardCharsets.UTF_8.displayName());
             encodedAccount = URLEncoder.encode(account, StandardCharsets.UTF_8.displayName());
         } catch (UnsupportedEncodingException e) {
-            throw new OciException(-1, "生成url失败");
+            throw new OciException(-1, "??url??");
         }
 
         return String.format("otpauth://totp/%s:%s?secret=%s&issuer=%s",
@@ -598,7 +598,7 @@ public class CommonUtils {
         long seconds = duration.getSeconds() % 60;
 
         // 
-        return days + "天" + hours + "小时" + minutes + "分钟" + seconds + "秒";
+        return days + "?" + hours + "??" + minutes + "??" + seconds + "?";
     }
 
     public static String getLatestVersion() {
@@ -644,7 +644,7 @@ public class CommonUtils {
             connection.disconnect();
         } catch (Exception e) {
             log.error("Failed to fetch the latest release. exception: {}", e.getMessage());
-            throw new OciException(-1, "获取 king-detective 项目信息失败");
+            throw new OciException(-1, "?? king-detective ??????");
         }
         return rst;
     }
@@ -727,7 +727,7 @@ public class CommonUtils {
                 "      \n" +
                 "      # Set up warning message\n" +
                 "      {\n" +
-                "        echo \\\"🎉 欢迎使用 W 探长 (King-Detective)~ 🎉\\\"\\n" +
+                "        echo \\\"? ???? W ?? (King-Detective)~ ?\\\"\\n" +
                 "        echo \\\"Source code address: https://github.com/tony-wang1990/King-Detective\\\"\\n" +
                 "      } | tee /etc/motd\n" +
                 "      \n" +

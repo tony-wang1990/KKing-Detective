@@ -5,9 +5,9 @@ import lombok.Data;
 
 @Data
 public class AddApiKeyParams {
-    @NotBlank(message = "ociCfgId不能为空")
+    @NotBlank(message = "ociCfgId????")
     private String ociCfgId;
 
-    @NotBlank(message = "publicKeyContent不能为空")
+    @NotBlank(message = "publicKeyContent????")
     private String publicKeyContent;
 }

@@ -13,12 +13,12 @@ import lombok.Data;
 @Data
 public class Close500MParams {
 
-    @NotBlank(message = "ociCfgId不能为空")
+    @NotBlank(message = "ociCfgId????")
     private String ociCfgId;
-    @NotBlank(message = "instanceId不能为空")
+    @NotBlank(message = "instanceId????")
     private String instanceId;
-    @NotNull(message = "是否保留网络负载平衡器不能为空")
+    @NotNull(message = "???????????????")
     private Boolean retainBl;
-    @NotNull(message = "是否保留NAT网关不能为空")
+    @NotNull(message = "????NAT??????")
     private Boolean retainNatGw;
 }

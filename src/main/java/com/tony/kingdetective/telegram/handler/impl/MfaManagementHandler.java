@@ -50,67 +50,67 @@ public class MfaManagementHandler extends AbstractCallbackHandler {
                 String formattedCode = String.format("%06d", mfaCode);
                 
                 text = String.format(
-                    "🔐 *MFA 管理*\n\n" +
-                    "📌 当前状态：�?已启用\n\n" +
-                    "🔑 当前验证码：\n" +
+                    "? *MFA ??*\n\n" +
+                    "? ??????????\n\n" +
+                    "? ??????\n" +
                     "`%s`\n\n" +
-                    "💡 使用说明：\n" +
-                    "�?验证码每 30 秒更新一次\n" +
-                    "�?点击验证码可复制\n" +
-                    "�?用于需�?MFA 认证的场景\n\n" +
-                    "⚠️ 注意：\n" +
-                    "关闭 MFA 不会删除密钥，只是禁用功能。\n" +
-                    "请妥善保管验证码，不要泄露。\n\n" +
-                    "⚙️ 请选择功能�"?,
+                    "? ?????\n" +
+                    "?????? 30 ?????\n" +
+                    "??????????\n" +
+                    "???????MFA ?????\n\n" +
+                    "?? ???\n" +
+                    "?? MFA ??????????????\n" +
+                    "??????????????\n\n" +
+                    "?? ??????"?,
                     formattedCode
                 );
                 
                 keyboard.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("🔄 刷新验证�"?, "mfa_refresh")
+                    KeyboardBuilder.button("? ?????"?, "mfa_refresh")
                 ));
                 
                 keyboard.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("🔴 关闭 MFA", "mfa_disable_confirm")
+                    KeyboardBuilder.button("? ?? MFA", "mfa_disable_confirm")
                 ));
                 
             } else if (!mfaEnabled && hasSecret) {
                 // Has secret but MFA is disabled
-                text = "🔐 *MFA 管理*\n\n" +
-                       "📌 当前状态：�?已禁用\n\n" +
-                       "📝 说明：\n" +
-                       "MFA 密钥已配置，但功能处于禁用状态。\n" +
-                       "点击下方按钮即可重新启用。\n\n" +
-                       "⚠️ 注意：\n" +
-                       "如果需要重新生成密钥和二维码，\n" +
-                       "请先删除当前密钥，然后在 Web 界面重新配置。\n\n" +
-                       "⚙️ 请选择功能�"?;
+                text = "? *MFA ??*\n\n" +
+                       "? ??????????\n\n" +
+                       "? ???\n" +
+                       "MFA ????????????????\n" +
+                       "?????????????\n\n" +
+                       "?? ???\n" +
+                       "???????????????\n" +
+                       "???????????? Web ???????\n\n" +
+                       "?? ??????"?;
                 
                 keyboard.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("�?启用 MFA", "mfa_enable"),
-                    KeyboardBuilder.button("🗑�?删除密钥", "mfa_delete_secret")
+                    KeyboardBuilder.button("???? MFA", "mfa_enable"),
+                    KeyboardBuilder.button("???????", "mfa_delete_secret")
                 ));
                 
             } else {
                 // No secret configured
-                text = "🔐 *MFA 管理*\n\n" +
-                       "📋 当前状态：�?未配置\n\n" +
-                       "💡 什么是 MFA？\n" +
-                       "MFA (Multi-Factor Authentication) 是一种安全认证机制，\n" +
-                       "通过生成一次性验证码来增强账户安全性。\n\n" +
-                       "📱 使用场景：\n" +
-                       "�?OCI 账户登录\n" +
-                       "�?需要双因素认证的服务\n" +
-                       "�?敏感操作确认\n\n" +
-                       "⚙️ 启用方式：\n" +
-                       "点击下方按钮即可启用 MFA。\n" +
-                       "系统会自动生成密钥和二维码。\n\n" +
-                       "💡 提示：\n" +
-                       "�?启用后会收到二维码图片\n" +
-                       "�?使用身份验证器应用扫描二维码\n" +
-                       "�?配置完成后即可使用验证码";
+                text = "? *MFA ??*\n\n" +
+                       "? ??????????\n\n" +
+                       "? ??? MFA?\n" +
+                       "MFA (Multi-Factor Authentication) ??????????\n" +
+                       "???????????????????\n\n" +
+                       "? ?????\n" +
+                       "??OCI ????\n" +
+                       "????????????\n" +
+                       "????????\n\n" +
+                       "?? ?????\n" +
+                       "?????????? MFA?\n" +
+                       "??????????????\n\n" +
+                       "? ???\n" +
+                       "?????????????\n" +
+                       "????????????????\n" +
+                       "??????????????";
                 
                 keyboard.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("�?启用 MFA", "mfa_enable")
+                    KeyboardBuilder.button("???? MFA", "mfa_enable")
                 ));
             }
             
@@ -139,9 +139,9 @@ public class MfaManagementHandler extends AbstractCallbackHandler {
      */
     private BotApiMethod<? extends Serializable> buildErrorMessage(CallbackQuery callbackQuery, String errorMsg) {
         String text = String.format(
-            "�?*获取 MFA 信息失败*\n\n" +
-            "错误信息�?s\n\n" +
-            "请稍后重试或联系管理员�"?,
+            "??*?? MFA ????*\n\n" +
+            "??????s\n\n" +
+            "????????????"?,
             errorMsg
         );
         
@@ -196,7 +196,7 @@ class MfaEnableHandler extends AbstractCallbackHandler {
             // Show processing message
             telegramClient.execute(buildEditMessage(
                 callbackQuery,
-                "�"? MFA...\n\n?,
+                "?"? MFA...\n\n?,
                 null
             ));
             
@@ -237,13 +237,13 @@ class MfaEnableHandler extends AbstractCallbackHandler {
                         .chatId(chatId)
                         .photo(new org.telegram.telegrambots.meta.api.objects.InputFile(qrFile))
                         .caption(
-                            "📱 *MFA 二维�?\n\n" +
-                            "请使用身份验证器应用（如 Google Authenticator、Microsoft Authenticator 等）\n" +
-                            "扫描此二维码来添加账户。\n\n" +
-                            "⚠️ 注意：\n" +
-                            "�?请妥善保管此二维码\n" +
-                            "�?扫描后即可删除此图片\n" +
-                            "�"??
+                            "? *MFA ????\n\n" +
+                            "???????????? Google Authenticator?Microsoft Authenticator ??\n" +
+                            "????????????\n\n" +
+                            "?? ???\n" +
+                            "???????????\n" +
+                            "????????????\n" +
+                            "?"??
                         )
                         .parseMode("Markdown")
                         .build();
@@ -256,24 +256,24 @@ class MfaEnableHandler extends AbstractCallbackHandler {
             }
             
             String text = String.format(
-                "�?*MFA 已启�?\n\n" +
-                "🔑 当前验证码：\n" +
+                "??*MFA ????\n\n" +
+                "? ??????\n" +
                 "`%s`\n\n" +
-                "📱 配置步骤：\n" +
-                "1️⃣ 查看上方发送的二维码图片\n" +
-                "2️⃣ 使用身份验证器应用扫描\n" +
-                "3️⃣ 应用中会显示 6 位数字验证码\n" +
-                "4️⃣ 使用该验证码进行 MFA 认证\n\n" +
-                "💡 提示：\n" +
-                "�?验证码每 30 秒更新一次\n" +
-                "�?随时可在此查看当前验证码\n" +
-                "�"??,
+                "? ?????\n" +
+                "1?? ????????????\n" +
+                "2?? ???????????\n" +
+                "3?? ?????? 6 ??????\n" +
+                "4?? ???????? MFA ??\n\n" +
+                "? ???\n" +
+                "?????? 30 ?????\n" +
+                "??????????????\n" +
+                "?"??,
                 formattedCode
             );
             
             List<InlineKeyboardRow> keyboard = new ArrayList<>();
             keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("◀�?返回", "mfa_management")
+                KeyboardBuilder.button("?????", "mfa_management")
             ));
             keyboard.add(KeyboardBuilder.buildCancelRow());
             
@@ -286,12 +286,12 @@ class MfaEnableHandler extends AbstractCallbackHandler {
         } catch (Exception e) {
             log.error("Failed to enable MFA", e);
             
-            String text = "�?*启用 MFA 失败*\n\n" +
-                         "错误信息�"? + e.getMessage();
+            String text = "??*?? MFA ??*\n\n" +
+                         "?????"? + e.getMessage();
             
             List<InlineKeyboardRow> keyboard = new ArrayList<>();
             keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("◀�?返回", "mfa_management")
+                KeyboardBuilder.button("?????", "mfa_management")
             ));
             keyboard.add(KeyboardBuilder.buildCancelRow());
             
@@ -320,24 +320,24 @@ class MfaDisableConfirmHandler extends AbstractCallbackHandler {
     
     @Override
     public BotApiMethod<? extends Serializable> handle(CallbackQuery callbackQuery, TelegramClient telegramClient) {
-        String text = "⚠️ *确认关闭 MFA*\n\n" +
-                     "您确定要关闭 MFA 功能吗？\n\n" +
-                     "关闭后将：\n" +
-                     "�?无法生成验证码\n" +
-                     "�?MFA 密钥仍会保留\n" +
-                     "�?可以随时重新启用\n\n" +
-                     "💡 提示：\n" +
-                     "如果只是暂时不使用，建议保持启用状态�"?;
+        String text = "?? *???? MFA*\n\n" +
+                     "?????? MFA ????\n\n" +
+                     "?????\n" +
+                     "?????????\n" +
+                     "??MFA ??????\n" +
+                     "??????????\n\n" +
+                     "? ???\n" +
+                     "???????????????????"?;
         
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
         
         keyboard.add(new InlineKeyboardRow(
-            KeyboardBuilder.button("�?确认关闭", "mfa_disable"),
-            KeyboardBuilder.button("�?取消", "mfa_management")
+            KeyboardBuilder.button("??????", "mfa_disable"),
+            KeyboardBuilder.button("????", "mfa_management")
         ));
         
         keyboard.add(new InlineKeyboardRow(
-            KeyboardBuilder.button("◀�?返回", "mfa_management")
+            KeyboardBuilder.button("?????", "mfa_management")
         ));
         keyboard.add(KeyboardBuilder.buildCancelRow());
         
@@ -388,15 +388,15 @@ class MfaDisableHandler extends AbstractCallbackHandler {
             
             log.info("MFA disabled for chatId: {}", callbackQuery.getMessage().getChatId());
             
-            String text = "�?*MFA 已关�?\n\n" +
-                         "MFA 功能已禁用。\n\n" +
-                         "💡 提示：\n" +
-                         "�?MFA 密钥仍会保留\n" +
-                         "�?需要时可以重新启用";
+            String text = "??*MFA ????\n\n" +
+                         "MFA ??????\n\n" +
+                         "? ???\n" +
+                         "??MFA ??????\n" +
+                         "???????????";
             
             List<InlineKeyboardRow> keyboard = new ArrayList<>();
             keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("◀�?返回", "mfa_management")
+                KeyboardBuilder.button("?????", "mfa_management")
             ));
             keyboard.add(KeyboardBuilder.buildCancelRow());
             
@@ -409,12 +409,12 @@ class MfaDisableHandler extends AbstractCallbackHandler {
         } catch (Exception e) {
             log.error("Failed to disable MFA", e);
             
-            String text = "�?*关闭 MFA 失败*\n\n" +
-                         "错误信息�"? + e.getMessage();
+            String text = "??*?? MFA ??*\n\n" +
+                         "?????"? + e.getMessage();
             
             List<InlineKeyboardRow> keyboard = new ArrayList<>();
             keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("◀�?返回", "mfa_management")
+                KeyboardBuilder.button("?????", "mfa_management")
             ));
             keyboard.add(KeyboardBuilder.buildCancelRow());
             
@@ -443,24 +443,24 @@ class MfaDeleteSecretHandler extends AbstractCallbackHandler {
     
     @Override
     public BotApiMethod<? extends Serializable> handle(CallbackQuery callbackQuery, TelegramClient telegramClient) {
-        String text = "⚠️ *确认删除 MFA 密钥*\n\n" +
-                     "您确定要删除当前�?MFA 密钥吗？\n\n" +
-                     "删除后将：\n" +
-                     "�?当前密钥不可恢复\n" +
-                     "�?需要通过 Web 界面重新生成\n" +
-                     "�?需要重新扫描二维码配置\n\n" +
-                     "💡 提示：\n" +
-                     "如果只是不想使用，建议使用「关�"?MFA?;
+        String text = "?? *???? MFA ??*\n\n" +
+                     "??????????MFA ????\n\n" +
+                     "?????\n" +
+                     "??????????\n" +
+                     "?????? Web ??????\n" +
+                     "?????????????\n\n" +
+                     "? ???\n" +
+                     "????????????????"?MFA?;
         
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
         
         keyboard.add(new InlineKeyboardRow(
-            KeyboardBuilder.button("�?确认删除", "mfa_delete_secret_confirm"),
-            KeyboardBuilder.button("�?取消", "mfa_management")
+            KeyboardBuilder.button("??????", "mfa_delete_secret_confirm"),
+            KeyboardBuilder.button("????", "mfa_management")
         ));
         
         keyboard.add(new InlineKeyboardRow(
-            KeyboardBuilder.button("◀�?返回", "mfa_management")
+            KeyboardBuilder.button("?????", "mfa_management")
         ));
         keyboard.add(KeyboardBuilder.buildCancelRow());
         
@@ -511,19 +511,19 @@ class MfaDeleteSecretConfirmHandler extends AbstractCallbackHandler {
             
             log.info("MFA secret deleted for chatId: {}", callbackQuery.getMessage().getChatId());
             
-            String text = "�?*MFA 密钥已删�?\n\n" +
-                         "当前密钥和二维码已删除。\n\n" +
-                         "🔗 重新配置步骤：\n" +
-                         "1️⃣ 访问系统 Web 管理界面\n" +
-                         "2️⃣ 进入「系统配置」页面\n" +
-                         "3️⃣ 启用 MFA，系统会生成新密钥\n" +
-                         "4️⃣ 扫描新的二维码配置\n\n" +
-                         "💡 提示：\n" +
-                         "配置完成后即可在此处查看验证码�"?;
+            String text = "??*MFA ??????\n\n" +
+                         "????????????\n\n" +
+                         "? ???????\n" +
+                         "1?? ???? Web ????\n" +
+                         "2?? ??????????\n" +
+                         "3?? ?? MFA?????????\n" +
+                         "4?? ?????????\n\n" +
+                         "? ???\n" +
+                         "????????????????"?;
             
             List<InlineKeyboardRow> keyboard = new ArrayList<>();
             keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("◀�?返回", "mfa_management")
+                KeyboardBuilder.button("?????", "mfa_management")
             ));
             keyboard.add(KeyboardBuilder.buildCancelRow());
             
@@ -536,12 +536,12 @@ class MfaDeleteSecretConfirmHandler extends AbstractCallbackHandler {
         } catch (Exception e) {
             log.error("Failed to delete MFA secret", e);
             
-            String text = "�?*删除 MFA 密钥失败*\n\n" +
-                         "错误信息�"? + e.getMessage();
+            String text = "??*?? MFA ????*\n\n" +
+                         "?????"? + e.getMessage();
             
             List<InlineKeyboardRow> keyboard = new ArrayList<>();
             keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("◀�?返回", "mfa_management")
+                KeyboardBuilder.button("?????", "mfa_management")
             ));
             keyboard.add(KeyboardBuilder.buildCancelRow());
             

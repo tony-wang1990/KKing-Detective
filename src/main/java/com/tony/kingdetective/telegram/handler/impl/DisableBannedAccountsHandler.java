@@ -38,32 +38,32 @@ public class DisableBannedAccountsHandler extends AbstractCallbackHandler {
             if (CollectionUtil.isEmpty(allUsers)) {
                 return buildEditMessage(
                         callbackQuery,
-                        "❌ 未找到任何 OCI 配置",
+                        "? ????? OCI ??",
                         new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
                 );
             }
             
             StringBuilder message = new StringBuilder();
-            message.append("【一键禁用被封账户】\n\n");
-            message.append(String.format("共 %d 个账户\n\n", allUsers.size()));
-            message.append("正在检测被封账户...\n\n");
+            message.append("??????????\n\n");
+            message.append(String.format("? %d ???\n\n", allUsers.size()));
+            message.append("????????...\n\n");
             
             // Note: This is a simplified implementation
             // In real scenario, you would need to check account status via OCI API
-            message.append("⚠️ 此功能需要管理员权限\n\n");
-            message.append("💡 检测方法:\n");
-            message.append("1. 尝试调用OCI API\n");
-            message.append("2. 如果返回401/403则标记为被封\n");
-            message.append("3. 自动在数据库中禁用该配置\n\n");
-            message.append("确认执行检测和禁用？");
+            message.append("?? ??????????\n\n");
+            message.append("? ????:\n");
+            message.append("1. ????OCI API\n");
+            message.append("2. ????401/403??????\n");
+            message.append("3. ????????????\n\n");
+            message.append("??????????");
             
             return buildEditMessage(
                     callbackQuery,
                     message.toString(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("🔍 开始检测", "confirm_disable_banned"),
-                                    KeyboardBuilder.button("❌ 取消", "back_to_main")
+                                    KeyboardBuilder.button("? ????", "confirm_disable_banned"),
+                                    KeyboardBuilder.button("? ??", "back_to_main")
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -73,7 +73,7 @@ public class DisableBannedAccountsHandler extends AbstractCallbackHandler {
             log.error("Failed to check accounts", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 查询失败: " + e.getMessage(),
+                    "? ????: " + e.getMessage(),
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }
@@ -98,7 +98,7 @@ class ConfirmDisableBannedHandler extends AbstractCallbackHandler {
             List<SysUserDTO> users = sysService.list();
             
             StringBuilder message = new StringBuilder();
-            message.append("【检测结果】\n\n");
+            message.append("??????\n\n");
             
             int bannedCount = 0;
             int activeCount = 0;
@@ -111,12 +111,12 @@ class ConfirmDisableBannedHandler extends AbstractCallbackHandler {
                     fetcher.getUserInfo();
                     fetcher.close();
                     
-                    message.append(String.format("✅ %s: 正常\n", user.getUsername()));
+                    message.append(String.format("? %s: ??\n", user.getUsername()));
                     activeCount++;
                     
                 } catch (Exception e) {
                     // Account might be banned
-                    message.append(String.format("❌ %s: 已禁用 (%s)\n", user.getUsername(), e.getMessage()));
+                    message.append(String.format("? %s: ??? (%s)\n", user.getUsername(), e.getMessage()));
                     bannedCount++;
                     
                     // Mark as disabled in database
@@ -132,8 +132,8 @@ class ConfirmDisableBannedHandler extends AbstractCallbackHandler {
                 }
             }
             
-            message.append("\n━━━━━━━━━━━━━━━━\n");
-            message.append(String.format("✅ 正常: %d / ❌ 已封禁: %d\n", activeCount, bannedCount));
+            message.append("\n????????????????\n");
+            message.append(String.format("? ??: %d / ? ???: %d\n", activeCount, bannedCount));
             
             return buildEditMessage(
                     callbackQuery,
@@ -148,7 +148,7 @@ class ConfirmDisableBannedHandler extends AbstractCallbackHandler {
             log.error("Failed to disable banned accounts", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 检测失败: " + e.getMessage(),
+                    "? ????: " + e.getMessage(),
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }

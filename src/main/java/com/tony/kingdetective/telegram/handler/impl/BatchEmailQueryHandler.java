@@ -39,15 +39,15 @@ public class BatchEmailQueryHandler extends AbstractCallbackHandler {
             if (CollectionUtil.isEmpty(users)) {
                 return buildEditMessage(
                         callbackQuery,
-                        "❌ 未找到任何 OCI 配置\n\n请先添加 OCI 配置",
+                        "? ????? OCI ??\n\n???? OCI ??",
                         new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
                 );
             }
             
             StringBuilder message = new StringBuilder();
-            message.append("【批量邮箱查询】\n\n");
-            message.append(String.format("共 %d 个 OCI 账户\n\n", users.size()));
-            message.append("━━━━━━━━━━━━━━━━\n\n");
+            message.append("????????\n\n");
+            message.append(String.format("? %d ? OCI ??\n\n", users.size()));
+            message.append("????????????????\n\n");
             
             int successCount = 0;
             int failCount = 0;
@@ -61,21 +61,21 @@ public class BatchEmailQueryHandler extends AbstractCallbackHandler {
                     String userName = ociUser.getName();
                     String description = ociUser.getDescription();
                     
-                    message.append(String.format("✅ %s\n", user.getUsername()));
-                    message.append(String.format("   区域: %s\n", user.getOciCfg().getRegion()));
+                    message.append(String.format("? %s\n", user.getUsername()));
+                    message.append(String.format("   ??: %s\n", user.getOciCfg().getRegion()));
                     
                     if (email != null && !email.isEmpty()) {
-                        message.append(String.format("   📧 邮箱: %s\n", email));
+                        message.append(String.format("   ? ??: %s\n", email));
                     } else {
-                        message.append("   📧 邮箱: 未设置\n");
+                        message.append("   ? ??: ???\n");
                     }
                     
                     if (userName != null && !userName.isEmpty()) {
-                        message.append(String.format("   👤 用户名: %s\n", userName));
+                        message.append(String.format("   ? ???: %s\n", userName));
                     }
                     
                     if (description != null && !description.isEmpty()) {
-                        message.append(String.format("   📝 描述: %s\n", description));
+                        message.append(String.format("   ? ??: %s\n", description));
                     }
                     
                     message.append("\n");
@@ -83,15 +83,15 @@ public class BatchEmailQueryHandler extends AbstractCallbackHandler {
                     
                 } catch (Exception e) {
                     log.error("Failed to query email for user: {}", user.getUsername(), e);
-                    message.append(String.format("❌ %s\n", user.getUsername()));
-                    message.append(String.format("   查询失败: %s\n\n", e.getMessage()));
+                    message.append(String.format("? %s\n", user.getUsername()));
+                    message.append(String.format("   ????: %s\n\n", e.getMessage()));
                     failCount++;
                 }
             }
             
-            message.append("━━━━━━━━━━━━━━━━\n");
-            message.append(String.format("📊 成功: %d / 失败: %d\n", successCount, failCount));
-            message.append("\n💡 数据来自 OCI Identity API");
+            message.append("????????????????\n");
+            message.append(String.format("? ??: %d / ??: %d\n", successCount, failCount));
+            message.append("\n? ???? OCI Identity API");
             
             return buildEditMessage(
                     callbackQuery,
@@ -106,7 +106,7 @@ public class BatchEmailQueryHandler extends AbstractCallbackHandler {
             log.error("Failed to query batch email", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 查询失败: " + e.getMessage(),
+                    "? ????: " + e.getMessage(),
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }

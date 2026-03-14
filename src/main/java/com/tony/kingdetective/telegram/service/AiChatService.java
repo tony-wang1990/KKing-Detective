@@ -71,7 +71,7 @@ public class AiChatService {
                 // Get API key
                 String apiKey = getApiKey();
                 if (StringUtils.isBlank(apiKey)) {
-                    return "❌ 未配置 AI API 密钥，请在系统配置中设置";
+                    return "? ??? AI API ????????????";
                 }
                 
                 // Get or create ChatClient
@@ -102,7 +102,7 @@ public class AiChatService {
                 
             } catch (Exception e) {
                 log.error("AI chat failed: chatId={}, message={}", chatId, message, e);
-                return "❌ AI 对话失败: " + e.getMessage();
+                return "? AI ????: " + e.getMessage();
             }
         });
     }
@@ -137,7 +137,7 @@ public class AiChatService {
                 
                 // Format with thinking as code block
                 if (!thinking.isEmpty()) {
-                    formatted.append("💭 *AI 思考过程：*\n");
+                    formatted.append("? *AI ?????*\n");
                     formatted.append("```\n");
                     formatted.append(thinking);
                     formatted.append("\n```\n\n");
@@ -145,7 +145,7 @@ public class AiChatService {
                 
                 // Add answer with Markdown support
                 if (!answer.isEmpty()) {
-                    formatted.append("💬 *回答：*\n");
+                    formatted.append("? *???*\n");
                     // Process answer to support Markdown properly
                     formatted.append(processMarkdownContent(answer));
                 } else {
@@ -156,7 +156,7 @@ public class AiChatService {
             } else if (thinkEnd != -1) {
                 // Only </think> found, everything after is answer
                 String answer = response.substring(thinkEnd + 8).trim();
-                return "💬 *回答：*\n" + processMarkdownContent(answer);
+                return "? *???*\n" + processMarkdownContent(answer);
             }
         }
         
@@ -401,7 +401,7 @@ public class AiChatService {
                     .block(); // Block to wait for search results
             
             if (searchResults != null && !searchResults.isEmpty()) {
-                String prompt = message + "\n\n根据以下搜索结果回答：\n" +
+                String prompt = message + "\n\n???????????\n" +
                                String.join("\n", searchResults);
                 
                 return chatClient.prompt(prompt)

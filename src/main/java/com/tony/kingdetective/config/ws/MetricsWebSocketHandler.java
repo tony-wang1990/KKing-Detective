@@ -55,7 +55,7 @@ public class MetricsWebSocketHandler {
     @OnOpen
     public void onOpen(Session session, @PathParam(value = "token") String token) {
         if (token == null || !validateToken(token)) {
-            throw new OciException(-1, "无效的token");
+            throw new OciException(-1, "???token");
         }
 
         // ?session?
@@ -88,7 +88,7 @@ public class MetricsWebSocketHandler {
 
     @OnMessage
     public void onMessage(String message) {
-        log.info("【WebSocket消息】收到客户端消息�"? + message);
+        log.info("?WebSocket???????????"? + message);
     }
 
     /**
@@ -103,7 +103,7 @@ public class MetricsWebSocketHandler {
                     session.getAsyncRemote().sendText(message);
                 }
             } catch (Exception e) {
-                log.error("仪表盘数据推送失�"?, e);
+                log.error("?????????"?, e);
             }
         }
     }

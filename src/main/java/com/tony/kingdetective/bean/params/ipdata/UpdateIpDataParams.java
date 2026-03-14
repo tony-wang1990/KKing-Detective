@@ -17,6 +17,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UpdateIpDataParams {
 
-    @NotBlank(message = "id不能为空")
+    @NotBlank(message = "id????")
     private String id;
 }

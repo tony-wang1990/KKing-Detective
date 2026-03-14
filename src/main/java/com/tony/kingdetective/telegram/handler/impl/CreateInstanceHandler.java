@@ -105,7 +105,7 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
             log.warn("User not found: userId={}", userId);
             return buildEditMessage(
                     callbackQuery,
-                    "�?配置不存�?",
+                    "????????",
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }
@@ -114,17 +114,17 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
         InstancePlan plan = getPlanByType(planType);
         
         String message = String.format(
-                "【选择创建数量】\n\n" +
-                "🔑 配置名：%s\n" +
-                "🌏 区域�?s\n" +
-                "💻 方案�?s\n" +
-                "⚙️ 配置�?dC%dG%dG\n" +
-                "🏗�?架构�?s\n" +
-                "💿 系统�?s\n\n" +
-                "请选择需要创建的实例数量�?",
+                "????????\n\n" +
+                "? ????%s\n" +
+                "? ????s\n" +
+                "? ????s\n" +
+                "?? ????dC%dG%dG\n" +
+                "???????s\n" +
+                "? ????s\n\n" +
+                "??????????????",
                 user.getUsername(),
                 user.getOciRegion(),
-                planType.equals("plan1") ? "方案1" : "方案2",
+                planType.equals("plan1") ? "??1" : "??2",
                 plan.getOcpus(),
                 plan.getMemory(),
                 plan.getDisk(),
@@ -136,17 +136,17 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
         
         // Add quantity buttons (1-4 in two rows)
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("1�?", "ci:" + userId + ":" + planType + ":1"),
-                KeyboardBuilder.button("2�?", "ci:" + userId + ":" + planType + ":2")
+                KeyboardBuilder.button("1??", "ci:" + userId + ":" + planType + ":1"),
+                KeyboardBuilder.button("2??", "ci:" + userId + ":" + planType + ":2")
         ));
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("3�?", "ci:" + userId + ":" + planType + ":3"),
-                KeyboardBuilder.button("4�?", "ci:" + userId + ":" + planType + ":4")
+                KeyboardBuilder.button("3??", "ci:" + userId + ":" + planType + ":3"),
+                KeyboardBuilder.button("4??", "ci:" + userId + ":" + planType + ":4")
         ));
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("◀�?返回", "show_create_plans:" + userId)
+                KeyboardBuilder.button("?????", "show_create_plans:" + userId)
         ));
         keyboard.add(KeyboardBuilder.buildCancelRow());
         
@@ -178,7 +178,7 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
             log.warn("showIntervalOptions: User not found: userId={}", userId);
             return buildEditMessage(
                     callbackQuery,
-                    "�?配置不存�?",
+                    "????????",
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }
@@ -190,25 +190,25 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
         
         // Get plan display name
         String planName = switch (planType) {
-            case "plan1" -> "方案1";
-            case "plan2" -> "方案2";
-            case "plan3" -> "方案3";
-            case "plan4" -> "方案4";
+            case "plan1" -> "??1";
+            case "plan2" -> "??2";
+            case "plan3" -> "??3";
+            case "plan4" -> "??4";
             default -> planType;
         };
         
         // Build message asking about retry interval
         String message = String.format(
-                "【选择抢机间隔】\n\n" +
-                "🔑 配置名：%s\n" +
-                "🌏 区域�?s\n" +
-                "💻 方案�?s\n" +
-                "⚙️ 配置�?dC%dG%dG\n" +
-                "🏗�?架构�?s\n" +
-                "💿 系统�?s\n" +
-                "🔢 数量�?d台\n\n" +
-                "⏱️ 请选择抢机重试间隔：\n" +
-                "(间隔越短成功率越高但消耗资源也越多)",
+                "????????\n\n" +
+                "? ????%s\n" +
+                "? ????s\n" +
+                "? ????s\n" +
+                "?? ????dC%dG%dG\n" +
+                "???????s\n" +
+                "? ????s\n" +
+                "? ????d?\n\n" +
+                "?? ??????????\n" +
+                "(?????????????????)",
                 user.getUsername(),
                 user.getOciRegion(),
                 planName,
@@ -225,28 +225,28 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
         
         keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button(
-                        "�?15�?(激�?",
+                        "??15??(???",
                         "ci:" + userId + ":" + planType + ":" + count + ":15"
                 ),
                 KeyboardBuilder.button(
-                        "🚀 30�?(推荐)",
+                        "? 30??(??)",
                         "ci:" + userId + ":" + planType + ":" + count + ":30"
                 )
         ));
         
         keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button(
-                        "�?45�?(稳定)",
+                        "??45??(??)",
                         "ci:" + userId + ":" + planType + ":" + count + ":45"
                 ),
                 KeyboardBuilder.button(
-                        "🐌 60�?(保守)",
+                        "? 60??(??)",
                         "ci:" + userId + ":" + planType + ":" + count + ":60"
                 )
         ));
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("◀�?返回", "create_instance:" + userId + ":" + planType)
+                KeyboardBuilder.button("?????", "create_instance:" + userId + ":" + planType)
         ));
         keyboard.add(KeyboardBuilder.buildCancelRow());
         
@@ -279,7 +279,7 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
             log.warn("showBroadcastOptions: User not found: userId={}", userId);
             return buildEditMessage(
                     callbackQuery,
-                    "�?配置不存�?",
+                    "????????",
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }
@@ -291,26 +291,26 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
         
         // Get plan display name
         String planName = switch (planType) {
-            case "plan1" -> "方案1";
-            case "plan2" -> "方案2";
-            case "plan3" -> "方案3";
-            case "plan4" -> "方案4";
+            case "plan1" -> "??1";
+            case "plan2" -> "??2";
+            case "plan3" -> "??3";
+            case "plan4" -> "??4";
             default -> planType;
         };
         
         // Build message asking about channel broadcast
         String message = String.format(
-                "【开机方案确认】\n\n" +
-                "🔑 配置名：%s\n" +
-                "🌏 区域�?s\n" +
-                "💻 方案�?s\n" +
-                "⚙️ 配置�?dC%dG%dG\n" +
-                "🏗�?架构�?s\n" +
-                "💿 系统�?s\n" +
-                "🔢 数量�?d台\n" +
-                "⏱️ 重试间隔�?d秒\n\n" +
-                "📢 是否�?TG 频道推送开机成功信息？\n" +
-                "(开启后，开机成功时会自动向频道发送放货信�?",
+                "????????\n\n" +
+                "? ????%s\n" +
+                "? ????s\n" +
+                "? ????s\n" +
+                "?? ????dC%dG%dG\n" +
+                "???????s\n" +
+                "? ????s\n" +
+                "? ????d?\n" +
+                "?? ??????d?\n\n" +
+                "? ????TG ???????????\n" +
+                "(??????????????????????",
                 user.getUsername(),
                 user.getOciRegion(),
                 planName,
@@ -328,20 +328,20 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
         
         keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button(
-                        "�?开启频道推�?",
+                        "?????????",
                         "ci:" + userId + ":" + planType + ":" + count + ":" + interval + ":true"
                 )
         ));
         
         keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button(
-                        "�?关闭频道推�?",
+                        "?????????",
                         "ci:" + userId + ":" + planType + ":" + count + ":" + interval + ":false"
                 )
         ));
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("◀�?返回", "ci:" + userId + ":" + planType + ":" + count)
+                KeyboardBuilder.button("?????", "ci:" + userId + ":" + planType + ":" + count)
         ));
         keyboard.add(KeyboardBuilder.buildCancelRow());
         
@@ -373,7 +373,7 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
         if (user == null) {
             return buildEditMessage(
                     callbackQuery,
-                    "�?配置不存�?",
+                    "????????",
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }
@@ -386,10 +386,10 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
         
         // Get plan display name
         String planName = switch (planType) {
-            case "plan1" -> "方案1";
-            case "plan2" -> "方案2";
-            case "plan3" -> "方案3";
-            case "plan4" -> "方案4";
+            case "plan1" -> "??1";
+            case "plan2" -> "??2";
+            case "plan3" -> "??3";
+            case "plan4" -> "??4";
             default -> planType;
         };
         
@@ -407,19 +407,19 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
         }
         
         // ?
-        String channelStatus = joinChannelBroadcast ? "�?已开�? : "??;
+        String channelStatus = joinChannelBroadcast ? "?????? : "??;
         String creatingMessage = String.format(
-                "�?正在创建实例...\n\n" +
-                "🔑 配置名：%s\n" +
-                "🌏 区域�?s\n" +
-                "💻 方案�?s\n" +
-                "⚙️ 配置�?dC%dG%dG\n" +
-                "🏗�?架构�?s\n" +
-                "💿 系统�?s\n" +
-                "🔢 数量�?d台\n" +
-                "⏱️ 重试间隔�?d秒\n" +
-                "📢 频道推送：%s\n\n" +
-                "请稍候，任务已提�?..",
+                "????????...\n\n" +
+                "? ????%s\n" +
+                "? ????s\n" +
+                "? ????s\n" +
+                "?? ????dC%dG%dG\n" +
+                "???????s\n" +
+                "? ????s\n" +
+                "? ????d?\n" +
+                "?? ??????d?\n" +
+                "? ?????%s\n\n" +
+                "??????????..",
                 user.getUsername(),
                 user.getOciRegion(),
                 planName,

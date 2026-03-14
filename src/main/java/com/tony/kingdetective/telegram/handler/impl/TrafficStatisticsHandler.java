@@ -30,16 +30,16 @@ public class TrafficStatisticsHandler extends AbstractCallbackHandler {
         // Show confirmation dialog
         return buildEditMessage(
                 callbackQuery,
-                "⚠️ 确认查询流量统计？\n\n此操作将获取所有OCI配置的流量使用情况�?",
+                "?? ?????????\n\n????????OCI???????????",
                 InlineKeyboardMarkup.builder()
                         .keyboard(Arrays.asList(
                                 new InlineKeyboardRow(
                                         InlineKeyboardButton.builder()
-                                                .text("�?确认查询")
+                                                .text("??????")
                                                 .callbackData("traffic_statistics_confirm")
                                                 .build(),
                                         InlineKeyboardButton.builder()
-                                                .text("�?取消")
+                                                .text("????")
                                                 .callbackData("back_to_main")
                                                 .build()
                                 )
@@ -72,7 +72,7 @@ class TrafficStatisticsConfirmHandler extends AbstractCallbackHandler {
         InlineKeyboardMarkup keyboard = InlineKeyboardMarkup.builder()
                 .keyboard(Arrays.asList(
                         new InlineKeyboardRow(
-                                KeyboardBuilder.button("🔄 刷新", "traffic_statistics_confirm")
+                                KeyboardBuilder.button("? ??", "traffic_statistics_confirm")
                         ),
                         KeyboardBuilder.buildBackToMainMenuRow(),
                         KeyboardBuilder.buildCancelRow()

@@ -55,10 +55,10 @@ public class OpenAllPortsHandler extends AbstractCallbackHandler {
             if (CollectionUtil.isEmpty(instances)) {
                 return buildEditMessage(
                         callbackQuery,
-                        "❌ 暂无运行中的实例",
+                        "? ????????",
                         new InlineKeyboardMarkup(List.of(
                                 new InlineKeyboardRow(
-                                        KeyboardBuilder.button("◀️ 返回", "select_config:" + ociCfgId)
+                                        KeyboardBuilder.button("?? ??", "select_config:" + ociCfgId)
                                 ),
                                 KeyboardBuilder.buildCancelRow()
                         ))
@@ -73,10 +73,10 @@ public class OpenAllPortsHandler extends AbstractCallbackHandler {
             log.error("Failed to list instances for opening ports", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 获取实例列表失败：" + e.getMessage(),
+                    "? ?????????" + e.getMessage(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "select_config:" + ociCfgId)
+                                    KeyboardBuilder.button("?? ??", "select_config:" + ociCfgId)
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -90,10 +90,10 @@ public class OpenAllPortsHandler extends AbstractCallbackHandler {
             String ociCfgId,
             long chatId) {
         
-        StringBuilder message = new StringBuilder("【开放云面板端口】\n\n");
-        message.append("一键开放所有进站/出站端口\n\n");
-        message.append(String.format("共 %d 个运行中的实例\n", instances.size()));
-        message.append("选择实例进行端口开放：\n\n");
+        StringBuilder message = new StringBuilder("?????????\n\n");
+        message.append("????????/????\n\n");
+        message.append(String.format("? %d ???????\n", instances.size()));
+        message.append("???????????\n\n");
         
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
         
@@ -102,7 +102,7 @@ public class OpenAllPortsHandler extends AbstractCallbackHandler {
             
             message.append(String.format(
                     "%d. %s\n" +
-                    "   区域: %s\n\n",
+                    "   ??: %s\n\n",
                     i + 1,
                     instance.getName(),
                     instance.getRegion()
@@ -110,18 +110,18 @@ public class OpenAllPortsHandler extends AbstractCallbackHandler {
             
             InlineKeyboardRow row = new InlineKeyboardRow();
             row.add(KeyboardBuilder.button(
-                    String.format("🔓 实例%d", i + 1),
+                    String.format("? ??%d", i + 1),
                     "open_ports_instance:" + i
             ));
             keyboard.add(row);
         }
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("🚀 批量开放所有实例", "open_ports_all")
+                KeyboardBuilder.button("? ????????", "open_ports_all")
         ));
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("◀️ 返回", "select_config:" + ociCfgId)
+                KeyboardBuilder.button("?? ??", "select_config:" + ociCfgId)
         ));
         keyboard.add(KeyboardBuilder.buildCancelRow());
         
@@ -158,7 +158,7 @@ class OpenPortsInstanceHandler extends AbstractCallbackHandler {
         if (instance == null) {
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 实例不存在",
+                    "? ?????",
                     new InlineKeyboardMarkup(List.of(KeyboardBuilder.buildCancelRow()))
             );
         }
@@ -193,10 +193,10 @@ class OpenPortsInstanceHandler extends AbstractCallbackHandler {
                 if (subnetId == null || subnetId.isEmpty()) {
                     return buildEditMessage(
                             callbackQuery,
-                            "❌ 实例未关联子网 (无法获取 VNIC 信息)",
+                            "? ??????? (???? VNIC ??)",
                             new InlineKeyboardMarkup(List.of(
                                     new InlineKeyboardRow(
-                                            KeyboardBuilder.button("◀️ 返回", "open_all_ports:" + ociCfgId)
+                                            KeyboardBuilder.button("?? ??", "open_all_ports:" + ociCfgId)
                                     ),
                                     KeyboardBuilder.buildCancelRow()
                             ))
@@ -265,21 +265,21 @@ class OpenPortsInstanceHandler extends AbstractCallbackHandler {
                 return buildEditMessage(
                         callbackQuery,
                         String.format(
-                                "✅ 端口开放成功！\n\n" +
-                                "实例: %s\n" +
-                                "区域: %s\n\n" +
-                                "已开放:\n" +
-                                "• 所有进站端口 0.0.0.0/0\n" +
-                                "• 所有出站端口 0.0.0.0/0\n" +
-                                "• 更新了 %d 个安全列表\n\n" +
-                                "💡 所有TCP/UDP端口已开放",
+                                "? ???????\n\n" +
+                                "??: %s\n" +
+                                "??: %s\n\n" +
+                                "???:\n" +
+                                "? ?????? 0.0.0.0/0\n" +
+                                "? ?????? 0.0.0.0/0\n" +
+                                "? ??? %d ?????\n\n" +
+                                "? ??TCP/UDP?????",
                                 instance.getName(),
                                 instance.getRegion(),
                                 updatedCount
                         ),
                         new InlineKeyboardMarkup(List.of(
                                 new InlineKeyboardRow(
-                                        KeyboardBuilder.button("◀️ 返回", "open_all_ports:" + ociCfgId)
+                                        KeyboardBuilder.button("?? ??", "open_all_ports:" + ociCfgId)
                                 ),
                                 KeyboardBuilder.buildCancelRow()
                         ))
@@ -290,10 +290,10 @@ class OpenPortsInstanceHandler extends AbstractCallbackHandler {
             log.error("Failed to open ports", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 端口开放失败\n\n" + e.getMessage(),
+                    "? ??????\n\n" + e.getMessage(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "open_all_ports:" + ociCfgId)
+                                    KeyboardBuilder.button("?? ??", "open_all_ports:" + ociCfgId)
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -325,7 +325,7 @@ class OpenPortsAllHandler extends AbstractCallbackHandler {
         if (CollectionUtil.isEmpty(instances)) {
              return buildEditMessage(
                     callbackQuery,
-                    "❌ 暂无实例缓存，请重新获取列表",
+                    "? ??????????????",
                     new InlineKeyboardMarkup(List.of(KeyboardBuilder.buildCancelRow()))
             );
         }
@@ -335,7 +335,7 @@ class OpenPortsAllHandler extends AbstractCallbackHandler {
             telegramClient.execute(org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText.builder()
                     .chatId(chatId)
                     .messageId(callbackQuery.getMessage().getMessageId())
-                    .text("⏳ 正在批量开放端口，请稍候...")
+                    .text("? ????????????...")
                     .build());
         } catch (Exception ignored) {}
         
@@ -444,18 +444,18 @@ class OpenPortsAllHandler extends AbstractCallbackHandler {
             return buildEditMessage(
                     callbackQuery,
                     String.format(
-                            "✅ **批量操作完成！**\n\n" +
-                            "尝试处理: %d 个实例\n" +
-                            "成功覆盖: %d 个实例\n" +
-                            "更新网络: %d 个 VCN\n\n" +
-                            "所有关联的安全组规则已更新为允许所有流量。",
+                            "? **???????**\n\n" +
+                            "????: %d ???\n" +
+                            "????: %d ???\n" +
+                            "????: %d ? VCN\n\n" +
+                            "?????????????????????",
                             instances.size(),
                             successCount,
                             totalVcnUpdated
                     ),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回列表", "open_all_ports:" + ociCfgId)
+                                    KeyboardBuilder.button("?? ????", "open_all_ports:" + ociCfgId)
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -465,10 +465,10 @@ class OpenPortsAllHandler extends AbstractCallbackHandler {
              log.error("Failed to batch open ports", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 批量开放失败\n\n" + e.getMessage(),
+                    "? ??????\n\n" + e.getMessage(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "open_all_ports:" + ociCfgId)
+                                    KeyboardBuilder.button("?? ??", "open_all_ports:" + ociCfgId)
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -499,21 +499,21 @@ class OpenAllPortsConfigSelectHandler extends AbstractCallbackHandler {
             if (CollectionUtil.isEmpty(users)) {
                 return buildEditMessage(
                         callbackQuery,
-                        "❌ 未找到任何 OCI 配置",
+                        "? ????? OCI ??",
                         new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
                 );
             }
             
             StringBuilder message = new StringBuilder();
-            message.append("【开放云面板端口】\n\n");
-            message.append("请选择要管理的 OCI 配置：\n\n");
+            message.append("?????????\n\n");
+            message.append("??????? OCI ???\n\n");
             
             List<InlineKeyboardRow> keyboard = new ArrayList<>();
             
             for (SysUserDTO user : users) {
                 message.append(String.format(
-                        "📌 %s\n" +
-                        "   区域: %s\n\n",
+                        "? %s\n" +
+                        "   ??: %s\n\n",
                         user.getUsername(),
                         user.getOciCfg().getRegion()
                 ));
@@ -539,7 +539,7 @@ class OpenAllPortsConfigSelectHandler extends AbstractCallbackHandler {
             log.error("Failed to list OCI configs", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 获取配置列表失败: " + e.getMessage(),
+                    "? ????????: " + e.getMessage(),
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }

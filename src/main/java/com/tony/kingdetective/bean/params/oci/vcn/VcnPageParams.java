@@ -17,7 +17,7 @@ import jakarta.validation.constraints.NotBlank;
 @Data
 public class VcnPageParams extends BasicPageParams {
 
-    @NotBlank(message = "配置id不能为空")
+    @NotBlank(message = "??id????")
     private String ociCfgId;
     private boolean cleanReLaunch;
 }

@@ -47,7 +47,7 @@ public class BatchOperationUtil {
                 .collect(Collectors.toMap(idExtractor, Function.identity()));
         
         long duration = System.currentTimeMillis() - startTime;
-        log.debug("批量查询完成: {} 条记录, 耗时: {}ms", results.size(), duration);
+        log.debug("??????: {} ???, ??: {}ms", results.size(), duration);
         
         return resultMap;
     }
@@ -81,14 +81,14 @@ public class BatchOperationUtil {
             int updated = updateFunction.apply(batch);
             totalUpdated += updated;
             
-            log.debug("批次 {}/{} 完成: 更新 {} 条记录",
+            log.debug("?? {}/{} ??: ?? {} ???",
                     (i / batchSize) + 1,
                     ((items.size() + batchSize - 1) / batchSize),
                     updated);
         }
         
         long duration = System.currentTimeMillis() - startTime;
-        log.info("批量更新完成: {} 条记录, 耗时: {}ms", totalUpdated, duration);
+        log.info("??????: {} ???, ??: {}ms", totalUpdated, duration);
         
         return totalUpdated;
     }
@@ -121,14 +121,14 @@ public class BatchOperationUtil {
             int deleted = deleteFunction.apply(batch);
             totalDeleted += deleted;
             
-            log.debug("批次 {}/{} 完成: 删除 {} 条记录",
+            log.debug("?? {}/{} ??: ?? {} ???",
                     (i / batchSize) + 1,
                     ((ids.size() + batchSize - 1) / batchSize),
                     deleted);
         }
         
         long duration = System.currentTimeMillis() - startTime;
-        log.info("批量删除完成: {} 条记录, 耗时: {}ms", totalDeleted, duration);
+        log.info("??????: {} ???, ??: {}ms", totalDeleted, duration);
         
         return totalDeleted;
     }

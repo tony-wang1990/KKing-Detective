@@ -31,7 +31,7 @@ public class HealthCheckController {
      */
     @GetMapping("/health")
     public HealthStatus health() {
-        log.debug("执行健康检查");
+        log.debug("??????");
         
         boolean databaseOk = checkDatabase();
         boolean memoryOk = checkMemory();
@@ -53,7 +53,7 @@ public class HealthCheckController {
         try (Connection conn = dataSource.getConnection()) {
             return conn.isValid(5); // 5
         } catch (Exception e) {
-            log.error("数据库连接检查失败", e);
+            log.error("?????????", e);
             return false;
         }
     }
@@ -68,12 +68,12 @@ public class HealthCheckController {
             long usedMemory = runtime.totalMemory() - runtime.freeMemory();
             double usagePercent = (double) usedMemory / maxMemory * 100;
             
-            log.debug("内存使用率: {:.2f}%", usagePercent);
+            log.debug("?????: {:.2f}%", usagePercent);
             
             // 90%
             return usagePercent < 90;
         } catch (Exception e) {
-            log.error("内存检查失败", e);
+            log.error("??????", e);
             return false;
         }
     }

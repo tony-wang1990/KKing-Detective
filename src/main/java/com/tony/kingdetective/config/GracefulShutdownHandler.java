@@ -28,7 +28,7 @@ public class GracefulShutdownHandler {
      */
     @PreDestroy
     public void shutdown() {
-        log.info("================== 开始优雅停机 ==================");
+        log.info("================== ?????? ==================");
         
         // 1. 
         if (virtualExecutor != null) {
@@ -36,15 +36,15 @@ public class GracefulShutdownHandler {
         }
         
         // 2. 
-        log.info("等待所有异步任务完成...");
+        log.info("??????????...");
         
         // 3. Spring 
-        log.info("关闭数据库连接...");
+        log.info("???????...");
         
         // 4. 
-        log.info("清理缓存...");
+        log.info("????...");
         
-        log.info("================== 优雅停机完成 ==================");
+        log.info("================== ?????? ==================");
     }
     
     /**
@@ -54,7 +54,7 @@ public class GracefulShutdownHandler {
      * @param name 
      */
     private void shutdownExecutor(ExecutorService executor, String name) {
-        log.info("开始关闭线程池: {}", name);
+        log.info("???????: {}", name);
         
         // 
         executor.shutdown();
@@ -62,20 +62,20 @@ public class GracefulShutdownHandler {
         try {
             // 60
             if (!executor.awaitTermination(60, TimeUnit.SECONDS)) {
-                log.warn("线程池 {} 在60秒内未完成所有任务，强制关闭", name);
+                log.warn("??? {} ?60??????????????", name);
                 
                 // 
                 executor.shutdownNow();
                 
                 // 30
                 if (!executor.awaitTermination(30, TimeUnit.SECONDS)) {
-                    log.error("线程池 {} 无法完全关闭", name);
+                    log.error("??? {} ??????", name);
                 }
             } else {
-                log.info("线程池 {} 已成功关闭", name);
+                log.info("??? {} ?????", name);
             }
         } catch (InterruptedException e) {
-            log.error("等待线程池关闭时被中断: {}", name, e);
+            log.error("???????????: {}", name, e);
             
             // 
             executor.shutdownNow();

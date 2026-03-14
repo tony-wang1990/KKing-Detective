@@ -15,9 +15,9 @@ import jakarta.validation.constraints.NotBlank;
 @Data
 public class UpdateUserInfoParams extends UpdateUserBasicParams{
 
-    @NotBlank(message = "邮箱不能为空")
+    @NotBlank(message = "??????")
     private String email;
-    @NotBlank(message = "dbUserName不能为空")
+    @NotBlank(message = "dbUserName????")
     private String dbUserName;
     private String description;
 }

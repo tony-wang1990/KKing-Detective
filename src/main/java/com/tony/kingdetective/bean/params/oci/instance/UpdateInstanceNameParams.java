@@ -17,6 +17,6 @@ import jakarta.validation.constraints.NotBlank;
 @Data
 public class UpdateInstanceNameParams extends GetInstanceCfgInfoParams {
 
-    @NotBlank(message = "实例名称不能为空")
+    @NotBlank(message = "????????")
     private String name;
 }

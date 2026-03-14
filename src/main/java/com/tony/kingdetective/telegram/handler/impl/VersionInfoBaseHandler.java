@@ -30,7 +30,7 @@ import static java.lang.Math.toIntExact;
 public abstract class VersionInfoBaseHandler extends AbstractCallbackHandler {
     
     protected BotApiMethod<? extends Serializable> getVersionInfo(long chatId, long messageId, TelegramClient telegramClient) {
-        String content = "【版本信息】\n\n当前版本：%s\n最新版本：%s\n";
+        String content = "??????\n\n?????%s\n?????%s\n";
         IOciKvService kvService = SpringUtil.getBean(IOciKvService.class);
         String latest = CommonUtils.getLatestVersion();
         String now = kvService.getObj(new LambdaQueryWrapper<OciKv>()
@@ -42,16 +42,16 @@ public abstract class VersionInfoBaseHandler extends AbstractCallbackHandler {
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
         
         if (!now.equals(latest)) {
-            common += String.format("一键脚本：%s\n更新内容：\n%s",
+            common += String.format("?????%s\n?????\n%s",
                     "bash <(wget -qO- https://github.com/tony-wang1990/king-detective/releases/latest/download/sh_king-detective_install.sh)",
                     CommonUtils.getLatestVersionBody());
             
             keyboard.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("\uD83D\uDD04 点击更新至最新版本", "update_sys_version")
+                    KeyboardBuilder.button("\uD83D\uDD04 ?????????", "update_sys_version")
             ));
             keyboard.add(KeyboardBuilder.buildCancelRow());
         } else {
-            common += "当前已是最新版本，无需更新~";
+            common += "?????????????~";
             keyboard = KeyboardBuilder.buildMainMenu();
         }
         

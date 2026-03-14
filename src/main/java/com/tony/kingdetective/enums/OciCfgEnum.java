@@ -16,11 +16,11 @@ public enum OciCfgEnum {
     /**
      * OCI
      */
-    OCI_CFG_USER_ID("user", "用户id"),
-    OCI_CFG_TENANT_ID("tenancy", "租户id"),
-    OCI_CFG_REGION("region", "区域"),
-    OCI_CFG_FINGERPRINT("fingerprint", "指纹"),
-    OCI_CFG_KEY_FILE("key_file", "密钥文件全路径"),
+    OCI_CFG_USER_ID("user", "??id"),
+    OCI_CFG_TENANT_ID("tenancy", "??id"),
+    OCI_CFG_REGION("region", "??"),
+    OCI_CFG_FINGERPRINT("fingerprint", "??"),
+    OCI_CFG_KEY_FILE("key_file", "???????"),
     ;
 
     private String type;

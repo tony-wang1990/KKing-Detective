@@ -32,7 +32,7 @@ public class VersionInfoHandler extends VersionInfoBaseHandler {
             );
         } catch (Exception e) {
             log.error("Handle version info error", e);
-            return buildEditMessage(callbackQuery, "获取版本信息失败");
+            return buildEditMessage(callbackQuery, "????????");
         }
     }
     
@@ -63,7 +63,7 @@ class UpdateSysVersionHandler extends VersionInfoBaseHandler {
             
             // 
             if (triggerFile.exists() && triggerFile.isDirectory()) {
-                log.warn("Trigger文件被错误地创建为目录，正在修复...");
+                log.warn("Trigger????????????????...");
                 org.apache.commons.io.FileUtils.deleteDirectory(triggerFile);
             }
             
@@ -81,7 +81,7 @@ class UpdateSysVersionHandler extends VersionInfoBaseHandler {
                 java.nio.file.StandardOpenOption.TRUNCATE_EXISTING
             );
             
-            log.info("�?成功创建更新触发�? {}", triggerFile.getAbsolutePath());
+            log.info("???????????? {}", triggerFile.getAbsolutePath());
             
             // ?
             telegramClient.execute(DeleteMessage.builder()
@@ -92,26 +92,26 @@ class UpdateSysVersionHandler extends VersionInfoBaseHandler {
             // ?
             return SendMessage.builder()
                     .chatId(chatId)
-                    .text("🔄 正在更新 king-detective 最新版本，请稍�?..\n\n" +
-                          "💡 更新过程�?-3分钟\n" +
-                          "📋 可通过以下命令查看进度：\n" +
+                    .text("? ???? king-detective ?????????..\n\n" +
+                          "? ??????-3??\n" +
+                          "? ????????????\n" +
                           "<code>docker logs -f king-detective-watcher</code>")
                     .parseMode("HTML")
                     .build();
                     
         } catch (java.io.IOException e) {
-            log.error("创建trigger文件失败", e);
+            log.error("??trigger????", e);
             try {
                 telegramClient.execute(DeleteMessage.builder()
                         .chatId(chatId)
                         .messageId(toIntExact(messageId))
                         .build());
             } catch (TelegramApiException ex) {
-                log.error("删除消息失败", ex);
+                log.error("??????", ex);
             }
             return SendMessage.builder()
                     .chatId(chatId)
-                    .text("�?触发更新失败: " + e.getMessage() + "\n\n请检查容器权限或手动更新")
+                    .text("????????: " + e.getMessage() + "\n\n????????????")
                     .build();
         } catch (TelegramApiException e) {
             log.error("TG Bot error", e);

@@ -118,7 +118,7 @@ public class TgBot implements LongPollingSingleThreadUpdateConsumer {
 
         TextSessionDispatcher dispatcher = SpringUtil.getBean(TextSessionDispatcher.class);
         if (!dispatcher.dispatchDocument(chatId, update, telegramClient)) {
-            sender.send(chatId, "❌ 请先在相关菜单中发起操作");
+            sender.send(chatId, "? ????????????");
         }
     }
 
@@ -139,13 +139,13 @@ public class TgBot implements LongPollingSingleThreadUpdateConsumer {
                         } else if (command.startsWith("/ssh ")) {
                             handleSshCommand(chatId, command);
                         } else {
-                            sender.send(chatId, "❌ 未知命令，输入 /help 查看帮助");
+                            sender.send(chatId, "? ??????? /help ????");
                         }
                     }
                 }
             } catch (Exception e) {
                 log.error("Error handling command: {}", command, e);
-                sender.send(chatId, "❌ 命令处理失败: " + e.getMessage());
+                sender.send(chatId, "? ??????: " + e.getMessage());
             }
         });
     }
@@ -154,9 +154,9 @@ public class TgBot implements LongPollingSingleThreadUpdateConsumer {
         ConfigSessionStorage storage = ConfigSessionStorage.getInstance();
         if (storage.hasActiveSession(chatId)) {
             storage.clearSession(chatId);
-            sender.send(chatId, "✅ 已取消当前操作");
+            sender.send(chatId, "? ???????");
         } else {
-            sender.send(chatId, "❓ 当前没有进行中的操作");
+            sender.send(chatId, "? ??????????");
         }
     }
 
@@ -169,15 +169,15 @@ public class TgBot implements LongPollingSingleThreadUpdateConsumer {
             String configString = command.substring(12).trim();
             if (configString.isEmpty()) {
                 sender.send(chatId,
-                    "❌ 参数不足\n\n格式: /ssh_config host port username password\n" +
-                    "例如: /ssh_config 192.168.1.100 22 root mypassword"
+                    "? ????\n\n??: /ssh_config host port username password\n" +
+                    "??: /ssh_config 192.168.1.100 22 root mypassword"
                 );
                 return;
             }
 
             String[] parts = configString.split("\\s+", 4);
             if (parts.length < 4) {
-                sender.send(chatId, "❌ 参数不足，需要 host port username password 共4个参数");
+                sender.send(chatId, "? ??????? host port username password ?4???");
                 return;
             }
 
@@ -186,7 +186,7 @@ public class TgBot implements LongPollingSingleThreadUpdateConsumer {
             String username = parts[2];
             String password = parts[3];
 
-            sender.send(chatId, "🔄 正在测试连接...");
+            sender.send(chatId, "? ??????...");
 
             Thread.ofVirtual().start(() -> {
                 try {
@@ -194,40 +194,40 @@ public class TgBot implements LongPollingSingleThreadUpdateConsumer {
                     if (sshService.testConnection(host, port, username, password)) {
                         SshConnectionStorage.getInstance().saveConnection(chatId, host, port, username, password);
                         sender.send(chatId, String.format(
-                            "✅ SSH 连接配置成功\n\n主机: %s:%d\n用户: %s\n\n使用 /ssh [命令] 来执行命令",
+                            "? SSH ??????\n\n??: %s:%d\n??: %s\n\n?? /ssh [??] ?????",
                             host, port, username
                         ));
                     } else {
-                        sender.send(chatId, "❌ 连接测试失败，请检查配置是否正确");
+                        sender.send(chatId, "? ????????????????");
                     }
                 } catch (Exception e) {
                     log.error("Failed to test SSH connection", e);
-                    sender.send(chatId, "❌ 连接失败: " + e.getMessage());
+                    sender.send(chatId, "? ????: " + e.getMessage());
                 }
             });
         } catch (NumberFormatException e) {
-            sender.send(chatId, "❌ 端口号格式错误");
+            sender.send(chatId, "? ???????");
         } catch (Exception e) {
             log.error("Failed to configure SSH", e);
-            sender.send(chatId, "❌ 配置失败: " + e.getMessage());
+            sender.send(chatId, "? ????: " + e.getMessage());
         }
     }
 
     private void handleSshCommand(long chatId, String command) {
         SshConnectionStorage storage = SshConnectionStorage.getInstance();
         if (!storage.hasConnection(chatId)) {
-            sender.send(chatId, "❌ 未配置 SSH 连接，请先使用 /ssh_config 命令配置");
+            sender.send(chatId, "? ??? SSH ??????? /ssh_config ????");
             return;
         }
 
         try {
             String sshCommand = command.substring(5).trim();
             if (sshCommand.isEmpty()) {
-                sender.send(chatId, "❌ 请输入要执行的命令，例如: /ssh ls -la");
+                sender.send(chatId, "? ????????????: /ssh ls -la");
                 return;
             }
 
-            sender.send(chatId, "⏳ 正在执行命令...");
+            sender.send(chatId, "? ??????...");
 
             SshConnectionStorage.SshInfo info = storage.getConnection(chatId);
             SshService sshService = SpringUtil.getBean(SshService.class);
@@ -239,12 +239,12 @@ public class TgBot implements LongPollingSingleThreadUpdateConsumer {
                 log.info("SSH command executed: chatId={}, command={}", chatId, sshCommand);
             }).exceptionally(ex -> {
                 log.error("Failed to execute SSH command", ex);
-                sender.send(chatId, "❌ 执行失败: " + ex.getMessage());
+                sender.send(chatId, "? ????: " + ex.getMessage());
                 return null;
             });
         } catch (Exception e) {
             log.error("Failed to handle SSH command", e);
-            sender.send(chatId, "❌ 处理失败: " + e.getMessage());
+            sender.send(chatId, "? ????: " + e.getMessage());
         }
     }
 
@@ -254,18 +254,18 @@ public class TgBot implements LongPollingSingleThreadUpdateConsumer {
 
     private void handleAiChat(long chatId, String message) {
         try {
-            sender.send(chatId, "🤔 思考中...");
+            sender.send(chatId, "? ???...");
             AiChatService aiChatService = SpringUtil.getBean(AiChatService.class);
             aiChatService.chat(chatId, message).thenAccept(response ->
                 sender.sendMd(chatId, MarkdownFormatter.formatAiResponse(response))
             ).exceptionally(ex -> {
                 log.error("AI chat failed", ex);
-                sender.send(chatId, "❌ AI 对话失败: " + ex.getMessage());
+                sender.send(chatId, "? AI ????: " + ex.getMessage());
                 return null;
             });
         } catch (Exception e) {
             log.error("Failed to handle AI chat", e);
-            sender.send(chatId, "❌ 处理失败: " + e.getMessage());
+            sender.send(chatId, "? ????: " + e.getMessage());
         }
     }
 
@@ -288,7 +288,7 @@ public class TgBot implements LongPollingSingleThreadUpdateConsumer {
                 CallbackHandler handler = factory.getHandler(callbackData).orElse(null);
 
                 if (handler == null) {
-                    log.warn("未找到处理回调的 handler: callbackData={}", callbackData);
+                    log.warn("???????? handler: callbackData={}", callbackData);
                     return;
                 }
 
@@ -300,11 +300,11 @@ public class TgBot implements LongPollingSingleThreadUpdateConsumer {
                     telegramClient.execute(response);
                 }
             } catch (TelegramApiException e) {
-                log.error("处理回调失败: callbackData={}", callbackData, e);
-                sender.send(chatId, "❌ 处理请求时发生错误，请重试");
+                log.error("??????: callbackData={}", callbackData, e);
+                sender.send(chatId, "? ?????????????");
             } catch (Exception e) {
-                log.error("回调处理异常: callbackData={}", callbackData, e);
-                sender.send(chatId, "❌ 系统错误，请重试或联系管理员");
+                log.error("??????: callbackData={}", callbackData, e);
+                sender.send(chatId, "? ??????????????");
             }
         });
     }
@@ -317,30 +317,30 @@ public class TgBot implements LongPollingSingleThreadUpdateConsumer {
         try {
             telegramClient.execute(SendMessage.builder()
                 .chatId(chatId)
-                .text("请选择需要执行的操作：")
+                .text("???????????")
                 .replyMarkup(InlineKeyboardMarkup.builder()
                     .keyboard(KeyboardBuilder.buildMainMenu())
                     .build())
                 .build());
         } catch (TelegramApiException e) {
-            log.error("发送主菜单失败", e);
+            log.error("???????", e);
         }
     }
 
     private void sendHelpMessage(long chatId) {
         String helpText =
-            "📖 *命令帮助*\n\n" +
-            "*基础命令：*\n" +
-            "├ `/start` — 显示主菜单\n" +
-            "├ `/help` — 显示此帮助信息\n" +
-            "└ `/cancel` — 取消当前操作\n\n" +
-            "*SSH 管理：*\n" +
-            "├ `/ssh_config host port user pwd` — 配置连接\n" +
-            "├ `/ssh [命令]` — 执行 SSH 命令\n" +
-            "└ 示例: `/ssh ls -la`\n\n" +
-            "*AI 聊天：*\n" +
-            "└ 直接发送消息即可与 AI 对话\n\n" +
-            "💡 更多功能请点击 /start 查看主菜单";
+            "? *????*\n\n" +
+            "*?????*\n" +
+            "? `/start` ? ?????\n" +
+            "? `/help` ? ???????\n" +
+            "? `/cancel` ? ??????\n\n" +
+            "*SSH ???*\n" +
+            "? `/ssh_config host port user pwd` ? ????\n" +
+            "? `/ssh [??]` ? ?? SSH ??\n" +
+            "? ??: `/ssh ls -la`\n\n" +
+            "*AI ???*\n" +
+            "? ????????? AI ??\n\n" +
+            "? ??????? /start ?????";
 
         sender.sendMd(chatId, MarkdownFormatter.formatMarkdown(helpText));
     }
@@ -357,10 +357,10 @@ public class TgBot implements LongPollingSingleThreadUpdateConsumer {
         try {
             telegramClient.execute(SendMessage.builder()
                 .chatId(chatId)
-                .text("❌ 无权限操作此机器人🤖，项目地址：https://github.com/tony-wang1990/king-detective")
+                .text("? ????????????????https://github.com/tony-wang1990/king-detective")
                 .build());
         } catch (TelegramApiException e) {
-            log.error("发送无权限消息失败", e);
+            log.error("?????????", e);
         }
     }
 }

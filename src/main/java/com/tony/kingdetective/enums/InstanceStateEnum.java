@@ -13,8 +13,8 @@ import lombok.Getter;
 @Getter
 public enum InstanceStateEnum {
 
-    LIFECYCLE_STATE_RUNNING("RUNNING","运行中"),
-    LIFECYCLE_STATE_TERMINATED("TERMINATED","已终止")
+    LIFECYCLE_STATE_RUNNING("RUNNING","???"),
+    LIFECYCLE_STATE_TERMINATED("TERMINATED","???")
     ;
 
     private String state;

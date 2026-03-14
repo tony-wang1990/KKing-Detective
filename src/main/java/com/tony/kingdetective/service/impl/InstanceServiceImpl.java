@@ -85,29 +85,29 @@ public class InstanceServiceImpl implements IInstanceService {
     private String bootBroadcastChannel;
 
     private static final String LEGACY_MESSAGE_TEMPLATE =
-            "【开机任务】 \n\n🎉 用户：[%s] 开机成功 🎉\n" +
-                    "时间： %s\n" +
-                    "Region： %s\n" +
-                    "CPU类型： %s\n" +
-                    "CPU： %s\n" +
-                    "内存（GB）： %s\n" +
-                    "磁盘大小（GB）： %s\n" +
-                    "Shape： %s\n" +
-                    "公网IP： %s\n" +
-                    "root密码： %s\n" +
-                    "开机次数：%s\n" +
-                    "开机时长：%s";
+            "?????? \n\n? ???[%s] ???? ?\n" +
+                    "??? %s\n" +
+                    "Region? %s\n" +
+                    "CPU??? %s\n" +
+                    "CPU? %s\n" +
+                    "???GB?? %s\n" +
+                    "?????GB?? %s\n" +
+                    "Shape? %s\n" +
+                    "??IP? %s\n" +
+                    "root??? %s\n" +
+                    "?????%s\n" +
+                    "?????%s";
     private static final String CHANNEL_MESSAGE_TEMPLATE =
-            "【放货提醒】有用户成功开机🎉\n\n" +
-                    "时间： %s\n" +
-                    "Region： %s\n" +
-                    "区域： %s\n" +
-                    "CPU类型： %s\n" +
-                    "CPU核心数： %s\n" +
-                    "内存（GB）： %s\n" +
-                    "磁盘大小（GB）： %s\n" +
-                    "开机次数：%s\n" +
-                    "开机时长：%s";
+            "??????????????\n\n" +
+                    "??? %s\n" +
+                    "Region? %s\n" +
+                    "??? %s\n" +
+                    "CPU??? %s\n" +
+                    "CPU???? %s\n" +
+                    "???GB?? %s\n" +
+                    "?????GB?? %s\n" +
+                    "?????%s\n" +
+                    "?????%s";
 
     @Override
     public List<SysUserDTO.CloudInstance> listRunningInstances(SysUserDTO sysUserDTO) {
@@ -122,7 +122,7 @@ public class InstanceServiceImpl implements IInstanceService {
                             .build())
                     .collect(Collectors.toList());
         } catch (Exception e) {
-            throw new OciException(-1, "获取实例信息失败");
+            throw new OciException(-1, "????????");
         }
 
     }
@@ -133,7 +133,7 @@ public class InstanceServiceImpl implements IInstanceService {
                 CommonUtils.CREATE_COUNTS_PREFIX + fetcher.getUser().getTaskId(),
                 (key, value) -> value == null ? 1L : Long.parseLong(String.valueOf(value)) + 1
         );
-        log.info("【开机任务】用户:[{}],区域:[{}],系统架构:[{}],开机数量:[{}],开始执行第 [{}] 次创建实例操作...",
+        log.info("????????:[{}],??:[{}],????:[{}],????:[{}],????? [{}] ???????...",
                 fetcher.getUser().getUsername(), fetcher.getUser().getOciCfg().getRegion(),
                 fetcher.getUser().getArchitecture(), fetcher.getUser().getCreateNumbers(), currentCount);
 
@@ -144,7 +144,7 @@ public class InstanceServiceImpl implements IInstanceService {
         for (int i = 0; i < fetcher.getUser().getCreateNumbers(); i++) {
             InstanceDetailDTO instanceDetail = fetcher.createInstanceData();
             if (instanceDetail.isTooManyReq()) {
-                log.info("【开机任务】用户:[{}],区域:[{}],系统架构:[{}],开机数量:[{}],执行第 [{}] 次创建实例操作时创建第 [{}] 台时请求频繁,本次任务暂停",
+                log.info("????????:[{}],??:[{}],????:[{}],????:[{}],??? [{}] ??????????? [{}] ??????,??????",
                         fetcher.getUser().getUsername(), fetcher.getUser().getOciCfg().getRegion(),
                         fetcher.getUser().getArchitecture(), fetcher.getUser().getCreateNumbers(), currentCount, i + 1
                 );
@@ -153,7 +153,7 @@ public class InstanceServiceImpl implements IInstanceService {
             instanceList.add(instanceDetail);
 
             if (instanceDetail.isSuccess()) {
-                log.info("---------------- 🎉 用户:[{}]开机成功,CPU类型:{},公网IP: {},root密码: {} 🎉 ----------------",
+                log.info("---------------- ? ??:[{}]????,CPU??:{},??IP: {},root??: {} ? ----------------",
                         instanceDetail.getUsername(), instanceDetail.getArchitecture(),
                         instanceDetail.getPublicIp(), instanceDetail.getRootPassword());
                 String message = String.format(LEGACY_MESSAGE_TEMPLATE,
@@ -168,7 +168,7 @@ public class InstanceServiceImpl implements IInstanceService {
                         instanceDetail.getPublicIp(),
                         instanceDetail.getRootPassword(),
                         currentCount,
-                        createTask == null ? "未知" : CommonUtils.getTimeDifference(createTask.getCreateTime())
+                        createTask == null ? "??" : CommonUtils.getTimeDifference(createTask.getCreateTime())
                 );
 
                 sysService.sendMessage(message);
@@ -188,15 +188,15 @@ public class InstanceServiceImpl implements IInstanceService {
                             String body = response.body();
 
                             if (status == 200) {
-//                                log.info("放货推送成功,status:{}", status);
-//                                log.info("放货推送成功,body:{}", body);
-                                log.info("放货信息推送成功");
+//                                log.info(",status:{}", status);
+//                                log.info(",body:{}", body);
+                                log.info("????????");
                             } else {
-                                log.warn("放货推送失败,status:{},body:{}", status, body);
+                                log.warn("??????,status:{},body:{}", status, body);
                             }
 
                         } catch (Exception e) {
-                            log.error("放货推送异常", e);
+                            log.error("??????", e);
                         }
                     }
 
@@ -211,7 +211,7 @@ public class InstanceServiceImpl implements IInstanceService {
                                 instanceDetail.getMemory().longValue(),
                                 instanceDetail.getDisk(),
                                 currentCount,
-                                createTask == null ? "未知" : CommonUtils.getTimeDifference(createTask.getCreateTime()));
+                                createTask == null ? "??" : CommonUtils.getTimeDifference(createTask.getCreateTime()));
                         try (HttpResponse response = HttpRequest.get(bootBroadcastChannel)
                                 .form("text", channelMsg)
                                 .timeout(20_000)
@@ -220,12 +220,12 @@ public class InstanceServiceImpl implements IInstanceService {
                             String body = response.body();
 
                             if (status == 200) {
-                                log.info("频道放货信息推送成功");
+                                log.info("??????????");
                             } else {
-                                log.warn("频道放货推送失败,status:{},body:{}", status, body);
+                                log.warn("????????,status:{},body:{}", status, body);
                             }
                         } catch (Exception e) {
-                            log.error("频道放货推送异常", e);
+                            log.error("????????", e);
                         }
                     }
                 });
@@ -254,12 +254,12 @@ public class InstanceServiceImpl implements IInstanceService {
             tuple2 = Tuple2.of(publicIp, instance);
             return tuple2;
         } catch (BmcException ociException) {
-            log.error("【更换公共IP】用户:[{}],区域:[{}],实例:[{}],更换公共IP失败,原因:{}",
+            log.error("?????IP???:[{}],??:[{}],??:[{}],????IP??,??:{}",
                     sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(), instanceName,
                     ociException.getLocalizedMessage());
             tuple2 = Tuple2.of(publicIp, instance);
         } catch (Exception e) {
-            log.error("【更换公共IP】用户:[{}],区域:[{}],实例:[{}],执行更换IP任务异常:{}",
+            log.error("?????IP???:[{}],??:[{}],??:[{}],????IP????:{}",
                     sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(), instanceName,
                     e.getLocalizedMessage());
             tuple2 = Tuple2.of(publicIp, instance);
@@ -275,10 +275,10 @@ public class InstanceServiceImpl implements IInstanceService {
             instanceName = instance.getDisplayName();
             return fetcher.getInstanceCfg(instanceId);
         } catch (Exception e) {
-            log.error("用户:[{}],区域:[{}],实例:[{}] 获取实例配置信息失败,原因:{}",
+            log.error("??:[{}],??:[{}],??:[{}] ??????????,??:{}",
                     sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(),
                     instanceName, e.getLocalizedMessage(), e);
-            throw new OciException(-1, "获取实例配置信息失败");
+            throw new OciException(-1, "??????????");
         }
     }
 
@@ -287,18 +287,18 @@ public class InstanceServiceImpl implements IInstanceService {
         try (OracleInstanceFetcher fetcher = new OracleInstanceFetcher(sysUserDTO)) {
             List<Vcn> vcns = fetcher.listVcn();
             if (null == vcns || vcns.isEmpty()) {
-                throw new OciException(-1, "当前用户未创建VCN,无法放行安全列表");
+                throw new OciException(-1, "???????VCN,????????");
             }
             vcns.parallelStream().forEach(x -> {
                 fetcher.releaseSecurityRule(x, 0, "0.0.0.0/0", "::/0");
-                log.info("用户:[{}],区域:[{}],放行 vcn: [{}] 安全列表所有端口及协议成功",
+                log.info("??:[{}],??:[{}],?? vcn: [{}] ?????????????",
                         sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(), x.getDisplayName());
             });
         } catch (Exception e) {
-            log.error("用户:[{}],区域:[{}],放行安全列表所有端口及协议,原因:{}",
+            log.error("??:[{}],??:[{}],?????????????,??:{}",
                     sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(),
                     e.getLocalizedMessage(), e);
-            throw new OciException(-1, "放行安全列表所有端口及协议失败");
+            throw new OciException(-1, "???????????????");
         }
     }
 
@@ -311,15 +311,15 @@ public class InstanceServiceImpl implements IInstanceService {
             Vnic vnic = fetcher.getVnicByInstanceId(instanceId);
             Ipv6 ipv6 = fetcher.createIpv6(vnic, vcn);
             instanceName = instance.getDisplayName();
-            log.info("用户:[{}],区域:[{}],实例:[{}] 附加 IPV6 成功,IPV6地址:{}",
+            log.info("??:[{}],??:[{}],??:[{}] ?? IPV6 ??,IPV6??:{}",
                     sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(),
                     instanceName, ipv6.getIpAddress());
             return ipv6.getIpAddress();
         } catch (Exception e) {
-            log.error("用户:[{}],区域:[{}],实例:[{}] 附加 IPV6 失败,原因:{}",
+            log.error("??:[{}],??:[{}],??:[{}] ?? IPV6 ??,??:{}",
                     sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(),
                     instanceName, e.getLocalizedMessage(), e);
-            throw new OciException(-1, "附加 IPV6 失败");
+            throw new OciException(-1, "?? IPV6 ??");
         }
     }
 
@@ -329,13 +329,13 @@ public class InstanceServiceImpl implements IInstanceService {
         try (OracleInstanceFetcher fetcher = new OracleInstanceFetcher(sysUserDTO)) {
             instanceName = fetcher.getInstanceById(instanceId).getDisplayName();
             fetcher.updateInstanceName(instanceId, name);
-            log.info("用户:[{}],区域:[{}],实例:[{}] 修改名称成功",
+            log.info("??:[{}],??:[{}],??:[{}] ??????",
                     sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(), instanceName);
         } catch (Exception e) {
-            log.error("用户:[{}],区域:[{}],实例:[{}] 修改名称失败,原因:{}",
+            log.error("??:[{}],??:[{}],??:[{}] ??????,??:{}",
                     sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(),
                     instanceName, e.getLocalizedMessage(), e);
-            throw new OciException(-1, "修改实例名称失败");
+            throw new OciException(-1, "????????");
         }
     }
 
@@ -345,13 +345,13 @@ public class InstanceServiceImpl implements IInstanceService {
         try (OracleInstanceFetcher fetcher = new OracleInstanceFetcher(sysUserDTO)) {
             instanceName = fetcher.getInstanceById(instanceId).getDisplayName();
             fetcher.updateInstanceCfg(instanceId, ocpus, memory);
-            log.info("用户:[{}],区域:[{}],实例:[{}] 修改实例配置成功",
+            log.info("??:[{}],??:[{}],??:[{}] ????????",
                     sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(), instanceName);
         } catch (Exception e) {
-            log.error("用户:[{}],区域:[{}],实例:[{}] 修改实例配置失败,原因:{}",
+            log.error("??:[{}],??:[{}],??:[{}] ????????,??:{}",
                     sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(),
                     instanceName, e.getLocalizedMessage(), e);
-            throw new OciException(-1, "修改实例配置失败");
+            throw new OciException(-1, "????????");
         }
     }
 
@@ -362,13 +362,13 @@ public class InstanceServiceImpl implements IInstanceService {
             BootVolume bootVolume = fetcher.getBootVolumeByInstanceId(instanceId);
             bootVolumeName = bootVolume.getDisplayName();
             fetcher.updateBootVolumeCfg(bootVolume.getId(), size, vpusPer);
-            log.info("用户:[{}],区域:[{}],引导卷:[{}] 修改引导卷配置成功",
+            log.info("??:[{}],??:[{}],???:[{}] ?????????",
                     sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(), bootVolumeName);
         } catch (Exception e) {
-            log.error("用户:[{}],区域:[{}],引导卷:[{}] 修改引导卷配置失败,原因:{}",
+            log.error("??:[{}],??:[{}],???:[{}] ?????????,??:{}",
                     sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(),
                     bootVolumeName, e.getLocalizedMessage(), e);
-            throw new OciException(-1, "修改引导卷配置失败");
+            throw new OciException(-1, "?????????");
         }
     }
 
@@ -387,8 +387,8 @@ public class InstanceServiceImpl implements IInstanceService {
                 Instance instance = fetcher.getInstanceById(instanceId);
                 instanceName = instance.getDisplayName();
                 if (!instance.getShape().contains(ArchitectureEnum.AMD.getShapeDetail())) {
-                    log.error("【一键开启下行500Mbps任务】实例Shape: [{}] 不支持一键开启下行500Mbps", instance.getShape());
-                    throw new OciException(-1, "该实例不支持一键开启下行500Mbps");
+                    log.error("???????500Mbps?????Shape: [{}] ?????????500Mbps", instance.getShape());
+                    throw new OciException(-1, "????????????500Mbps");
                 }
 
                 Vcn vcn = fetcher.getVcnByInstanceId(instanceId);
@@ -407,7 +407,7 @@ public class InstanceServiceImpl implements IInstanceService {
                         .build()).getItems();
                 if (CollectionUtil.isNotEmpty(natGatewayList)) {
                     natGateway = natGatewayList.getFirst();
-                    log.info("【一键开启下行500Mbps任务】获取到已存在的NAT网关: " + natGateway.getDisplayName());
+                    log.info("???????500Mbps??????????NAT??: " + natGateway.getDisplayName());
                 } else {
                     natGateway = virtualNetworkClient.createNatGateway(CreateNatGatewayRequest.builder()
                             .createNatGatewayDetails(CreateNatGatewayDetails.builder()
@@ -422,7 +422,7 @@ public class InstanceServiceImpl implements IInstanceService {
                             .build()).getNatGateway().getLifecycleState().getValue().equals(NatGateway.LifecycleState.Available.getValue())) {
                         Thread.sleep(1000);
                     }
-                    log.info("【一键开启下行500Mbps任务】NAT网关创建成功: " + natGateway.getDisplayName());
+                    log.info("???????500Mbps???NAT??????: " + natGateway.getDisplayName());
                 }
 
                 // 
@@ -457,13 +457,13 @@ public class InstanceServiceImpl implements IInstanceService {
                             Vnic xvnic = fetcher.getVnicByInstanceId(x.getId());
                             if (StrUtil.isNotBlank(xvnic.getRouteTableId()) && xvnic.getRouteTableId().equals(routeTable.getId())
                                     && !x.getId().equals(instanceId)) {
-                                throw new OciException(-1, "已有其他免费AMD实例绑定NAT路由表");
+                                throw new OciException(-1, "??????AMD????NAT???");
                             }
                         }
                     }
                 }
 
-                log.warn("【一键开启下行500Mbps任务】用户:[{}],区域:[{}],实例:[{}] 开始执行一键开启下行500Mbps任务...", sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(), instance.getDisplayName());
+                log.warn("???????500Mbps?????:[{}],??:[{}],??:[{}] ??????????500Mbps??...", sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(), instance.getDisplayName());
 
                 // 
                 Subnet subnet = virtualNetworkClient.listSubnets(ListSubnetsRequest.builder()
@@ -479,14 +479,14 @@ public class InstanceServiceImpl implements IInstanceService {
                         .build()).getNetworkLoadBalancerCollection().getItems();
                 if (CollectionUtil.isNotEmpty(networkLoadBalancerSummaries)) {
                     networkLoadBalancerSummaries.forEach(x -> {
-                        log.info("【一键开启下行500Mbps任务】正在删除网络负载平衡器: " + x.getDisplayName());
+                        log.info("???????500Mbps??????????????: " + x.getDisplayName());
                         networkLoadBalancerClient.deleteNetworkLoadBalancer(DeleteNetworkLoadBalancerRequest.builder()
                                 .networkLoadBalancerId(x.getId())
                                 .build());
                     });
                 }
 
-                log.info("【一键开启下行500Mbps任务】开始创建网络负载平衡器...");
+                log.info("???????500Mbps??????????????...");
 
                 NetworkLoadBalancer networkLoadBalancer = null;
                 boolean isNormal = false;
@@ -532,10 +532,10 @@ public class InstanceServiceImpl implements IInstanceService {
                         isNormal = true;
                     } catch (Exception e) {
                         retryCount++;
-                        log.warn("【一键开启下行500Mbps任务】第 " + retryCount + " 次创建网络负载平衡器失败,重试中...");
+                        log.warn("???????500Mbps???? " + retryCount + " ????????????,???...");
                         if (retryCount >= MAX_RETRY) {
-                            log.error("【一键开启下行500Mbps任务】创建网络负载平衡器失败次数超过 " + MAX_RETRY + " 次,终止任务");
-                            throw new OciException(-1, "创建网络负载平衡器重试失败次数超过限制", e);
+                            log.error("???????500Mbps?????????????????? " + MAX_RETRY + " ?,????");
+                            throw new OciException(-1, "???????????????????", e);
                         }
                         Thread.sleep(30000);
                     }
@@ -547,13 +547,13 @@ public class InstanceServiceImpl implements IInstanceService {
                     Thread.sleep(1000);
                 }
 
-                log.info("【一键开启下行500Mbps任务】网络负载平衡器创建成功");
+                log.info("???????500Mbps??????????????");
                 for (IpAddress x : networkLoadBalancerClient.getNetworkLoadBalancer(GetNetworkLoadBalancerRequest.builder()
                         .networkLoadBalancerId(networkLoadBalancer.getId())
                         .build()).getNetworkLoadBalancer().getIpAddresses()) {
                     if (!CommonUtils.isPrivateIp(x.getIpAddress())) {
                         publicIp = x.getIpAddress();
-                        log.info("【一键开启下行500Mbps任务】网络负载平衡器公网IP:" + x.getIpAddress());
+                        log.info("???????500Mbps????????????IP:" + x.getIpAddress());
                     }
                 }
 
@@ -569,7 +569,7 @@ public class InstanceServiceImpl implements IInstanceService {
                                             .build()))
                                     .build())
                             .build());
-                    log.info("【一键开启下行500Mbps任务】获取到已存在的NAT路由表:" + routeTable.getDisplayName());
+                    log.info("???????500Mbps??????????NAT???:" + routeTable.getDisplayName());
                 } else {
                     routeTable = virtualNetworkClient.createRouteTable(CreateRouteTableRequest.builder()
                             .createRouteTableDetails(CreateRouteTableDetails.builder()
@@ -590,7 +590,7 @@ public class InstanceServiceImpl implements IInstanceService {
                         Thread.sleep(1000);
                     }
 
-                    log.info("【一键开启下行500Mbps任务】NAT路由表创建成功:" + routeTable.getDisplayName());
+                    log.info("???????500Mbps???NAT???????:" + routeTable.getDisplayName());
                 }
 
                 // vnic,/
@@ -605,14 +605,14 @@ public class InstanceServiceImpl implements IInstanceService {
                 // 
                 fetcher.releaseSecurityRule(vcn, 0, "10.0.0.0/16", "::/0");
 
-                log.info("【一键开启下行500Mbps任务】实例vnic绑定路由表成功,实例:【{}】已成功开启下行500Mbps🎉,公网IP:{}", instance.getDisplayName(), publicIp);
-                sysService.sendMessage(String.format("【一键开启下行500Mbps任务】用户:[%s],区域:[%s],实例:[%s] 已成功开启下行500Mbps🎉,公网IP:%s",
+                log.info("???????500Mbps?????vnic???????,??:?{}????????500Mbps?,??IP:{}", instance.getDisplayName(), publicIp);
+                sysService.sendMessage(String.format("???????500Mbps?????:[%s],??:[%s],??:[%s] ???????500Mbps?,??IP:%s",
                         sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(), instance.getDisplayName(), publicIp));
                 customCache.remove(CacheConstant.PREFIX_NETWORK_LOAD_BALANCER + params.getOciCfgId());
             } catch (Exception e) {
-                log.error("【一键开启下行500Mbps任务】用户:[{}],区域:[{}],实例:[{}] 开启下行500Mbps失败❌",
+                log.error("???????500Mbps?????:[{}],??:[{}],??:[{}] ????500Mbps???",
                         sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(), instanceName, e);
-                sysService.sendMessage(String.format("【一键开启下行500Mbps任务】用户:[%s],区域:[%s],实例:[%s] 开启下行500Mbps失败❌,错误:%s",
+                sysService.sendMessage(String.format("???????500Mbps?????:[%s],??:[%s],??:[%s] ????500Mbps???,??:%s",
                         sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(), instanceName, e.getLocalizedMessage()));
             }
         });
@@ -631,8 +631,8 @@ public class InstanceServiceImpl implements IInstanceService {
                 Vnic vnic = fetcher.getVnicByInstanceId(params.getInstanceId());
 
                 if (!instance.getShape().contains(ArchitectureEnum.AMD.getShapeDetail())) {
-                    log.error("【关闭实例下行500Mbps任务】实例Shape: [{}] 不支持一键开启下行500Mbps", instance.getShape());
-                    throw new OciException(-1, "该实例不支持开启下行500Mbps");
+                    log.error("???????500Mbps?????Shape: [{}] ?????????500Mbps", instance.getShape());
+                    throw new OciException(-1, "??????????500Mbps");
                 }
 
                 List<RouteTable> routeTableList = virtualNetworkClient.listRouteTables(ListRouteTablesRequest.builder()
@@ -641,7 +641,7 @@ public class InstanceServiceImpl implements IInstanceService {
                         .lifecycleState(Available)
                         .build()).getItems();
                 if (CollectionUtil.isEmpty(routeTableList)) {
-                    throw new OciException(-1, "路由表列表为空");
+                    throw new OciException(-1, "???????");
                 }
 
                 // Nat
@@ -666,7 +666,7 @@ public class InstanceServiceImpl implements IInstanceService {
                                                 && routeRule.getDestinationType().getValue().equals(RouteRule.DestinationType.CidrBlock.getValue())) {
                                             routeTables.removeIf(x -> x.getId().equals(table.getId()));
                                             if (!params.getRetainNatGw()) {
-                                                log.info("【关闭实例下行500Mbps任务】正在清空路由表:[{}]...", table.getDisplayName());
+                                                log.info("???????500Mbps??????????:[{}]...", table.getDisplayName());
                                                 // 
                                                 virtualNetworkClient.updateRouteTable(UpdateRouteTableRequest.builder()
                                                         .rtId(table.getId())
@@ -681,12 +681,12 @@ public class InstanceServiceImpl implements IInstanceService {
                                 }
                             }
                         } catch (Exception e) {
-                            log.error("【关闭实例下行500Mbps任务】用户:[{}],区域:[{}],实例:[{}] 清空路由表失败 ❌",
+                            log.error("???????500Mbps?????:[{}],??:[{}],??:[{}] ??????? ?",
                                     sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(), instanceName, e);
                         }
                         // NAT
                         if (!params.getRetainNatGw()) {
-                            log.info("【关闭实例下行500Mbps任务】正在删除NAT网关:[{}] ...", natGateway.getDisplayName());
+                            log.info("???????500Mbps???????NAT??:[{}] ...", natGateway.getDisplayName());
                             virtualNetworkClient.deleteNatGateway(DeleteNatGatewayRequest.builder()
                                     .natGatewayId(natGateway.getId())
                                     .build());
@@ -695,7 +695,7 @@ public class InstanceServiceImpl implements IInstanceService {
                 }
 
                 // vnic
-                log.info("【关闭实例下行500Mbps任务】正在修改vnic:[{}] 的路由表为:[{}]...", vnic.getDisplayName(), routeTables.getFirst().getDisplayName());
+                log.info("???????500Mbps???????vnic:[{}] ?????:[{}]...", vnic.getDisplayName(), routeTables.getFirst().getDisplayName());
                 virtualNetworkClient.updateVnic(UpdateVnicRequest.builder()
                         .vnicId(vnic.getId())
                         .updateVnicDetails(UpdateVnicDetails.builder()
@@ -707,14 +707,14 @@ public class InstanceServiceImpl implements IInstanceService {
                 try {
                     for (RouteTable rt : routeTableList) {
                         if (!rt.getId().equals(routeTables.getFirst().getId())) {
-                            log.info("【关闭实例下行500Mbps任务】正在删除NAT路由表:[{}]...", rt.getDisplayName());
+                            log.info("???????500Mbps???????NAT???:[{}]...", rt.getDisplayName());
                             virtualNetworkClient.deleteRouteTable(DeleteRouteTableRequest.builder()
                                     .rtId(rt.getId())
                                     .build());
                         }
                     }
                 } catch (Exception e) {
-                    log.error("【关闭实例下行500Mbps任务】用户:[{}],区域:[{}],实例:[{}] 删除路由表失败 ❌",
+                    log.error("???????500Mbps?????:[{}],??:[{}],??:[{}] ??????? ?",
                             sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(), instanceName, e);
                 }
 
@@ -725,21 +725,21 @@ public class InstanceServiceImpl implements IInstanceService {
                             .compartmentId(fetcher.getCompartmentId())
                             .build()).getNetworkLoadBalancerCollection().getItems();
                     for (NetworkLoadBalancerSummary networkLoadBalancerSummary : networkLoadBalancerSummaries) {
-                        log.info("【关闭实例下行500Mbps任务】正在删除网络负载平衡器:[{}] ...", networkLoadBalancerSummary.getDisplayName());
+                        log.info("???????500Mbps??????????????:[{}] ...", networkLoadBalancerSummary.getDisplayName());
                         networkLoadBalancerClient.deleteNetworkLoadBalancer(DeleteNetworkLoadBalancerRequest.builder()
                                 .networkLoadBalancerId(networkLoadBalancerSummary.getId())
                                 .build());
                     }
                 }
 
-                log.info("【关闭实例下行500Mbps任务】用户:[{}],区域:[{}],实例:[{}] 已成功关闭实例下行500Mbps🎉🎉",
+                log.info("???????500Mbps?????:[{}],??:[{}],??:[{}] ?????????500Mbps??",
                         sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(), instanceName);
-                sysService.sendMessage(String.format("【关闭实例下行500Mbps任务】用户:[%s],区域:[%s],实例:[%s] 已成功关闭实例下行500Mbps🎉",
+                sysService.sendMessage(String.format("???????500Mbps?????:[%s],??:[%s],??:[%s] ?????????500Mbps?",
                         sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(), instance.getDisplayName()));
             } catch (Exception e) {
-                log.error("【关闭实例下行500Mbps任务】用户:[{}],区域:[{}],实例:[{}] 关闭下行500Mbps失败❌",
+                log.error("???????500Mbps?????:[{}],??:[{}],??:[{}] ????500Mbps???",
                         sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(), instanceName, e);
-                sysService.sendMessage(String.format("【关闭实例下行500Mbps任务】用户:[%s],区域:[%s],实例:[%s] 关闭下行500Mbps失败❌,错误:%s",
+                sysService.sendMessage(String.format("???????500Mbps?????:[%s],??:[%s],??:[%s] ????500Mbps???,??:%s",
                         sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(), instanceName, e.getLocalizedMessage()));
             }
         });
@@ -774,9 +774,9 @@ public class InstanceServiceImpl implements IInstanceService {
                         .build());
             }
         } catch (Exception e) {
-            log.error("【更改实例Shape任务】用户:[{}],区域:[{}],实例ID:[{}] 更新 Shape 为:[{}] 失败❌",
+            log.error("?????Shape?????:[{}],??:[{}],??ID:[{}] ?? Shape ?:[{}] ???",
                     sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(), params.getInstanceId(), params.getShape(), e);
-            throw new OciException(-1, "更新实例 Shape 为:" + params.getShape() + " 失败");
+            throw new OciException(-1, "???? Shape ?:" + params.getShape() + " ??");
         }
     }
 

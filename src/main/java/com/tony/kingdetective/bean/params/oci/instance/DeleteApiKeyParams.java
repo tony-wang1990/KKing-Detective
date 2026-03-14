@@ -5,9 +5,9 @@ import lombok.Data;
 
 @Data
 public class DeleteApiKeyParams {
-    @NotBlank(message = "ociCfgId不能为空")
+    @NotBlank(message = "ociCfgId????")
     private String ociCfgId;
 
-    @NotBlank(message = "fingerprint不能为空")
+    @NotBlank(message = "fingerprint????")
     private String fingerprint;
 }

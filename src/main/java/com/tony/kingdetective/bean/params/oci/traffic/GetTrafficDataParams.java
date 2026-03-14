@@ -16,18 +16,18 @@ import java.util.Date;
 @Data
 public class GetTrafficDataParams {
 
-    @NotBlank(message = "配置ID不能为空")
+    @NotBlank(message = "??ID????")
     private String ociCfgId;
-    @NotNull(message = "开始时间不能为空")
+    @NotNull(message = "????????")
     private Date beginTime;
-    @NotNull(message = "结束时间不能为空")
+    @NotNull(message = "????????")
     private Date endTime;
-    @NotBlank(message = "区域不能为空")
+    @NotBlank(message = "??????")
     private String region;
-    @NotBlank(message = "inQuery不能为空")
+    @NotBlank(message = "inQuery????")
     private String inQuery;
-    @NotBlank(message = "outQuery不能为空")
+    @NotBlank(message = "outQuery????")
     private String outQuery;
-    @NotBlank(message = "namespace不能为空")
+    @NotBlank(message = "namespace????")
     private String namespace;
 }

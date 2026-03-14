@@ -84,7 +84,7 @@ public class LogWebSocketHandler extends TextWebSocketHandler {
                 tailer.stop();
                 startLogTailer(CommonUtils.LOG_FILE_PATH);
             } else {
-                log.error("启动日志监听服务失败：{}", e.getLocalizedMessage(), e);
+                log.error("???????????{}", e.getLocalizedMessage(), e);
             }
         }
 

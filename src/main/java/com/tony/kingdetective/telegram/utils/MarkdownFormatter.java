@@ -169,7 +169,7 @@ public class MarkdownFormatter {
         }
         
         // Check if response is already formatted with thinking/answer sections
-        if (response.contains("💭") || response.contains("💬")) {
+        if (response.contains("?") || response.contains("?")) {
             // Response already formatted by AiChatService, just escape carefully
             return formatMarkdown(response);
         }
@@ -233,7 +233,7 @@ public class MarkdownFormatter {
             return text;
         }
         
-        return text.substring(0, maxLength) + "\n...\n(消息过长，已截断)";
+        return text.substring(0, maxLength) + "\n...\n(????????)";
     }
     
     /**

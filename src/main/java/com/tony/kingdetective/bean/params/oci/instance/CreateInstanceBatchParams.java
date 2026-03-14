@@ -18,28 +18,28 @@ import java.util.List;
 @Data
 public class CreateInstanceBatchParams {
 
-    @NotEmpty(message = "用户配置id列表不能为空")
+    @NotEmpty(message = "????id??????")
     private List<String> userIds;
     @Valid
     private InstanceInfo instanceInfo;
 
     @Data
     public static class InstanceInfo {
-        @NotBlank(message = "CPU不能为空")
+        @NotBlank(message = "CPU????")
         private String ocpus;
-        @NotBlank(message = "内存不能为空")
+        @NotBlank(message = "??????")
         private String memory;
-        @NotNull(message = "磁盘空间不能为空")
+        @NotNull(message = "????????")
         private Integer disk;
-        @NotBlank(message = "系统架构不能为空")
+        @NotBlank(message = "????????")
         private String architecture;
-        @NotNull(message = "时间间隔不能为空")
+        @NotNull(message = "????????")
         private Integer interval;
-        @NotNull(message = "创建数目不能为空")
+        @NotNull(message = "????????")
         private Integer createNumbers;
-        @NotBlank(message = "系统类型不能为空")
+        @NotBlank(message = "????????")
         private String operationSystem;
-        @NotBlank(message = "root密码不能为空")
+        @NotBlank(message = "root??????")
         private String rootPassword;
     }
 }

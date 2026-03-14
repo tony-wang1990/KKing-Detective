@@ -79,9 +79,9 @@ public class IpDataServiceImpl extends ServiceImpl<IpDataMapper, IpData> impleme
     @Override
     public void loadOciIpData() {
         virtualExecutor.execute(() -> {
-            log.info("【同步IP数据任务】开始同步已有的oci配置的最新IP数据...");
+            log.info("???IP????????????oci?????IP??...");
             this.remove(new LambdaQueryWrapper<IpData>().eq(IpData::getType, IpDataTypeEnum.IP_DATA_ORACLE.getCode()));
-            log.info("【同步IP数据任务】清除已有的oci配置的旧IP数据成功");
+            log.info("???IP??????????oci????IP????");
             List<String> ociCfgIds = ociUserService.listObjs(new LambdaQueryWrapper<OciUser>().select(OciUser::getId), String::valueOf);
             if (CollectionUtil.isNotEmpty(ociCfgIds)) {
                 for (String x : ociCfgIds) {
@@ -89,7 +89,7 @@ public class IpDataServiceImpl extends ServiceImpl<IpDataMapper, IpData> impleme
                     try (OracleInstanceFetcher fetcher = new OracleInstanceFetcher(ociUser)) {
                         fetcher.getAvailabilityDomains();
                     } catch (Exception e) {
-                        log.warn("oci配置：[{}]，区域：[{}] 已失效，跳过本次IP数据同步", ociUser.getUsername(), ociUser.getOciCfg().getRegion());
+                        log.warn("oci???[{}]????[{}] ????????IP????", ociUser.getUsername(), ociUser.getOciCfg().getRegion());
                         continue;
                     }
                     List<SysUserDTO.CloudInstance> cloudInstances = instanceService.listRunningInstances(ociUser);
@@ -116,23 +116,23 @@ public class IpDataServiceImpl extends ServiceImpl<IpDataMapper, IpData> impleme
                                 ipData.setLng(json.getDouble("longitude"));
                                 ipData.setType(IpDataTypeEnum.IP_DATA_ORACLE.getCode());
                                 if (this.save(ipData)) {
-                                    log.info("oci配置：[{}]，区域：[{}]，IP地址：[{}] 已添加至地图IP数据", ociUser.getUsername(), ociUser.getOciCfg().getRegion(), z);
+                                    log.info("oci???[{}]????[{}]?IP???[{}] ??????IP??", ociUser.getUsername(), ociUser.getOciCfg().getRegion(), z);
                                 }
                             } catch (Exception e) {
-                                log.error("oci配置：[{}]，区域：[{}]，IP地址：[{}] 添加至地图IP数据失败", ociUser.getUsername(), ociUser.getOciCfg().getRegion(), z, e);
+                                log.error("oci???[{}]????[{}]?IP???[{}] ?????IP????", ociUser.getUsername(), ociUser.getOciCfg().getRegion(), z, e);
                             }
                         }
                     }
                 }
             }
-            log.info("【同步IP数据任务】任务完成");
+            log.info("???IP?????????");
         });
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateIpData(UpdateIpDataParams params) {
-        IpData ipData = Optional.ofNullable(this.getById(params.getId())).orElseThrow(() -> new OciException(-1, "当前记录不存在"));
+        IpData ipData = Optional.ofNullable(this.getById(params.getId())).orElseThrow(() -> new OciException(-1, "???????"));
         String jsonStr = HttpUtil.get(String.format("https://ipapi.co/%s/json", ipData.getIp()));
         JSONObject json = JSONUtil.parseObj(jsonStr);
         this.update(new LambdaUpdateWrapper<IpData>().eq(IpData::getId, params.getId())

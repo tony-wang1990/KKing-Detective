@@ -48,12 +48,12 @@ public class SshService {
         // Check for interactive commands
         if (isInteractiveCommand(command)) {
             log.warn("Blocked interactive command: {}", command);
-            return "❌ 不支持交互式命令\n\n" +
-                   "检测到交互式命令（如 vi, top, ssh 等），这些命令会导致阻塞。\n" +
-                   "请使用非交互式命令，例如：\n" +
-                   "• 使用 `cat` 查看文件而不是 `vi`\n" +
-                   "• 使用 `ps aux` 查看进程而不是 `top`\n" +
-                   "• 使用 `head` 或 `tail` 查看日志而不是 `tail -f`";
+            return "? ????????\n\n" +
+                   "?????????? vi, top, ssh ?????????????\n" +
+                   "?????????????\n" +
+                   "? ?? `cat` ??????? `vi`\n" +
+                   "? ?? `ps aux` ??????? `top`\n" +
+                   "? ?? `head` ? `tail` ??????? `tail -f`";
         }
         
         com.jcraft.jsch.Session session = null;
@@ -77,21 +77,21 @@ public class SshService {
                 // Command timeout
                 future.cancel(true);
                 log.warn("SSH command timeout: host={}, command={}", host, command);
-                return "⏱️ 命令执行超时（超过 " + COMMAND_TIMEOUT_SECONDS + " 秒）\n\n" +
-                       "可能原因：\n" +
-                       "• 命令执行时间过长\n" +
-                       "• 命令需要交互式输入\n" +
-                       "• 命令正在等待用户确认\n\n" +
-                       "建议：使用更快的命令或添加参数避免交互";
+                return "?? ????????? " + COMMAND_TIMEOUT_SECONDS + " ??\n\n" +
+                       "?????\n" +
+                       "? ????????\n" +
+                       "? ?????????\n" +
+                       "? ??????????\n\n" +
+                       "???????????????????";
                        
             } catch (ExecutionException e) {
                 log.error("SSH command execution failed: host={}, command={}", host, command, e);
-                return "❌ 执行命令失败: " + e.getCause().getMessage();
+                return "? ??????: " + e.getCause().getMessage();
             }
             
         } catch (Exception e) {
             log.error("Failed to execute SSH command: host={}, command={}", host, command, e);
-            return "❌ 执行命令失败: " + e.getMessage();
+            return "? ??????: " + e.getMessage();
         } finally {
             // Close session and shutdown executor
             if (session != null) {
@@ -146,7 +146,7 @@ public class SshService {
             
             // Check exit status
             if (exitStatus != 0 && errorOutput.length() > 0) {
-                return "❌ 命令执行失败 (退出码: " + exitStatus + ")\n\n" + errorOutput.toString();
+                return "? ?????? (???: " + exitStatus + ")\n\n" + errorOutput.toString();
             }
             
             return output.toString();
@@ -218,11 +218,11 @@ public class SshService {
      */
     public String formatOutput(String output) {
         if (output == null || output.trim().isEmpty()) {
-            return "✅ 命令执行成功（无输出）";
+            return "? ???????????";
         }
         
         // Check if output is already an error message (starts with emoji)
-        if (output.startsWith("❌") || output.startsWith("⏱️")) {
+        if (output.startsWith("?") || output.startsWith("??")) {
             return output; // Don't wrap error messages in code blocks
         }
         

@@ -46,7 +46,7 @@ public class CostQueryHandler extends AbstractCallbackHandler {
             if (users == null || users.isEmpty()) {
                 return buildEditMessage(
                         callbackQuery,
-                        "❌ 未找到任何 OCI 配置\n\n请先添加 OCI 配置",
+                        "? ????? OCI ??\n\n???? OCI ??",
                         new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
                 );
             }
@@ -55,10 +55,10 @@ public class CostQueryHandler extends AbstractCallbackHandler {
             SysUserDTO user = users.get(0);
             
             StringBuilder message = new StringBuilder();
-            message.append("【近3月花费查询】\n\n");
-            message.append(String.format("租户: %s\n", user.getUsername()));
-            message.append(String.format("区域: %s\n\n", user.getOciCfg().getRegion()));
-            message.append("━━━━━━━━━━━━━━━━\n\n");
+            message.append("??3??????\n\n");
+            message.append(String.format("??: %s\n", user.getUsername()));
+            message.append(String.format("??: %s\n\n", user.getOciCfg().getRegion()));
+            message.append("????????????????\n\n");
             
             try (OracleInstanceFetcher fetcher = new OracleInstanceFetcher(user)) {
                 UsageapiClient usageClient = UsageapiClient.builder()
@@ -88,11 +88,11 @@ public class CostQueryHandler extends AbstractCallbackHandler {
                 List<UsageSummary> usageSummaries = response.getUsageAggregation().getItems();
                 
                 if (usageSummaries == null || usageSummaries.isEmpty()) {
-                    message.append("📊 近3个月暂无费用记录\n\n");
-                    message.append("💡 可能原因：\n");
-                    message.append("  • 账户为永久免费层\n");
-                    message.append("  • 未超出免费额度\n");
-                    message.append("  • 数据同步延迟\n");
+                    message.append("? ?3????????\n\n");
+                    message.append("? ?????\n");
+                    message.append("  ? ????????\n");
+                    message.append("  ? ???????\n");
+                    message.append("  ? ??????\n");
                 } else {
                     // Group by month
                     Map<String, Map<String, BigDecimal>> monthlyCosts = new TreeMap<>();
@@ -100,7 +100,7 @@ public class CostQueryHandler extends AbstractCallbackHandler {
                     
                     for (UsageSummary summary : usageSummaries) {
                         String month = formatMonth(summary.getTimeUsageStarted());
-                        String service = summary.getService() != null ? summary.getService() : "其他";
+                        String service = summary.getService() != null ? summary.getService() : "??";
                         BigDecimal cost = summary.getComputedAmount() != null 
                                 ? summary.getComputedAmount() 
                                 : BigDecimal.ZERO;
@@ -120,15 +120,15 @@ public class CostQueryHandler extends AbstractCallbackHandler {
                         BigDecimal monthTotal = services.values().stream()
                                 .reduce(BigDecimal.ZERO, BigDecimal::add);
                         
-                        message.append(String.format("📅 %s\n", month));
-                        message.append(String.format("总计: $%.2f\n\n", monthTotal));
+                        message.append(String.format("? %s\n", month));
+                        message.append(String.format("??: $%.2f\n\n", monthTotal));
                         
                         // Top 5 services
                         services.entrySet().stream()
                                 .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
                                 .limit(5)
                                 .forEach(entry -> {
-                                    message.append(String.format("  • %s: $%.2f\n", 
+                                    message.append(String.format("  ? %s: $%.2f\n", 
                                             entry.getKey(), 
                                             entry.getValue()));
                                 });
@@ -136,9 +136,9 @@ public class CostQueryHandler extends AbstractCallbackHandler {
                         message.append("\n");
                     }
                     
-                    message.append("━━━━━━━━━━━━━━━━\n");
-                    message.append(String.format("💰 3个月总计: $%.2f\n", totalCost));
-                    message.append(String.format("📊 月均花费: $%.2f\n", 
+                    message.append("????????????????\n");
+                    message.append(String.format("? 3????: $%.2f\n", totalCost));
+                    message.append(String.format("? ????: $%.2f\n", 
                             totalCost.divide(BigDecimal.valueOf(3), 2, RoundingMode.HALF_UP)));
                 }
                 
@@ -148,12 +148,12 @@ public class CostQueryHandler extends AbstractCallbackHandler {
                 log.error("Failed to query cost data", e);
                 return buildEditMessage(
                         callbackQuery,
-                        "❌ 查询花费失败\n\n" + e.getMessage(),
+                        "? ??????\n\n" + e.getMessage(),
                         new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
                 );
             }
             
-            message.append("\n💡 数据来自 OCI Usage API");
+            message.append("\n? ???? OCI Usage API");
             
             return buildEditMessage(
                     callbackQuery,
@@ -168,7 +168,7 @@ public class CostQueryHandler extends AbstractCallbackHandler {
             log.error("Failed to handle cost query", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 处理失败: " + e.getMessage(),
+                    "? ????: " + e.getMessage(),
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }
@@ -179,10 +179,10 @@ public class CostQueryHandler extends AbstractCallbackHandler {
      */
     private String formatMonth(Date date) {
         if (date == null) {
-            return "未知";
+            return "??";
         }
         LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        return localDate.format(DateTimeFormatter.ofPattern("yyyy年MM月"));
+        return localDate.format(DateTimeFormatter.ofPattern("yyyy?MM?"));
     }
     
     @Override

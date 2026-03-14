@@ -62,10 +62,10 @@ public class BootVolumeManagementHandler extends AbstractCallbackHandler {
             if (CollectionUtil.isEmpty(volumes)) {
                 return buildEditMessage(
                         callbackQuery,
-                        "�"??,
+                        "?"??,
                         new InlineKeyboardMarkup(List.of(
                                 new InlineKeyboardRow(
-                                        KeyboardBuilder.button("◀�?返回", "select_config:" + ociCfgId)
+                                        KeyboardBuilder.button("?????", "select_config:" + ociCfgId)
                                 ),
                                 KeyboardBuilder.buildCancelRow()
                         ))
@@ -81,10 +81,10 @@ public class BootVolumeManagementHandler extends AbstractCallbackHandler {
             log.error("Failed to list boot volumes for ociCfgId: {}", ociCfgId, e);
             return buildEditMessage(
                     callbackQuery,
-                    "�?获取引导卷列表失败：" + e.getMessage(),
+                    "????????????" + e.getMessage(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀�?返回", "select_config:" + ociCfgId)
+                                    KeyboardBuilder.button("?????", "select_config:" + ociCfgId)
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -103,8 +103,8 @@ public class BootVolumeManagementHandler extends AbstractCallbackHandler {
         
         BootVolumeSelectionStorage storage = BootVolumeSelectionStorage.getInstance();
         
-        StringBuilder message = new StringBuilder("【引导卷管理】\n\n");
-        message.append(String.format("�?%d 个引导卷：\n\n", volumes.size()));
+        StringBuilder message = new StringBuilder("???????\n\n");
+        message.append(String.format("??%d ?????\n\n", volumes.size()));
         
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
         
@@ -115,10 +115,10 @@ public class BootVolumeManagementHandler extends AbstractCallbackHandler {
             
             message.append(String.format(
                     "%s %d. %s\n" +
-                    "   状�? %s\n" +
-                    "   大小: %sGB | VPUs: %s\n" +
-                    "   可用�? %s\n" +
-                    "   已附�? %s%s\n\n",
+                    "   ??? %s\n" +
+                    "   ??: %sGB | VPUs: %s\n" +
+                    "   ???? %s\n" +
+                    "   ???? %s%s\n\n",
                     isSelected ?" "" : "?,
                     i + 1,
                     volume.getDisplayName(),
@@ -126,7 +126,7 @@ public class BootVolumeManagementHandler extends AbstractCallbackHandler {
                     volume.getSizeInGBs(),
                     volume.getVpusPerGB(),
                     volume.getAvailabilityDomain(),
-                    volume.getAttached() ? "�? : "?,
+                    volume.getAttached() ? "?? : "?,
                     volume.getAttached() && volume.getInstanceName() != null ? " (" + volume.getInstanceName() + ")" : ""
             ));
             
@@ -134,13 +134,13 @@ public class BootVolumeManagementHandler extends AbstractCallbackHandler {
             if (i % 2 == 0) {
                 InlineKeyboardRow row = new InlineKeyboardRow();
                 row.add(KeyboardBuilder.button(
-                        String.format("%s �"?d", isSelected ? "" : "?, i + 1),
+                        String.format("%s ?"?d", isSelected ? "" : "?, i + 1),
                         "toggle_boot_volume:" + i  // Use index
                 ));
                 keyboard.add(row);
             } else {
                 keyboard.get(keyboard.size() - 1).add(KeyboardBuilder.button(
-                        String.format("%s �"?d", isSelected ? "" : "?, i + 1),
+                        String.format("%s ?"?d", isSelected ? "" : "?, i + 1),
                         "toggle_boot_volume:" + i  // Use index
                 ));
             }
@@ -148,21 +148,21 @@ public class BootVolumeManagementHandler extends AbstractCallbackHandler {
         
         // Add batch operation buttons
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("�"??, "select_all_boot_volumes"),
-                KeyboardBuilder.button("�"??, "deselect_all_boot_volumes")
+                KeyboardBuilder.button("?"??, "select_all_boot_volumes"),
+                KeyboardBuilder.button("?"??, "deselect_all_boot_volumes")
         ));
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("🔄 刷新列表", "refresh_boot_volumes")
+                KeyboardBuilder.button("? ????", "refresh_boot_volumes")
         ));
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("🗑 终止选中的引导卷", "confirm_terminate_boot_volumes")
+                KeyboardBuilder.button("? ????????", "confirm_terminate_boot_volumes")
         ));
         
         // Back button
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("◀�?返回", "select_config:" + ociCfgId)
+                KeyboardBuilder.button("?????", "select_config:" + ociCfgId)
         ));
         keyboard.add(KeyboardBuilder.buildCancelRow());
         
@@ -202,7 +202,7 @@ class ToggleBootVolumeHandler extends AbstractCallbackHandler {
             try {
                 telegramClient.execute(AnswerCallbackQuery.builder()
                         .callbackQueryId(callbackQuery.getId())
-                        .text("引导卷不存在")
+                        .text("??????")
                         .showAlert(true)
                         .build());
             } catch (TelegramApiException e) {
@@ -217,7 +217,7 @@ class ToggleBootVolumeHandler extends AbstractCallbackHandler {
         try {
             telegramClient.execute(AnswerCallbackQuery.builder()
                     .callbackQueryId(callbackQuery.getId())
-                    .text(isSelected ? "已选中" : "已取消选中")
+                    .text(isSelected ? "???" : "?????")
                     .showAlert(false)
                     .build());
         } catch (TelegramApiException e) {
@@ -238,7 +238,7 @@ class ToggleBootVolumeHandler extends AbstractCallbackHandler {
         if (ociCfgId == null) {
             return buildEditMessage(
                     callbackQuery,
-                    "�?配置上下文丢失，请重新进入引导卷管理",
+                    "????????????????????",
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }
@@ -249,10 +249,10 @@ class ToggleBootVolumeHandler extends AbstractCallbackHandler {
         if (CollectionUtil.isEmpty(volumes)) {
             return buildEditMessage(
                     callbackQuery,
-                    "�?引导卷缓存丢失，请重新进入引导卷管理",
+                    "????????????????????",
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀�?返回", "select_config:" + ociCfgId)
+                                    KeyboardBuilder.button("?????", "select_config:" + ociCfgId)
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -273,8 +273,8 @@ class ToggleBootVolumeHandler extends AbstractCallbackHandler {
         
         BootVolumeSelectionStorage storage = BootVolumeSelectionStorage.getInstance();
         
-        StringBuilder message = new StringBuilder("【引导卷管理】\n\n");
-        message.append(String.format("�?%d 个引导卷：\n\n", volumes.size()));
+        StringBuilder message = new StringBuilder("???????\n\n");
+        message.append(String.format("??%d ?????\n\n", volumes.size()));
         
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
         
@@ -285,10 +285,10 @@ class ToggleBootVolumeHandler extends AbstractCallbackHandler {
             
             message.append(String.format(
                     "%s %d. %s\n" +
-                    "   状�? %s\n" +
-                    "   大小: %sGB | VPUs: %s\n" +
-                    "   可用�? %s\n" +
-                    "   已附�? %s%s\n\n",
+                    "   ??? %s\n" +
+                    "   ??: %sGB | VPUs: %s\n" +
+                    "   ???? %s\n" +
+                    "   ???? %s%s\n\n",
                     isSelected ?" "" : "?,
                     i + 1,
                     volume.getDisplayName(),
@@ -296,7 +296,7 @@ class ToggleBootVolumeHandler extends AbstractCallbackHandler {
                     volume.getSizeInGBs(),
                     volume.getVpusPerGB(),
                     volume.getAvailabilityDomain(),
-                    volume.getAttached() ? "�? : "?,
+                    volume.getAttached() ? "?? : "?,
                     volume.getAttached() && volume.getInstanceName() != null ? " (" + volume.getInstanceName() + ")" : ""
             ));
             
@@ -304,13 +304,13 @@ class ToggleBootVolumeHandler extends AbstractCallbackHandler {
             if (i % 2 == 0) {
                 InlineKeyboardRow row = new InlineKeyboardRow();
                 row.add(KeyboardBuilder.button(
-                        String.format("%s �"?d", isSelected ? "" : "?, i + 1),
+                        String.format("%s ?"?d", isSelected ? "" : "?, i + 1),
                         "toggle_boot_volume:" + i
                 ));
                 keyboard.add(row);
             } else {
                 keyboard.get(keyboard.size() - 1).add(KeyboardBuilder.button(
-                        String.format("%s �"?d", isSelected ? "" : "?, i + 1),
+                        String.format("%s ?"?d", isSelected ? "" : "?, i + 1),
                         "toggle_boot_volume:" + i
                 ));
             }
@@ -318,21 +318,21 @@ class ToggleBootVolumeHandler extends AbstractCallbackHandler {
         
         // Add batch operation buttons
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("�"??, "select_all_boot_volumes"),
-                KeyboardBuilder.button("�"??, "deselect_all_boot_volumes")
+                KeyboardBuilder.button("?"??, "select_all_boot_volumes"),
+                KeyboardBuilder.button("?"??, "deselect_all_boot_volumes")
         ));
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("🔄 刷新列表", "refresh_boot_volumes")
+                KeyboardBuilder.button("? ????", "refresh_boot_volumes")
         ));
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("🗑 终止选中的引导卷", "confirm_terminate_boot_volumes")
+                KeyboardBuilder.button("? ????????", "confirm_terminate_boot_volumes")
         ));
         
         // Back button
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("◀�?返回", "select_config:" + ociCfgId)
+                KeyboardBuilder.button("?????", "select_config:" + ociCfgId)
         ));
         keyboard.add(KeyboardBuilder.buildCancelRow());
         
@@ -373,7 +373,7 @@ class SelectAllBootVolumesHandler extends AbstractCallbackHandler {
             try {
                 telegramClient.execute(AnswerCallbackQuery.builder()
                         .callbackQueryId(callbackQuery.getId())
-                        .text(String.format("已全�?%d 个引导卷", volumes.size()))
+                        .text(String.format("????%d ????", volumes.size()))
                         .showAlert(false)
                         .build());
             } catch (TelegramApiException e) {
@@ -412,7 +412,7 @@ class DeselectAllBootVolumesHandler extends AbstractCallbackHandler {
         try {
             telegramClient.execute(AnswerCallbackQuery.builder()
                     .callbackQueryId(callbackQuery.getId())
-                    .text("已取消所有选中")
+                    .text("???????")
                     .showAlert(false)
                     .build());
         } catch (TelegramApiException e) {
@@ -449,7 +449,7 @@ class ConfirmTerminateBootVolumesHandler extends AbstractCallbackHandler {
             try {
                 telegramClient.execute(AnswerCallbackQuery.builder()
                         .callbackQueryId(callbackQuery.getId())
-                        .text("请先选择要终止的引导�"?)
+                        .text("???????????"?)
                         .showAlert(true)
                         .build());
             } catch (TelegramApiException e) {
@@ -461,19 +461,19 @@ class ConfirmTerminateBootVolumesHandler extends AbstractCallbackHandler {
         // Show confirmation dialog
         List<InlineKeyboardRow> keyboard = List.of(
                 new InlineKeyboardRow(
-                        KeyboardBuilder.button("�?确认终止", "execute_terminate_boot_volumes")
+                        KeyboardBuilder.button("??????", "execute_terminate_boot_volumes")
                 ),
                 new InlineKeyboardRow(
-                        KeyboardBuilder.button("◀�?返回", "boot_volume_management:" + storage.getConfigContext(chatId))
+                        KeyboardBuilder.button("?????", "boot_volume_management:" + storage.getConfigContext(chatId))
                 ),
                 KeyboardBuilder.buildCancelRow()
         );
         
         String message = String.format(
-                "【确认终止引导卷】\n\n" +
-                "⚠️ 您选择�?%d 个引导卷，即将终止这些引导卷。\n\n" +
-                "⚠️ 注意：此操作不可逆！\n" +
-                "引导卷一旦终止将无法恢复，请确认�"?,
+                "?????????\n\n" +
+                "?? ?????%d ???????????????\n\n" +
+                "?? ??????????\n" +
+                "?????????????????"?,
                 selectedVolumes.size()
         );
         
@@ -510,7 +510,7 @@ class ExecuteTerminateBootVolumesHandler extends AbstractCallbackHandler {
             try {
                 telegramClient.execute(AnswerCallbackQuery.builder()
                         .callbackQueryId(callbackQuery.getId())
-                        .text("没有选中的引导卷")
+                        .text("????????")
                         .showAlert(true)
                         .build());
             } catch (TelegramApiException e) {
@@ -523,7 +523,7 @@ class ExecuteTerminateBootVolumesHandler extends AbstractCallbackHandler {
             try {
                 telegramClient.execute(AnswerCallbackQuery.builder()
                         .callbackQueryId(callbackQuery.getId())
-                        .text("配置上下文丢�"?)
+                        .text("???????"?)
                         .showAlert(true)
                         .build());
             } catch (TelegramApiException e) {
@@ -536,7 +536,7 @@ class ExecuteTerminateBootVolumesHandler extends AbstractCallbackHandler {
         try {
             telegramClient.execute(AnswerCallbackQuery.builder()
                     .callbackQueryId(callbackQuery.getId())
-                    .text("正在终止引导�?..")
+                    .text("????????..")
                     .showAlert(false)
                     .build());
         } catch (TelegramApiException e) {
@@ -555,7 +555,7 @@ class ExecuteTerminateBootVolumesHandler extends AbstractCallbackHandler {
         
         // Send processing message
         String processingMessage = String.format(
-                "�?正在终止 %d 个引导卷...\n\n请稍候，任务已提�?..",
+                "?????? %d ????...\n\n??????????..",
                 selectedVolumes.size()
         );
         
@@ -582,7 +582,7 @@ class ExecuteTerminateBootVolumesHandler extends AbstractCallbackHandler {
             try {
                 telegramClient.execute(SendMessage.builder()
                         .chatId(chatId)
-                        .text(String.format("�?已成功提交终�?%d 个引导卷的任务！", selectedVolumes.size()))
+                        .text(String.format("??????????%d ????????", selectedVolumes.size()))
                         .build());
             } catch (TelegramApiException e) {
                 log.error("Failed to send success message", e);
@@ -595,7 +595,7 @@ class ExecuteTerminateBootVolumesHandler extends AbstractCallbackHandler {
             try {
                 telegramClient.execute(SendMessage.builder()
                         .chatId(chatId)
-                        .text("�?终止引导卷失败：" + e.getMessage())
+                        .text("??????????" + e.getMessage())
                         .build());
             } catch (TelegramApiException ex) {
                 log.error("Failed to send error message", ex);
@@ -633,7 +633,7 @@ class RefreshBootVolumesHandler extends AbstractCallbackHandler {
             try {
                 telegramClient.execute(AnswerCallbackQuery.builder()
                         .callbackQueryId(callbackQuery.getId())
-                        .text("配置上下文丢失，请重新进入引导卷管理")
+                        .text("??????????????????")
                         .showAlert(true)
                         .build());
             } catch (TelegramApiException e) {
@@ -646,7 +646,7 @@ class RefreshBootVolumesHandler extends AbstractCallbackHandler {
         try {
             telegramClient.execute(AnswerCallbackQuery.builder()
                     .callbackQueryId(callbackQuery.getId())
-                    .text("正在刷新引导卷列�?..")
+                    .text("??????????..")
                     .showAlert(false)
                     .build());
         } catch (TelegramApiException e) {
@@ -669,10 +669,10 @@ class RefreshBootVolumesHandler extends AbstractCallbackHandler {
             if (CollectionUtil.isEmpty(volumes)) {
                 return buildEditMessage(
                         callbackQuery,
-                        "�"??,
+                        "?"??,
                         new InlineKeyboardMarkup(List.of(
                                 new InlineKeyboardRow(
-                                        KeyboardBuilder.button("◀�?返回", "select_config:" + ociCfgId)
+                                        KeyboardBuilder.button("?????", "select_config:" + ociCfgId)
                                 ),
                                 KeyboardBuilder.buildCancelRow()
                         ))
@@ -686,9 +686,9 @@ class RefreshBootVolumesHandler extends AbstractCallbackHandler {
             // Build message with refresh timestamp
             BootVolumeSelectionStorage storage2 = BootVolumeSelectionStorage.getInstance();
             
-            StringBuilder message = new StringBuilder("【引导卷管理】\n\n");
-            message.append(String.format("�?%d 个引导卷：\n", volumes.size()));
-            message.append("🔄 刷新时间: ");
+            StringBuilder message = new StringBuilder("???????\n\n");
+            message.append(String.format("??%d ?????\n", volumes.size()));
+            message.append("? ????: ");
             message.append(java.time.LocalDateTime.now().format(
                     java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")));
             message.append("\n\n");
@@ -702,10 +702,10 @@ class RefreshBootVolumesHandler extends AbstractCallbackHandler {
                 
                 message.append(String.format(
                         "%s %d. %s\n" +
-                        "   状�? %s\n" +
-                        "   大小: %sGB | VPUs: %s\n" +
-                        "   可用�? %s\n" +
-                        "   已附�? %s%s\n\n",
+                        "   ??? %s\n" +
+                        "   ??: %sGB | VPUs: %s\n" +
+                        "   ???? %s\n" +
+                        "   ???? %s%s\n\n",
                         isSelected ?" "" : "?,
                         i + 1,
                         volume.getDisplayName(),
@@ -713,7 +713,7 @@ class RefreshBootVolumesHandler extends AbstractCallbackHandler {
                         volume.getSizeInGBs(),
                         volume.getVpusPerGB(),
                         volume.getAvailabilityDomain(),
-                        volume.getAttached() ? "�? : "?,
+                        volume.getAttached() ? "?? : "?,
                         volume.getAttached() && volume.getInstanceName() != null ? " (" + volume.getInstanceName() + ")" : ""
                 ));
                 
@@ -721,13 +721,13 @@ class RefreshBootVolumesHandler extends AbstractCallbackHandler {
                 if (i % 2 == 0) {
                     InlineKeyboardRow row = new InlineKeyboardRow();
                     row.add(KeyboardBuilder.button(
-                            String.format("%s �"?d", isSelected ? "" : "?, i + 1),
+                            String.format("%s ?"?d", isSelected ? "" : "?, i + 1),
                             "toggle_boot_volume:" + i  // Use index
                     ));
                     keyboard.add(row);
                 } else {
                     keyboard.get(keyboard.size() - 1).add(KeyboardBuilder.button(
-                            String.format("%s �"?d", isSelected ? "" : "?, i + 1),
+                            String.format("%s ?"?d", isSelected ? "" : "?, i + 1),
                             "toggle_boot_volume:" + i  // Use index
                     ));
                 }
@@ -735,21 +735,21 @@ class RefreshBootVolumesHandler extends AbstractCallbackHandler {
             
             // Add batch operation buttons
             keyboard.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("�"??, "select_all_boot_volumes"),
-                    KeyboardBuilder.button("�"??, "deselect_all_boot_volumes")
+                    KeyboardBuilder.button("?"??, "select_all_boot_volumes"),
+                    KeyboardBuilder.button("?"??, "deselect_all_boot_volumes")
             ));
             
             keyboard.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("🔄 刷新列表", "refresh_boot_volumes")
+                    KeyboardBuilder.button("? ????", "refresh_boot_volumes")
             ));
             
             keyboard.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("🗑 终止选中的引导卷", "confirm_terminate_boot_volumes")
+                    KeyboardBuilder.button("? ????????", "confirm_terminate_boot_volumes")
             ));
             
             // Back button
             keyboard.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("◀�?返回", "select_config:" + ociCfgId)
+                    KeyboardBuilder.button("?????", "select_config:" + ociCfgId)
             ));
             keyboard.add(KeyboardBuilder.buildCancelRow());
             
@@ -763,13 +763,13 @@ class RefreshBootVolumesHandler extends AbstractCallbackHandler {
             log.error("Failed to refresh boot volumes for ociCfgId: {}", ociCfgId, e);
             return buildEditMessage(
                     callbackQuery,
-                    "�"?? + e.getMessage(),
+                    "?"?? + e.getMessage(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("🔄 重试", "refresh_boot_volumes")
+                                    KeyboardBuilder.button("? ??", "refresh_boot_volumes")
                             ),
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀�?返回", "select_config:" + ociCfgId)
+                                    KeyboardBuilder.button("?????", "select_config:" + ociCfgId)
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))

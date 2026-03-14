@@ -45,33 +45,33 @@ public class SecurityManagementHandler extends AbstractCallbackHandler {
             long blacklistCount = blacklistService.count();
             
             StringBuilder message = new StringBuilder();
-            message.append("【🛡 安全管理】\n\n");
+            message.append("?? ?????\n\n");
             
             // Defense Mode Status
-            message.append("🔒 防御模式\n");
-            message.append(String.format("状态: %s\n", isDefenseModeEnabled ? "✅ 已开启" : "❌ 已关闭"));
+            message.append("? ????\n");
+            message.append(String.format("??: %s\n", isDefenseModeEnabled ? "? ???" : "? ???"));
             if (isDefenseModeEnabled) {
-                message.append("⚠️ 所有Web访问已阻止\n");
+                message.append("?? ??Web?????\n");
             }
             message.append("\n");
             
             // IP Blacklist Status
-            message.append("🚫 IP黑名单\n");
-            message.append(String.format("拉黑IP数量: %d\n", blacklistCount));
+            message.append("? IP???\n");
+            message.append(String.format("??IP??: %d\n", blacklistCount));
             message.append("\n");
             
-            message.append("━━━━━━━━━━━━━━━━\n");
-            message.append("💡 通过TG管理Web端安全\n");
-            message.append("🔐 自动拉黑登录失败IP");
+            message.append("????????????????\n");
+            message.append("? ??TG??Web???\n");
+            message.append("? ????????IP");
             
             List<InlineKeyboardRow> keyboard = new ArrayList<>();
             
             keyboard.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("🔒 " + (isDefenseModeEnabled ? "关闭" : "开启") + "防御模式", "defense_mode_toggle")
+                    KeyboardBuilder.button("? " + (isDefenseModeEnabled ? "??" : "??") + "????", "defense_mode_toggle")
             ));
             
             keyboard.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("🚫 IP黑名单管理", "ip_blacklist_management")
+                    KeyboardBuilder.button("? IP?????", "ip_blacklist_management")
             ));
             
             keyboard.add(KeyboardBuilder.buildBackToMainMenuRow());
@@ -87,7 +87,7 @@ public class SecurityManagementHandler extends AbstractCallbackHandler {
             log.error("Failed to show security management", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 获取安全设置失败: " + e.getMessage(),
+                    "? ????????: " + e.getMessage(),
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }
@@ -130,17 +130,17 @@ class DefenseModeToggleHandler extends AbstractCallbackHandler {
             
             String message;
             if (newStatus) {
-                message = "✅ 防御模式已开启\n\n" +
-                        "⚠️ 重要提示:\n" +
-                        "• 所有IP无法访问Web端\n" +
-                        "• 包括您自己的IP\n" +
-                        "• 仅可通过TG操作\n" +
-                        "• OCI任务不受影响\n\n" +
-                        "🔒 Web端已完全锁定";
+                message = "? ???????\n\n" +
+                        "?? ????:\n" +
+                        "? ??IP????Web?\n" +
+                        "? ??????IP\n" +
+                        "? ????TG??\n" +
+                        "? OCI??????\n\n" +
+                        "? Web??????";
             } else {
-                message = "✅ 防御模式已关闭\n\n" +
-                        "Web端访问已恢复正常\n" +
-                        "IP黑名单仍然生效";
+                message = "? ???????\n\n" +
+                        "Web????????\n" +
+                        "IP???????";
             }
             
             return buildEditMessage(
@@ -148,7 +148,7 @@ class DefenseModeToggleHandler extends AbstractCallbackHandler {
                     message,
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "security_management")
+                                    KeyboardBuilder.button("?? ??", "security_management")
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -157,10 +157,10 @@ class DefenseModeToggleHandler extends AbstractCallbackHandler {
             log.error("Failed to toggle defense mode", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 切换防御模式失败: " + e.getMessage(),
+                    "? ????????: " + e.getMessage(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "security_management")
+                                    KeyboardBuilder.button("?? ??", "security_management")
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -189,29 +189,29 @@ class IpBlacklistManagementHandler extends AbstractCallbackHandler {
             List<IpBlacklist> blacklist = blacklistService.listAll();
             
             StringBuilder message = new StringBuilder();
-            message.append("【🚫 IP黑名单管理】\n\n");
+            message.append("?? IP??????\n\n");
             
             if (blacklist.isEmpty()) {
-                message.append("暂无拉黑IP\n\n");
-                message.append("💡 登录失败5次自动拉黑");
+                message.append("????IP\n\n");
+                message.append("? ????5?????");
             } else {
-                message.append(String.format("共 %d 个IP被拉黑:\n\n", blacklist.size()));
+                message.append(String.format("? %d ?IP???:\n\n", blacklist.size()));
                 
                 for (int i = 0; i < Math.min(blacklist.size(), 10); i++) {
                     IpBlacklist item = blacklist.get(i);
                     message.append(String.format(
                             "%d. %s\n" +
-                            "   原因: %s\n" +
-                            "   时间: %s\n\n",
+                            "   ??: %s\n" +
+                            "   ??: %s\n\n",
                             i + 1,
                             item.getIpAddress(),
-                            item.getReason() != null ? item.getReason() : "未知",
+                            item.getReason() != null ? item.getReason() : "??",
                             item.getCreateTime()
                     ));
                 }
                 
                 if (blacklist.size() > 10) {
-                    message.append(String.format("... 还有 %d 个IP\n\n", blacklist.size() - 10));
+                    message.append(String.format("... ?? %d ?IP\n\n", blacklist.size() - 10));
                 }
             }
             
@@ -219,12 +219,12 @@ class IpBlacklistManagementHandler extends AbstractCallbackHandler {
             
             if (!blacklist.isEmpty()) {
                 keyboard.add(new InlineKeyboardRow(
-                        KeyboardBuilder.button("🗑 清空黑名单", "blacklist_clear_confirm")
+                        KeyboardBuilder.button("? ?????", "blacklist_clear_confirm")
                 ));
             }
             
             keyboard.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("◀️ 返回", "security_management")
+                    KeyboardBuilder.button("?? ??", "security_management")
             ));
             keyboard.add(KeyboardBuilder.buildCancelRow());
             
@@ -238,10 +238,10 @@ class IpBlacklistManagementHandler extends AbstractCallbackHandler {
             log.error("Failed to show blacklist", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 获取黑名单失败: " + e.getMessage(),
+                    "? ???????: " + e.getMessage(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "security_management")
+                                    KeyboardBuilder.button("?? ??", "security_management")
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -266,13 +266,13 @@ class BlacklistClearConfirmHandler extends AbstractCallbackHandler {
     public BotApiMethod<? extends Serializable> handle(CallbackQuery callbackQuery, TelegramClient telegramClient) {
         return buildEditMessage(
                 callbackQuery,
-                "⚠️ 确认清空黑名单？\n\n" +
-                "此操作将删除所有拉黑IP\n" +
-                "不可恢复！",
+                "?? ????????\n\n" +
+                "??????????IP\n" +
+                "?????",
                 new InlineKeyboardMarkup(List.of(
                         new InlineKeyboardRow(
-                                KeyboardBuilder.button("✅ 确认清空", "blacklist_clear"),
-                                KeyboardBuilder.button("❌ 取消", "ip_blacklist_management")
+                                KeyboardBuilder.button("? ????", "blacklist_clear"),
+                                KeyboardBuilder.button("? ??", "ip_blacklist_management")
                         ),
                         KeyboardBuilder.buildCancelRow()
                 ))
@@ -302,10 +302,10 @@ class BlacklistClearHandler extends AbstractCallbackHandler {
             
             return buildEditMessage(
                     callbackQuery,
-                    String.format("✅ 黑名单已清空\n\n已删除 %d 个IP", count),
+                    String.format("? ??????\n\n??? %d ?IP", count),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "ip_blacklist_management")
+                                    KeyboardBuilder.button("?? ??", "ip_blacklist_management")
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -314,10 +314,10 @@ class BlacklistClearHandler extends AbstractCallbackHandler {
             log.error("Failed to clear blacklist", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 清空失败: " + e.getMessage(),
+                    "? ????: " + e.getMessage(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "ip_blacklist_management")
+                                    KeyboardBuilder.button("?? ??", "ip_blacklist_management")
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))

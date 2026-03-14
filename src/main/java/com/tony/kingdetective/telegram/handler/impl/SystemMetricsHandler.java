@@ -42,7 +42,7 @@ public class SystemMetricsHandler extends AbstractCallbackHandler {
             // Build keyboard with refresh button
             List<InlineKeyboardRow> keyboard = List.of(
                     new InlineKeyboardRow(
-                            KeyboardBuilder.button("🔄 刷新", "system_metrics")
+                            KeyboardBuilder.button("? ??", "system_metrics")
                     ),
                     KeyboardBuilder.buildBackToMainMenuRow(),
                     KeyboardBuilder.buildCancelRow()
@@ -55,11 +55,11 @@ public class SystemMetricsHandler extends AbstractCallbackHandler {
             );
             
         } catch (Exception e) {
-            log.error("获取系统资源信息失败", e);
+            log.error("??????????", e);
             
             List<InlineKeyboardRow> keyboard = List.of(
                     new InlineKeyboardRow(
-                            KeyboardBuilder.button("🔄 重试", "system_metrics")
+                            KeyboardBuilder.button("? ??", "system_metrics")
                     ),
                     KeyboardBuilder.buildBackToMainMenuRow(),
                     KeyboardBuilder.buildCancelRow()
@@ -67,7 +67,7 @@ public class SystemMetricsHandler extends AbstractCallbackHandler {
             
             return buildEditMessage(
                 callbackQuery,
-                "�?获取系统资源信息失败: " + e.getMessage(),
+                "????????????: " + e.getMessage(),
                 new InlineKeyboardMarkup(keyboard)
             );
         }
@@ -84,7 +84,7 @@ public class SystemMetricsHandler extends AbstractCallbackHandler {
         OperatingSystem os = systemInfo.getOperatingSystem();
         
         StringBuilder sb = new StringBuilder();
-        sb.append("📊 系统资源监控\n\n");
+        sb.append("? ??????\n\n");
         
         // System Info
         sb.append(getSystemInfo(os, hardware));
@@ -110,7 +110,7 @@ public class SystemMetricsHandler extends AbstractCallbackHandler {
         sb.append(getUptimeInfo(os));
         
         sb.append("\n");
-        sb.append("�?更新时间: ");
+        sb.append("??????: ");
         sb.append(Instant.now().atZone(ZoneId.systemDefault()).format(TIME_FORMATTER));
         
         return sb.toString();
@@ -121,23 +121,23 @@ public class SystemMetricsHandler extends AbstractCallbackHandler {
      */
     private String getSystemInfo(OperatingSystem os, HardwareAbstractionLayer hardware) {
         StringBuilder sb = new StringBuilder();
-        sb.append("🖥�?系统信息\n");
+        sb.append("???????\n");
         
         // Try to detect if running in Docker
         boolean isDocker = isRunningInDocker();
         if (isDocker) {
-            sb.append("  环境: Docker 容器\n");
+            sb.append("  ??: Docker ??\n");
             
             // Try to read host OS info from mounted file
             String hostOs = getHostOsInfo();
             if (hostOs != null) {
-                sb.append("  宿主�? ").append(hostOs).append("\n");
+                sb.append("  ???? ").append(hostOs).append("\n");
             }
         }
         
-        sb.append("  容器OS: ").append(os.getFamily()).append(" ").append(os.getVersionInfo().getVersion()).append("\n");
-        sb.append("  架构: ").append(System.getProperty("os.arch")).append("\n");
-        sb.append("  处理�? ").append(hardware.getProcessor().getProcessorIdentifier().getName()).append("\n");
+        sb.append("  ??OS: ").append(os.getFamily()).append(" ").append(os.getVersionInfo().getVersion()).append("\n");
+        sb.append("  ??: ").append(System.getProperty("os.arch")).append("\n");
+        sb.append("  ???? ").append(hardware.getProcessor().getProcessorIdentifier().getName()).append("\n");
         return sb.toString();
     }
     
@@ -168,7 +168,7 @@ public class SystemMetricsHandler extends AbstractCallbackHandler {
                 }
             }
         } catch (Exception e) {
-            log.debug("检测Docker环境失败", e);
+            log.debug("??Docker????", e);
         }
         return false;
     }
@@ -205,7 +205,7 @@ public class SystemMetricsHandler extends AbstractCallbackHandler {
                 }
             }
         } catch (Exception e) {
-            log.debug("读取宿主机OS信息失败", e);
+            log.debug("?????OS????", e);
         }
         return null;
     }
@@ -215,7 +215,7 @@ public class SystemMetricsHandler extends AbstractCallbackHandler {
      */
     private String getCpuInfo(CentralProcessor processor) {
         StringBuilder sb = new StringBuilder();
-        sb.append("💻 服务�?CPU 使用率\n");
+        sb.append("? ????CPU ???\n");
         
         // Get CPU usage
         long[] prevTicks = processor.getSystemCpuLoadTicks();
@@ -226,9 +226,9 @@ public class SystemMetricsHandler extends AbstractCallbackHandler {
         }
         double cpuUsage = processor.getSystemCpuLoadBetweenTicks(prevTicks) * 100;
         
-        sb.append("  核心�? ").append(processor.getLogicalProcessorCount()).append("\n");
-        sb.append("  使用�? ").append(String.format("%.2f", cpuUsage)).append("%\n");
-        sb.append("  空闲�? ").append(String.format("%.2f", 100 - cpuUsage)).append("%\n");
+        sb.append("  ???? ").append(processor.getLogicalProcessorCount()).append("\n");
+        sb.append("  ???? ").append(String.format("%.2f", cpuUsage)).append("%\n");
+        sb.append("  ???? ").append(String.format("%.2f", 100 - cpuUsage)).append("%\n");
         
         // Visual progress bar
         sb.append("  ").append(generateProgressBar(cpuUsage, 100));
@@ -241,17 +241,17 @@ public class SystemMetricsHandler extends AbstractCallbackHandler {
      */
     private String getMemoryInfo(GlobalMemory memory) {
         StringBuilder sb = new StringBuilder();
-        sb.append("💾 服务器内存使用\n");
+        sb.append("? ???????\n");
         
         long totalMemory = memory.getTotal();
         long availableMemory = memory.getAvailable();
         long usedMemory = totalMemory - availableMemory;
         double usedPercentage = ((double) usedMemory / totalMemory) * 100;
         
-        sb.append("  总容�? ").append(formatBytes(totalMemory)).append("\n");
-        sb.append("  已使�? ").append(formatBytes(usedMemory)).append("\n");
-        sb.append("  可用: ").append(formatBytes(availableMemory)).append("\n");
-        sb.append("  使用�? ").append(String.format("%.2f", usedPercentage)).append("%\n");
+        sb.append("  ???? ").append(formatBytes(totalMemory)).append("\n");
+        sb.append("  ???? ").append(formatBytes(usedMemory)).append("\n");
+        sb.append("  ??: ").append(formatBytes(availableMemory)).append("\n");
+        sb.append("  ???? ").append(String.format("%.2f", usedPercentage)).append("%\n");
         sb.append("  ").append(generateProgressBar(usedPercentage, 100));
         
         return sb.toString();
@@ -262,13 +262,13 @@ public class SystemMetricsHandler extends AbstractCallbackHandler {
      */
     private String getDiskInfo(FileSystem fileSystem) {
         StringBuilder sb = new StringBuilder();
-        sb.append("💿 磁盘使用\n");
+        sb.append("? ????\n");
         
         // Only monitor root directory
         File rootDir = new File("/");
         
         if (!rootDir.exists()) {
-            sb.append("  ⚠️ 根目录不存在\n");
+            sb.append("  ?? ??????\n");
             return sb.toString();
         }
         
@@ -278,16 +278,16 @@ public class SystemMetricsHandler extends AbstractCallbackHandler {
         long used = total - usable;
         
         if (total == 0) {
-            sb.append("  ⚠️ 无法获取磁盘信息\n");
+            sb.append("  ?? ????????\n");
             return sb.toString();
         }
         
         double usedPercentage = ((double) used / total) * 100;
         
-        sb.append("  总容�? ").append(formatBytes(total)).append("\n");
-        sb.append("  已使�? ").append(formatBytes(used)).append("\n");
-        sb.append("  可用: ").append(formatBytes(usable)).append("\n");
-        sb.append("  使用�? ").append(String.format("%.2f", usedPercentage)).append("%\n");
+        sb.append("  ???? ").append(formatBytes(total)).append("\n");
+        sb.append("  ???? ").append(formatBytes(used)).append("\n");
+        sb.append("  ??: ").append(formatBytes(usable)).append("\n");
+        sb.append("  ???? ").append(String.format("%.2f", usedPercentage)).append("%\n");
         sb.append("  ").append(generateProgressBar(usedPercentage, 100));
         
         return sb.toString();
@@ -298,12 +298,12 @@ public class SystemMetricsHandler extends AbstractCallbackHandler {
      */
     private String getNetworkInfo(List<NetworkIF> networkIFs) {
         StringBuilder sb = new StringBuilder();
-        sb.append("🌐 网络信息\n");
+        sb.append("? ????\n");
         
         // Get public IP address
         String publicIp = getPublicIpAddress();
         if (publicIp != null) {
-            sb.append("  公网IP: ").append(publicIp).append("\n");
+            sb.append("  ??IP: ").append(publicIp).append("\n");
         }
         
         // Find primary network interface
@@ -316,24 +316,24 @@ public class SystemMetricsHandler extends AbstractCallbackHandler {
         if (primaryIF != null) {
             primaryIF.updateAttributes();
             
-            sb.append("  接口名称: ").append(primaryIF.getDisplayName()).append("\n");
+            sb.append("  ????: ").append(primaryIF.getDisplayName()).append("\n");
             
             String[] ipv4 = primaryIF.getIPv4addr();
             if (ipv4.length > 0) {
-                sb.append("  内网IP: ").append(String.join(", ", ipv4)).append("\n");
+                sb.append("  ??IP: ").append(String.join(", ", ipv4)).append("\n");
             }
             
-            sb.append("  接收: ").append(formatBytes(primaryIF.getBytesRecv())).append("\n");
-            sb.append("  发�? ").append(formatBytes(primaryIF.getBytesSent())).append("\n");
-            sb.append("  收包: ").append(primaryIF.getPacketsRecv()).append("\n");
-            sb.append("  发包: ").append(primaryIF.getPacketsSent()).append("\n");
+            sb.append("  ??: ").append(formatBytes(primaryIF.getBytesRecv())).append("\n");
+            sb.append("  ??? ").append(formatBytes(primaryIF.getBytesSent())).append("\n");
+            sb.append("  ??: ").append(primaryIF.getPacketsRecv()).append("\n");
+            sb.append("  ??: ").append(primaryIF.getPacketsSent()).append("\n");
             
             if (primaryIF.getInErrors() > 0 || primaryIF.getOutErrors() > 0) {
-                sb.append("  错误: ").append("�?").append(primaryIF.getInErrors())
-                  .append(" �?").append(primaryIF.getOutErrors()).append("\n");
+                sb.append("  ??: ").append("??").append(primaryIF.getInErrors())
+                  .append(" ??").append(primaryIF.getOutErrors()).append("\n");
             }
         } else {
-            sb.append("  ⚠️ 未检测到活动网络接口\n");
+            sb.append("  ?? ??????????\n");
         }
         
         return sb.toString();
@@ -374,7 +374,7 @@ public class SystemMetricsHandler extends AbstractCallbackHandler {
                 }
             }
         } catch (Exception e) {
-            log.warn("获取公网IP失败", e);
+            log.warn("????IP??", e);
         }
         return null;
     }
@@ -384,7 +384,7 @@ public class SystemMetricsHandler extends AbstractCallbackHandler {
      */
     private String getUptimeInfo(OperatingSystem os) {
         StringBuilder sb = new StringBuilder();
-        sb.append("⏱️ 系统运行时间\n");
+        sb.append("?? ??????\n");
         
         long uptimeSeconds = os.getSystemUptime();
         long days = uptimeSeconds / 86400;
@@ -394,11 +394,11 @@ public class SystemMetricsHandler extends AbstractCallbackHandler {
         
         sb.append("  ");
         if (days > 0) {
-            sb.append(days).append(" �?");
+            sb.append(days).append(" ??");
         }
-        sb.append(hours).append(" 小时 ");
-        sb.append(minutes).append(" 分钟 ");
-        sb.append(seconds).append(" 秒\n");
+        sb.append(hours).append(" ?? ");
+        sb.append(minutes).append(" ?? ");
+        sb.append(seconds).append(" ?\n");
         
         return sb.toString();
     }
@@ -441,9 +441,9 @@ public class SystemMetricsHandler extends AbstractCallbackHandler {
         StringBuilder bar = new StringBuilder("[");
         for (int i = 0; i < totalBars; i++) {
             if (i < filledBars) {
-                bar.append("�?");
+                bar.append("??");
             } else {
-                bar.append("�?");
+                bar.append("??");
             }
         }
         bar.append("]\n");

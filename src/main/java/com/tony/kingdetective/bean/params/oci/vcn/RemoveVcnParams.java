@@ -16,8 +16,8 @@ import java.util.List;
 @Data
 public class RemoveVcnParams {
 
-    @NotEmpty(message = "vcnId列表不能为空")
+    @NotEmpty(message = "vcnId??????")
     private List<String> vcnIds;
-    @NotBlank(message = "配置id不能为空")
+    @NotBlank(message = "??id????")
     private String ociCfgId;
 }

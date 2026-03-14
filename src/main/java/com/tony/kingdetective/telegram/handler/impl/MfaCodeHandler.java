@@ -52,12 +52,12 @@ public class MfaCodeHandler extends AbstractCallbackHandler {
             log.info("MFA code generated for chatId: {}", callbackQuery.getMessage().getChatId());
             
             String text = String.format(
-                "🔐 *MFA 验证�?\n\n" +
-                "当前一次性验证码：\n\n" +
+                "? *MFA ????\n\n" +
+                "?????????\n\n" +
                 "`%s`\n\n" +
-                "�?验证码有效期�?30 秒\n" +
-                "💡 点击验证码可复制\n\n" +
-                "⚠️ 请妥善保管，不要泄露给他人！",
+                "??????????30 ?\n" +
+                "? ????????\n\n" +
+                "?? ??????????????",
                 formattedCode
             );
             
@@ -65,7 +65,7 @@ public class MfaCodeHandler extends AbstractCallbackHandler {
             
             // Refresh button
             keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("🔄 刷新验证�"?, "mfa_code")
+                KeyboardBuilder.button("? ?????"?, "mfa_code")
             ));
             
             // Navigation
@@ -93,9 +93,9 @@ public class MfaCodeHandler extends AbstractCallbackHandler {
      * Build MFA not enabled message
      */
     private BotApiMethod<? extends Serializable> buildMfaNotEnabledMessage(CallbackQuery callbackQuery) {
-        String text = "�?*MFA 功能未启�?\n\n" +
-                     "请先在系统设置中启用 MFA 双因素认证功能。\n\n" +
-                     "💡 启用后，您可以通过此功能获取一次性验证码�"?;
+        String text = "??*MFA ??????\n\n" +
+                     "?????????? MFA ????????\n\n" +
+                     "? ?????????????????????"?;
         
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
         keyboard.add(KeyboardBuilder.buildBackToMainMenuRow());
@@ -113,9 +113,9 @@ public class MfaCodeHandler extends AbstractCallbackHandler {
      */
     private BotApiMethod<? extends Serializable> buildErrorMessage(CallbackQuery callbackQuery, String errorMsg) {
         String text = String.format(
-            "�?*获取验证码失�?\n\n" +
-            "错误信息�?s\n\n" +
-            "请稍后重试或联系管理员�"?,
+            "??*????????\n\n" +
+            "??????s\n\n" +
+            "????????????"?,
             errorMsg
         );
         

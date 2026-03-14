@@ -16,9 +16,9 @@ import lombok.EqualsAndHashCode;
 @Data
 public class AutoRescueParams extends GetInstanceCfgInfoParams {
 
-    @NotBlank(message = "实例名称不能为空")
+    @NotBlank(message = "????????")
     private String name;
 
-    @NotNull(message = "keepBackupVolume不能为空")
+    @NotNull(message = "keepBackupVolume????")
     private Boolean keepBackupVolume = true;
 }

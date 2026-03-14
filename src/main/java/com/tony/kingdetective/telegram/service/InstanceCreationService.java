@@ -42,7 +42,7 @@ public class InstanceCreationService {
                 // Send success message
                 telegramClient.execute(SendMessage.builder()
                         .chatId(chatId)
-                        .text("�"?\n\n?)
+                        .text("?"?\n\n?)
                         .build());
                 
                 log.info("Instance creation task submitted successfully: userId={}, chatId={}", userId, chatId);
@@ -54,12 +54,12 @@ public class InstanceCreationService {
                 try {
                     String errorMessage = e.getMessage();
                     if (errorMessage == null || errorMessage.isEmpty()) {
-                        errorMessage = "未知错误";
+                        errorMessage = "????";
                     }
                     
                     telegramClient.execute(SendMessage.builder()
                             .chatId(chatId)
-                            .text("�?开机任务提交失败：" + errorMessage)
+                            .text("???????????" + errorMessage)
                             .build());
                 } catch (TelegramApiException ex) {
                     log.error("Failed to send error message: chatId={}", chatId, ex);
@@ -82,7 +82,7 @@ public class InstanceCreationService {
         // Validate user exists
         OciUser user = userService.getById(userId);
         if (user == null) {
-            throw new RuntimeException("配置不存在，用户ID: " + userId);
+            throw new RuntimeException("????????ID: " + userId);
         }
         
         // Generate random password if not provided

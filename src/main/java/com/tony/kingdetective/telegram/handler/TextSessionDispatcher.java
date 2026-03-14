@@ -103,7 +103,7 @@ public class TextSessionDispatcher {
             return true;
         }
 
-        sender.send(chatId, "❌ 当前操作不支持文件上传，请发送 /cancel 取消");
+        sender.send(chatId, "? ??????????????? /cancel ??");
         return true;
     }
 
@@ -117,12 +117,12 @@ public class TextSessionDispatcher {
 
         if (!url.startsWith("http://") && !url.startsWith("https://")) {
             sender.send(chatId,
-                "❌ URL 格式错误\n\n" +
-                "必须以 http:// 或 https:// 开头\n\n" +
-                "示例：\n" +
-                "• http://192.168.1.100:6080\n" +
-                "• https://vnc.example.com\n\n" +
-                "请重新输入或发送 /cancel 取消"
+                "? URL ????\n\n" +
+                "??? http:// ? https:// ??\n\n" +
+                "???\n" +
+                "? http://192.168.1.100:6080\n" +
+                "? https://vnc.example.com\n\n" +
+                "???????? /cancel ??"
             );
             return;
         }
@@ -152,16 +152,16 @@ public class TextSessionDispatcher {
             storage.clearSession(chatId);
             sender.sendMd(chatId,
                 String.format(
-                    "✅ *VNC URL 配置成功*\n\n" +
-                    "配置的 URL: `%s`\n\n" +
-                    "💡 在实例管理中选择单个实例后可使用此 URL 进行 VNC 连接。",
+                    "? *VNC URL ????*\n\n" +
+                    "??? URL: `%s`\n\n" +
+                    "? ????????????????? URL ?? VNC ???",
                     url
                 )
             );
             log.info("VNC URL configured: chatId={}, url={}", chatId, url);
         } catch (Exception e) {
             log.error("Failed to save VNC URL", e);
-            sender.send(chatId, "❌ 保存失败: " + e.getMessage());
+            sender.send(chatId, "? ????: " + e.getMessage());
             storage.clearSession(chatId);
         }
     }
@@ -175,11 +175,11 @@ public class TextSessionDispatcher {
         password = password.trim();
 
         if (password.length() < 6) {
-            sender.send(chatId, "❌ 密码太短，至少需要 6 位字符\n\n请重新输入或发送 /cancel 取消");
+            sender.send(chatId, "? ????????? 6 ???\n\n???????? /cancel ??");
             return;
         }
 
-        sender.send(chatId, "⏳ 正在创建加密备份，请稍候...");
+        sender.send(chatId, "? ????????????...");
 
         try {
             ISysService sysService = SpringUtil.getBean(ISysService.class);
@@ -190,13 +190,13 @@ public class TextSessionDispatcher {
 
             File backupFile = new File(backupFilePath);
             if (!backupFile.exists()) {
-                throw new RuntimeException("备份文件不存在: " + backupFilePath);
+                throw new RuntimeException("???????: " + backupFilePath);
             }
 
-            String caption = "📦 *备份文件*\n\n" +
-                "✅ 类型：加密备份\n" +
-                "📅 时间：" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "\n\n" +
-                "⚠️ 请妥善保管密码，恢复时需要输入。";
+            String caption = "? *????*\n\n" +
+                "? ???????\n" +
+                "? ???" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "\n\n" +
+                "?? ????????????????";
 
             SendDocument sendDocument = SendDocument.builder()
                 .chatId(chatId)
@@ -209,11 +209,11 @@ public class TextSessionDispatcher {
             FileUtil.del(backupFile);
 
             storage.clearSession(chatId);
-            sender.sendMd(chatId, "✅ *加密备份成功，文件已发送。服务器副本已删除。*");
+            sender.sendMd(chatId, "? *??????????????????????*");
             log.info("Encrypted backup sent and deleted: chatId={}", chatId);
         } catch (Exception e) {
             log.error("Failed to create encrypted backup", e);
-            sender.send(chatId, "❌ 备份失败: " + e.getMessage());
+            sender.send(chatId, "? ????: " + e.getMessage());
             storage.clearSession(chatId);
         }
     }
@@ -225,11 +225,11 @@ public class TextSessionDispatcher {
             String fileName = document.getFileName();
 
             if (!fileName.toLowerCase().endsWith(".zip")) {
-                sender.send(chatId, "❌ 只支持 ZIP 格式的备份文件，请重新上传或发送 /cancel 取消");
+                sender.send(chatId, "? ??? ZIP ???????????????? /cancel ??");
                 return;
             }
 
-            sender.send(chatId, "⏳ 正在下载备份文件...");
+            sender.send(chatId, "? ????????...");
 
             GetFile getFile = new GetFile(document.getFileId());
             org.telegram.telegrambots.meta.api.objects.File tgFile = telegramClient.execute(getFile);
@@ -245,15 +245,15 @@ public class TextSessionDispatcher {
             }
 
             sender.sendMd(chatId,
-                "✅ *文件上传成功*\n\n" +
-                "文件名：`" + fileName + "`\n\n" +
-                "请发送解密密码（普通备份输入任意字符即可）\n" +
-                "发送 /cancel 可取消操作"
+                "? *??????*\n\n" +
+                "????`" + fileName + "`\n\n" +
+                "?????????????????????\n" +
+                "?? /cancel ?????"
             );
             log.info("Backup file downloaded: chatId={}, file={}", chatId, tempFilePath);
         } catch (Exception e) {
             log.error("Failed to handle backup file upload", e);
-            sender.send(chatId, "❌ 文件上传失败: " + e.getMessage());
+            sender.send(chatId, "? ??????: " + e.getMessage());
             storage.clearSession(chatId);
         }
     }
@@ -263,7 +263,7 @@ public class TextSessionDispatcher {
         ConfigSessionStorage.SessionState state = storage.getSessionState(chatId);
 
         if (state == null || state.getData().get("backupFilePath") == null) {
-            sender.send(chatId, "❌ 会话已过期，请重新上传备份文件");
+            sender.send(chatId, "? ???????????????");
             storage.clearSession(chatId);
             return;
         }
@@ -273,12 +273,12 @@ public class TextSessionDispatcher {
         File backupFile = new File(backupFilePath);
 
         if (!backupFile.exists()) {
-            sender.send(chatId, "❌ 备份文件不存在，请重新上传");
+            sender.send(chatId, "? ?????????????");
             storage.clearSession(chatId);
             return;
         }
 
-        sender.send(chatId, "⏳ 正在恢复数据，请稍候（勿关闭程序）...");
+        sender.send(chatId, "? ?????????????????...");
 
         try {
             ISysService sysService = SpringUtil.getBean(ISysService.class);
@@ -296,8 +296,8 @@ public class TextSessionDispatcher {
             FileUtil.del(backupFile);
 
             sender.sendMd(chatId,
-                "✅ *数据恢复成功*\n\n" +
-                "建议重启服务以确保所有配置生效。"
+                "? *??????*\n\n" +
+                "????????????????"
             );
             log.info("Data restored: chatId={}, file={}", chatId, backupFilePath);
         } catch (Exception e) {
@@ -305,8 +305,8 @@ public class TextSessionDispatcher {
             FileUtil.del(backupFile);
             storage.clearSession(chatId);
             sender.sendMd(chatId,
-                "❌ *恢复失败*\n\n错误：" + e.getMessage() + "\n\n" +
-                "可能原因：密码错误、文件损坏或文件不匹配。"
+                "? *????*\n\n???" + e.getMessage() + "\n\n" +
+                "?????????????????????"
             );
         }
     }
@@ -325,9 +325,9 @@ public class TextSessionDispatcher {
 
             if (user == null || fingerprint == null || tenancy == null || region == null) {
                 sender.sendMd(chatId,
-                    "❌ *配置格式错误*\n\n" +
-                    "未检测到必要字段 (user, fingerprint, tenancy, region)。\n" +
-                    "请检查复制的内容是否完整，或发送 /cancel 取消。"
+                    "? *??????*\n\n" +
+                    "???????? (user, fingerprint, tenancy, region)?\n" +
+                    "???????????????? /cancel ???"
                 );
                 return;
             }
@@ -342,19 +342,19 @@ public class TextSessionDispatcher {
             storage.startAddAccountKey(chatId, data);
 
             sender.sendMd(chatId,
-                "✅ *配置已识别*\n\n" +
-                "🔑 *第二步：上传私钥*\n\n" +
-                "请发送私钥文件 (`.pem`) 或直接粘贴私钥文本内容。"
+                "? *?????*\n\n" +
+                "? *????????*\n\n" +
+                "??????? (`.pem`) ????????????"
             );
         } catch (Exception e) {
             log.error("Failed to parse OCI config input", e);
-            sender.send(chatId, "❌ 处理配置失败: " + e.getMessage());
+            sender.send(chatId, "? ??????: " + e.getMessage());
         }
     }
 
     private void handleAddAccountKeyInput(long chatId, String text, TgMessageSender sender) {
         if (!text.contains("BEGIN") || !text.contains("PRIVATE KEY")) {
-            sender.sendMd(chatId, "❌ *非法的私钥格式*\n\n请确保包含 `-----BEGIN ... PRIVATE KEY-----` 头。");
+            sender.sendMd(chatId, "? *???????*\n\n????? `-----BEGIN ... PRIVATE KEY-----` ??");
             return;
         }
         processAccountKey(chatId, text, sender);
@@ -369,13 +369,13 @@ public class TextSessionDispatcher {
             String keyContent = FileUtil.readUtf8String(downloadedFile);
 
             if (!keyContent.contains("BEGIN") || !keyContent.contains("PRIVATE KEY")) {
-                sender.sendMd(chatId, "❌ *文件无效*\n\n文件内容不是有效的私钥格式。");
+                sender.sendMd(chatId, "? *????*\n\n??????????????");
                 return;
             }
             processAccountKey(chatId, keyContent, sender);
         } catch (Exception e) {
             log.error("Failed to handle key file upload", e);
-            sender.send(chatId, "❌ 读取文件失败: " + e.getMessage());
+            sender.send(chatId, "? ??????: " + e.getMessage());
         }
     }
 
@@ -384,7 +384,7 @@ public class TextSessionDispatcher {
         ConfigSessionStorage.SessionState state = storage.getSessionState(chatId);
 
         if (state == null) {
-            sender.send(chatId, "❌ 会话已过期，请重新开始。");
+            sender.send(chatId, "? ????????????");
             return;
         }
 
@@ -392,9 +392,9 @@ public class TextSessionDispatcher {
         storage.startAddAccountRemark(chatId, state.getData());
 
         sender.sendMd(chatId,
-            "✅ *私钥已接收*\n\n" +
-            "🏷️ *第三步：设置备注名*\n\n" +
-            "给这个账户取一个名字（例如：`US-SanJose` 或 `甲骨文1号`）。"
+            "? *?????*\n\n" +
+            "?? *?????????*\n\n" +
+            "??????????????`US-SanJose` ? `???1?`??"
         );
     }
 
@@ -403,11 +403,11 @@ public class TextSessionDispatcher {
         ConfigSessionStorage.SessionState state = storage.getSessionState(chatId);
 
         if (state == null) {
-            sender.send(chatId, "❌ 会话已过期，请重新开始。");
+            sender.send(chatId, "? ????????????");
             return;
         }
 
-        sender.send(chatId, "⏳ 正在验证并保存...");
+        sender.send(chatId, "? ???????...");
 
         try {
             Map<String, Object> data = state.getData();
@@ -453,17 +453,17 @@ public class TextSessionDispatcher {
 
             sender.sendMd(chatId,
                 String.format(
-                    "🎉 *账户添加成功！*\n\n" +
-                    "备注名: `%s`\n" +
-                    "区域: `%s`\n" +
-                    "状态: ✅ 已保存",
+                    "? *???????*\n\n" +
+                    "???: `%s`\n" +
+                    "??: `%s`\n" +
+                    "??: ? ???",
                     remark, region
                 )
             );
             log.info("New OCI account added: chatId={}, remark={}, region={}", chatId, remark, region);
         } catch (Exception e) {
             log.error("Failed to save new account", e);
-            sender.send(chatId, "❌ 保存失败: " + e.getMessage());
+            sender.send(chatId, "? ????: " + e.getMessage());
             storage.clearSession(chatId);
         }
     }
@@ -476,23 +476,23 @@ public class TextSessionDispatcher {
         ConfigSessionStorage storage = ConfigSessionStorage.getInstance();
         ConfigSessionStorage.SessionState state = storage.getSessionState(chatId);
         if (state == null) {
-            sender.send(chatId, "❌ 会话已过期");
+            sender.send(chatId, "? ?????");
             return;
         }
         
         String userId = (String) state.getData().get("userId");
         text = text.trim();
         if (!text.startsWith("ssh-rsa") && !text.startsWith("ssh-ed25519") && !text.startsWith("ecdsa-sha2-nistp256")) {
-            sender.send(chatId, "❌ 无效的公钥格式，必须以 ssh-rsa / ssh-ed25519 等开头");
+            sender.send(chatId, "? ??????????? ssh-rsa / ssh-ed25519 ???");
             return;
         }
 
-        sender.send(chatId, "⏳ 正在上传公钥...");
+        sender.send(chatId, "? ??????...");
         try {
             IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
             OciUser user = userService.getById(userId);
             if (user == null) {
-                sender.send(chatId, "❌ 账户不存在");
+                sender.send(chatId, "? ?????");
                 storage.clearSession(chatId);
                 return;
             }
@@ -521,10 +521,10 @@ public class TextSessionDispatcher {
                 );
             }
             storage.clearSession(chatId);
-            sender.sendMd(chatId, "✅ *公钥已成功上传*");
+            sender.sendMd(chatId, "? *???????*");
         } catch (Exception e) {
             log.error("Failed to upload ssh pubkey", e);
-            sender.send(chatId, "❌ 上传失败: " + e.getMessage());
+            sender.send(chatId, "? ????: " + e.getMessage());
         }
     }
 
@@ -537,7 +537,7 @@ public class TextSessionDispatcher {
         email = email.trim();
         
         if (!email.contains("@") || !email.contains(".")) {
-            sender.send(chatId, "❌ 邮箱格式不正确，请重新输入");
+            sender.send(chatId, "? ?????????????");
             return;
         }
 
@@ -560,10 +560,10 @@ public class TextSessionDispatcher {
             }
 
             storage.clearSession(chatId);
-            sender.sendMd(chatId, "✅ *告警邮箱配置成功*\n\n当前邮箱：`" + email + "`");
+            sender.sendMd(chatId, "? *????????*\n\n?????`" + email + "`");
         } catch (Exception e) {
             log.error("Failed to save alert email", e);
-            sender.send(chatId, "❌ 配置失败: " + e.getMessage());
+            sender.send(chatId, "? ????: " + e.getMessage());
         }
     }
 
@@ -575,13 +575,13 @@ public class TextSessionDispatcher {
         ConfigSessionStorage storage = ConfigSessionStorage.getInstance();
         ConfigSessionStorage.SessionState state = storage.getSessionState(chatId);
         if (state == null) {
-            sender.send(chatId, "❌ 会话已过期");
+            sender.send(chatId, "? ?????");
             return;
         }
 
         text = text.trim();
         if (!text.contains("=")) {
-            sender.send(chatId, "❌ 格式错误，请使用 `key=value` 的形式发送");
+            sender.send(chatId, "? ???????? `key=value` ?????");
             return;
         }
 
@@ -589,19 +589,19 @@ public class TextSessionDispatcher {
         String key = parts[0].trim();
         String val = parts[1].trim();
         if (key.isEmpty()) {
-            sender.send(chatId, "❌ 标签键不能为空");
+            sender.send(chatId, "? ???????");
             return;
         }
 
         String userId = (String) state.getData().get("userId");
         String instanceId = (String) state.getData().get("instanceId");
 
-        sender.send(chatId, "⏳ 正在保存标签...");
+        sender.send(chatId, "? ??????...");
         try {
             IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
             OciUser user = userService.getById(userId);
             if (user == null) {
-                sender.send(chatId, "❌ 账户不存在");
+                sender.send(chatId, "? ?????");
                 storage.clearSession(chatId);
                 return;
             }
@@ -643,10 +643,10 @@ public class TextSessionDispatcher {
             }
 
             storage.clearSession(chatId);
-            sender.sendMd(chatId, "✅ *标签已添加*\n\n`" + key + "` = `" + val + "`");
+            sender.sendMd(chatId, "? *?????*\n\n`" + key + "` = `" + val + "`");
         } catch (Exception e) {
             log.error("Failed to add tag", e);
-            sender.send(chatId, "❌ 保存失败: " + e.getMessage());
+            sender.send(chatId, "? ????: " + e.getMessage());
         }
     }
 
@@ -672,14 +672,14 @@ public class TextSessionDispatcher {
         ConfigSessionStorage storage = ConfigSessionStorage.getInstance();
         ConfigSessionStorage.SessionState state = storage.getSessionState(chatId);
         if (state == null) {
-            sender.send(chatId, "❌ 会话已过期");
+            sender.send(chatId, "? ?????");
             return;
         }
 
         text = text.trim();
         String[] times = text.split("\\|");
         if (times.length != 2) {
-            sender.send(chatId, "❌ 格式错误，请使用 `HH|HH` 的形式，例如 `01|08`");
+            sender.send(chatId, "? ???????? `HH|HH` ?????? `01|08`");
             return;
         }
 
@@ -690,7 +690,7 @@ public class TextSessionDispatcher {
             int stopHour = Integer.parseInt(stopHourStr);
             int startHour = Integer.parseInt(startHourStr);
             if (stopHour < 0 || stopHour > 23 || startHour < 0 || startHour > 23) {
-                throw new NumberFormatException("小时必须在 00-23 之间");
+                throw new NumberFormatException("????? 00-23 ??");
             }
             //  "01" 
             stopHourStr = String.format("%02d", stopHour);
@@ -718,13 +718,13 @@ public class TextSessionDispatcher {
             }
 
             storage.clearSession(chatId);
-            sender.sendMd(chatId, "✅ *定时任务配置成功！*\n\n设定为：\n- 每日 `" + stopHourStr + ":00` 关机\n- 每日 `" + startHourStr + ":00` 开机");
+            sender.sendMd(chatId, "? *?????????*\n\n????\n- ?? `" + stopHourStr + ":00` ??\n- ?? `" + startHourStr + ":00` ??");
 
         } catch (NumberFormatException e) {
-            sender.send(chatId, "❌ 格式错误: 小时必须是 0-23 的有效数字");
+            sender.send(chatId, "? ????: ????? 0-23 ?????");
         } catch (Exception e) {
             log.error("Failed to save scheduled power config", e);
-            sender.send(chatId, "❌ 保存失败: " + e.getMessage());
+            sender.send(chatId, "? ????: " + e.getMessage());
         }
     }
 }

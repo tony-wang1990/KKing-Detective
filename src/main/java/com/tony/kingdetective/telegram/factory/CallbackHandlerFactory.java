@@ -22,7 +22,7 @@ public class CallbackHandlerFactory {
     @Autowired
     public CallbackHandlerFactory(List<CallbackHandler> handlers) {
         this.handlers = handlers;
-        log.info("已加载 {} 个回调处理器", handlers.size());
+        log.info("??? {} ??????", handlers.size());
     }
     
     /**

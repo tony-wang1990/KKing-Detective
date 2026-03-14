@@ -55,7 +55,7 @@ public class SysCfgController {
             // Login success - clear attempts
             loginAttemptService.clearAttempts(clientIp);
             
-            return ResponseData.successData(result, "登录成功");
+            return ResponseData.successData(result, "????");
         } catch (OciException e) {
             // Login failed - record attempt
             loginAttemptService.recordFailure(clientIp);
@@ -92,35 +92,35 @@ public class SysCfgController {
     @PostMapping(path = "/updateVersion")
     public ResponseData<Void> updateVersion() {
         sysService.updateVersion();
-        return ResponseData.successData("版本更新任务下发成功，请稍后刷新网页查看~");
+        return ResponseData.successData("????????????????????~");
     }
 
     @PostMapping(path = "/getEnableMfa")
     public ResponseData<Boolean> getEnableMfa() {
-        return ResponseData.successData(sysService.getEnableMfa(), "获取系统是否启用MFA成功");
+        return ResponseData.successData(sysService.getEnableMfa(), "????????MFA??");
     }
 
     @PostMapping(path = "/getSysCfg")
     public ResponseData<GetSysCfgRsp> getSysCfg() {
-        return ResponseData.successData(sysService.getSysCfg(), "获取系统配置成功");
+        return ResponseData.successData(sysService.getSysCfg(), "????????");
     }
 
     @PostMapping(path = "/updateSysCfg")
     public ResponseData<Void> updateSysCfg(@Validated @RequestBody UpdateSysCfgParams params) {
         sysService.updateSysCfg(params);
-        return ResponseData.successData("更新系统配置成功");
+        return ResponseData.successData("????????");
     }
 
     @PostMapping(path = "/sendMsg")
     public ResponseData<Void> sendMsg(@Validated @RequestBody SendMsgParams params) {
         sysService.sendMessage(params.getMessage());
-        return ResponseData.successData("发送消息成功");
+        return ResponseData.successData("??????");
     }
 
     @PostMapping(path = "/checkMfaCode")
     public ResponseData<Void> checkMfaCode(@Validated @RequestBody CheckMfaCodeParams params) {
         sysService.checkMfaCode(params.getMfaCode());
-        return ResponseData.successData("MFA验证通过");
+        return ResponseData.successData("MFA????");
     }
 
     @PostMapping(path = "/backup")
@@ -131,32 +131,32 @@ public class SysCfgController {
     @PostMapping(path = "/recover")
     public ResponseData<Void> recover(@Validated RecoverParams params) {
         sysService.recover(params);
-        return ResponseData.successData("恢复数据成功");
+        return ResponseData.successData("??????");
     }
 
     @GetMapping(path = "/glance")
     public ResponseData<GetGlanceRsp> glance() {
-        return ResponseData.successData(sysService.glance(), "获取仪表盘数据成功");
+        return ResponseData.successData(sysService.glance(), "?????????");
     }
 
     @PostMapping(path = "/googleLogin")
     public ResponseData<LoginRsp> googleLogin(@Validated @RequestBody GoogleLoginParams params) {
-        return ResponseData.successData(sysService.googleLogin(params), "Google登录成功");
+        return ResponseData.successData(sysService.googleLogin(params), "Google????");
     }
 
     @PostMapping(path = "/getGoogleClientId")
     public ResponseData<String> getGoogleClientId() {
-        return ResponseData.successData(sysService.getGoogleClientId(), "获取Google Client ID成功");
+        return ResponseData.successData(sysService.getGoogleClientId(), "??Google Client ID??");
     }
 
     @GetMapping(path = "/getAlertEmail")
     public ResponseData<String> getAlertEmail() {
-        return ResponseData.successData(sysService.getAlertEmail(), "获取告警邮箱成功");
+        return ResponseData.successData(sysService.getAlertEmail(), "????????");
     }
 
     @PostMapping(path = "/updateAlertEmail")
     public ResponseData<Void> updateAlertEmail(@RequestParam("email") String email) {
         sysService.updateAlertEmail(email);
-        return ResponseData.successData("更新告警邮箱成功");
+        return ResponseData.successData("????????");
     }
 }

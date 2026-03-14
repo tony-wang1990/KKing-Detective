@@ -41,7 +41,7 @@ public class ConfigListHandler extends AbstractCallbackHandler {
         if (CollectionUtil.isEmpty(userList)) {
             return buildEditMessage(
                     callbackQuery,
-                    "�?暂无配置信息，请先添�?OCI 配置",
+                    "??????????????OCI ??",
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }
@@ -93,7 +93,7 @@ public class ConfigListHandler extends AbstractCallbackHandler {
         keyboard.add(KeyboardBuilder.buildCancelRow());
         
         String message = String.format(
-                "【配置列表】\n\n�?%d 个配置，当前�?%d/%d 页\n请选择需要开机的配置�?", 
+                "??????\n\n??%d ????????%d/%d ?\n????????????", 
                 userList.size(), 
                 currentPage + 1, 
                 totalPages

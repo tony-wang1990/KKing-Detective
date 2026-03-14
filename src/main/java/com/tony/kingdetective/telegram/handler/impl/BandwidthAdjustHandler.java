@@ -55,32 +55,32 @@ public class BandwidthAdjustHandler extends AbstractCallbackHandler {
         } else if (data.startsWith("bandwidth_adjust_set:")) {
             return adjustBandwidth(callbackQuery, data.substring("bandwidth_adjust_set:".length()), telegramClient);
         }
-        return buildEditMessage(callbackQuery, "❌ 未知操作");
+        return buildEditMessage(callbackQuery, "? ????");
     }
 
     private BotApiMethod<? extends Serializable> showAccountList(CallbackQuery callbackQuery) {
         IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
         List<OciUser> users = userService.getEnabledOciUserList();
         if (users == null || users.isEmpty()) {
-            return buildEditMessage(callbackQuery, "❌ 暂无可用账户");
+            return buildEditMessage(callbackQuery, "? ??????");
         }
 
         List<InlineKeyboardRow> rows = new ArrayList<>();
         for (OciUser user : users) {
             rows.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("👤 " + user.getUsername(), "bandwidth_adjust_list:" + user.getId())
+                KeyboardBuilder.button("? " + user.getUsername(), "bandwidth_adjust_list:" + user.getId())
             ));
         }
         rows.add(new InlineKeyboardRow(KeyboardBuilder.buildBackToMainMenuRow()));
 
-        return buildEditMessage(callbackQuery, "📶 *带宽修改*\n\n请选择要操作的账户：", new InlineKeyboardMarkup(rows));
+        return buildEditMessage(callbackQuery, "? *????*\n\n??????????", new InlineKeyboardMarkup(rows));
     }
 
     private BotApiMethod<? extends Serializable> showInstanceList(CallbackQuery callbackQuery, String userId) {
         try {
             IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
             OciUser user = userService.getById(userId);
-            if (user == null) return buildEditMessage(callbackQuery, "❌ 账户不存在");
+            if (user == null) return buildEditMessage(callbackQuery, "? ?????");
 
             List<InlineKeyboardRow> rows = new ArrayList<>();
             SysUserDTO dto = buildDto(user);
@@ -93,10 +93,10 @@ public class BandwidthAdjustHandler extends AbstractCallbackHandler {
                 ).getItems();
 
                 if (instances.isEmpty()) {
-                    return buildEditMessage(callbackQuery, "❌ 该账户下没有实例");
+                    return buildEditMessage(callbackQuery, "? ????????");
                 }
 
-                StringBuilder sb = new StringBuilder("📶 *带宽修改* (选择实例)\n\n⚠️ 注：仅弹性实例(Flex)支持修改网络带宽限制\n\n");
+                StringBuilder sb = new StringBuilder("? *????* (????)\n\n?? ???????(Flex)??????????\n\n");
                 for (var instance : instances) {
                     if ("TERMINATED".equals(instance.getLifecycleState().getValue()) || 
                         "TERMINATING".equals(instance.getLifecycleState().getValue())) {
@@ -104,37 +104,37 @@ public class BandwidthAdjustHandler extends AbstractCallbackHandler {
                     }
                     String shape = instance.getShape();
                     if (!shape.contains("Flex")) {
-                        sb.append("🚫 `").append(instance.getDisplayName()).append("` (不支持: ").append(shape).append(")\n");
+                        sb.append("? `").append(instance.getDisplayName()).append("` (???: ").append(shape).append(")\n");
                     } else {
-                        sb.append("✅ `").append(instance.getDisplayName()).append("`\n");
+                        sb.append("? `").append(instance.getDisplayName()).append("`\n");
                         // 
                         rows.add(new InlineKeyboardRow(
-                            KeyboardBuilder.button("⚙️ " + instance.getDisplayName().substring(0, Math.min(instance.getDisplayName().length(), 10)) + " (设为 1 Gbps)", 
+                            KeyboardBuilder.button("?? " + instance.getDisplayName().substring(0, Math.min(instance.getDisplayName().length(), 10)) + " (?? 1 Gbps)", 
                                 "bandwidth_adjust_set:" + userId + ":" + instance.getId() + ":1")
                         ));
                         rows.add(new InlineKeyboardRow(
-                            KeyboardBuilder.button("⚙️ " + instance.getDisplayName().substring(0, Math.min(instance.getDisplayName().length(), 10)) + " (设为 2 Gbps)", 
+                            KeyboardBuilder.button("?? " + instance.getDisplayName().substring(0, Math.min(instance.getDisplayName().length(), 10)) + " (?? 2 Gbps)", 
                                 "bandwidth_adjust_set:" + userId + ":" + instance.getId() + ":2")
                         ));
                         rows.add(new InlineKeyboardRow(
-                            KeyboardBuilder.button("⚙️ " + instance.getDisplayName().substring(0, Math.min(instance.getDisplayName().length(), 10)) + " (取消限速)", 
+                            KeyboardBuilder.button("?? " + instance.getDisplayName().substring(0, Math.min(instance.getDisplayName().length(), 10)) + " (????)", 
                                 "bandwidth_adjust_set:" + userId + ":" + instance.getId() + ":4")
                         ));
                     }
                 }
-                rows.add(new InlineKeyboardRow(KeyboardBuilder.button("← 返回账户列表", "bandwidth_adjust_select")));
+                rows.add(new InlineKeyboardRow(KeyboardBuilder.button("? ??????", "bandwidth_adjust_select")));
                 rows.add(new InlineKeyboardRow(KeyboardBuilder.buildBackToMainMenuRow()));
                 return buildEditMessage(callbackQuery, sb.toString(), new InlineKeyboardMarkup(rows));
             }
         } catch (Exception e) {
             log.error("Failed to list instances for bandwidth", e);
-            return buildEditMessage(callbackQuery, "❌ 获取实例列表失败：" + e.getMessage());
+            return buildEditMessage(callbackQuery, "? ?????????" + e.getMessage());
         }
     }
 
     private BotApiMethod<? extends Serializable> adjustBandwidth(CallbackQuery callbackQuery, String params, TelegramClient telegramClient) {
         String[] parts = params.split(":");
-        if (parts.length < 3) return buildEditMessage(callbackQuery, "❌ 参数错误");
+        if (parts.length < 3) return buildEditMessage(callbackQuery, "? ????");
         
         String userId = parts[0];
         String instanceId = parts[1];
@@ -171,19 +171,19 @@ public class BandwidthAdjustHandler extends AbstractCallbackHandler {
                 );
 
                 return buildEditMessage(callbackQuery, 
-                    "✅ *带宽修改请求已提交*\n\n" +
-                    "实例：`" + instance.getDisplayName() + "`\n" +
-                    "目标带宽设定：`" + targetBandwidth + " Gbps`\n\n" +
-                    "⏳ 生效可能需要几分钟（实际上可能需要实例重启）。",
+                    "? *?????????*\n\n" +
+                    "???`" + instance.getDisplayName() + "`\n" +
+                    "???????`" + targetBandwidth + " Gbps`\n\n" +
+                    "? ???????????????????????",
                     KeyboardBuilder.fromRows(List.of(
-                        new InlineKeyboardRow(KeyboardBuilder.button("← 返回实例列表", "bandwidth_adjust_list:" + userId)),
+                        new InlineKeyboardRow(KeyboardBuilder.button("? ??????", "bandwidth_adjust_list:" + userId)),
                         new InlineKeyboardRow(KeyboardBuilder.buildBackToMainMenuRow())
                     ))
                 );
             }
         } catch (Exception e) {
             log.error("Failed to adjust bandwidth", e);
-            return buildEditMessage(callbackQuery, "❌ 修改失败：" + e.getMessage());
+            return buildEditMessage(callbackQuery, "? ?????" + e.getMessage());
         }
     }
 

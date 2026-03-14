@@ -81,7 +81,7 @@ public class AiChatController {
                 protected boolean removeEldestEntry(Map.Entry<String, CachedClient> eldest) {
                     boolean needRemove = size() > MAX_CHAT_CLIENT_CACHE_SIZE;
                     if (needRemove) {
-                        log.info("移除最久未使用的 ChatClient：{}", eldest.getKey());
+                        log.info("???????? ChatClient?{}", eldest.getKey());
                     }
                     return needRemove;
                 }
@@ -92,7 +92,7 @@ public class AiChatController {
         String cacheKey = apiKey + "|" + baseUrl + "|" + model;
         return chatClientCache
                 .computeIfAbsent(cacheKey, k -> {
-                    log.info("创建新的 ChatClient，model = {}", model);
+                    log.info("???? ChatClient?model = {}", model);
                     return new CachedClient(factory.create(apiKey, baseUrl, model));
                 })
                 .getClient(); //  lastUsed
@@ -107,7 +107,7 @@ public class AiChatController {
             while (it.hasNext()) {
                 Map.Entry<String, CachedClient> entry = it.next();
                 if (now - entry.getValue().getLastUsed() > MAX_IDLE_TIME) {
-                    log.info("清理闲置超过30分钟的 ChatClient：{}", entry.getKey());
+                    log.info("??????30??? ChatClient?{}", entry.getKey());
                     it.remove();
                 }
             }
@@ -117,7 +117,7 @@ public class AiChatController {
     @GetMapping(value = "/removeCache")
     public ResponseData<Void> removeCache(@RequestParam("sessionId") String sessionId) {
         customCache.remove(sessionId);
-        return ResponseData.successData("会话内容已清除");
+        return ResponseData.successData("???????");
     }
 
     @GetMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
@@ -132,7 +132,7 @@ public class AiChatController {
         if (StringUtils.isBlank(apiKey)) {
             OciKv cfg = kvService.getOne(new LambdaQueryWrapper<OciKv>().eq(OciKv::getCode, SysCfgEnum.SILICONFLOW_AI_API.getCode()));
             if (null == cfg || StringUtils.isBlank(cfg.getValue())) {
-                return Flux.just("抱歉，您未配置API秘钥，服务暂时不可用。");
+                return Flux.just("???????API???????????");
             } else {
                 apiKey = cfg.getValue();
                 customCache.put(SysCfgEnum.SILICONFLOW_AI_API.getCode(), apiKey, 24 * 60 * 60 * 1000);
@@ -155,7 +155,7 @@ public class AiChatController {
             if (enableInternet != null && enableInternet) {
                 return searchService.searchWithHtml(message)
                         .flatMapMany(results -> {
-                            String prompt = message + "\n根据以下内容回答：\n" +
+                            String prompt = message + "\n?????????\n" +
                                     String.join("\n", results);
 
                             return chatClient
@@ -173,12 +173,12 @@ public class AiChatController {
                                         finalHistory.add(new AssistantMessage(chunk));
                                         customCache.put(sessionId, finalHistory, 30 * 60 * 1000); // 30
                                     })
-                                    .bufferUntil(chunk -> chunk.endsWith("。") || chunk.endsWith("\n") || chunk.endsWith("."))
+                                    .bufferUntil(chunk -> chunk.endsWith("?") || chunk.endsWith("\n") || chunk.endsWith("."))
                                     .map(list -> String.join("", list))
                                     .onErrorResume(error -> {
                                         // 
                                         log.error("Stream error: ", error);
-                                        return Flux.just("抱歉，处理您的请求时出现了错误。");
+                                        return Flux.just("????????????????");
                                     });
                         });
             } else {
@@ -195,16 +195,16 @@ public class AiChatController {
                             finalHistory.add(new AssistantMessage(chunk));
                             customCache.put(sessionId, finalHistory, 30 * 60 * 1000); // 30
                         })
-                        .bufferUntil(chunk -> chunk.endsWith("。") || chunk.endsWith("\n") || chunk.endsWith("."))
+                        .bufferUntil(chunk -> chunk.endsWith("?") || chunk.endsWith("\n") || chunk.endsWith("."))
                         .map(list -> String.join("", list))
                         .onErrorResume(error -> {
                             log.error("Stream error: ", error);
-                            return Flux.just("抱歉，处理您的请求时出现了错误。");
+                            return Flux.just("????????????????");
                         });
             }
         } catch (Exception e) {
             log.error("Chat error: ", e);
-            return Flux.just("抱歉，服务暂时不可用。");
+            return Flux.just("???????????");
         }
     }
 }

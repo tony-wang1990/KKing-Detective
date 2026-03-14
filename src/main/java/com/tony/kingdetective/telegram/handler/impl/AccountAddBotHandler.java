@@ -30,9 +30,9 @@ public class AccountAddBotHandler extends AbstractCallbackHandler {
         // Start the config session
         ConfigSessionStorage.getInstance().startAddAccountConfig(chatId);
         
-        String message = "📝 *第一步：输入 OCI 配置*\n\n" +
-                "请复制 `~/.oci/config` 文件的内容并发送给机器人。\n\n" +
-                "格式示例：\n" +
+        String message = "? *?????? OCI ??*\n\n" +
+                "??? `~/.oci/config` ?????????????\n\n" +
+                "?????\n" +
                 "```ini\n" +
                 "[DEFAULT]\n" +
                 "user=ocid1.user.oc1..aaaa...\n" +
@@ -40,7 +40,7 @@ public class AccountAddBotHandler extends AbstractCallbackHandler {
                 "tenancy=ocid1.tenancy.oc1..aaaa...\n" +
                 "region=us-sanjose-1\n" +
                 "```\n\n" +
-                "💡 *提示*: 发送 `/cancel` 可随时取消。";
+                "? *??*: ?? `/cancel` ??????";
         
         return buildEditMessage(
                 callbackQuery,

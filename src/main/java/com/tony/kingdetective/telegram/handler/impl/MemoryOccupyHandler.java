@@ -55,10 +55,10 @@ public class MemoryOccupyHandler extends AbstractCallbackHandler {
             if (CollectionUtil.isEmpty(instances)) {
                 return buildEditMessage(
                         callbackQuery,
-                        "❌ 暂无运行中的实例",
+                        "? ????????",
                         new InlineKeyboardMarkup(List.of(
                                 new InlineKeyboardRow(
-                                        KeyboardBuilder.button("◀️ 返回", "select_config:" + ociCfgId)
+                                        KeyboardBuilder.button("?? ??", "select_config:" + ociCfgId)
                                 ),
                                 KeyboardBuilder.buildCancelRow()
                         ))
@@ -73,10 +73,10 @@ public class MemoryOccupyHandler extends AbstractCallbackHandler {
             log.error("Failed to list instances for memory occupy", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 获取实例列表失败：" + e.getMessage(),
+                    "? ?????????" + e.getMessage(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "select_config:" + ociCfgId)
+                                    KeyboardBuilder.button("?? ??", "select_config:" + ociCfgId)
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -90,10 +90,10 @@ public class MemoryOccupyHandler extends AbstractCallbackHandler {
             String ociCfgId,
             long chatId) {
         
-        StringBuilder message = new StringBuilder("【占用25%内存】\n\n");
-        message.append("⚠️ 防止甲骨文回收闲置机器\n\n");
-        message.append(String.format("共 %d 个运行中的实例\n", instances.size()));
-        message.append("选择实例进行内存占用：\n\n");
+        StringBuilder message = new StringBuilder("???25%???\n\n");
+        message.append("?? ???????????\n\n");
+        message.append(String.format("? %d ???????\n", instances.size()));
+        message.append("???????????\n\n");
         
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
         
@@ -103,7 +103,7 @@ public class MemoryOccupyHandler extends AbstractCallbackHandler {
             message.append(String.format(
                     "%d. %s\n" +
                     "   Shape: %s\n" +
-                    "   区域: %s\n\n",
+                    "   ??: %s\n\n",
                     i + 1,
                     instance.getName(),
                     instance.getShape(),
@@ -112,18 +112,18 @@ public class MemoryOccupyHandler extends AbstractCallbackHandler {
             
             InlineKeyboardRow row = new InlineKeyboardRow();
             row.add(KeyboardBuilder.button(
-                    String.format("💾 实例%d", i + 1),
+                    String.format("? ??%d", i + 1),
                     "occupy_memory_instance:" + i
             ));
             keyboard.add(row);
         }
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("🚀 批量占用所有实例", "occupy_memory_all")
+                KeyboardBuilder.button("? ????????", "occupy_memory_all")
         ));
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("◀️ 返回", "select_config:" + ociCfgId)
+                KeyboardBuilder.button("?? ??", "select_config:" + ociCfgId)
         ));
         keyboard.add(KeyboardBuilder.buildCancelRow());
         
@@ -184,24 +184,24 @@ class OccupyMemoryInstanceHandler extends AbstractCallbackHandler {
         if (instance == null) {
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 实例不存在",
+                    "? ?????",
                     new InlineKeyboardMarkup(List.of(KeyboardBuilder.buildCancelRow()))
             );
         }
         
         StringBuilder message = new StringBuilder();
-        message.append("【执行内存占用】\n\n");
-        message.append(String.format("实例: %s\n", instance.getName()));
-        message.append(String.format("区域: %s\n\n", instance.getRegion()));
-        message.append("⚠️ 请手动执行以下脚本:\n\n");
+        message.append("????????\n\n");
+        message.append(String.format("??: %s\n", instance.getName()));
+        message.append(String.format("??: %s\n\n", instance.getRegion()));
+        message.append("?? ?????????:\n\n");
         message.append("```bash\n");
         message.append(MEMORY_OCCUPY_SCRIPT);
         message.append("```\n\n");
-        message.append("💡 说明:\n");
-        message.append("• 脚本会占用25%内存防止回收\n");
-        message.append("• 使用 stress 工具实现\n");
-        message.append("• 进程会持续运行直到手动停止\n\n");
-        message.append("🛑 停止占用:\n");
+        message.append("? ??:\n");
+        message.append("? ?????25%??????\n");
+        message.append("? ?? stress ????\n");
+        message.append("? ?????????????\n\n");
+        message.append("? ????:\n");
         message.append("```bash\n");
         message.append("pkill -f 'stress.*--vm-bytes'\n");
         message.append("```\n");
@@ -211,10 +211,10 @@ class OccupyMemoryInstanceHandler extends AbstractCallbackHandler {
                 message.toString(),
                 new InlineKeyboardMarkup(List.of(
                         new InlineKeyboardRow(
-                                KeyboardBuilder.button("🚀 自动执行 (Beta)", "occupy_memory_auto:" + instanceIndex)
+                                KeyboardBuilder.button("? ???? (Beta)", "occupy_memory_auto:" + instanceIndex)
                         ),
                         new InlineKeyboardRow(
-                                KeyboardBuilder.button("◀️ 返回", "memory_occupy:" + ociCfgId)
+                                KeyboardBuilder.button("?? ??", "memory_occupy:" + ociCfgId)
                         ),
                         KeyboardBuilder.buildCancelRow()
                 ))
@@ -245,7 +245,7 @@ class OccupyMemoryAutoHandler extends AbstractCallbackHandler {
         String ociCfgId = storage.getConfigContext(chatId);
         
         if (instance == null) {
-            return buildEditMessage(callbackQuery, "❌ 实例不存在", new InlineKeyboardMarkup(List.of(KeyboardBuilder.buildCancelRow())));
+            return buildEditMessage(callbackQuery, "? ?????", new InlineKeyboardMarkup(List.of(KeyboardBuilder.buildCancelRow())));
         }
 
         // Send processing message
@@ -253,7 +253,7 @@ class OccupyMemoryAutoHandler extends AbstractCallbackHandler {
             telegramClient.execute(org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText.builder()
                     .chatId(chatId)
                     .messageId(callbackQuery.getMessage().getMessageId())
-                    .text("⏳ 正在发送指令到云助手 Agent...\n\n(若是首次使用，需确保实例中已安装并启动 Oracle Cloud Agent)")
+                    .text("? ?????????? Agent...\n\n(??????????????????? Oracle Cloud Agent)")
                     .build());
         } catch (Exception ignored) {}
         
@@ -305,17 +305,17 @@ class OccupyMemoryAutoHandler extends AbstractCallbackHandler {
                 return buildEditMessage(
                         callbackQuery,
                         String.format(
-                                "✅ **指令发送成功！**\n\n" +
-                                "实例: %s\n" +
+                                "? **???????**\n\n" +
+                                "??: %s\n" +
                                 "CommandId: ...%s\n\n" +
-                                "Oracle Cloud Agent 已接收指令，将在后台执行。\n" +
-                                "请稍后 (约1-2分钟) 检查实例内存使用情况。",
+                                "Oracle Cloud Agent ?????????????\n" +
+                                "??? (?1-2??) ???????????",
                                 instance.getName(),
                                 response.getInstanceAgentCommand().getId().substring(response.getInstanceAgentCommand().getId().length() - 6)
                         ),
                         new InlineKeyboardMarkup(List.of(
                                 new InlineKeyboardRow(
-                                        KeyboardBuilder.button("◀️ 返回列表", "memory_occupy:" + ociCfgId)
+                                        KeyboardBuilder.button("?? ????", "memory_occupy:" + ociCfgId)
                                 ),
                                 KeyboardBuilder.buildCancelRow()
                         ))
@@ -326,10 +326,10 @@ class OccupyMemoryAutoHandler extends AbstractCallbackHandler {
             log.error("Failed to auto execute memory occupy", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 指令发送失败\n\n" + e.getMessage() + "\n\n💡 失败原因可能是：\n1. 实例未安装/启动 Oracle Cloud Agent\n2. 实例 Agent 插件未启用 Run Command 功能\n3. 权限不足",
+                    "? ??????\n\n" + e.getMessage() + "\n\n? ????????\n1. ?????/?? Oracle Cloud Agent\n2. ?? Agent ????? Run Command ??\n3. ????",
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "memory_occupy:" + ociCfgId)
+                                    KeyboardBuilder.button("?? ??", "memory_occupy:" + ociCfgId)
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -360,33 +360,33 @@ class OccupyMemoryAllHandler extends AbstractCallbackHandler {
         if (CollectionUtil.isEmpty(instances)) {
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 未找到实例",
+                    "? ?????",
                     new InlineKeyboardMarkup(List.of(KeyboardBuilder.buildCancelRow()))
             );
         }
         
         StringBuilder message = new StringBuilder();
-        message.append("【批量内存占用脚本】\n\n");
-        message.append(String.format("共 %d 个实例\n\n", instances.size()));
-        message.append("请为每个实例执行以下脚本:\n\n");
+        message.append("??????????\n\n");
+        message.append(String.format("? %d ???\n\n", instances.size()));
+        message.append("????????????:\n\n");
         
         for (int i = 0; i < instances.size(); i++) {
             SysUserDTO.CloudInstance instance = instances.get(i);
-            message.append(String.format("━━ %d. %s ━━\n", i + 1, instance.getName()));
-            message.append(String.format("SSH登录后执行:\n"));
+            message.append(String.format("?? %d. %s ??\n", i + 1, instance.getName()));
+            message.append(String.format("SSH?????:\n"));
             message.append("```bash\n");
             message.append("curl -sSL https://raw.githubusercontent.com/your-repo/scripts/memory_occupy.sh | bash\n");
             message.append("```\n\n");
         }
         
-        message.append("💡 或使用内置脚本 (见单个实例详情)\n");
+        message.append("? ??????? (???????)\n");
         
         return buildEditMessage(
                 callbackQuery,
                 message.toString(),
                 new InlineKeyboardMarkup(List.of(
                         new InlineKeyboardRow(
-                                KeyboardBuilder.button("◀️ 返回", "memory_occupy:" + ociCfgId)
+                                KeyboardBuilder.button("?? ??", "memory_occupy:" + ociCfgId)
                         ),
                         KeyboardBuilder.buildCancelRow()
                 ))

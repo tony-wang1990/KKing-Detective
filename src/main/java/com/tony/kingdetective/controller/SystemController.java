@@ -31,11 +31,11 @@ public class SystemController {
             File flagFile = new File("/app/king-detective/update_version_trigger.flag");
             String timestamp = String.valueOf(System.currentTimeMillis());
             Files.write(flagFile.toPath(), timestamp.getBytes());
-            log.info("触发自动更新，timestamp: {}", timestamp);
-            return ResponseData.successData("更新触发成功，系统将在几分钟内自动更新并重启");
+            log.info("???????timestamp: {}", timestamp);
+            return ResponseData.successData("??????????????????????");
         } catch (Exception e) {
-            log.error("触发更新失败", e);
-            return ResponseData.errorData("更新触发失败: " + e.getMessage());
+            log.error("??????", e);
+            return ResponseData.errorData("??????: " + e.getMessage());
         }
     }
 

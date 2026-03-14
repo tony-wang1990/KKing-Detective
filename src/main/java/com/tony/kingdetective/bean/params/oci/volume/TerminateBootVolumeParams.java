@@ -17,8 +17,8 @@ import java.util.List;
 @Data
 public class TerminateBootVolumeParams {
 
-    @NotBlank(message = "配置id不能为空")
+    @NotBlank(message = "??id????")
     private String ociCfgId;
-    @NotEmpty(message = "引导卷id不能为空")
+    @NotEmpty(message = "???id????")
     private List<String> bootVolumeIds;
 }

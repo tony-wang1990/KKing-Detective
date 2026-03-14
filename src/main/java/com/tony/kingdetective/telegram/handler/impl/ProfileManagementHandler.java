@@ -38,11 +38,11 @@ public class ProfileManagementHandler extends AbstractCallbackHandler {
             List<OciUser> users = userService.list();
             
             StringBuilder message = new StringBuilder();
-            message.append("【Profile管理】\n\n");
-            message.append("OCI CLI 配置文件管理\n\n");
+            message.append("?Profile???\n\n");
+            message.append("OCI CLI ??????\n\n");
             
             if (users.isEmpty()) {
-                message.append("暂无账户配置");
+                message.append("??????");
                 return buildEditMessage(
                         callbackQuery,
                         message.toString(),
@@ -53,7 +53,7 @@ public class ProfileManagementHandler extends AbstractCallbackHandler {
                 );
             }
             
-            message.append(String.format("共 %d 个Profile\n\n", users.size()));
+            message.append(String.format("? %d ?Profile\n\n", users.size()));
             
             List<InlineKeyboardRow> keyboard = new ArrayList<>();
             
@@ -61,24 +61,24 @@ public class ProfileManagementHandler extends AbstractCallbackHandler {
                 OciUser user = users.get(i);
                 message.append(String.format(
                         "%d. [%s]\n" +
-                        "   区域: %s\n" +
-                        "   状态: %s\n\n",
+                        "   ??: %s\n" +
+                        "   ??: %s\n\n",
                         i + 1,
                         user.getUsername(),
                         user.getOciRegion(),
-                        user.getDeleted() != null && user.getDeleted() == 1 ? "禁用" : "正常"
+                        user.getDeleted() != null && user.getDeleted() == 1 ? "??" : "??"
                 ));
                 
                 keyboard.add(new InlineKeyboardRow(
                         KeyboardBuilder.button(
-                                String.format("📄 Profile%d", i + 1),
+                                String.format("? Profile%d", i + 1),
                                 "profile_detail:" + user.getId()
                         )
                 ));
             }
             
             keyboard.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("📦 生成完整配置", "profile_generate_all")
+                    KeyboardBuilder.button("? ??????", "profile_generate_all")
             ));
             
             keyboard.add(KeyboardBuilder.buildBackToMainMenuRow());
@@ -94,7 +94,7 @@ public class ProfileManagementHandler extends AbstractCallbackHandler {
             log.error("Failed to list profiles", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 获取Profile列表失败: " + e.getMessage(),
+                    "? ??Profile????: " + e.getMessage(),
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }
@@ -124,10 +124,10 @@ class ProfileDetailHandler extends AbstractCallbackHandler {
             if (user == null) {
                 return buildEditMessage(
                         callbackQuery,
-                        "❌ Profile不存在",
+                        "? Profile???",
                         new InlineKeyboardMarkup(List.of(
                                 new InlineKeyboardRow(
-                                        KeyboardBuilder.button("◀️ 返回", "profile_management")
+                                        KeyboardBuilder.button("?? ??", "profile_management")
                                 ),
                                 KeyboardBuilder.buildCancelRow()
                         ))
@@ -137,23 +137,23 @@ class ProfileDetailHandler extends AbstractCallbackHandler {
             String profileConfig = generateProfileConfig(user);
             
             StringBuilder message = new StringBuilder();
-            message.append(String.format("【Profile: %s】\n\n", user.getUsername()));
-            message.append("OCI CLI 配置:\n\n");
+            message.append(String.format("?Profile: %s?\n\n", user.getUsername()));
+            message.append("OCI CLI ??:\n\n");
             message.append("```ini\n");
             message.append(profileConfig);
             message.append("\n```\n\n");
-            message.append("💡 将以上内容保存到 ~/.oci/config\n");
-            message.append("💡 私钥保存到 ~/.oci/oci_api_key.pem");
+            message.append("? ???????? ~/.oci/config\n");
+            message.append("? ????? ~/.oci/oci_api_key.pem");
             
             return buildEditMessage(
                     callbackQuery,
                     message.toString(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("🔑 查看私钥", "profile_show_key:" + userId)
+                                    KeyboardBuilder.button("? ????", "profile_show_key:" + userId)
                             ),
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "profile_management")
+                                    KeyboardBuilder.button("?? ??", "profile_management")
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -163,10 +163,10 @@ class ProfileDetailHandler extends AbstractCallbackHandler {
             log.error("Failed to get profile detail", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 获取Profile详情失败: " + e.getMessage(),
+                    "? ??Profile????: " + e.getMessage(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "profile_management")
+                                    KeyboardBuilder.button("?? ??", "profile_management")
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -214,10 +214,10 @@ class ProfileShowKeyHandler extends AbstractCallbackHandler {
             if (user == null || user.getPrivateKey() == null) {
                 return buildEditMessage(
                         callbackQuery,
-                        "❌ 私钥不存在",
+                        "? ?????",
                         new InlineKeyboardMarkup(List.of(
                                 new InlineKeyboardRow(
-                                        KeyboardBuilder.button("◀️ 返回", "profile_management")
+                                        KeyboardBuilder.button("?? ??", "profile_management")
                                 ),
                                 KeyboardBuilder.buildCancelRow()
                         ))
@@ -225,23 +225,23 @@ class ProfileShowKeyHandler extends AbstractCallbackHandler {
             }
             
             StringBuilder message = new StringBuilder();
-            message.append(String.format("【%s - 私钥】\n\n", user.getUsername()));
-            message.append("⚠️ 请妥善保管私钥\n\n");
+            message.append(String.format("?%s - ???\n\n", user.getUsername()));
+            message.append("?? ???????\n\n");
             message.append("```\n");
             message.append(user.getPrivateKey());
             message.append("\n```\n\n");
-            message.append("💾 保存为 ~/.oci/oci_api_key.pem\n");
-            message.append("🔒 设置权限: chmod 600 ~/.oci/oci_api_key.pem");
+            message.append("? ??? ~/.oci/oci_api_key.pem\n");
+            message.append("? ????: chmod 600 ~/.oci/oci_api_key.pem");
             
             return buildEditMessage(
                     callbackQuery,
                     message.toString(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回详情", "profile_detail:" + userId)
+                                    KeyboardBuilder.button("?? ????", "profile_detail:" + userId)
                             ),
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回列表", "profile_management")
+                                    KeyboardBuilder.button("?? ????", "profile_management")
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -251,10 +251,10 @@ class ProfileShowKeyHandler extends AbstractCallbackHandler {
             log.error("Failed to show private key", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 获取私钥失败: " + e.getMessage(),
+                    "? ??????: " + e.getMessage(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "profile_management")
+                                    KeyboardBuilder.button("?? ??", "profile_management")
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -306,20 +306,20 @@ class ProfileGenerateAllHandler extends AbstractCallbackHandler {
             }
             
             StringBuilder message = new StringBuilder();
-            message.append("【完整OCI配置文件】\n\n");
-            message.append(String.format("包含 %d 个Profile\n\n", users.size()));
+            message.append("???OCI?????\n\n");
+            message.append(String.format("?? %d ?Profile\n\n", users.size()));
             message.append("```ini\n");
             message.append(configContent.toString());
             message.append("```\n\n");
-            message.append("💾 保存为 ~/.oci/config\n");
-            message.append("💡 每个账户的私钥需单独查看");
+            message.append("? ??? ~/.oci/config\n");
+            message.append("? ????????????");
             
             return buildEditMessage(
                     callbackQuery,
                     message.toString(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "profile_management")
+                                    KeyboardBuilder.button("?? ??", "profile_management")
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -329,10 +329,10 @@ class ProfileGenerateAllHandler extends AbstractCallbackHandler {
             log.error("Failed to generate all profiles", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 生成配置失败: " + e.getMessage(),
+                    "? ??????: " + e.getMessage(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "profile_management")
+                                    KeyboardBuilder.button("?? ??", "profile_management")
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))

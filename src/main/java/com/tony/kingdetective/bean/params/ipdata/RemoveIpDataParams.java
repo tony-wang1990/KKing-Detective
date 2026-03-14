@@ -20,6 +20,6 @@ import java.util.List;
 @NoArgsConstructor
 public class RemoveIpDataParams {
 
-    @NotEmpty(message = "id列表不能为空")
+    @NotEmpty(message = "id??????")
     private List<String> idList;
 }

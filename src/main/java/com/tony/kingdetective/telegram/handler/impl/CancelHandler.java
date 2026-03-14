@@ -51,7 +51,7 @@ class BackToMainHandler extends AbstractCallbackHandler {
     public BotApiMethod<? extends Serializable> handle(CallbackQuery callbackQuery, TelegramClient telegramClient) {
         return buildEditMessage(
                 callbackQuery,
-                "请选择需要执行的操作：",
+                "???????????",
                 new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
         );
     }

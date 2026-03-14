@@ -11,7 +11,7 @@ import lombok.Getter;
 @Getter
 public enum IpDataTypeEnum {
 
-    IP_DATA_ORACLE("oracle", "oracle cloud ip类型"),
+    IP_DATA_ORACLE("oracle", "oracle cloud ip??"),
     ;
 
     private String code;

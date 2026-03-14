@@ -57,10 +57,10 @@ public class Ipv6ManagementHandler extends AbstractCallbackHandler {
             if (CollectionUtil.isEmpty(instances)) {
                 return buildEditMessage(
                         callbackQuery,
-                        "❌ 暂无运行中的实例",
+                        "? ????????",
                         new InlineKeyboardMarkup(List.of(
                                 new InlineKeyboardRow(
-                                        KeyboardBuilder.button("◀️ 返回", "select_config:" + ociCfgId)
+                                        KeyboardBuilder.button("?? ??", "select_config:" + ociCfgId)
                                 ),
                                 KeyboardBuilder.buildCancelRow()
                         ))
@@ -76,10 +76,10 @@ public class Ipv6ManagementHandler extends AbstractCallbackHandler {
             log.error("Failed to list instances for IPv6 management", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 获取实例列表失败：" + e.getMessage(),
+                    "? ?????????" + e.getMessage(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "select_config:" + ociCfgId)
+                                    KeyboardBuilder.button("?? ??", "select_config:" + ociCfgId)
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -97,9 +97,9 @@ public class Ipv6ManagementHandler extends AbstractCallbackHandler {
             long chatId,
             SysUserDTO sysUserDTO) {
         
-        StringBuilder message = new StringBuilder("【IPv6 管理】\n\n");
-        message.append(String.format("共 %d 个运行中的实例\n", instances.size()));
-        message.append("选择实例进行 IPv6 配置：\n\n");
+        StringBuilder message = new StringBuilder("?IPv6 ???\n\n");
+        message.append(String.format("? %d ???????\n", instances.size()));
+        message.append("?????? IPv6 ???\n\n");
         
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
         
@@ -110,23 +110,23 @@ public class Ipv6ManagementHandler extends AbstractCallbackHandler {
                 
                 // Check if instance has IPv6
                 boolean hasIpv6 = checkInstanceHasIpv6(fetcher, instance.getOcId());
-                String ipv6Status = hasIpv6 ? "✅" : "⬜";
+                String ipv6Status = hasIpv6 ? "?" : "?";
                 
                 message.append(String.format(
                         "%s %d. %s\n" +
-                        "   区域: %s\n" +
+                        "   ??: %s\n" +
                         "   IPv6: %s\n\n",
                         ipv6Status,
                         i + 1,
                         instance.getName(),
                         instance.getRegion(),
-                        hasIpv6 ? "已配置" : "未配置"
+                        hasIpv6 ? "???" : "???"
                 ));
                 
                 // Add button
                 InlineKeyboardRow row = new InlineKeyboardRow();
                 row.add(KeyboardBuilder.button(
-                        String.format("%s 实例%d", ipv6Status, i + 1),
+                        String.format("%s ??%d", ipv6Status, i + 1),
                         "ipv6_instance:" + i
                 ));
                 keyboard.add(row);
@@ -136,7 +136,7 @@ public class Ipv6ManagementHandler extends AbstractCallbackHandler {
         }
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("◀️ 返回", "select_config:" + ociCfgId)
+                KeyboardBuilder.button("?? ??", "select_config:" + ociCfgId)
         ));
         keyboard.add(KeyboardBuilder.buildCancelRow());
         
@@ -207,7 +207,7 @@ class Ipv6InstanceSelectHandler extends AbstractCallbackHandler {
             try {
                 telegramClient.execute(AnswerCallbackQuery.builder()
                         .callbackQueryId(callbackQuery.getId())
-                        .text("实例不存在")
+                        .text("?????")
                         .showAlert(true)
                         .build());
             } catch (TelegramApiException e) {
@@ -227,9 +227,9 @@ class Ipv6InstanceSelectHandler extends AbstractCallbackHandler {
             SysUserDTO sysUserDTO = sysService.getOciUser(ociCfgId);
             
             StringBuilder message = new StringBuilder();
-            message.append("【IPv6 配置】\n\n");
-            message.append(String.format("实例: %s\n", instance.getName()));
-            message.append(String.format("区域: %s\n", instance.getRegion()));
+            message.append("?IPv6 ???\n\n");
+            message.append(String.format("??: %s\n", instance.getName()));
+            message.append(String.format("??: %s\n", instance.getRegion()));
             message.append(String.format("ID: ...%s\n\n", 
                     instance.getOcId().substring(Math.max(0, instance.getOcId().length() - 8))));
             
@@ -263,14 +263,14 @@ class Ipv6InstanceSelectHandler extends AbstractCallbackHandler {
             }
             
             if (hasIpv6) {
-                message.append("当前IPv6状态: ✅ 已配置\n\n");
-                message.append("IPv6地址:\n");
+                message.append("??IPv6??: ? ???\n\n");
+                message.append("IPv6??:\n");
                 for (String addr : ipv6Addresses) {
                     message.append(String.format("  %s\n", addr));
                 }
             } else {
-                message.append("当前IPv6状态: ⬜ 未配置\n\n");
-                message.append("💡 可以为此实例添加 IPv6 地址");
+                message.append("??IPv6??: ? ???\n\n");
+                message.append("? ???????? IPv6 ??");
             }
             
             // Build keyboard based on status
@@ -278,16 +278,16 @@ class Ipv6InstanceSelectHandler extends AbstractCallbackHandler {
             
             if (!hasIpv6) {
                 keyboard.add(new InlineKeyboardRow(
-                        KeyboardBuilder.button("➕ 添加 IPv6", "ipv6_add:" + instanceIndex)
+                        KeyboardBuilder.button("? ?? IPv6", "ipv6_add:" + instanceIndex)
                 ));
             } else {
                 keyboard.add(new InlineKeyboardRow(
-                        KeyboardBuilder.button("🗑 删除 IPv6", "ipv6_remove:" + instanceIndex)
+                        KeyboardBuilder.button("? ?? IPv6", "ipv6_remove:" + instanceIndex)
                 ));
             }
             
             keyboard.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("◀️ 返回实例列表", "ipv6_management:" + ociCfgId)
+                    KeyboardBuilder.button("?? ??????", "ipv6_management:" + ociCfgId)
             ));
             keyboard.add(KeyboardBuilder.buildCancelRow());
             
@@ -301,10 +301,10 @@ class Ipv6InstanceSelectHandler extends AbstractCallbackHandler {
             log.error("Failed to get IPv6 details", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 获取IPv6信息失败: " + e.getMessage(),
+                    "? ??IPv6????: " + e.getMessage(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "ipv6_management:" + ociCfgId)
+                                    KeyboardBuilder.button("?? ??", "ipv6_management:" + ociCfgId)
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -338,7 +338,7 @@ class Ipv6AddHandler extends AbstractCallbackHandler {
         if (instance == null) {
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 实例不存在",
+                    "? ?????",
                     new InlineKeyboardMarkup(List.of(KeyboardBuilder.buildCancelRow()))
             );
         }
@@ -360,10 +360,10 @@ class Ipv6AddHandler extends AbstractCallbackHandler {
                 if (vnicResponse.getItems().isEmpty()) {
                     return buildEditMessage(
                             callbackQuery,
-                            "❌ 未找到实例的网络接口",
+                            "? ??????????",
                             new InlineKeyboardMarkup(List.of(
                                     new InlineKeyboardRow(
-                                            KeyboardBuilder.button("◀️ 返回", "ipv6_management:" + ociCfgId)
+                                            KeyboardBuilder.button("?? ??", "ipv6_management:" + ociCfgId)
                                     ),
                                     KeyboardBuilder.buildCancelRow()
                             ))
@@ -388,16 +388,16 @@ class Ipv6AddHandler extends AbstractCallbackHandler {
                 if (subnet.getIpv6CidrBlocks() == null || subnet.getIpv6CidrBlocks().isEmpty()) {
                     return buildEditMessage(
                             callbackQuery,
-                            "❌ **子网未启用 IPv6**\n\n" +
-                            "该实例所在的子网 (" + subnet.getDisplayName() + ") 未配置 IPv6 CIDR。\n\n" +
-                            "💡 **懒人模式**：\n" +
-                            "您可以点击下方按钮，机器人将尝试自动为您配置 VCN 和子网的 IPv6。",
+                            "? **????? IPv6**\n\n" +
+                            "???????? (" + subnet.getDisplayName() + ") ??? IPv6 CIDR?\n\n" +
+                            "? **????**?\n" +
+                            "?????????????????????? VCN ???? IPv6?",
                             new InlineKeyboardMarkup(List.of(
                                     new InlineKeyboardRow(
-                                            KeyboardBuilder.button("🛠️ 自动开启 IPv6", "ipv6_auto_enable:" + instanceIndex)
+                                            KeyboardBuilder.button("?? ???? IPv6", "ipv6_auto_enable:" + instanceIndex)
                                     ),
                                     new InlineKeyboardRow(
-                                            KeyboardBuilder.button("◀️ 返回", "ipv6_management:" + ociCfgId)
+                                            KeyboardBuilder.button("?? ??", "ipv6_management:" + ociCfgId)
                                     ),
                                     KeyboardBuilder.buildCancelRow()
                             ))
@@ -420,16 +420,16 @@ class Ipv6AddHandler extends AbstractCallbackHandler {
                 return buildEditMessage(
                         callbackQuery,
                         String.format(
-                                "✅ IPv6 添加成功！\n\n" +
-                                "实例: %s\n" +
-                                "IPv6地址: %s\n\n" +
-                                "💡 IPv6 地址已分配，可能需要几分钟才能生效",
+                                "? IPv6 ?????\n\n" +
+                                "??: %s\n" +
+                                "IPv6??: %s\n\n" +
+                                "? IPv6 ?????????????????",
                                 instance.getName(),
                                 ipv6.getIpAddress()
                         ),
                         new InlineKeyboardMarkup(List.of(
                                 new InlineKeyboardRow(
-                                        KeyboardBuilder.button("◀️ 返回", "ipv6_management:" + ociCfgId)
+                                        KeyboardBuilder.button("?? ??", "ipv6_management:" + ociCfgId)
                                 ),
                                 KeyboardBuilder.buildCancelRow()
                         ))
@@ -440,10 +440,10 @@ class Ipv6AddHandler extends AbstractCallbackHandler {
             log.error("Failed to add IPv6", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 添加 IPv6 失败\n\n" + e.getMessage(),
+                    "? ?? IPv6 ??\n\n" + e.getMessage(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "ipv6_management:" + ociCfgId)
+                                    KeyboardBuilder.button("?? ??", "ipv6_management:" + ociCfgId)
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -477,7 +477,7 @@ class Ipv6RemoveHandler extends AbstractCallbackHandler {
         if (instance == null) {
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 实例不存在",
+                    "? ?????",
                     new InlineKeyboardMarkup(List.of(KeyboardBuilder.buildCancelRow()))
             );
         }
@@ -528,15 +528,15 @@ class Ipv6RemoveHandler extends AbstractCallbackHandler {
                     return buildEditMessage(
                             callbackQuery,
                             String.format(
-                                    "✅ IPv6 删除成功！\n\n" +
-                                    "实例: %s\n" +
-                                    "已删除 %d 个 IPv6 地址",
+                                    "? IPv6 ?????\n\n" +
+                                    "??: %s\n" +
+                                    "??? %d ? IPv6 ??",
                                     instance.getName(),
                                     removedCount
                             ),
                             new InlineKeyboardMarkup(List.of(
                                     new InlineKeyboardRow(
-                                            KeyboardBuilder.button("◀️ 返回", "ipv6_management:" + ociCfgId)
+                                            KeyboardBuilder.button("?? ??", "ipv6_management:" + ociCfgId)
                                     ),
                                     KeyboardBuilder.buildCancelRow()
                             ))
@@ -544,10 +544,10 @@ class Ipv6RemoveHandler extends AbstractCallbackHandler {
                 } else {
                     return buildEditMessage(
                             callbackQuery,
-                            "⚠️ 未找到任何 IPv6 地址",
+                            "?? ????? IPv6 ??",
                             new InlineKeyboardMarkup(List.of(
                                     new InlineKeyboardRow(
-                                            KeyboardBuilder.button("◀️ 返回", "ipv6_management:" + ociCfgId)
+                                            KeyboardBuilder.button("?? ??", "ipv6_management:" + ociCfgId)
                                     ),
                                     KeyboardBuilder.buildCancelRow()
                             ))
@@ -559,10 +559,10 @@ class Ipv6RemoveHandler extends AbstractCallbackHandler {
             log.error("Failed to remove IPv6", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 删除 IPv6 失败\n\n" + e.getMessage(),
+                    "? ?? IPv6 ??\n\n" + e.getMessage(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "ipv6_management:" + ociCfgId)
+                                    KeyboardBuilder.button("?? ??", "ipv6_management:" + ociCfgId)
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -594,7 +594,7 @@ class Ipv6AutoEnableHandler extends AbstractCallbackHandler {
         String ociCfgId = storage.getConfigContext(chatId);
         
         if (instance == null) {
-            return buildEditMessage(callbackQuery, "❌ 实例不存在", new InlineKeyboardMarkup(List.of(KeyboardBuilder.buildCancelRow())));
+            return buildEditMessage(callbackQuery, "? ?????", new InlineKeyboardMarkup(List.of(KeyboardBuilder.buildCancelRow())));
         }
         
         // Send loading message
@@ -602,7 +602,7 @@ class Ipv6AutoEnableHandler extends AbstractCallbackHandler {
             telegramClient.execute(org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText.builder()
                     .chatId(chatId)
                     .messageId(callbackQuery.getMessage().getMessageId())
-                    .text("⏳ 正在自动配置网络，请稍候...\n\n1. 检查 VCN IPv6 状态\n2. 开启子网 IPv6\n3. 分配地址")
+                    .text("? ????????????...\n\n1. ?? VCN IPv6 ??\n2. ???? IPv6\n3. ????")
                     .build());
         } catch (Exception ignored) {}
         
@@ -628,26 +628,26 @@ class Ipv6AutoEnableHandler extends AbstractCallbackHandler {
                 // 2. Enable VCN IPv6 if needed
                 if (vcn.getIpv6CidrBlocks() == null || vcn.getIpv6CidrBlocks().isEmpty()) {
                     // VCN doesn't have IPv6 enabled, show instructions to user
-                    String warningMessage = "⚠️ *VCN 未启用 IPv6*\\n\\n" +
-                            "检测到该 VCN 还未启用 IPv6，请按以下步骤手动启用：\\n\\n" +
-                            "*步骤 1: 启用 VCN IPv6*\\n" +
-                            "1. 登录 OCI 控制台\\n" +
-                            "2. 进入 VCN 详情页\\n" +
-                            "3. 点击 '添加 IPv6 CIDR 块'\\n" +
-                            "4. 选择 'Oracle GUA IPv6 前缀'\\n" +
-                            "5. 点击确认\\n\\n" +
-                            "*步骤 2: 启用子网 IPv6*\\n" +
-                            "1. 进入子网详情页\\n" +
-                            "2. 点击 '添加 IPv6 CIDR 块'\\n" +
-                            "3. 选择 IPv6 前缀\\n" +
-                            "4. 点击确认\\n\\n" +
-                            "✅ 完成后，再次点击 '🔄 自动启用' 即可为实例分配 IPv6 地址。";
+                    String warningMessage = "?? *VCN ??? IPv6*\\n\\n" +
+                            "???? VCN ???? IPv6????????????\\n\\n" +
+                            "*?? 1: ?? VCN IPv6*\\n" +
+                            "1. ?? OCI ???\\n" +
+                            "2. ?? VCN ???\\n" +
+                            "3. ?? '?? IPv6 CIDR ?'\\n" +
+                            "4. ?? 'Oracle GUA IPv6 ??'\\n" +
+                            "5. ????\\n\\n" +
+                            "*?? 2: ???? IPv6*\\n" +
+                            "1. ???????\\n" +
+                            "2. ?? '?? IPv6 CIDR ?'\\n" +
+                            "3. ?? IPv6 ??\\n" +
+                            "4. ????\\n\\n" +
+                            "? ???????? '? ????' ??????? IPv6 ???";
                     
                     return buildEditMessage(callbackQuery, 
                         warningMessage,
                         new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                KeyboardBuilder.button("◀️ 返回", "ipv6_management:" + ociCfgId)
+                                KeyboardBuilder.button("?? ??", "ipv6_management:" + ociCfgId)
                             ),
                             KeyboardBuilder.buildCancelRow()
                         )));
@@ -690,7 +690,7 @@ class Ipv6AutoEnableHandler extends AbstractCallbackHandler {
                     } catch (Exception e) {
                         // Fallback: maybe try '01' if '00' failed?
                         // For now, fail with error message.
-                        throw new RuntimeException("自动分配子网 CIDR 失败 (" + targetSubnetCidr + "): " + e.getMessage());
+                        throw new RuntimeException("?????? CIDR ?? (" + targetSubnetCidr + "): " + e.getMessage());
                     }
                     try { Thread.sleep(2000); } catch (InterruptedException e) {}
                 }
@@ -710,19 +710,19 @@ class Ipv6AutoEnableHandler extends AbstractCallbackHandler {
                 return buildEditMessage(
                         callbackQuery,
                         String.format(
-                                "✅ **自动配置成功！**\n\n" +
-                                "实例: %s\n" +
-                                "IPv6地址: %s\n\n" +
-                                "已自动完成:\n" +
-                                "1. VCN 开启 IPv6\n" +
-                                "2. 子网分配 CIDR\n" +
-                                "3. 创建 IPv6 地址",
+                                "? **???????**\n\n" +
+                                "??: %s\n" +
+                                "IPv6??: %s\n\n" +
+                                "?????:\n" +
+                                "1. VCN ?? IPv6\n" +
+                                "2. ???? CIDR\n" +
+                                "3. ?? IPv6 ??",
                                 instance.getName(),
                                 createResponse.getIpv6().getIpAddress()
                         ),
                         new InlineKeyboardMarkup(List.of(
                                 new InlineKeyboardRow(
-                                        KeyboardBuilder.button("◀️ 返回列表", "ipv6_management:" + ociCfgId)
+                                        KeyboardBuilder.button("?? ????", "ipv6_management:" + ociCfgId)
                                 ),
                                 KeyboardBuilder.buildCancelRow()
                         ))
@@ -734,10 +734,10 @@ class Ipv6AutoEnableHandler extends AbstractCallbackHandler {
             log.error("Failed to auto enable IPv6", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 自动配置失败\n\n" + e.getMessage() + "\n\n请尝试登录网页控制台手动配置。",
+                    "? ??????\n\n" + e.getMessage() + "\n\n???????????????",
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "ipv6_management:" + ociCfgId)
+                                    KeyboardBuilder.button("?? ??", "ipv6_management:" + ociCfgId)
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))

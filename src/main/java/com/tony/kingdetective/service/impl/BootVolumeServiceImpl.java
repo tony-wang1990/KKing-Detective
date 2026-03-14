@@ -75,8 +75,8 @@ public class BootVolumeServiceImpl implements IBootVolumeService {
                     return bootVolumeInfo;
                 }).collect(Collectors.toList());
             } catch (Exception e) {
-                log.error("获取引导卷列表失败", e);
-                throw new OciException(-1, "获取引导卷列表失败");
+                log.error("?????????", e);
+                throw new OciException(-1, "?????????");
             }
         }
         customCache.put(CacheConstant.PREFIX_BOOT_VOLUME_PAGE + params.getOciCfgId(), bootVolumeInCache, 10 * 60 * 1000);
@@ -103,10 +103,10 @@ public class BootVolumeServiceImpl implements IBootVolumeService {
                 try (OracleInstanceFetcher fetcher = new OracleInstanceFetcher(sysUserDTO)) {
                     fetcher.terminateBootVolume(id);
                     bvName = fetcher.getBootVolumeById(id).getDisplayName();
-                    log.info("用户：[{}]，区域：[{}]，正在终止引导卷：[{}]",
+                    log.info("???[{}]????[{}]?????????[{}]",
                             sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(), bvName);
                 } catch (Exception e) {
-                    log.error("引导卷：{} 终止异常", bvName, e);
+                    log.error("????{} ????", bvName, e);
                 }
             });
         });
@@ -120,8 +120,8 @@ public class BootVolumeServiceImpl implements IBootVolumeService {
                     Long.parseLong(params.getBootVolumeSize()),
                     Long.parseLong(params.getBootVolumeVpu()));
         } catch (Exception e) {
-            log.error("更改引导卷配置失败", e);
-            throw new OciException(-1, "更改引导卷配置失败");
+            log.error("?????????", e);
+            throw new OciException(-1, "?????????");
         }
     }
 
@@ -140,11 +140,11 @@ public class BootVolumeServiceImpl implements IBootVolumeService {
                         }
                     }
                 } catch (Exception e) {
-                    log.error("获取实例引导卷列表失败", e);
+                    log.error("???????????", e);
                 }
             }
         } catch (Exception e) {
-            log.error("获取实例引导卷列表失败", e);
+            log.error("???????????", e);
         }
         return Tuple2.of(false, null);
     }

@@ -59,8 +59,8 @@ public class VcnServiceImpl implements IVcnService {
                     return vcnInfo;
                 }).collect(Collectors.toList());
             } catch (Exception e) {
-                log.error("获取VCN列表失败", e);
-                throw new OciException(-1, "获取VCN列表失败");
+                log.error("??VCN????", e);
+                throw new OciException(-1, "??VCN????");
             }
         }
 
@@ -80,8 +80,8 @@ public class VcnServiceImpl implements IVcnService {
             try (OracleInstanceFetcher fetcher = new OracleInstanceFetcher(sysUserDTO)) {
                 fetcher.deleteVcnById(vcnId);
             } catch (Exception e) {
-                log.error("删除VCN：失败", vcnName, e);
-                throw new OciException(-1, "删除 VCN 失败");
+                log.error("??VCN???", vcnName, e);
+                throw new OciException(-1, "?? VCN ??");
             }
         });
     }

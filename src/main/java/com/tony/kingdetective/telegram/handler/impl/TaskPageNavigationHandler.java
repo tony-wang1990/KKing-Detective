@@ -52,7 +52,7 @@ public class TaskPageNavigationHandler extends AbstractCallbackHandler {
         if (CollectionUtil.isEmpty(taskList)) {
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 当前没有正在执行的任务",
+                    "? ???????????",
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }
@@ -96,8 +96,8 @@ public class TaskPageNavigationHandler extends AbstractCallbackHandler {
         // 
         List<OciCreateTask> pageTasks = taskList.subList(startIndex, endIndex);
         
-        StringBuilder message = new StringBuilder("【任务管理】\n\n");
-        message.append(String.format("共 %d 个正在执行的任务，当前第 %d/%d 页：\n\n",
+        StringBuilder message = new StringBuilder("??????\n\n");
+        message.append(String.format("? %d ???????????? %d/%d ??\n\n",
                 taskList.size(), currentPage + 1, totalPages));
         
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
@@ -116,9 +116,9 @@ public class TaskPageNavigationHandler extends AbstractCallbackHandler {
             
             message.append(String.format(
                     "%s %d. [%s] [%s] [%s]\n" +
-                    "   配置: %s核/%sG/%sG\n" +
-                    "   数量: %s台 | 已运行: %s | 尝试: %s次\n\n",
-                    isSelected ? "☑️" : "⬜",
+                    "   ??: %s?/%sG/%sG\n" +
+                    "   ??: %s? | ???: %s | ??: %s?\n\n",
+                    isSelected ? "??" : "?",
                     taskNumber,
                     user.getUsername(),
                     user.getOciRegion(),
@@ -135,13 +135,13 @@ public class TaskPageNavigationHandler extends AbstractCallbackHandler {
             if (i % 2 == 0) {
                 InlineKeyboardRow row = new InlineKeyboardRow();
                 row.add(KeyboardBuilder.button(
-                        String.format("%s 任务%d", isSelected ? "☑️" : "⬜", taskNumber),
+                        String.format("%s ??%d", isSelected ? "??" : "?", taskNumber),
                         "toggle_task:" + task.getId()
                 ));
                 keyboard.add(row);
             } else {
                 keyboard.get(keyboard.size() - 1).add(KeyboardBuilder.button(
-                        String.format("%s 任务%d", isSelected ? "☑️" : "⬜", taskNumber),
+                        String.format("%s ??%d", isSelected ? "??" : "?", taskNumber),
                         "toggle_task:" + task.getId()
                 ));
             }
@@ -159,12 +159,12 @@ public class TaskPageNavigationHandler extends AbstractCallbackHandler {
         
         // 
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("✅ 全选", "select_all_tasks"),
-                KeyboardBuilder.button("⬜ 取消全选", "deselect_all_tasks")
+                KeyboardBuilder.button("? ??", "select_all_tasks"),
+                KeyboardBuilder.button("? ????", "deselect_all_tasks")
         ));
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("🛑 结束选中的任务", "stop_selected_tasks")
+                KeyboardBuilder.button("? ???????", "stop_selected_tasks")
         ));
         
         keyboard.add(KeyboardBuilder.buildBackToMainMenuRow());

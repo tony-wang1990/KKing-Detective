@@ -16,8 +16,8 @@ public enum MessageTypeEnum {
     /**
      * 
      */
-    MSG_TYPE_TELEGRAM("TG", "telegram消息通知"),
-    MSG_TYPE_DING_DING("DING", "钉钉消息通知"),
+    MSG_TYPE_TELEGRAM("TG", "telegram????"),
+    MSG_TYPE_DING_DING("DING", "??????"),
     ;
 
     private String type;

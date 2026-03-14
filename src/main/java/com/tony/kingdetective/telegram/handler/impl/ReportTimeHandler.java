@@ -50,10 +50,10 @@ public class ReportTimeHandler extends AbstractCallbackHandler {
             
             return buildEditMessage(
                     callbackQuery,
-                    String.format("✅ 报告时间已更新\n\n新的发送时间: 每天 %s:00", timeStr),
+                    String.format("? ???????\n\n??????: ?? %s:00", timeStr),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "daily_report")
+                                    KeyboardBuilder.button("?? ??", "daily_report")
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -63,10 +63,10 @@ public class ReportTimeHandler extends AbstractCallbackHandler {
             log.error("Failed to update report time", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 设置失败: " + e.getMessage(),
+                    "? ????: " + e.getMessage(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "daily_report")
+                                    KeyboardBuilder.button("?? ??", "daily_report")
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))

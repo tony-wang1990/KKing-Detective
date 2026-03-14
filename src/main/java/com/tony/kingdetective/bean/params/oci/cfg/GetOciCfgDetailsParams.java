@@ -15,7 +15,7 @@ import jakarta.validation.constraints.NotBlank;
  */
 @Data
 public class GetOciCfgDetailsParams {
-    @NotBlank(message = "id不能为空")
+    @NotBlank(message = "id????")
     private String cfgId;
     private boolean cleanReLaunchDetails;
 }

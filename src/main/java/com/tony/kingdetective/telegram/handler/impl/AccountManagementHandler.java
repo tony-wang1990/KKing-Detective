@@ -35,18 +35,18 @@ public class AccountManagementHandler extends AbstractCallbackHandler {
             List<OciUser> users = userService.list();
             
             StringBuilder message = new StringBuilder();
-            message.append("【账户管理】\n\n");
+            message.append("??????\n\n");
             
             if (CollectionUtil.isEmpty(users)) {
-                message.append("暂无OCI账户\n\n");
-                message.append("💡 请先添加账户");
+                message.append("??OCI??\n\n");
+                message.append("? ??????");
                 
                 return buildEditMessage(
                         callbackQuery,
                         message.toString(),
                         new InlineKeyboardMarkup(List.of(
                                 new InlineKeyboardRow(
-                                        KeyboardBuilder.button("➕ 添加账户", "account_add")
+                                        KeyboardBuilder.button("? ????", "account_add")
                                 ),
                                 KeyboardBuilder.buildBackToMainMenuRow(),
                                 KeyboardBuilder.buildCancelRow()
@@ -54,19 +54,19 @@ public class AccountManagementHandler extends AbstractCallbackHandler {
                 );
             }
             
-            message.append(String.format("共 %d 个账户\n\n", users.size()));
+            message.append(String.format("? %d ???\n\n", users.size()));
             
             List<InlineKeyboardRow> keyboard = new ArrayList<>();
             
             for (int i = 0; i < users.size(); i++) {
                 OciUser user = users.get(i);
-                String status = (user.getDeleted() != null && user.getDeleted() == 1) ? "❌ 已禁用" : "✅ 正常";
+                String status = (user.getDeleted() != null && user.getDeleted() == 1) ? "? ???" : "? ??";
                 
                 message.append(String.format(
                         "%d. %s\n" +
-                        "   状态: %s\n" +
-                        "   区域: %s\n" +
-                        "   租户ID: ...%s\n\n",
+                        "   ??: %s\n" +
+                        "   ??: %s\n" +
+                        "   ??ID: ...%s\n\n",
                         i + 1,
                         user.getUsername(),
                         status,
@@ -76,15 +76,15 @@ public class AccountManagementHandler extends AbstractCallbackHandler {
                 
                 InlineKeyboardRow row = new InlineKeyboardRow();
                 row.add(KeyboardBuilder.button(
-                        String.format("⚙️ 账户%d", i + 1),
+                        String.format("?? ??%d", i + 1),
                         "account_detail:" + user.getId()
                 ));
                 keyboard.add(row);
             }
             
             keyboard.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("➕ 添加新账户", "account_add"),
-                    KeyboardBuilder.button("🔄 刷新列表", "account_management")
+                    KeyboardBuilder.button("? ?????", "account_add"),
+                    KeyboardBuilder.button("? ????", "account_management")
             ));
             
             keyboard.add(KeyboardBuilder.buildBackToMainMenuRow());
@@ -100,7 +100,7 @@ public class AccountManagementHandler extends AbstractCallbackHandler {
             log.error("Failed to list accounts", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 获取账户列表失败: " + e.getMessage(),
+                    "? ????????: " + e.getMessage(),
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }
@@ -132,10 +132,10 @@ class AccountDetailHandler extends AbstractCallbackHandler {
             if (user == null) {
                 return buildEditMessage(
                         callbackQuery,
-                        "❌ 账户不存在",
+                        "? ?????",
                         new InlineKeyboardMarkup(List.of(
                                 new InlineKeyboardRow(
-                                        KeyboardBuilder.button("◀️ 返回", "account_management")
+                                        KeyboardBuilder.button("?? ??", "account_management")
                                 ),
                                 KeyboardBuilder.buildCancelRow()
                         ))
@@ -143,38 +143,38 @@ class AccountDetailHandler extends AbstractCallbackHandler {
             }
             
             StringBuilder message = new StringBuilder();
-            message.append("【账户详情】\n\n");
-            message.append(String.format("账户名: %s\n", user.getUsername()));
-            message.append(String.format("状态: %s\n", (user.getDeleted() != null && user.getDeleted() == 1) ? "❌ 已禁用" : "✅ 正常"));
-            message.append(String.format("主区域: %s\n", user.getOciRegion()));
-            message.append(String.format("租户ID: %s\n", user.getTenantId()));
-            message.append(String.format("用户ID: %s\n", user.getUserId()));
-            message.append(String.format("指纹: %s\n", user.getFingerprint()));
-            message.append(String.format("创建时间: %s\n", user.getCreateTime()));
+            message.append("??????\n\n");
+            message.append(String.format("???: %s\n", user.getUsername()));
+            message.append(String.format("??: %s\n", (user.getDeleted() != null && user.getDeleted() == 1) ? "? ???" : "? ??"));
+            message.append(String.format("???: %s\n", user.getOciRegion()));
+            message.append(String.format("??ID: %s\n", user.getTenantId()));
+            message.append(String.format("??ID: %s\n", user.getUserId()));
+            message.append(String.format("??: %s\n", user.getFingerprint()));
+            message.append(String.format("????: %s\n", user.getCreateTime()));
             
             List<InlineKeyboardRow> keyboard = new ArrayList<>();
             
             // Enable/Disable button
             if (user.getDeleted() != null && user.getDeleted() == 1) {
                 keyboard.add(new InlineKeyboardRow(
-                        KeyboardBuilder.button("✅ 启用账户", "account_enable:" + accountId)
+                        KeyboardBuilder.button("? ????", "account_enable:" + accountId)
                 ));
             } else {
                 keyboard.add(new InlineKeyboardRow(
-                        KeyboardBuilder.button("❌ 禁用账户", "account_disable:" + accountId)
+                        KeyboardBuilder.button("? ????", "account_disable:" + accountId)
                 ));
             }
             
             keyboard.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("🗑 删除API配置", "delete_api_config:" + accountId)
+                    KeyboardBuilder.button("? ??API??", "delete_api_config:" + accountId)
             ));
             
             keyboard.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("🗑 删除账户", "account_delete_confirm:" + accountId)
+                    KeyboardBuilder.button("? ????", "account_delete_confirm:" + accountId)
             ));
             
             keyboard.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("◀️ 返回", "account_management")
+                    KeyboardBuilder.button("?? ??", "account_management")
             ));
             keyboard.add(KeyboardBuilder.buildCancelRow());
             
@@ -188,10 +188,10 @@ class AccountDetailHandler extends AbstractCallbackHandler {
             log.error("Failed to get account detail", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 获取账户详情失败: " + e.getMessage(),
+                    "? ????????: " + e.getMessage(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "account_management")
+                                    KeyboardBuilder.button("?? ??", "account_management")
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -225,13 +225,13 @@ class AccountEnableHandler extends AbstractCallbackHandler {
                 
                 return buildEditMessage(
                         callbackQuery,
-                        String.format("✅ 账户 %s 已启用", user.getUsername()),
+                        String.format("? ?? %s ???", user.getUsername()),
                         new InlineKeyboardMarkup(List.of(
                                 new InlineKeyboardRow(
-                                        KeyboardBuilder.button("◀️ 返回详情", "account_detail:" + accountId)
+                                        KeyboardBuilder.button("?? ????", "account_detail:" + accountId)
                                 ),
                                 new InlineKeyboardRow(
-                                        KeyboardBuilder.button("◀️ 返回列表", "account_management")
+                                        KeyboardBuilder.button("?? ????", "account_management")
                                 ),
                                 KeyboardBuilder.buildCancelRow()
                         ))
@@ -243,10 +243,10 @@ class AccountEnableHandler extends AbstractCallbackHandler {
         
         return buildEditMessage(
                 callbackQuery,
-                "❌ 启用失败",
+                "? ????",
                 new InlineKeyboardMarkup(List.of(
                         new InlineKeyboardRow(
-                                KeyboardBuilder.button("◀️ 返回", "account_management")
+                                KeyboardBuilder.button("?? ??", "account_management")
                         ),
                         KeyboardBuilder.buildCancelRow()
                 ))
@@ -279,13 +279,13 @@ class AccountDisableHandler extends AbstractCallbackHandler {
                 
                 return buildEditMessage(
                         callbackQuery,
-                        String.format("✅ 账户 %s 已禁用", user.getUsername()),
+                        String.format("? ?? %s ???", user.getUsername()),
                         new InlineKeyboardMarkup(List.of(
                                 new InlineKeyboardRow(
-                                        KeyboardBuilder.button("◀️ 返回详情", "account_detail:" + accountId)
+                                        KeyboardBuilder.button("?? ????", "account_detail:" + accountId)
                                 ),
                                 new InlineKeyboardRow(
-                                        KeyboardBuilder.button("◀️ 返回列表", "account_management")
+                                        KeyboardBuilder.button("?? ????", "account_management")
                                 ),
                                 KeyboardBuilder.buildCancelRow()
                         ))
@@ -297,10 +297,10 @@ class AccountDisableHandler extends AbstractCallbackHandler {
         
         return buildEditMessage(
                 callbackQuery,
-                "❌ 禁用失败",
+                "? ????",
                 new InlineKeyboardMarkup(List.of(
                         new InlineKeyboardRow(
-                                KeyboardBuilder.button("◀️ 返回", "account_management")
+                                KeyboardBuilder.button("?? ??", "account_management")
                         ),
                         KeyboardBuilder.buildCancelRow()
                 ))
@@ -331,17 +331,17 @@ class AccountDeleteConfirmHandler extends AbstractCallbackHandler {
             return buildEditMessage(
                     callbackQuery,
                     String.format(
-                            "⚠️ 确认删除账户？\n\n" +
-                            "账户: %s\n" +
-                            "区域: %s\n\n" +
-                            "此操作不可恢复！",
+                            "?? ???????\n\n" +
+                            "??: %s\n" +
+                            "??: %s\n\n" +
+                            "????????",
                             user.getUsername(),
                             user.getOciRegion()
                     ),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("🗑 确认删除", "account_delete:" + accountId),
-                                    KeyboardBuilder.button("❌ 取消", "account_detail:" + accountId)
+                                    KeyboardBuilder.button("? ????", "account_delete:" + accountId),
+                                    KeyboardBuilder.button("? ??", "account_detail:" + accountId)
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -350,10 +350,10 @@ class AccountDeleteConfirmHandler extends AbstractCallbackHandler {
             log.error("Failed to show delete confirmation", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 操作失败",
+                    "? ????",
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "account_management")
+                                    KeyboardBuilder.button("?? ??", "account_management")
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -387,10 +387,10 @@ class AccountDeleteHandler extends AbstractCallbackHandler {
             
             return buildEditMessage(
                     callbackQuery,
-                    String.format("✅ 账户 %s 已删除", username),
+                    String.format("? ?? %s ???", username),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回列表", "account_management")
+                                    KeyboardBuilder.button("?? ????", "account_management")
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -399,10 +399,10 @@ class AccountDeleteHandler extends AbstractCallbackHandler {
             log.error("Failed to delete account", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 删除失败: " + e.getMessage(),
+                    "? ????: " + e.getMessage(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "account_management")
+                                    KeyboardBuilder.button("?? ??", "account_management")
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))

@@ -14,6 +14,6 @@ import jakarta.validation.constraints.NotBlank;
 @Data
 public class SendMsgParams {
 
-    @NotBlank(message = "消息不能为空")
+    @NotBlank(message = "??????")
     private String message;
 }

@@ -58,10 +58,10 @@ public class InstanceShapeChangeHandler extends AbstractCallbackHandler {
             if (CollectionUtil.isEmpty(instances)) {
                 return buildEditMessage(
                         callbackQuery,
-                        "❌ 暂无运行中的实例",
+                        "? ????????",
                         new InlineKeyboardMarkup(List.of(
                                 new InlineKeyboardRow(
-                                        KeyboardBuilder.button("◀️ 返回", "select_config:" + ociCfgId)
+                                        KeyboardBuilder.button("?? ??", "select_config:" + ociCfgId)
                                 ),
                                 KeyboardBuilder.buildCancelRow()
                         ))
@@ -77,10 +77,10 @@ public class InstanceShapeChangeHandler extends AbstractCallbackHandler {
             log.error("Failed to list instances for shape change", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 获取实例列表失败：" + e.getMessage(),
+                    "? ?????????" + e.getMessage(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "select_config:" + ociCfgId)
+                                    KeyboardBuilder.button("?? ??", "select_config:" + ociCfgId)
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -97,9 +97,9 @@ public class InstanceShapeChangeHandler extends AbstractCallbackHandler {
             String ociCfgId,
             long chatId) {
         
-        StringBuilder message = new StringBuilder("【实例升降级】\n\n");
-        message.append(String.format("共 %d 个运行中的实例\n", instances.size()));
-        message.append("选择实例进行配置调整：\n\n");
+        StringBuilder message = new StringBuilder("???????\n\n");
+        message.append(String.format("? %d ???????\n", instances.size()));
+        message.append("???????????\n\n");
         
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
         
@@ -109,7 +109,7 @@ public class InstanceShapeChangeHandler extends AbstractCallbackHandler {
             message.append(String.format(
                     "%d. %s\n" +
                     "   Shape: %s\n" +
-                    "   区域: %s\n\n",
+                    "   ??: %s\n\n",
                     i + 1,
                     instance.getName(),
                     instance.getShape(),
@@ -118,14 +118,14 @@ public class InstanceShapeChangeHandler extends AbstractCallbackHandler {
             
             InlineKeyboardRow row = new InlineKeyboardRow();
             row.add(KeyboardBuilder.button(
-                    String.format("🔄 实例%d", i + 1),
+                    String.format("? ??%d", i + 1),
                     "shape_change_instance:" + i
             ));
             keyboard.add(row);
         }
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("◀️ 返回", "select_config:" + ociCfgId)
+                KeyboardBuilder.button("?? ??", "select_config:" + ociCfgId)
         ));
         keyboard.add(KeyboardBuilder.buildCancelRow());
         
@@ -163,7 +163,7 @@ class ShapeChangeInstanceSelectHandler extends AbstractCallbackHandler {
             try {
                 telegramClient.execute(AnswerCallbackQuery.builder()
                         .callbackQueryId(callbackQuery.getId())
-                        .text("实例不存在")
+                        .text("?????")
                         .showAlert(true)
                         .build());
             } catch (TelegramApiException e) {
@@ -201,23 +201,23 @@ class ShapeChangeInstanceSelectHandler extends AbstractCallbackHandler {
                         .collect(Collectors.toList());
                 
                 StringBuilder message = new StringBuilder();
-                message.append("【选择新配置】\n\n");
-                message.append(String.format("实例: %s\n", instance.getName()));
-                message.append(String.format("当前Shape: %s\n\n", instance.getShape()));
-                message.append("可选配置:\n\n");
+                message.append("???????\n\n");
+                message.append(String.format("??: %s\n", instance.getName()));
+                message.append(String.format("??Shape: %s\n\n", instance.getShape()));
+                message.append("????:\n\n");
                 
                 List<InlineKeyboardRow> keyboard = new ArrayList<>();
                 
                 if (!flexShapes.isEmpty()) {
                     // Show common configurations for Flex shapes
                     if (instance.getShape().contains("Flex") || instance.getShape().contains("A1")) {
-                        message.append("💡 自定义配置 (当前类型支持):\n\n");
+                        message.append("? ????? (??????):\n\n");
                         
                         // Common configurations
                         String[][] configs = {
-                                {"1", "6", "☁️ 1核6G"},
-                                {"2", "12", "⚡ 2核12G"},
-                                {"4", "24", "🚀 4核24G"}
+                                {"1", "6", "?? 1?6G"},
+                                {"2", "12", "? 2?12G"},
+                                {"4", "24", "? 4?24G"}
                         };
                         
                         for (String[] config : configs) {
@@ -233,8 +233,8 @@ class ShapeChangeInstanceSelectHandler extends AbstractCallbackHandler {
                             ));
                         }
                     } else {
-                        message.append("⚠️ 当前实例为固定配置\n");
-                        message.append("可升级到灵活配置:\n\n");
+                        message.append("?? ?????????\n");
+                        message.append("????????:\n\n");
                         
                         for (Shape shape : flexShapes) {
                             keyboard.add(new InlineKeyboardRow(
@@ -246,11 +246,11 @@ class ShapeChangeInstanceSelectHandler extends AbstractCallbackHandler {
                         }
                     }
                 } else {
-                    message.append("❌ 暂无可用的升降级选项");
+                    message.append("? ??????????");
                 }
                 
                 keyboard.add(new InlineKeyboardRow(
-                        KeyboardBuilder.button("◀️ 返回", "shape_change:" + ociCfgId)
+                        KeyboardBuilder.button("?? ??", "shape_change:" + ociCfgId)
                 ));
                 keyboard.add(KeyboardBuilder.buildCancelRow());
                 
@@ -265,10 +265,10 @@ class ShapeChangeInstanceSelectHandler extends AbstractCallbackHandler {
             log.error("Failed to get shape options", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 获取配置选项失败: " + e.getMessage(),
+                    "? ????????: " + e.getMessage(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "shape_change:" + ociCfgId)
+                                    KeyboardBuilder.button("?? ??", "shape_change:" + ociCfgId)
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -305,7 +305,7 @@ class ConfirmShapeChangeHandler extends AbstractCallbackHandler {
         if (instance == null) {
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 实例不存在",
+                    "? ?????",
                     new InlineKeyboardMarkup(List.of(KeyboardBuilder.buildCancelRow()))
             );
         }
@@ -336,20 +336,20 @@ class ConfirmShapeChangeHandler extends AbstractCallbackHandler {
                 return buildEditMessage(
                         callbackQuery,
                         String.format(
-                                "✅ 配置调整请求已提交！\n\n" +
-                                "实例: %s\n" +
-                                "目标配置: %s核 / %sG内存\n\n" +
-                                "⚠️ 注意:\n" +
-                                "• 实例将重启以应用新配置\n" +
-                                "• 调整过程可能需要几分钟\n" +
-                                "• 请确保已保存重要数据",
+                                "? ??????????\n\n" +
+                                "??: %s\n" +
+                                "????: %s? / %sG??\n\n" +
+                                "?? ??:\n" +
+                                "? ???????????\n" +
+                                "? ???????????\n" +
+                                "? ??????????",
                                 instance.getName(),
                                 ocpus,
                                 memory
                         ),
                         new InlineKeyboardMarkup(List.of(
                                 new InlineKeyboardRow(
-                                        KeyboardBuilder.button("◀️ 返回", "shape_change:" + ociCfgId)
+                                        KeyboardBuilder.button("?? ??", "shape_change:" + ociCfgId)
                                 ),
                                 KeyboardBuilder.buildCancelRow()
                         ))
@@ -360,10 +360,10 @@ class ConfirmShapeChangeHandler extends AbstractCallbackHandler {
             log.error("Failed to change instance shape", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 配置调整失败\n\n" + e.getMessage(),
+                    "? ??????\n\n" + e.getMessage(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "shape_change:" + ociCfgId)
+                                    KeyboardBuilder.button("?? ??", "shape_change:" + ociCfgId)
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))

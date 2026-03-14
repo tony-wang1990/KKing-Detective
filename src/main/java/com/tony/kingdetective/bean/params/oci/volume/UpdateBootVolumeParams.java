@@ -14,12 +14,12 @@ import jakarta.validation.constraints.NotBlank;
 @Data
 public class UpdateBootVolumeParams {
 
-    @NotBlank(message = "配置id不能为空")
+    @NotBlank(message = "??id????")
     private String ociCfgId;
-    @NotBlank(message = "引导卷id不能为空")
+    @NotBlank(message = "???id????")
     private String bootVolumeId;
-    @NotBlank(message = "引导卷大小不能为空")
+    @NotBlank(message = "?????????")
     private String bootVolumeSize;
-    @NotBlank(message = "引导卷VPU不能为空")
+    @NotBlank(message = "???VPU????")
     private String bootVolumeVpu;
 }

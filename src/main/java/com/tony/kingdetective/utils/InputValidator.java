@@ -42,20 +42,20 @@ public class InputValidator {
      */
     public static void validateUrl(String url) {
         if (url == null || url.trim().isEmpty()) {
-            throw new OciException(-400, "URL 不能为空");
+            throw new OciException(-400, "URL ????");
         }
         
         if (!URL_PATTERN.matcher(url).matches()) {
             throw new OciException(-400, 
-                "无效的 URL 格式\n\n" +
-                "必须以 http:// 或 https:// 开头\n\n" +
-                "示例：\n" +
-                "• http://192.168.1.100:6080\n" +
-                "• https://vnc.example.com"
+                "??? URL ??\n\n" +
+                "??? http:// ? https:// ??\n\n" +
+                "???\n" +
+                "? http://192.168.1.100:6080\n" +
+                "? https://vnc.example.com"
             );
         }
         
-        log.debug("URL 验证通过: {}", url);
+        log.debug("URL ????: {}", url);
     }
     
     /**
@@ -66,10 +66,10 @@ public class InputValidator {
      */
     public static void validatePort(int port) {
         if (port < 1 || port > 65535) {
-            throw new OciException(-400, "端口号必须在 1-65535 之间");
+            throw new OciException(-400, "?????? 1-65535 ??");
         }
         
-        log.debug("端口验证通过: {}", port);
+        log.debug("??????: {}", port);
     }
     
     /**
@@ -80,17 +80,17 @@ public class InputValidator {
      */
     public static void validateIpAddress(String ip) {
         if (ip == null || ip.trim().isEmpty()) {
-            throw new OciException(-400, "IP 地址不能为空");
+            throw new OciException(-400, "IP ??????");
         }
         
         if (!IP_PATTERN.matcher(ip).matches()) {
             throw new OciException(-400, 
-                "无效的 IP 地址格式\n\n" +
-                "示例: 192.168.1.100"
+                "??? IP ????\n\n" +
+                "??: 192.168.1.100"
             );
         }
         
-        log.debug("IP 地址验证通过: {}", ip);
+        log.debug("IP ??????: {}", ip);
     }
     
     /**
@@ -101,17 +101,17 @@ public class InputValidator {
      */
     public static void validateCidr(String cidr) {
         if (cidr == null || cidr.trim().isEmpty()) {
-            throw new OciException(-400, "CIDR 块不能为空");
+            throw new OciException(-400, "CIDR ?????");
         }
         
         if (!CIDR_PATTERN.matcher(cidr).matches()) {
             throw new OciException(-400, 
-                "无效的 CIDR 格式\n\n" +
-                "示例: 10.0.0.0/16 或 192.168.1.0/24"
+                "??? CIDR ??\n\n" +
+                "??: 10.0.0.0/16 ? 192.168.1.0/24"
             );
         }
         
-        log.debug("CIDR 验证通过: {}", cidr);
+        log.debug("CIDR ????: {}", cidr);
     }
     
     /**
@@ -122,17 +122,17 @@ public class InputValidator {
      */
     public static void validateHostname(String hostname) {
         if (hostname == null || hostname.trim().isEmpty()) {
-            throw new OciException(-400, "主机名不能为空");
+            throw new OciException(-400, "???????");
         }
         
         if (!HOSTNAME_PATTERN.matcher(hostname).matches()) {
             throw new OciException(-400, 
-                "无效的主机名格式\n\n" +
-                "示例: example.com 或 server01"
+                "????????\n\n" +
+                "??: example.com ? server01"
             );
         }
         
-        log.debug("主机名验证通过: {}", hostname);
+        log.debug("???????: {}", hostname);
     }
     
     /**
@@ -143,20 +143,20 @@ public class InputValidator {
      */
     public static void validateUsername(String username) {
         if (username == null || username.trim().isEmpty()) {
-            throw new OciException(-400, "用户名不能为空");
+            throw new OciException(-400, "???????");
         }
         
         if (username.length() < 2 || username.length() > 32) {
-            throw new OciException(-400, "用户名长度必须在 2-32 个字符之间");
+            throw new OciException(-400, "???????? 2-32 ?????");
         }
         
         if (!username.matches("^[a-zA-Z0-9_-]+$")) {
             throw new OciException(-400, 
-                "用户名只能包含字母、数字、下划线和连字符"
+                "????????????????????"
             );
         }
         
-        log.debug("用户名验证通过: {}", username);
+        log.debug("???????: {}", username);
     }
     
     /**
@@ -168,16 +168,16 @@ public class InputValidator {
      */
     public static void validatePassword(String password, int minLength) {
         if (password == null || password.isEmpty()) {
-            throw new OciException(-400, "密码不能为空");
+            throw new OciException(-400, "??????");
         }
         
         if (password.length() < minLength) {
             throw new OciException(-400, 
-                String.format("密码长度至少为 %d 个字符\n\n建议使用强密码以提高安全性", minLength)
+                String.format("??????? %d ???\n\n?????????????", minLength)
             );
         }
         
-        log.debug("密码验证通过（长度: {}）", password.length());
+        log.debug("?????????: {}?", password.length());
     }
     
     /**
@@ -191,16 +191,16 @@ public class InputValidator {
      */
     public static void validateLength(String text, String fieldName, int minLength, int maxLength) {
         if (text == null) {
-            throw new OciException(-400, fieldName + " 不能为空");
+            throw new OciException(-400, fieldName + " ????");
         }
         
         if (text.length() < minLength || text.length() > maxLength) {
             throw new OciException(-400, 
-                String.format("%s 长度必须在 %d-%d 个字符之间", fieldName, minLength, maxLength)
+                String.format("%s ????? %d-%d ?????", fieldName, minLength, maxLength)
             );
         }
         
-        log.debug("长度验证通过: {} (长度: {})", fieldName, text.length());
+        log.debug("??????: {} (??: {})", fieldName, text.length());
     }
     
     /**
@@ -212,9 +212,9 @@ public class InputValidator {
      */
     public static void validateNotEmpty(String text, String fieldName) {
         if (text == null || text.trim().isEmpty()) {
-            throw new OciException(-400, fieldName + " 不能为空");
+            throw new OciException(-400, fieldName + " ????");
         }
         
-        log.debug("非空验证通过: {}", fieldName);
+        log.debug("??????: {}", fieldName);
     }
 }

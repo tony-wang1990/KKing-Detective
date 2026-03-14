@@ -41,7 +41,7 @@ public class SQLiteHelper {
                 }
             }
         } catch (SQLException e) {
-            log.error("更新数据库表结构失败，无法新增列：[{}]", columnName, e);
+            log.error("?????????????????[{}]", columnName, e);
         }
     }
 

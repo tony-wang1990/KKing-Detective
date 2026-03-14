@@ -51,17 +51,17 @@ public class NetbootHandler extends AbstractCallbackHandler {
         } else if (data.startsWith("netboot_xyz_execute:")) {
             return executeNetboot(callbackQuery, data.substring("netboot_xyz_execute:".length()), telegramClient);
         }
-        return buildEditMessage(callbackQuery, "❌ 未知操作");
+        return buildEditMessage(callbackQuery, "? ????");
     }
 
     private BotApiMethod<? extends Serializable> showConfirm(CallbackQuery callbackQuery, String params) {
         return buildEditMessage(callbackQuery,
-            "🚑 *netboot.xyz 救砖模式*\n\n" +
-            "⚠️ 注意：\n" +
-            "1. 实例的 iPXE 脚本将被修改为 `netboot.xyz` 引导代码。\n" +
-            "2. 实例将**立刻重启**并进入网络引导模式。\n" +
-            "3. 重启后需要使用 VNC 控制台直接操作！\n\n" +
-            "确认执行吗？",
+            "? *netboot.xyz ????*\n\n" +
+            "?? ???\n" +
+            "1. ??? iPXE ??????? `netboot.xyz` ?????\n" +
+            "2. ???**????**??????????\n" +
+            "3. ??????? VNC ????????\n\n" +
+            "??????",
             KeyboardBuilder.buildConfirmationKeyboard(
                 "netboot_xyz_execute:" + params,
                 "cancel"
@@ -71,13 +71,13 @@ public class NetbootHandler extends AbstractCallbackHandler {
 
     private BotApiMethod<? extends Serializable> executeNetboot(CallbackQuery callbackQuery, String params, TelegramClient telegramClient) {
         String[] parts = params.split(":");
-        if (parts.length < 2) return buildEditMessage(callbackQuery, "❌ 参数错误");
+        if (parts.length < 2) return buildEditMessage(callbackQuery, "? ????");
         
         String instanceId = parts[0];
         String userId = parts[1];
         long chatId = callbackQuery.getMessage().getChatId();
 
-        try { telegramClient.execute(buildEditMessage(callbackQuery, "⏳ 正在设置 iPXE 脚本并重启实例，请稍候...", null)); } catch (Exception ignore) {}
+        try { telegramClient.execute(buildEditMessage(callbackQuery, "? ???? iPXE ???????????...", null)); } catch (Exception ignore) {}
 
         CompletableFuture.runAsync(() -> doNetboot(chatId, instanceId, userId, telegramClient));
         return null;
@@ -88,7 +88,7 @@ public class NetbootHandler extends AbstractCallbackHandler {
             IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
             OciUser user = userService.getById(userId);
             if (user == null) {
-                sendMarkdownMessage(chatId, "❌ 账户不存在", telegramClient);
+                sendMarkdownMessage(chatId, "? ?????", telegramClient);
                 return;
             }
 
@@ -125,16 +125,16 @@ public class NetbootHandler extends AbstractCallbackHandler {
                         .build()
                 );
 
-                String msg = "✅ *netboot.xyz 救砖模式已启动*\n\n" +
-                             "iPXE 引导脚本设置成功，实例正在重启。\n\n" +
-                             "📺 **下一步操作：**\n" +
-                             "请使用在【主菜单】->【VNC配置】中配置的 VNC 工具，或前往 OCI 控制台，连接实例的 **Console Connection (VNC)** 进行后续系统重装操作。";
+                String msg = "? *netboot.xyz ???????*\n\n" +
+                             "iPXE ????????????????\n\n" +
+                             "? **??????**\n" +
+                             "?????????->?VNC??????? VNC ?????? OCI ????????? **Console Connection (VNC)** ???????????";
                 
                 sendMarkdownMessage(chatId, msg, telegramClient);
             }
         } catch (Exception e) {
             log.error("Failed to execute netboot", e);
-            sendMarkdownMessage(chatId, "❌ 开启 netboot.xyz 失败：" + e.getMessage(), telegramClient);
+            sendMarkdownMessage(chatId, "? ?? netboot.xyz ???" + e.getMessage(), telegramClient);
         }
     }
 

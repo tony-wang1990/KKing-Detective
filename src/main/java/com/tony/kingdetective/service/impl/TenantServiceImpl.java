@@ -132,7 +132,7 @@ public class TenantServiceImpl implements ITenantService {
             CompletableFuture<String> createTimeTask = CompletableFuture.supplyAsync(() -> {
                         String registeredTime = fetcher.getRegisteredTime();
                         String timeDifference = CommonUtils.getTimeDifference(LocalDateTime.parse(registeredTime, CommonUtils.DATETIME_FMT_NORM));
-                        return registeredTime + "（" + timeDifference + "）";
+                        return registeredTime + "?" + timeDifference + "?";
                     }, virtualExecutor)
                     .exceptionally(e -> {
                         log.error("get account create time error", e);
@@ -150,8 +150,8 @@ public class TenantServiceImpl implements ITenantService {
             customCache.put(CacheConstant.PREFIX_TENANT_INFO + params.getOciCfgId(), rsp, 10 * 60 * 1000);
             return rsp;
         } catch (Exception e) {
-            log.error("获取租户信息失败", e);
-            throw new OciException(-1, "获取租户信息失败", e);
+            log.error("????????", e);
+            throw new OciException(-1, "????????", e);
         }
     }
 
@@ -167,8 +167,8 @@ public class TenantServiceImpl implements ITenantService {
         try (OracleInstanceFetcher fetcher = new OracleInstanceFetcher(sysUserDTO)) {
             fetcher.deleteAllMfa();
         } catch (Exception e) {
-            log.error("清除 MFA 设备失败", e);
-            throw new OciException(-1, "清除 MFA 设备失败", e);
+            log.error("?? MFA ????", e);
+            throw new OciException(-1, "?? MFA ????", e);
         }
     }
 
@@ -184,8 +184,8 @@ public class TenantServiceImpl implements ITenantService {
         try (OracleInstanceFetcher fetcher = new OracleInstanceFetcher(sysUserDTO)) {
             fetcher.deleteAllApiKey();
         } catch (Exception e) {
-            log.error("清除所有 API 失败", e);
-            throw new OciException(-1, "清除所有 API 失败", e);
+            log.error("???? API ??", e);
+            throw new OciException(-1, "???? API ??", e);
         }
     }
 
@@ -201,8 +201,8 @@ public class TenantServiceImpl implements ITenantService {
         try (OracleInstanceFetcher fetcher = new OracleInstanceFetcher(sysUserDTO)) {
             fetcher.createOrResetUIPassword();
         } catch (Exception e) {
-            log.error("重置用户密码失败", e);
-            throw new OciException(-1, "重置用户密码失败", e);
+            log.error("????????", e);
+            throw new OciException(-1, "????????", e);
         }
     }
 
@@ -218,8 +218,8 @@ public class TenantServiceImpl implements ITenantService {
         try (OracleInstanceFetcher fetcher = new OracleInstanceFetcher(sysUserDTO)) {
             fetcher.updateUser(params.getEmail(), params.getDbUserName(), params.getDescription());
         } catch (Exception e) {
-            log.error("更新用户信息失败", e);
-            throw new OciException(-1, "更新用户信息失败", e);
+            log.error("????????", e);
+            throw new OciException(-1, "????????", e);
         }
     }
 
@@ -237,8 +237,8 @@ public class TenantServiceImpl implements ITenantService {
                     .userId(params.getUserId())
                     .build());
         } catch (Exception e) {
-            log.error("删除用户失败", e);
-            throw new OciException(-1, "删除用户失败", e);
+            log.error("??????", e);
+            throw new OciException(-1, "??????", e);
         }
     }
 
@@ -252,8 +252,8 @@ public class TenantServiceImpl implements ITenantService {
                 OciUtils.enablePasswordExpirationWithAutoDomain(fetcher, params.getPasswordExpiresAfter());
             }
         } catch (Exception e) {
-            log.error("更新密码策略失败", e);
-            throw new OciException(-1, "更新密码策略失败");
+            log.error("????????", e);
+            throw new OciException(-1, "????????");
         }
     }
 }

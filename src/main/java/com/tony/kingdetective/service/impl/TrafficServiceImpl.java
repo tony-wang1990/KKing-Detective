@@ -62,8 +62,8 @@ public class TrafficServiceImpl implements ITrafficService {
                     .collect(Collectors.toList()));
             return rsp;
         } catch (Exception e) {
-            log.error("获取数据失败", e);
-            throw new OciException(-1, "获取数据失败：" + e.getMessage());
+            log.error("??????", e);
+            throw new OciException(-1, "???????" + e.getMessage());
         }
     }
 
@@ -90,15 +90,15 @@ public class TrafficServiceImpl implements ITrafficService {
                                     .collect(Collectors.toList());
                             return Tuple2.of(x.getRegionName(), instances);
                         } catch (Exception e) {
-                            log.error("获取区域实例失败", e);
-                            throw new OciException(-1, "获取区域实例失败：" + e.getMessage());
+                            log.error("????????", e);
+                            throw new OciException(-1, "?????????" + e.getMessage());
                         }
                     })
                     .collect(Collectors.toMap(Tuple2::getFirst, Tuple2::getSecond)));
             return rsp;
         } catch (Exception e) {
-            log.error("获取区域失败", e);
-            throw new OciException(-1, "获取区域失败：" + e.getMessage());
+            log.error("??????", e);
+            throw new OciException(-1, "???????" + e.getMessage());
         }
     }
 
@@ -144,8 +144,8 @@ public class TrafficServiceImpl implements ITrafficService {
                     .sum()));
             return rsp;
         } catch (Exception e) {
-            log.error("获取区域实例失败", e);
-            throw new OciException(-1, "获取区域实例失败：" + e.getMessage());
+            log.error("????????", e);
+            throw new OciException(-1, "?????????" + e.getMessage());
         }
     }
 
@@ -162,8 +162,8 @@ public class TrafficServiceImpl implements ITrafficService {
                     .map(x -> new ValueLabelDTO(x.getDisplayName(), x.getId()))
                     .collect(Collectors.toList());
         } catch (Exception e) {
-            log.error("获取区域实例vnic失败", e);
-            throw new OciException(-1, "获取区域实例vnic失败：" + e.getMessage());
+            log.error("??????vnic??", e);
+            throw new OciException(-1, "??????vnic???" + e.getMessage());
         }
     }
 

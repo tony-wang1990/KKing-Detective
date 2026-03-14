@@ -62,7 +62,7 @@ public class CfCfgServiceImpl extends ServiceImpl<CfCfgMapper, CfCfg> implements
     public void addCfCfg(AddCfCfgParams params) {
         Optional.ofNullable(this.getOne(new LambdaQueryWrapper<CfCfg>().eq(CfCfg::getDomain, params.getDomain())))
                 .ifPresent(x -> {
-                    throw new OciException(-1, "域名：" + params.getDomain() + " 已存在");
+                    throw new OciException(-1, "???" + params.getDomain() + " ???");
                 });
 
         CfCfg cfCfg = new CfCfg();
@@ -82,7 +82,7 @@ public class CfCfgServiceImpl extends ServiceImpl<CfCfgMapper, CfCfg> implements
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateCfCfg(UpdateCfCfgParams params) {
-        CfCfg cfCfg = Optional.ofNullable(this.getById(params.getId())).orElseThrow(() -> new OciException(-1, "当前配置不存在"));
+        CfCfg cfCfg = Optional.ofNullable(this.getById(params.getId())).orElseThrow(() -> new OciException(-1, "???????"));
         cfCfg.setDomain(params.getDomain());
         cfCfg.setZoneId(params.getZoneId());
         cfCfg.setApiToken(params.getApiToken());
@@ -91,7 +91,7 @@ public class CfCfgServiceImpl extends ServiceImpl<CfCfgMapper, CfCfg> implements
 
     @Override
     public void addCfDnsRecord(OciAddCfDnsRecordsParams params) {
-        CfCfg cfCfg = Optional.ofNullable(this.getById(params.getCfCfgId())).orElseThrow(() -> new OciException(-1, "当前配置不存在"));
+        CfCfg cfCfg = Optional.ofNullable(this.getById(params.getCfCfgId())).orElseThrow(() -> new OciException(-1, "???????"));
         AddCfDnsRecordsParams addCfDnsRecordsParams = new AddCfDnsRecordsParams();
         addCfDnsRecordsParams.setDomainPrefix(StrUtil.isBlank(params.getPrefix()) ? "@" : params.getPrefix());
         addCfDnsRecordsParams.setType(params.getType());
@@ -106,7 +106,7 @@ public class CfCfgServiceImpl extends ServiceImpl<CfCfgMapper, CfCfg> implements
 
     @Override
     public void removeCfDnsRecord(OciRemoveCfDnsRecordsParams params) {
-        CfCfg cfCfg = Optional.ofNullable(this.getById(params.getCfCfgId())).orElseThrow(() -> new OciException(-1, "当前配置不存在"));
+        CfCfg cfCfg = Optional.ofNullable(this.getById(params.getCfCfgId())).orElseThrow(() -> new OciException(-1, "???????"));
         RemoveCfDnsByIdsParams removeCfDnsRecordsParams = new RemoveCfDnsByIdsParams();
         removeCfDnsRecordsParams.setRecordIds(params.getRecordIds());
         removeCfDnsRecordsParams.setZoneId(cfCfg.getZoneId());
@@ -116,7 +116,7 @@ public class CfCfgServiceImpl extends ServiceImpl<CfCfgMapper, CfCfg> implements
 
     @Override
     public void updateCfDnsRecord(OciUpdateCfDnsRecordsParams params) {
-        CfCfg cfCfg = Optional.ofNullable(this.getById(params.getCfCfgId())).orElseThrow(() -> new OciException(-1, "当前配置不存在"));
+        CfCfg cfCfg = Optional.ofNullable(this.getById(params.getCfCfgId())).orElseThrow(() -> new OciException(-1, "???????"));
         UpdateCfDnsRecordsParams updateCfDnsRecordsParams = new UpdateCfDnsRecordsParams();
         updateCfDnsRecordsParams.setZoneId(cfCfg.getZoneId());
         updateCfDnsRecordsParams.setApiToken(cfCfg.getApiToken());
@@ -153,7 +153,7 @@ public class CfCfgServiceImpl extends ServiceImpl<CfCfgMapper, CfCfg> implements
             customCache.remove(CacheConstant.PREFIX_VCN_PAGE + params.getCfCfgId());
         }
 
-        CfCfg cfCfg = Optional.ofNullable(this.getById(params.getCfCfgId())).orElseThrow(() -> new OciException(-1, "当前配置不存在"));
+        CfCfg cfCfg = Optional.ofNullable(this.getById(params.getCfCfgId())).orElseThrow(() -> new OciException(-1, "???????"));
         List<ListCfDnsRecordRsp> cfDnsRecordRspList = (List<ListCfDnsRecordRsp>) customCache.get(CacheConstant.PREFIX_CF_DNS_RECORDS + params.getCfCfgId());
         if (CollectionUtil.isEmpty(cfDnsRecordRspList)) {
             GetCfDnsRecordsParams getCfDnsRecordsParams = new GetCfDnsRecordsParams();
@@ -192,8 +192,8 @@ public class CfCfgServiceImpl extends ServiceImpl<CfCfgMapper, CfCfg> implements
 
     private void handleHttpRsp(HttpResponse httpResponse) {
         if (!Boolean.parseBoolean(String.valueOf(JSONUtil.parseObj(httpResponse.body()).get("success")))) {
-            log.error("请求失败，接口返回数据：{}", httpResponse.body());
-            throw new OciException(-1, "请求失败，接口返回数据：" + httpResponse.body());
+            log.error("????????????{}", httpResponse.body());
+            throw new OciException(-1, "????????????" + httpResponse.body());
         }
     }
 }

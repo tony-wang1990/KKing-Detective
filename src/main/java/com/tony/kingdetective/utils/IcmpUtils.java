@@ -48,7 +48,7 @@ public class IcmpUtils {
         try {
             return RuntimeUtil.execForStr(cmd);
         } catch (Exception e) {
-            return "Ping 执行失败：" + e.getMessage();
+            return "Ping ?????" + e.getMessage();
         }
     }
 
@@ -79,7 +79,7 @@ public class IcmpUtils {
 
         //  Sent = 4, Received = 0  Packets: Sent = 4, Received = 0
         Pattern pattern = Pattern.compile(
-                "(?i)(Sent|发送|Transmitted)\\s*=*\\s*(\\d+)[^\\d]+(Received|接收|received)\\s*=*\\s*(\\d+)",
+                "(?i)(Sent|??|Transmitted)\\s*=*\\s*(\\d+)[^\\d]+(Received|??|received)\\s*=*\\s*(\\d+)",
                 Pattern.MULTILINE);
 
         Matcher matcher = pattern.matcher(pingOutput);
@@ -109,9 +109,9 @@ public class IcmpUtils {
         System.out.println(result);
 
         if (isPacketLoss100(result)) {
-            System.out.println("⚠️ 网络不可达，100% 丢包");
+            System.out.println("?? ??????100% ??");
         } else {
-            System.out.println("✅ 网络可达，部分或无丢包");
+            System.out.println("? ???????????");
         }
     }
 }

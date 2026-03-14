@@ -14,9 +14,9 @@ import jakarta.validation.constraints.NotBlank;
 @Data
 public class AddIngressSecurityRuleParams {
 
-    @NotBlank(message = "api配置id不能为空")
+    @NotBlank(message = "api??id????")
     private String ociCfgId;
-    @NotBlank(message = "vcnId不能为空")
+    @NotBlank(message = "vcnId????")
     private String vcnId;
     private IngressInfo inboundRule;
 

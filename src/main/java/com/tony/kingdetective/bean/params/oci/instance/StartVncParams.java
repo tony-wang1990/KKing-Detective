@@ -13,9 +13,9 @@ import jakarta.validation.constraints.NotBlank;
 @Data
 public class StartVncParams {
 
-    @NotBlank(message = "配置ID不能为空")
+    @NotBlank(message = "??ID????")
     private String ociCfgId;
     private String compartmentId;
-    @NotBlank(message = "实例ID不能为空")
+    @NotBlank(message = "??ID????")
     private String instanceId;
 }

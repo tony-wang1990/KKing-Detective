@@ -54,10 +54,10 @@ public class AutoIpChangeHandler extends AbstractCallbackHandler {
             if (CollectionUtil.isEmpty(instances)) {
                 return buildEditMessage(
                         callbackQuery,
-                        "❌ 暂无运行中的实例",
+                        "? ????????",
                         new InlineKeyboardMarkup(List.of(
                                 new InlineKeyboardRow(
-                                        KeyboardBuilder.button("◀️ 返回", "select_config:" + ociCfgId)
+                                        KeyboardBuilder.button("?? ??", "select_config:" + ociCfgId)
                                 ),
                                 KeyboardBuilder.buildCancelRow()
                         ))
@@ -72,10 +72,10 @@ public class AutoIpChangeHandler extends AbstractCallbackHandler {
             log.error("Failed to list instances for auto IP change", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 获取实例列表失败：" + e.getMessage(),
+                    "? ?????????" + e.getMessage(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "select_config:" + ociCfgId)
+                                    KeyboardBuilder.button("?? ??", "select_config:" + ociCfgId)
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -89,9 +89,9 @@ public class AutoIpChangeHandler extends AbstractCallbackHandler {
             String ociCfgId,
             long chatId) {
         
-        StringBuilder message = new StringBuilder("【监控-自动换IP】\n\n");
-        message.append(String.format("共 %d 个运行中的实例\n", instances.size()));
-        message.append("选择实例进行IP更换：\n\n");
+        StringBuilder message = new StringBuilder("???-???IP?\n\n");
+        message.append(String.format("? %d ???????\n", instances.size()));
+        message.append("??????IP???\n\n");
         
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
         
@@ -99,13 +99,13 @@ public class AutoIpChangeHandler extends AbstractCallbackHandler {
             SysUserDTO.CloudInstance instance = instances.get(i);
             
             String publicIps = CollectionUtil.isEmpty(instance.getPublicIp())
-                    ? "无公网IP"
+                    ? "???IP"
                     : String.join(", ", instance.getPublicIp());
             
             message.append(String.format(
                     "%d. %s\n" +
-                    "   当前IP: %s\n" +
-                    "   区域: %s\n\n",
+                    "   ??IP: %s\n" +
+                    "   ??: %s\n\n",
                     i + 1,
                     instance.getName(),
                     publicIps,
@@ -114,14 +114,14 @@ public class AutoIpChangeHandler extends AbstractCallbackHandler {
             
             InlineKeyboardRow row = new InlineKeyboardRow();
             row.add(KeyboardBuilder.button(
-                    String.format("🔄 实例%d", i + 1),
+                    String.format("? ??%d", i + 1),
                     "change_ip_instance:" + i
             ));
             keyboard.add(row);
         }
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("◀️ 返回", "select_config:" + ociCfgId)
+                KeyboardBuilder.button("?? ??", "select_config:" + ociCfgId)
         ));
         keyboard.add(KeyboardBuilder.buildCancelRow());
         
@@ -158,7 +158,7 @@ class ChangeIpInstanceHandler extends AbstractCallbackHandler {
         if (instance == null) {
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 实例不存在",
+                    "? ?????",
                     new InlineKeyboardMarkup(List.of(KeyboardBuilder.buildCancelRow()))
             );
         }
@@ -182,10 +182,10 @@ class ChangeIpInstanceHandler extends AbstractCallbackHandler {
                 if (vnicResponse.getItems().isEmpty()) {
                     return buildEditMessage(
                             callbackQuery,
-                            "❌ 未找到网络接口",
+                            "? ???????",
                             new InlineKeyboardMarkup(List.of(
                                     new InlineKeyboardRow(
-                                            KeyboardBuilder.button("◀️ 返回", "auto_ip_change:" + ociCfgId)
+                                            KeyboardBuilder.button("?? ??", "auto_ip_change:" + ociCfgId)
                                     ),
                                     KeyboardBuilder.buildCancelRow()
                             ))
@@ -221,10 +221,10 @@ class ChangeIpInstanceHandler extends AbstractCallbackHandler {
                 if (listPrivateIpsResponse.getItems().isEmpty()) {
                      return buildEditMessage(
                             callbackQuery,
-                            "❌ 未找到私有IP对象",
+                            "? ?????IP??",
                             new InlineKeyboardMarkup(List.of(
                                     new InlineKeyboardRow(
-                                            KeyboardBuilder.button("◀️ 返回", "auto_ip_change:" + ociCfgId)
+                                            KeyboardBuilder.button("?? ??", "auto_ip_change:" + ociCfgId)
                                     ),
                                     KeyboardBuilder.buildCancelRow()
                             ))
@@ -248,17 +248,17 @@ class ChangeIpInstanceHandler extends AbstractCallbackHandler {
                     return buildEditMessage(
                             callbackQuery,
                             String.format(
-                                    "⚠️ 未找到公网IP对象\n\n" +
-                                    "实例: %s\n" +
-                                    "当前IP: %s\n\n" +
-                                    "💡 该实例可能没有保留公网IP\n" +
-                                    "💡 或使用临时公网IP",
+                                    "?? ?????IP??\n\n" +
+                                    "??: %s\n" +
+                                    "??IP: %s\n\n" +
+                                    "? ???????????IP\n" +
+                                    "? ???????IP",
                                     instance.getName(),
-                                    currentPublicIp != null ? currentPublicIp : "无"
+                                    currentPublicIp != null ? currentPublicIp : "?"
                             ),
                             new InlineKeyboardMarkup(List.of(
                                     new InlineKeyboardRow(
-                                            KeyboardBuilder.button("◀️ 返回", "auto_ip_change:" + ociCfgId)
+                                            KeyboardBuilder.button("?? ??", "auto_ip_change:" + ociCfgId)
                                     ),
                                     KeyboardBuilder.buildCancelRow()
                             ))
@@ -303,21 +303,21 @@ class ChangeIpInstanceHandler extends AbstractCallbackHandler {
                 return buildEditMessage(
                         callbackQuery,
                         String.format(
-                                "✅ IP更换成功！\n\n" +
-                                "实例: %s\n" +
-                                "旧IP: %s\n" +
-                                "新IP: %s\n\n" +
-                                "💡 新IP已生效",
+                                "? IP?????\n\n" +
+                                "??: %s\n" +
+                                "?IP: %s\n" +
+                                "?IP: %s\n\n" +
+                                "? ?IP???",
                                 instance.getName(),
-                                currentPublicIp != null ? currentPublicIp : "无",
-                                newPublicIp != null ? newPublicIp : "获取中..."
+                                currentPublicIp != null ? currentPublicIp : "?",
+                                newPublicIp != null ? newPublicIp : "???..."
                         ),
                         new InlineKeyboardMarkup(List.of(
                                 new InlineKeyboardRow(
-                                        KeyboardBuilder.button("🔄 再次更换", "change_ip_instance:" + instanceIndex)
+                                        KeyboardBuilder.button("? ????", "change_ip_instance:" + instanceIndex)
                                 ),
                                 new InlineKeyboardRow(
-                                        KeyboardBuilder.button("◀️ 返回", "auto_ip_change:" + ociCfgId)
+                                        KeyboardBuilder.button("?? ??", "auto_ip_change:" + ociCfgId)
                                 ),
                                 KeyboardBuilder.buildCancelRow()
                         ))
@@ -328,10 +328,10 @@ class ChangeIpInstanceHandler extends AbstractCallbackHandler {
             log.error("Failed to change IP", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ IP更换失败\n\n" + e.getMessage() + "\n\n💡 提示: 确保实例有保留公网IP",
+                    "? IP????\n\n" + e.getMessage() + "\n\n? ??: ?????????IP",
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("◀️ 返回", "auto_ip_change:" + ociCfgId)
+                                    KeyboardBuilder.button("?? ??", "auto_ip_change:" + ociCfgId)
                             ),
                             KeyboardBuilder.buildCancelRow()
                     ))
@@ -362,21 +362,21 @@ class AutoIpChangeConfigSelectHandler extends AbstractCallbackHandler {
             if (CollectionUtil.isEmpty(users)) {
                 return buildEditMessage(
                         callbackQuery,
-                        "❌ 未找到任何 OCI 配置",
+                        "? ????? OCI ??",
                         new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
                 );
             }
             
             StringBuilder message = new StringBuilder();
-            message.append("【监控-自动换IP】\n\n");
-            message.append("请选择要管理的 OCI 配置：\n\n");
+            message.append("???-???IP?\n\n");
+            message.append("??????? OCI ???\n\n");
             
             List<InlineKeyboardRow> keyboard = new ArrayList<>();
             
             for (SysUserDTO user : users) {
                 message.append(String.format(
-                        "📌 %s\n" +
-                        "   区域: %s\n\n",
+                        "? %s\n" +
+                        "   ??: %s\n\n",
                         user.getUsername(),
                         user.getOciCfg().getRegion()
                 ));
@@ -402,7 +402,7 @@ class AutoIpChangeConfigSelectHandler extends AbstractCallbackHandler {
             log.error("Failed to list OCI configs", e);
             return buildEditMessage(
                     callbackQuery,
-                    "❌ 获取配置列表失败: " + e.getMessage(),
+                    "? ????????: " + e.getMessage(),
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }

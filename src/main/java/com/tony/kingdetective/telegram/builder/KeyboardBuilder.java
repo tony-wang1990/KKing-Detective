@@ -25,7 +25,7 @@ public class KeyboardBuilder {
                 // 
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
-                                .text("🚀 一键抢?")
+                                .text("? ????")
                                 .callbackData("config_list")
                                 .build()
                 ),
@@ -33,37 +33,37 @@ public class KeyboardBuilder {
                 // ==========  +  ==========
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
-                                .text("快捷开?")
+                                .text("????")
                                 .callbackData("quick_start")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("一键测?")
+                                .text("????")
                                 .callbackData("check_alive")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("实例升降?")
+                                .text("?????")
                                 .callbackData("shape_change_select")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("账户管理")
+                                .text("????")
                                 .callbackData("account_management")
                                 .build()
                 ),
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
-                                .text("自动换IP")
+                                .text("???IP")
                                 .callbackData("auto_ip_change_select")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("开放端?")
+                                .text("????")
                                 .callbackData("open_all_ports_select")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("SSH管理")
+                                .text("SSH??")
                                 .callbackData("ssh_management")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("IPv6管理")
+                                .text("IPv6??")
                                 .callbackData("ipv6_config_select")
                                 .build()
                 ),
@@ -71,37 +71,37 @@ public class KeyboardBuilder {
                 // ==========  ==========
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
-                                .text("配额查询")
+                                .text("????")
                                 .callbackData("quota_query")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("消费查询")
+                                .text("????")
                                 .callbackData("cost_query")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("资源占用")
+                                .text("????")
                                 .callbackData("instance_resource_usage_select")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("内存占用")
+                                .text("????")
                                 .callbackData("memory_occupy_select")
                                 .build()
                 ),
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
-                                .text("流量历史")
+                                .text("????")
                                 .callbackData("traffic_history")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("流量统计")
+                                .text("????")
                                 .callbackData("traffic_statistics")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("Profile管理")
+                                .text("Profile??")
                                 .callbackData("profile_management")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("区域拓展")
+                                .text("????")
                                 .callbackData("auto_region_expansion")
                                 .build()
                 ),
@@ -109,37 +109,37 @@ public class KeyboardBuilder {
                 // ========== ?+  ==========
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
-                                .text("监控通知")
+                                .text("????")
                                 .callbackData("instance_monitoring")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("监控自启")
+                                .text("????")
                                 .callbackData("auto_restart_monitoring")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("每日日报")
+                                .text("????")
                                 .callbackData("daily_report")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("任务管理")
+                                .text("????")
                                 .callbackData("task_management")
                                 .build()
                 ),
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
-                                .text("安全管理")
+                                .text("????")
                                 .callbackData("security_management")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("MFA管理")
+                                .text("MFA??")
                                 .callbackData("mfa_management")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("清除2FA")
+                                .text("??2FA")
                                 .callbackData("clear_2fa_devices")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("禁用被封?")
+                                .text("?????")
                                 .callbackData("disable_banned_accounts")
                                 .build()
                 ),
@@ -147,37 +147,37 @@ public class KeyboardBuilder {
                 // ========== ?==========
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
-                                .text("批量查邮")
+                                .text("????")
                                 .callbackData("batch_email_query")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("订阅信息")
+                                .text("????")
                                 .callbackData("subscription_info")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("版本信息")
+                                .text("????")
                                 .callbackData("version_info")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("日志查询")
+                                .text("????")
                                 .callbackData("log_query")
                                 .build()
                 ),
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
-                                .text("VNC配置")
+                                .text("VNC??")
                                 .callbackData("vnc_config")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("备份恢复")
+                                .text("????")
                                 .callbackData("backup_restore")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("AI聊天")
+                                .text("AI??")
                                 .callbackData("ai_chat")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("通知频道")
+                                .text("????")
                                 .url("https://t.me/Woci_detective")
                                 .build()
                 ),
@@ -185,11 +185,11 @@ public class KeyboardBuilder {
                 // ==========  ==========
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
-                                .text("放货查询")
+                                .text("????")
                                 .url("https://check.oci-helper.de5.net")
                                 .build(),
                         InlineKeyboardButton.builder()
-                                .text("开源地址（帮忙点点star⭐）")
+                                .text("?????????star??")
                                 .url("https://github.com/tony-wang1990/king-detective")
                                 .build()
                 ),
@@ -197,7 +197,7 @@ public class KeyboardBuilder {
                 // 
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
-                                .text("?关闭窗口")
+                                .text("?????")
                                 .callbackData("cancel")
                                 .build()
                 )
@@ -225,7 +225,7 @@ public class KeyboardBuilder {
         // 
         InlineKeyboardRow backRow = new InlineKeyboardRow();
         backRow.add(InlineKeyboardButton.builder()
-                .text("« 返回主菜?")
+                .text("? ?????")
                 .callbackData("back_to_main")
                 .build());
         keyboard.add(backRow);
@@ -245,11 +245,11 @@ public class KeyboardBuilder {
 
         InlineKeyboardRow row = new InlineKeyboardRow();
         row.add(InlineKeyboardButton.builder()
-                .text("?确认")
+                .text("???")
                 .callbackData(confirmCallback)
                 .build());
         row.add(InlineKeyboardButton.builder()
-                .text("?取消")
+                .text("???")
                 .callbackData(cancelCallback)
                 .build());
 
@@ -267,7 +267,7 @@ public class KeyboardBuilder {
 
         InlineKeyboardRow row = new InlineKeyboardRow();
         row.add(InlineKeyboardButton.builder()
-                .text("« 返回主菜?")
+                .text("? ?????")
                 .callbackData("back_to_main")
                 .build());
 
@@ -302,7 +302,7 @@ public class KeyboardBuilder {
     public static InlineKeyboardRow buildCancelRow() {
         return new InlineKeyboardRow(
                 InlineKeyboardButton.builder()
-                        .text("?关闭窗口")
+                        .text("?????")
                         .callbackData("cancel")
                         .build()
         );
@@ -316,7 +316,7 @@ public class KeyboardBuilder {
     public static InlineKeyboardRow buildBackToMainMenuRow() {
         return new InlineKeyboardRow(
                 InlineKeyboardButton.builder()
-                        .text("« 返回主菜?")
+                        .text("? ?????")
                         .callbackData("cancel")
                         .build()
         );
@@ -336,7 +336,7 @@ public class KeyboardBuilder {
         
         if (currentPage > 1) {
             row.add(InlineKeyboardButton.builder()
-                    .text("◀?上一?")
+                    .text("?????")
                     .callbackData(prevCallback)
                     .build());
         }
@@ -348,7 +348,7 @@ public class KeyboardBuilder {
         
         if (currentPage < totalPages) {
             row.add(InlineKeyboardButton.builder()
-                    .text("下一?▶️")
+                    .text("?????")
                     .callbackData(nextCallback)
                     .build());
         }

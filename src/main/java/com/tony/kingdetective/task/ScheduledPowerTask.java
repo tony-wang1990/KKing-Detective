@@ -35,7 +35,7 @@ public class ScheduledPowerTask {
      */
     @Scheduled(cron = "0 0 * * * ?")
     public void executeSchedule() {
-        log.info("⏰ 开始执行定时开关机检查...");
+        log.info("? ???????????...");
         IOciKvService kvService = SpringUtil.getBean(IOciKvService.class);
         IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
 
@@ -68,20 +68,20 @@ public class ScheduledPowerTask {
                 }
 
                 if (action != null) {
-                    log.info("🎯 匹配到定时任务: 实例[{}], 目标动作[{}]", instanceId, action);
+                    log.info("? ???????: ??[{}], ????[{}]", instanceId, action);
                     executeInstanceAction(userId, instanceId, action, userService);
                 }
             } catch (Exception e) {
-                log.error("💥 执行实例的开关机任务失败：[{}]", config.getCode(), e);
+                log.error("? ?????????????[{}]", config.getCode(), e);
             }
         }
-        log.info("⏰ 定时开关机检查完毕.");
+        log.info("? ?????????.");
     }
 
     private void executeInstanceAction(String userId, String instanceId, String action, IOciUserService userService) {
         OciUser user = userService.getById(userId);
         if (user == null || user.getOciUserStatus() == 0) {
-            log.warn("用户为空或状态已禁用，跳过开关机动作");
+            log.warn("??????????????????");
             return;
         }
 
@@ -103,9 +103,9 @@ public class ScheduledPowerTask {
                     .action(action)
                     .build()
             );
-            log.info("✅ 成功发起实例定时动作：[{}] -> [{}]", instanceId, action);
+            log.info("? ???????????[{}] -> [{}]", instanceId, action);
         } catch (Exception e) {
-            log.error("❌ 调用 OCI 实例开关机接口异常", e);
+            log.error("? ?? OCI ?????????", e);
         }
     }
 }

@@ -37,37 +37,37 @@ public class TenantController {
     @RequestMapping("deleteUser")
     public ResponseData<Void> deleteUser(@Validated @RequestBody UpdateUserBasicParams params) {
         tenantService.deleteUser(params);
-        return ResponseData.successData("删除用户成功");
+        return ResponseData.successData("??????");
     }
 
     @RequestMapping("deleteMfaDevice")
     public ResponseData<Void> deleteMfaDevice(@Validated @RequestBody UpdateUserBasicParams params) {
         tenantService.deleteMfaDevice(params);
-        return ResponseData.successData("清除 MFA 设备成功");
+        return ResponseData.successData("?? MFA ????");
     }
 
     @RequestMapping("deleteApiKey")
     public ResponseData<Void> deleteApiKey(@Validated @RequestBody UpdateUserBasicParams params) {
         tenantService.deleteApiKey(params);
-        return ResponseData.successData("清除所有 API 成功");
+        return ResponseData.successData("???? API ??");
     }
 
     @RequestMapping("resetPassword")
     public ResponseData<Void> resetPassword(@Validated @RequestBody UpdateUserBasicParams params) {
         tenantService.resetPassword(params);
-        return ResponseData.successData("重置用户密码成功");
+        return ResponseData.successData("????????");
     }
 
     @RequestMapping("updateUserInfo")
     public ResponseData<Void> updateUserInfo(@Validated @RequestBody UpdateUserInfoParams params) {
         tenantService.updateUserInfo(params);
-        return ResponseData.successData("更新用户信息成功");
+        return ResponseData.successData("????????");
     }
 
     @RequestMapping("updatePwdEx")
     public ResponseData<Void> updatePwdEx(@Validated @RequestBody UpdatePwdExpirationPolicyParams params) {
         tenantService.updatePwdExpirationPolicy(params);
-        return ResponseData.successData("更新密码过期时间成功");
+        return ResponseData.successData("??????????");
     }
 
 }

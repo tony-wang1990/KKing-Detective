@@ -130,10 +130,10 @@ public class OciConsoleUtils {
      * @return The ID of the created console connection if successful, null otherwise.
      */
     public String createConsoleConnection(String instanceId, String publicKey) {
-        log.info("🔑 Starting console connection creation for instance ID: {}", instanceId);
+        log.info("? Starting console connection creation for instance ID: {}", instanceId);
 
         if (!isValidOpenSSHPublicKey(publicKey)) {
-            log.error("❌ Invalid public key format! Expected OpenSSH format (ssh-rsa ...), Actual format: {}",
+            log.error("? Invalid public key format! Expected OpenSSH format (ssh-rsa ...), Actual format: {}",
                     publicKey.startsWith("-----BEGIN") ? "PEM" : "Unknown");
             log.error("Oracle Cloud requires OpenSSH formatted public key. Example: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAB...");
             return null;
@@ -142,10 +142,10 @@ public class OciConsoleUtils {
         try {
             Instance instance = getInstanceIfExists(instanceId);
             if (instance == null) {
-                log.error("❌ Instance {} does not exist or is inaccessible.", instanceId);
+                log.error("? Instance {} does not exist or is inaccessible.", instanceId);
                 return null;
             }
-            log.info("✅ Instance validation successful: {}", instance.getDisplayName());
+            log.info("? Instance validation successful: {}", instance.getDisplayName());
 
             // Check and delete any existing active connections for this instance
             String existingConnectionId = findExistingActiveConnection(instanceId, instance.getCompartmentId());
@@ -162,23 +162,23 @@ public class OciConsoleUtils {
                     .createInstanceConsoleConnectionDetails(createDetails)
                     .build();
 
-            log.info("📡 Sending create console connection request...");
+            log.info("? Sending create console connection request...");
             CreateInstanceConsoleConnectionResponse response = computeClient.createInstanceConsoleConnection(createRequest);
             String connectionId = response.getInstanceConsoleConnection().getId();
-            log.info("✅ Successfully created console connection. ID: {}, Initial State: {}", connectionId, response.getInstanceConsoleConnection().getLifecycleState());
+            log.info("? Successfully created console connection. ID: {}, Initial State: {}", connectionId, response.getInstanceConsoleConnection().getLifecycleState());
             return connectionId;
         } catch (BmcException e) {
-            log.error("❌ Failed to create console connection - OCI API Error:");
+            log.error("? Failed to create console connection - OCI API Error:");
             log.error("  Status Code: {}", e.getStatusCode());
             log.error("  Service Code: {}", e.getServiceCode());
             log.error("  Error Message: {}", e.getMessage());
             log.error("  Request ID: {}", e.getOpcRequestId());
             if (e.getStatusCode() == 400 && e.getMessage().contains("Invalid ssh public key")) {
-                log.error("  🔧 Public key format diagnostic: Detected PEM format public key! Please use OpenSSH format.");
+                log.error("  ? Public key format diagnostic: Detected PEM format public key! Please use OpenSSH format.");
             }
             return null;
         } catch (Exception e) {
-            log.error("❌ An unexpected error occurred while creating console connection: {}", e.getMessage(), e);
+            log.error("? An unexpected error occurred while creating console connection: {}", e.getMessage(), e);
             return null;
         }
     }
@@ -200,12 +200,12 @@ public class OciConsoleUtils {
             if (trimmedKey.startsWith(prefix + " ")) {
                 String[] parts = trimmedKey.split("\\s+");
                 if (parts.length >= 2 && parts[1].matches("[A-Za-z0-9+/]+=*")) {
-                    log.debug("✅ Valid OpenSSH {} public key detected.", prefix);
+                    log.debug("? Valid OpenSSH {} public key detected.", prefix);
                     return true;
                 }
             }
         }
-        log.warn("❌ Invalid OpenSSH public key format.");
+        log.warn("? Invalid OpenSSH public key format.");
         return false;
     }
 
@@ -367,7 +367,7 @@ public class OciConsoleUtils {
             // Attempt to find an existing active connection
             String existingConnectionId = findExistingActiveConnection(instanceId, instance.getCompartmentId());
             if (existingConnectionId != null) {
-                log.info("♻️ Reusing existing console connection: {}", existingConnectionId);
+                log.info("?? Reusing existing console connection: {}", existingConnectionId);
                 String connectionString = getConsoleConnectionString(existingConnectionId);
                 String vncConnectionString = getVncConnectionString(existingConnectionId);
                 return new ConsoleConnectionResultDTO(existingConnectionId, connectionString, vncConnectionString, null, false);
@@ -375,11 +375,11 @@ public class OciConsoleUtils {
 
             // If no existing connection, create a new one
             if (publicKey == null || publicKey.trim().isEmpty()) {
-                log.info("🔑 No public key provided, automatically generating SSH key pair.");
+                log.info("? No public key provided, automatically generating SSH key pair.");
                 return createConsoleConnectionWithAutoKey(instanceId);
             } else {
                 if (!isValidOpenSSHPublicKey(publicKey)) {
-                    log.error("❌ Provided public key format is invalid, OpenSSH format required.");
+                    log.error("? Provided public key format is invalid, OpenSSH format required.");
                     return null;
                 }
                 String newConnectionId = createConsoleConnection(instanceId, publicKey);
@@ -391,7 +391,7 @@ public class OciConsoleUtils {
                 return new ConsoleConnectionResultDTO(newConnectionId, connectionString, vncConnectionString, null, false);
             }
         } catch (Exception e) {
-            log.error("❌ An error occurred while getting or creating console connection: {}", e.getMessage(), e);
+            log.error("? An error occurred while getting or creating console connection: {}", e.getMessage(), e);
             return null;
         }
     }
@@ -402,7 +402,7 @@ public class OciConsoleUtils {
      * @param keyPair The SshKeyPair to debug.
      */
     public static void debugKeyFormats(SshKeyPairDTO keyPair) {
-        log.info("🔍 SSH Key Format Debug Information:");
+        log.info("? SSH Key Format Debug Information:");
         log.info("=================================");
         String publicKeyPem = keyPair.getPublicKey();
         String publicKeyOpenSSH = keyPair.getPublicKeyOpenSSH();
@@ -424,8 +424,8 @@ public class OciConsoleUtils {
         log.info("  Starts with: {}", privateKeyPem.substring(0, Math.min(50, privateKeyPem.length())));
         log.info("  Format Correct: {}", (privateKeyPem.startsWith("-----BEGIN PRIVATE KEY-----") && privateKeyPem.endsWith("-----END PRIVATE KEY-----")));
         log.info("=================================");
-        log.info("🎯 Oracle Console Connection should use: OpenSSH Public Key Format");
-        log.info("🎯 SSH client connection should use: Private Key (PEM Format)");
+        log.info("? Oracle Console Connection should use: OpenSSH Public Key Format");
+        log.info("? SSH client connection should use: Private Key (PEM Format)");
     }
 
     /**

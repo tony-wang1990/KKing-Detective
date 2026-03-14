@@ -56,25 +56,25 @@ public class InstanceTagHandler extends AbstractCallbackHandler {
         } else if (data.startsWith("instance_tag_del:")) {
             return deleteTag(callbackQuery, data.substring("instance_tag_del:".length()), telegramClient);
         }
-        return buildEditMessage(callbackQuery, "❌ 未知操作");
+        return buildEditMessage(callbackQuery, "? ????");
     }
 
     private BotApiMethod<? extends Serializable> showAccountList(CallbackQuery callbackQuery) {
         IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
         List<OciUser> users = userService.getEnabledOciUserList();
         if (users == null || users.isEmpty()) {
-            return buildEditMessage(callbackQuery, "❌ 暂无可用账户");
+            return buildEditMessage(callbackQuery, "? ??????");
         }
 
         List<InlineKeyboardRow> rows = new ArrayList<>();
         for (OciUser user : users) {
             rows.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("👤 " + user.getUsername(), "instance_tag_list:" + user.getId() + ":account")
+                KeyboardBuilder.button("? " + user.getUsername(), "instance_tag_list:" + user.getId() + ":account")
             ));
         }
         rows.add(new InlineKeyboardRow(KeyboardBuilder.buildBackToMainMenuRow()));
 
-        return buildEditMessage(callbackQuery, "📌 *实例标签管理*\n\n请选择要操作的账户：", new InlineKeyboardMarkup(rows));
+        return buildEditMessage(callbackQuery, "? *??????*\n\n??????????", new InlineKeyboardMarkup(rows));
     }
 
     private BotApiMethod<? extends Serializable> showTagList(CallbackQuery callbackQuery, String params) {
@@ -98,30 +98,30 @@ public class InstanceTagHandler extends AbstractCallbackHandler {
                 ).getInstance();
 
                 Map<String, String> tags = instance.getFreeformTags();
-                StringBuilder sb = new StringBuilder("📌 *实例标签* (`" + instance.getDisplayName() + "`)\n\n");
+                StringBuilder sb = new StringBuilder("? *????* (`" + instance.getDisplayName() + "`)\n\n");
                 List<InlineKeyboardRow> rows = new ArrayList<>();
 
                 if (tags == null || tags.isEmpty()) {
-                    sb.append("暂无标签\n");
+                    sb.append("????\n");
                 } else {
                     for (Map.Entry<String, String> entry : tags.entrySet()) {
-                        sb.append("🏷️ `").append(entry.getKey()).append("` = `").append(entry.getValue()).append("`\n");
+                        sb.append("?? `").append(entry.getKey()).append("` = `").append(entry.getValue()).append("`\n");
                         rows.add(new InlineKeyboardRow(
-                            KeyboardBuilder.button("🗑️ 删除 " + entry.getKey(), 
+                            KeyboardBuilder.button("?? ?? " + entry.getKey(), 
                                 "instance_tag_del:" + userId + ":" + instanceId + ":" + entry.getKey())
                         ));
                     }
                 }
 
-                rows.add(0, new InlineKeyboardRow(KeyboardBuilder.button("➕ 添加/修改标签", "instance_tag_add:" + userId + ":" + instanceId)));
-                rows.add(new InlineKeyboardRow(KeyboardBuilder.button("← 返回实例列表", "instance_tag_list:" + userId + ":account")));
+                rows.add(0, new InlineKeyboardRow(KeyboardBuilder.button("? ??/????", "instance_tag_add:" + userId + ":" + instanceId)));
+                rows.add(new InlineKeyboardRow(KeyboardBuilder.button("? ??????", "instance_tag_list:" + userId + ":account")));
                 rows.add(new InlineKeyboardRow(KeyboardBuilder.buildBackToMainMenuRow()));
 
                 return buildEditMessage(callbackQuery, sb.toString(), new InlineKeyboardMarkup(rows));
             }
         } catch (Exception e) {
             log.error("Failed to list tags", e);
-            return buildEditMessage(callbackQuery, "❌ 获取失败：" + e.getMessage());
+            return buildEditMessage(callbackQuery, "? ?????" + e.getMessage());
         }
     }
 
@@ -136,27 +136,27 @@ public class InstanceTagHandler extends AbstractCallbackHandler {
                         .build()
                 ).getItems();
 
-                if (instances.isEmpty()) return buildEditMessage(callbackQuery, "❌ 该账户下无实例");
+                if (instances.isEmpty()) return buildEditMessage(callbackQuery, "? ???????");
 
-                StringBuilder sb = new StringBuilder("📌 *选择实例以管理标签*\n\n");
+                StringBuilder sb = new StringBuilder("? *?????????*\n\n");
                 List<InlineKeyboardRow> rows = new ArrayList<>();
                 for (var inst : instances) {
                     if ("TERMINATED".equals(inst.getLifecycleState().getValue()) || "TERMINATING".equals(inst.getLifecycleState().getValue())) continue;
                     
                     int tagCount = inst.getFreeformTags() != null ? inst.getFreeformTags().size() : 0;
                     rows.add(new InlineKeyboardRow(
-                        KeyboardBuilder.button("🏷️ " + inst.getDisplayName() + " [" + tagCount + "个标签]", 
+                        KeyboardBuilder.button("?? " + inst.getDisplayName() + " [" + tagCount + "???]", 
                             "instance_tag_list:" + userId + ":" + inst.getId())
                     ));
                 }
                 
-                rows.add(new InlineKeyboardRow(KeyboardBuilder.button("← 返回账户列表", "instance_tag_select")));
+                rows.add(new InlineKeyboardRow(KeyboardBuilder.button("? ??????", "instance_tag_select")));
                 rows.add(new InlineKeyboardRow(KeyboardBuilder.buildBackToMainMenuRow()));
                 return buildEditMessage(callbackQuery, sb.toString(), new InlineKeyboardMarkup(rows));
             }
         } catch (Exception e) {
             log.error("Failed to load instances for tag", e);
-            return buildEditMessage(callbackQuery, "❌ 获取实例列表失败：" + e.getMessage());
+            return buildEditMessage(callbackQuery, "? ?????????" + e.getMessage());
         }
     }
 
@@ -176,10 +176,10 @@ public class InstanceTagHandler extends AbstractCallbackHandler {
         storage.startCustomSession(chatId, com.tony.kingdetective.telegram.storage.ConfigSessionStorage.SessionType.INSTANCE_TAG_INPUT, data);
 
         return buildEditMessage(callbackQuery,
-            "📌 *添加实例标签*\n\n" +
-            "请直接发送标签内容，格式为 `key=value`\n" +
-            "示例：`Role=Web-Server` 或 `Env=Prod`\n\n" +
-            "💡 发送 /cancel 可取消"
+            "? *??????*\n\n" +
+            "????????????? `key=value`\n" +
+            "???`Role=Web-Server` ? `Env=Prod`\n\n" +
+            "? ?? /cancel ???"
         );
     }
 
@@ -218,16 +218,16 @@ public class InstanceTagHandler extends AbstractCallbackHandler {
                 );
 
                 return buildEditMessage(callbackQuery, 
-                    "✅ *标签  `" + keyToRemove + "` 已删除*",
+                    "? *??  `" + keyToRemove + "` ???*",
                     KeyboardBuilder.fromRows(List.of(
-                        new InlineKeyboardRow(KeyboardBuilder.button("← 返回标签列表", "instance_tag_list:" + userId + ":" + instanceId)),
+                        new InlineKeyboardRow(KeyboardBuilder.button("? ??????", "instance_tag_list:" + userId + ":" + instanceId)),
                         new InlineKeyboardRow(KeyboardBuilder.buildBackToMainMenuRow())
                     ))
                 );
             }
         } catch (Exception e) {
             log.error("Failed to delete tag", e);
-            return buildEditMessage(callbackQuery, "❌ 删除失败：" + e.getMessage());
+            return buildEditMessage(callbackQuery, "? ?????" + e.getMessage());
         }
     }
 

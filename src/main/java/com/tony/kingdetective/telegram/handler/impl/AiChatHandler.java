@@ -37,17 +37,17 @@ public class AiChatHandler extends AbstractCallbackHandler {
         int historyCount = storage.getHistory(chatId).size();
         
         String text = String.format(
-            "🤖 *AI 聊天助手*\n\n" +
-            "📌 当前设置：\n" +
-            "• 模型: %s\n" +
-            "• 联网搜索: %s\n" +
-            "• 会话消息数: %d\n\n" +
-            "💡 使用说明：\n" +
-            "直接在聊天中输入消息即可与 AI 对话\n" +
-            "AI 会记住最近 10 条对话内容\n\n" +
-            "⚙️ 请选择功能：",
+            "? *AI ????*\n\n" +
+            "? ?????\n" +
+            "? ??: %s\n" +
+            "? ????: %s\n" +
+            "? ?????: %d\n\n" +
+            "? ?????\n" +
+            "????????????? AI ??\n" +
+            "AI ????? 10 ?????\n\n" +
+            "?? ??????",
             getModelDisplayName(currentModel),
-            internetEnabled ? "✅ 已开启" : "❌ 已关闭",
+            internetEnabled ? "? ???" : "? ???",
             historyCount
         );
         
@@ -55,18 +55,18 @@ public class AiChatHandler extends AbstractCallbackHandler {
         
         // Model selection row
         keyboard.add(new InlineKeyboardRow(
-            KeyboardBuilder.button("🔄 切换模型", "ai_select_model")
+            KeyboardBuilder.button("? ????", "ai_select_model")
         ));
         
         // Internet search toggle row
-        String internetButtonText = internetEnabled ? "🌐 关闭联网搜索" : "🌐 开启联网搜索";
+        String internetButtonText = internetEnabled ? "? ??????" : "? ??????";
         keyboard.add(new InlineKeyboardRow(
             KeyboardBuilder.button(internetButtonText, "ai_toggle_internet")
         ));
         
         // Clear history row
         keyboard.add(new InlineKeyboardRow(
-            KeyboardBuilder.button("🗑️ 清空会话历史", "ai_clear_history")
+            KeyboardBuilder.button("?? ??????", "ai_clear_history")
         ));
         
         // Navigation
@@ -90,11 +90,11 @@ public class AiChatHandler extends AbstractCallbackHandler {
      */
     private String getModelDisplayName(String model) {
         if (model.contains("DeepSeek-R1")) {
-            return "DeepSeek-R1 (推理模型)";
+            return "DeepSeek-R1 (????)";
         } else if (model.contains("DeepSeek-V3")) {
-            return "DeepSeek-V3 (通用模型)";
+            return "DeepSeek-V3 (????)";
         } else if (model.contains("Qwen")) {
-            return "Qwen (通义千问)";
+            return "Qwen (????)";
         }
         return model;
     }
@@ -109,29 +109,29 @@ class AiModelSelectionHandler extends AbstractCallbackHandler {
     
     @Override
     public BotApiMethod<? extends Serializable> handle(CallbackQuery callbackQuery, TelegramClient telegramClient) {
-        String text = "🤖 *选择 AI 模型*\n\n" +
-                     "请选择要使用的 AI 模型：\n\n" +
-                     "💡 不同模型有不同特点：\n" +
-                     "• DeepSeek-R1: 推理能力强，适合复杂问题\n" +
-                     "• DeepSeek-V3: 通用能力强，响应速度快\n" +
-                     "• Qwen: 中文优化好，对话自然";
+        String text = "? *?? AI ??*\n\n" +
+                     "??????? AI ???\n\n" +
+                     "? ??????????\n" +
+                     "? DeepSeek-R1: ????????????\n" +
+                     "? DeepSeek-V3: ???????????\n" +
+                     "? Qwen: ??????????";
         
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
         
         keyboard.add(new InlineKeyboardRow(
-            KeyboardBuilder.button("🧠 DeepSeek-R1", "ai_set_model_deepseek_r1")
+            KeyboardBuilder.button("? DeepSeek-R1", "ai_set_model_deepseek_r1")
         ));
         
         keyboard.add(new InlineKeyboardRow(
-            KeyboardBuilder.button("⚡ DeepSeek-V3", "ai_set_model_deepseek_v3")
+            KeyboardBuilder.button("? DeepSeek-V3", "ai_set_model_deepseek_v3")
         ));
         
         keyboard.add(new InlineKeyboardRow(
-            KeyboardBuilder.button("🌟 Qwen-2.5", "ai_set_model_qwen")
+            KeyboardBuilder.button("? Qwen-2.5", "ai_set_model_qwen")
         ));
         
         keyboard.add(new InlineKeyboardRow(
-            KeyboardBuilder.button("◀️ 返回", "ai_chat")
+            KeyboardBuilder.button("?? ??", "ai_chat")
         ));
         
         keyboard.add(KeyboardBuilder.buildCancelRow());
@@ -182,11 +182,11 @@ class AiSetModelHandler extends AbstractCallbackHandler {
         storage.setModel(chatId, modelName);
         log.info("AI model changed: chatId={}, model={}", chatId, modelName);
         
-        String text = String.format("✅ 已切换到 *%s* 模型\n\n可以开始对话了！", displayName);
+        String text = String.format("? ???? *%s* ??\n\n????????", displayName);
         
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
         keyboard.add(new InlineKeyboardRow(
-            KeyboardBuilder.button("◀️ 返回 AI 设置", "ai_chat")
+            KeyboardBuilder.button("?? ?? AI ??", "ai_chat")
         ));
         keyboard.add(KeyboardBuilder.buildCancelRow());
         
@@ -223,17 +223,17 @@ class AiToggleInternetHandler extends AbstractCallbackHandler {
         boolean currentStatus = storage.isInternetEnabled(chatId);
         storage.setInternetEnabled(chatId, !currentStatus);
         
-        String statusText = !currentStatus ? "已开启" : "已关闭";
+        String statusText = !currentStatus ? "???" : "???";
         log.info("AI internet search toggled: chatId={}, enabled={}", chatId, !currentStatus);
         
-        String text = String.format("✅ 联网搜索%s\n\n%s", 
+        String text = String.format("? ????%s\n\n%s", 
             statusText,
-            !currentStatus ? "AI 将能够搜索最新信息来回答问题" : "AI 将仅使用训练数据回答问题"
+            !currentStatus ? "AI ??????????????" : "AI ????????????"
         );
         
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
         keyboard.add(new InlineKeyboardRow(
-            KeyboardBuilder.button("◀️ 返回 AI 设置", "ai_chat")
+            KeyboardBuilder.button("?? ?? AI ??", "ai_chat")
         ));
         keyboard.add(KeyboardBuilder.buildCancelRow());
         
@@ -265,11 +265,11 @@ class AiClearHistoryHandler extends AbstractCallbackHandler {
         storage.clearHistory(chatId);
         log.info("AI chat history cleared: chatId={}", chatId);
         
-        String text = "✅ 会话历史已清空\n\n可以开始新的对话了！";
+        String text = "? ???????\n\n??????????";
         
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
         keyboard.add(new InlineKeyboardRow(
-            KeyboardBuilder.button("◀️ 返回 AI 设置", "ai_chat")
+            KeyboardBuilder.button("?? ?? AI ??", "ai_chat")
         ));
         keyboard.add(KeyboardBuilder.buildCancelRow());
         

@@ -47,7 +47,7 @@ public class GlobalInstanceSummaryHandler extends AbstractCallbackHandler {
         long chatId = callbackQuery.getMessage().getChatId();
         
         // 1. 
-        buildEditMessage(callbackQuery, "🚀 正在并行扫描所有区域的实例，可能需要几十秒，请稍候...", null);
+        buildEditMessage(callbackQuery, "? ?????????????????????????...", null);
 
         // 2.  TelegramClient 
         CompletableFuture.runAsync(() -> doGlobalSummary(chatId, telegramClient));
@@ -63,7 +63,7 @@ public class GlobalInstanceSummaryHandler extends AbstractCallbackHandler {
 
         List<OciUser> users = userService.getEnabledOciUserList();
         if (users == null || users.isEmpty()) {
-            sendMarkdownMessage(chatId, "❌ 暂无可用账户，请先添加 OCI 账户", telegramClient);
+            sendMarkdownMessage(chatId, "? ??????????? OCI ??", telegramClient);
             return;
         }
 
@@ -77,8 +77,8 @@ public class GlobalInstanceSummaryHandler extends AbstractCallbackHandler {
             .collect(Collectors.toList());
 
         // 
-        StringBuilder sb = new StringBuilder("🌍 *全局实例资产汇总*\n");
-        sb.append(String.format("— 耗时: `%.1f 秒`\n\n", timer.intervalMs() / 1000.0));
+        StringBuilder sb = new StringBuilder("? *????????*\n");
+        sb.append(String.format("? ??: `%.1f ?`\n\n", timer.intervalMs() / 1000.0));
 
         int totalAccounts = users.size();
         int errorAccounts = 0;
@@ -86,22 +86,22 @@ public class GlobalInstanceSummaryHandler extends AbstractCallbackHandler {
         int totalStopped = 0;
 
         for (AccountSummary summary : results) {
-            sb.append("👤 *账户*: `").append(summary.user.getUsername()).append("` (").append(summary.user.getOciRegion()).append(")\n");
+            sb.append("? *??*: `").append(summary.user.getUsername()).append("` (").append(summary.user.getOciRegion()).append(")\n");
             
             if (summary.error != null) {
-                sb.append("   ⚠️ `获取失败: ").append(truncateString(summary.error, 30)).append("`\n\n");
+                sb.append("   ?? `????: ").append(truncateString(summary.error, 30)).append("`\n\n");
                 errorAccounts++;
                 continue;
             }
 
             if (summary.instances.isEmpty()) {
-                sb.append("   暂无实例\n\n");
+                sb.append("   ????\n\n");
                 continue;
             }
 
             for (Tuple2<Instance, String> dto : summary.instances) {
                 String state = dto.getFirst().getLifecycleState().getValue();
-                String ip = dto.getSecond() != null && !dto.getSecond().isEmpty() ? dto.getSecond() : "无公网";
+                String ip = dto.getSecond() != null && !dto.getSecond().isEmpty() ? dto.getSecond() : "???";
                 String shape = dto.getFirst().getShape();
                 if (shape.contains("Micro")) shape = "ARM";
                 else if (shape.contains("E4") || shape.contains("E3")) shape = "AMD";
@@ -110,7 +110,7 @@ public class GlobalInstanceSummaryHandler extends AbstractCallbackHandler {
                 if (isRunning) totalRunning++;
                 else totalStopped++;
 
-                sb.append("   ").append(isRunning ? "✅" : "⏸")
+                sb.append("   ").append(isRunning ? "?" : "?")
                   .append(" `").append(truncateString(dto.getFirst().getDisplayName(), 12)).append("`")
                   .append(" | `").append(ip).append("`")
                   .append(" | `").append(shape).append("`\n");
@@ -118,12 +118,12 @@ public class GlobalInstanceSummaryHandler extends AbstractCallbackHandler {
             sb.append("\n");
         }
 
-        sb.append("📊 *总计*\n");
-        sb.append("账户数: `").append(totalAccounts).append("`");
-        if (errorAccounts > 0) sb.append(" [⚠️").append(errorAccounts).append("失败]");
+        sb.append("? *??*\n");
+        sb.append("???: `").append(totalAccounts).append("`");
+        if (errorAccounts > 0) sb.append(" [??").append(errorAccounts).append("??]");
         sb.append("\n");
-        sb.append("运行中: `").append(totalRunning).append("` 台\n");
-        sb.append("已停止: `").append(totalStopped).append("` 台\n");
+        sb.append("???: `").append(totalRunning).append("` ?\n");
+        sb.append("???: `").append(totalStopped).append("` ?\n");
 
         sendMarkdownMessage(chatId, sb.toString(), telegramClient);
     }
@@ -148,7 +148,7 @@ public class GlobalInstanceSummaryHandler extends AbstractCallbackHandler {
                     }
                     
                     // Public IP
-                    String publicIp = "无公网";
+                    String publicIp = "???";
                     try {
                         var vnicAttachments = fetcher.getComputeClient().listVnicAttachments(
                             com.oracle.bmc.core.requests.ListVnicAttachmentsRequest.builder()

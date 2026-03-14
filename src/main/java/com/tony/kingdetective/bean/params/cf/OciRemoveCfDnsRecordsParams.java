@@ -15,6 +15,6 @@ import java.util.List;
 public class OciRemoveCfDnsRecordsParams {
 
     private String cfCfgId;
-    @NotEmpty(message = "记录ID不能为空")
+    @NotEmpty(message = "??ID????")
     private List<String> recordIds;
 }
