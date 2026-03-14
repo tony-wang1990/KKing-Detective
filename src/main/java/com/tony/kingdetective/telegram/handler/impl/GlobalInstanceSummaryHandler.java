@@ -99,10 +99,10 @@ public class GlobalInstanceSummaryHandler extends AbstractCallbackHandler {
                 continue;
             }
 
-            for (InstanceCfgDTO dto : summary.instances) {
-                String state = dto.getInstance().getLifecycleState().getValue();
-                String ip = dto.getPublicIp() != null && !dto.getPublicIp().isEmpty() ? dto.getPublicIp() : "无公网";
-                String shape = dto.getInstance().getShape();
+            for (Tuple2<Instance, String> dto : summary.instances) {
+                String state = dto.getFirst().getLifecycleState().getValue();
+                String ip = dto.getSecond() != null && !dto.getSecond().isEmpty() ? dto.getSecond() : "无公网";
+                String shape = dto.getFirst().getShape();
                 if (shape.contains("Micro")) shape = "ARM";
                 else if (shape.contains("E4") || shape.contains("E3")) shape = "AMD";
 
@@ -111,7 +111,7 @@ public class GlobalInstanceSummaryHandler extends AbstractCallbackHandler {
                 else totalStopped++;
 
                 sb.append("   ").append(isRunning ? "✅" : "⏸")
-                  .append(" `").append(truncateString(dto.getInstance().getDisplayName(), 12)).append("`")
+                  .append(" `").append(truncateString(dto.getFirst().getDisplayName(), 12)).append("`")
                   .append(" | `").append(ip).append("`")
                   .append(" | `").append(shape).append("`\n");
             }

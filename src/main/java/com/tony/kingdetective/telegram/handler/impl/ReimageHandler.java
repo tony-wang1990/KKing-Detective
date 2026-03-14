@@ -149,7 +149,7 @@ public class ReimageHandler extends AbstractCallbackHandler {
         String instanceId = parts[1];
         long chatId = callbackQuery.getMessage().getChatId();
 
-        buildEditMessage(callbackQuery, "⏳ 正在提交重建任务，时间较长，请稍候...", null);
+        try { telegramClient.execute(buildEditMessage(callbackQuery, "⏳ 正在提交重建任务，时间较长，请稍候...", null)); } catch (Exception ignore) {}
 
         CompletableFuture.runAsync(() -> doReimage(chatId, userId, instanceId, telegramClient));
         return null;

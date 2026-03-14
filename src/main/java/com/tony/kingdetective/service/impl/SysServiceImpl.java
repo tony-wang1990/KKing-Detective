@@ -1130,4 +1130,28 @@ public class SysServiceImpl implements ISysService {
             }
         });
     }
+
+    @Override
+    public String getAlertEmail() {
+        OciKv config = kvService.getOne(new LambdaQueryWrapper<OciKv>()
+                .eq(OciKv::getCode, "sys-alert-email"));
+        return config != null ? config.getValue() : "";
+    }
+
+    @Override
+    public void updateAlertEmail(String email) {
+        OciKv config = kvService.getOne(new LambdaQueryWrapper<OciKv>()
+                .eq(OciKv::getCode, "sys-alert-email"));
+        if (config != null) {
+            config.setValue(email);
+            kvService.updateById(config);
+        } else {
+            config = new OciKv();
+            config.setId(IdUtil.getSnowflakeNextIdStr());
+            config.setCode("sys-alert-email");
+            config.setValue(email);
+            config.setType(SysCfgTypeEnum.SYS_INIT_CFG.getCode());
+            kvService.save(config);
+        }
+    }
 }

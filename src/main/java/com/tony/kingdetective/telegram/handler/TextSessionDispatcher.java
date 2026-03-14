@@ -71,6 +71,7 @@ public class TextSessionDispatcher {
             case SSH_PUBKEY_INPUT -> handleSshPubkeyInput(chatId, text, sender);
             case ALERT_EMAIL_INPUT -> handleAlertEmailInput(chatId, text, sender);
             case INSTANCE_TAG_INPUT -> handleInstanceTagInput(chatId, text, sender);
+            case SCHEDULED_POWER_INPUT -> handleScheduledPowerInput(chatId, text, sender);
             default -> {
                 return false;
             }
@@ -661,5 +662,69 @@ public class TextSessionDispatcher {
             }
         }
         return null;
+    }
+
+    // ─────────────────────────────────────────────
+    // 定时开关机设置
+    // ─────────────────────────────────────────────
+
+    private void handleScheduledPowerInput(long chatId, String text, TgMessageSender sender) {
+        ConfigSessionStorage storage = ConfigSessionStorage.getInstance();
+        ConfigSessionStorage.SessionState state = storage.getSessionState(chatId);
+        if (state == null) {
+            sender.send(chatId, "❌ 会话已过期");
+            return;
+        }
+
+        text = text.trim();
+        String[] times = text.split("\\|");
+        if (times.length != 2) {
+            sender.send(chatId, "❌ 格式错误，请使用 `HH|HH` 的形式，例如 `01|08`");
+            return;
+        }
+
+        String stopHourStr = times[0].trim();
+        String startHourStr = times[1].trim();
+
+        try {
+            int stopHour = Integer.parseInt(stopHourStr);
+            int startHour = Integer.parseInt(startHourStr);
+            if (stopHour < 0 || stopHour > 23 || startHour < 0 || startHour > 23) {
+                throw new NumberFormatException("小时必须在 00-23 之间");
+            }
+            // 确保是两位的，比如 "01" 
+            stopHourStr = String.format("%02d", stopHour);
+            startHourStr = String.format("%02d", startHour);
+
+            String userId = (String) state.getData().get("userId");
+            String instanceId = (String) state.getData().get("instanceId");
+
+            IOciKvService kvService = SpringUtil.getBean(IOciKvService.class);
+            String key = "scheduled_power:" + instanceId;
+            LambdaQueryWrapper<OciKv> wrapper = new LambdaQueryWrapper<OciKv>().eq(OciKv::getCode, key);
+            
+            String configStr = "STOP=" + stopHourStr + ":00,START=" + startHourStr + ":00,USER=" + userId;
+            OciKv cfg = kvService.getOne(wrapper);
+            if (cfg != null) {
+                cfg.setValue(configStr);
+                kvService.updateById(cfg);
+            } else {
+                cfg = new OciKv();
+                cfg.setId(IdUtil.getSnowflakeNextIdStr());
+                cfg.setCode(key);
+                cfg.setValue(configStr);
+                cfg.setType(SysCfgTypeEnum.SYS_INIT_CFG.getCode());
+                kvService.save(cfg);
+            }
+
+            storage.clearSession(chatId);
+            sender.sendMd(chatId, "✅ *定时任务配置成功！*\n\n设定为：\n- 每日 `" + stopHourStr + ":00` 关机\n- 每日 `" + startHourStr + ":00` 开机");
+
+        } catch (NumberFormatException e) {
+            sender.send(chatId, "❌ 格式错误: 小时必须是 0-23 的有效数字");
+        } catch (Exception e) {
+            log.error("Failed to save scheduled power config", e);
+            sender.send(chatId, "❌ 保存失败: " + e.getMessage());
+        }
     }
 }

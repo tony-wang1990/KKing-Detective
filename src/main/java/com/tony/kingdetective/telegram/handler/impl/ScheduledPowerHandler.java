@@ -42,7 +42,8 @@ public class ScheduledPowerHandler extends AbstractCallbackHandler {
             callbackData.equals("scheduled_power_management") ||
             callbackData.startsWith("scheduled_power_list:") ||
             callbackData.startsWith("scheduled_power_config:") ||
-            callbackData.startsWith("scheduled_power_set:")
+            callbackData.startsWith("scheduled_power_set:") ||
+            callbackData.startsWith("scheduled_power_custom:")
         );
     }
 
@@ -58,6 +59,8 @@ public class ScheduledPowerHandler extends AbstractCallbackHandler {
             return showConfigPanel(callbackQuery, data.substring("scheduled_power_config:".length()));
         } else if (data.startsWith("scheduled_power_set:")) {
             return setConfig(callbackQuery, data.substring("scheduled_power_set:".length()), telegramClient);
+        } else if (data.startsWith("scheduled_power_custom:")) {
+            return startCustomTimeInput(callbackQuery, data.substring("scheduled_power_custom:".length()));
         }
         return buildEditMessage(callbackQuery, "❌ 未知操作");
     }
@@ -130,12 +133,17 @@ public class ScheduledPowerHandler extends AbstractCallbackHandler {
         String currentCfg = cfg != null ? cfg.getValue() : "未配置";
         
         List<InlineKeyboardRow> rows = new ArrayList<>();
-        // 预设几个常用配置，实际应用中可以接入 TextSessionDispatcher 让用户手输 Cron 表达式或时间
         rows.add(new InlineKeyboardRow(
             KeyboardBuilder.button("🌙 晚1关，早8开 (停7h)", "scheduled_power_set:" + userId + ":" + instanceId + ":01|08")
         ));
         rows.add(new InlineKeyboardRow(
             KeyboardBuilder.button("🌙 晚2关，早9开 (停7h)", "scheduled_power_set:" + userId + ":" + instanceId + ":02|09")
+        ));
+        rows.add(new InlineKeyboardRow(
+            KeyboardBuilder.button("🕑 晚23关，早7开", "scheduled_power_set:" + userId + ":" + instanceId + ":23|07")
+        ));
+        rows.add(new InlineKeyboardRow(
+            KeyboardBuilder.button("✏️ 自定义时间 (输入)", "scheduled_power_custom:" + userId + ":" + instanceId)
         ));
         rows.add(new InlineKeyboardRow(
             KeyboardBuilder.button("🗑️ 清除定时任务", "scheduled_power_set:" + userId + ":" + instanceId + ":clear")
@@ -145,7 +153,7 @@ public class ScheduledPowerHandler extends AbstractCallbackHandler {
         return buildEditMessage(callbackQuery, 
             "⏰ *定时开关机配置*\n\n" +
             "当前配置：`" + currentCfg + "`\n\n" +
-            "说明：时间为 UTC+8 时区。当到达关机点时，实例将被软关机(STOP)；当到达开机点时，实例将被开机(START)。这有助于节省计费和配额。\n\n请选择以下预设策略：",
+            "说明：时间为 UTC+8 时区（小时）。选择预设或自定义输入（格式 `HH|HH`，如 `01|08` 表示 01:00 关机、08:00 开机）。",
             new InlineKeyboardMarkup(rows)
         );
     }
@@ -195,6 +203,30 @@ public class ScheduledPowerHandler extends AbstractCallbackHandler {
             log.error("Failed to set schedule", e);
             return buildEditMessage(callbackQuery, "❌ 配置失败：" + e.getMessage());
         }
+    }
+
+    private BotApiMethod<? extends Serializable> startCustomTimeInput(CallbackQuery callbackQuery, String params) {
+        long chatId = callbackQuery.getMessage().getChatId();
+        String[] parts = params.split(":");
+        String userId = parts[0];
+        String instanceId = parts[1];
+
+        com.tony.kingdetective.telegram.storage.ConfigSessionStorage storage =
+            com.tony.kingdetective.telegram.storage.ConfigSessionStorage.getInstance();
+        var data = new java.util.HashMap<String, Object>();
+        data.put("userId", userId);
+        data.put("instanceId", instanceId);
+        storage.startCustomSession(chatId,
+            com.tony.kingdetective.telegram.storage.ConfigSessionStorage.SessionType.SCHEDULED_POWER_INPUT, data);
+
+        return buildEditMessage(callbackQuery,
+            "⏰ *自定义定时开关机*\n\n" +
+            "请直接发送时间配置，格式：`关机小时|开机小时`\n\n" +
+            "示例：\n" +
+            "`01|08` → 每日 01:00 关机，08:00 开机\n" +
+            "`22|06` → 每日 22:00 关机，06:00 开机\n\n" +
+            "💡 时区为 UTC+8，小时范围 00-23。发送 /cancel 取消。"
+        );
     }
 
     private SysUserDTO buildDto(OciUser user) {

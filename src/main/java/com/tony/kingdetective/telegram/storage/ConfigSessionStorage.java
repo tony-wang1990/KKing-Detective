@@ -158,6 +158,7 @@ public class ConfigSessionStorage {
         ADD_ACCOUNT_REMARK,
         SSH_PUBKEY_INPUT,
         ALERT_EMAIL_INPUT,
-        INSTANCE_TAG_INPUT
+        INSTANCE_TAG_INPUT,
+        SCHEDULED_POWER_INPUT
     }
 }

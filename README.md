@@ -1,156 +1,69 @@
+# 👑 King-Detective v4.1.1
+> **专业的 Oracle Cloud (OCI) 实例管理集成系统 —— Telegram Bot + 全新玻璃拟态 Web UI**
 
-## 一键部署 (VPS)
+`King-Detective` 是一款为甲骨文云 (OCI) 用户量身定制的深度管理工具。它不仅支持极致便捷的 Telegram Bot 移动端交互，更在 v4.1.1 版本中迎来了**革命性的 Web 端重构**，集成了先进的 OCI 资源审计、数据可视化以及“傻瓜式”一键救砖能力。
+
+---
+
+## ✨ 核心特性
+
+### 🌐 全新 Web 仪表盘 (v4.1.1)
+- **玻璃拟态设计 (Glassmorphism)：** 极简主义现代设计，适配 PC 与移动端浏览器。
+- **Global Insights 洞察雷达：** 集成 `ECharts` 数据引擎，通过雷达图、饼图直观统计全球区域分布、实例存活率及账户资产分布。
+- **高级实例看板：** 实时同步 OCI 真实 API 数据（IP、状态、Shape），无任何虚假/Mock 信息。
+
+### 🤖 Telegram Bot 全能交互
+- **移动端首选：** 支持一键开关机、重启、带宽动态调整、流量监控与账单查询。
+- **VPS 监控：** 内置监控探针，实时反馈主机性能状态。
+
+### 🚑 “傻瓜式”一键救砖系统
+- **Netboot.xyz 模式：** 自动化篡改 iPXE 脚本并软重启，实现一键进入网络 PE/引导重装界面。
+- **Re-image (Keep Disk) 模式：** 自动化实现 `保留启动卷终止并原地重建`，让您在保留数据的同时翻新计算节点并强制更换 IP。
+
+### 🔐 进阶资源管理
+- **快照管理：** 支持 Web/TG 双端一键创建 Boot Volume 快照及备份恢复。
+- **标签管理：** 无缝管理 OCI Freeform Tags 标签。
+- **SSH 密钥抽屉：** 无需连接服务器，直接通过网页侧边栏管理 API Key (SSH 公钥)，支持实时查阅指纹与删除上传。
+- **定时任务：** 支持对具体实例设置每日固定时间的 “晚关早开” 自动化电源策略。
+
+---
+
+## 🚀 快速开始
 
 ### 方式 1：自动安装脚本（推荐）
-
-直接复制以下命令到服务器终端运行即可：
+适用于 Ubuntu/Debian/CentOS 等 VPS 环境。复制以下命令运行：
 
 ```bash
 bash <(wget -qO- https://raw.githubusercontent.com/tony-wang1990/King-Detective/main/scripts/install.sh)
 ```
 
-脚本会自动完成：
+脚本自动完成环境检测、Docker 镜像拉取与自启动配置。
 
-- ✅ 环境检测（Docker/Docker Compose）
-- ✅ 拉取最新Docker镜像
-- ✅ 启动服务（自动重启）
-- ✅ 支持一键更新（拉取最新版本）
-
-## 💻 访问应用
-
-- **Web面板：** `http://your-ip:9527`
-- **默认账号：** `admin`
-- **默认密码：** `admin123456`
-
----
-
-## 🔄 一键更新（保留所有数据）
-
-### ⚠️ 重要说明
-
-**更新不会丢失任何数据！**
-
-- ✅ 保留账户密码配置
-- ✅ 保留OCI私钥文件
-- ✅ 保留所有历史记录
-- ✅ 自动备份数据库
-
-### 📝 最新更新 (v4.02)
-
-**修复内容：**
-
-- ✅ 修复 TG Bot 连接死锁问题
-- ✅ 修复版本更新功能（安装 docker-cli）
-- ✅ 优化错误处理和日志记录
-- ✅ 确保更新时保留所有数据
-
-### 更新步骤
-
-在服务器上执行以下命令：
+### 方式 2：手动更新 (v4.1.1)
+如果您已安装旧版本，请通过以下一键命令平滑升级（不丢失任何私钥与数据）：
 
 ```bash
-# 设置你的配置信息（替换为你的实际值）
-export BOT_TOKEN="你的Telegram_Bot_Token"
-export ADMIN_USERNAME="你的管理员用户名"
-export ADMIN_PASSWORD="你的管理员密码"
-
-# 下载并执行更新脚本
-wget https://raw.githubusercontent.com/tony-wang1990/King-Detective/main/update.sh
-bash update.sh
-```
-
-**或者一行命令：**
-
-```bash
-BOT_TOKEN="你的Token" ADMIN_USERNAME="你的用户名" ADMIN_PASSWORD="你的密码" bash <(wget -qO- https://raw.githubusercontent.com/tony-wang1990/King-Detective/main/update.sh)
-```
-
-### 更新流程
-
-脚本会自动：
-
-1. 📋 备份现有数据库
-2. 🛑 停止旧容器
-3. ⬇️ 拉取最新Docker镜像
-4. 🚀 启动新容器（挂载原有数据卷）
-5. ✅ 验证服务状态
-
-### 数据保存位置
-
-- **数据库：** `/root/king-detective/data/king-detective.db`
-- **私钥：** `/root/king-detective/keys/`
-- **备份：** `/root/king-detective/data/king-detective.db.backup.*`
-
----
-
-## 🔄 版本管理
-
-### 查看版本信息
-
-#### Telegram Bot
-
-1. 发送 `/start`
-2. 点击 **🛡️ 版本信息**
-3. 查看当前版本和最新版本
-
-#### Web面板
-
-- 登录后台即可查看版本信息
-
-### 🚀 自动更新功能（推荐）
-
-King-Detective 支持通过Telegram Bot一键更新到最新版本，**无需手动操作VPS！**
-
-#### 使用方法
-
-1. 在Bot中点击"版本信息" → "更新到最新版本"
-2. Watcher容器自动执行更新流程（约2-3分钟）
-3. 完成后Bot会自动重启，所有数据保留
-
-#### 工作原理
-
-- Bot创建触发器文件 → Watcher检测 → 拉取最新镜像 → 重启容器 → 更新完成
-- **数据安全**：所有配置、数据库、私钥通过Docker Volume保存在宿主机，更新不会丢失
-
-#### 查看更新日志
-
-```bash
-docker logs -f king-detective-watcher
-```
-
-#### 故障排查
-
-如果自动更新失败，请检查：
-
-1. Watcher容器是否运行：`docker ps | grep watcher`
-2. Docker权限：Watcher需要访问docker.sock
-3. 网络连接：能否访问ghcr.io
-
-手动更新方法请参考 [UPDATE.md](./UPDATE.md)
-
----
-
-## ⚙️ 修改账号密码
-
-如果需要修改登录账号和密码：
-
-```bash
-# 编辑配置文件
-nano /app/king-detective/application.yml
-
-# 修改以下内容
-web:
-  account: "您的新账号"
-  password: "您的新密码"
-
-# 重启服务生效
-cd /app/king-detective
-docker-compose restart king-detective
+BOT_TOKEN="你的Token" ADMIN_USERNAME="用户名" ADMIN_PASSWORD="密码" bash <(wget -qO- https://raw.githubusercontent.com/tony-wang1990/King-Detective/main/update.sh)
 ```
 
 ---
 
-## 📝 更多文档
+## ⚙️ 访问配置
+- **Web 面板：** `http://your-ip:9527`
+- **默认账号：** `admin` / **默认密码：** `admin123456`
+- **数据目录：** `/root/king-detective/` (包含 `data` 数据库与 `keys` 私钥)
 
-- **详细更新说明：** [UPDATE.md](./UPDATE.md)
-- **问题排查：** 查看容器日志 `docker logs -f king-detective`
+---
+
+## 🛡️ 诊断与审计
+项目所有后端接口均通过 `OCI Java SDK` 真实调用。您可在后台控制台查看 `audit_report.md` 获取关于功能逻辑真实性与代码质量的完整诊断报告。
+
+---
+
+## 📝 开发者与声明
+- **Author:** Tony Wang
+- **Repo:** [tony-wang1990/King-Detective](https://github.com/tony-wang1990/King-Detective)
+- **License:** Apache License 2.0
+
+---
+*本项目仅供技术交流使用，请勿用于违反甲骨文使用条款的任何活动。*

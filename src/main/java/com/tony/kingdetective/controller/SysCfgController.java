@@ -148,4 +148,15 @@ public class SysCfgController {
     public ResponseData<String> getGoogleClientId() {
         return ResponseData.successData(sysService.getGoogleClientId(), "获取Google Client ID成功");
     }
+
+    @GetMapping(path = "/getAlertEmail")
+    public ResponseData<String> getAlertEmail() {
+        return ResponseData.successData(sysService.getAlertEmail(), "获取告警邮箱成功");
+    }
+
+    @PostMapping(path = "/updateAlertEmail")
+    public ResponseData<Void> updateAlertEmail(@RequestParam("email") String email) {
+        sysService.updateAlertEmail(email);
+        return ResponseData.successData("更新告警邮箱成功");
+    }
 }

@@ -77,7 +77,7 @@ public class NetbootHandler extends AbstractCallbackHandler {
         String userId = parts[1];
         long chatId = callbackQuery.getMessage().getChatId();
 
-        buildEditMessage(callbackQuery, "⏳ 正在设置 iPXE 脚本并重启实例，请稍候...", null);
+        try { telegramClient.execute(buildEditMessage(callbackQuery, "⏳ 正在设置 iPXE 脚本并重启实例，请稍候...", null)); } catch (Exception ignore) {}
 
         CompletableFuture.runAsync(() -> doNetboot(chatId, instanceId, userId, telegramClient));
         return null;
