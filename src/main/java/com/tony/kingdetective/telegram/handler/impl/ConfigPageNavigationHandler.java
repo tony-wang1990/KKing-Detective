@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 配置列表分页导航处理�?
+ * 配置列表分页导航处理?
  * 
  * @author Tony Wang
  */
@@ -83,7 +83,7 @@ public class ConfigPageNavigationHandler extends AbstractCallbackHandler {
         
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
         
-        // 添加配置按钮（每�?个）
+        // 添加配置按钮（每?个）
         List<InlineKeyboardRow> configRows = buildConfigRows(pageUsers);
         keyboard.addAll(configRows);
         
@@ -112,7 +112,7 @@ public class ConfigPageNavigationHandler extends AbstractCallbackHandler {
     }
     
     /**
-     * 构建配置按钮�?
+     * 构建配置按钮?
      */
     private List<InlineKeyboardRow> buildConfigRows(List<OciUser> userList) {
         List<InlineKeyboardRow> rows = new ArrayList<>();

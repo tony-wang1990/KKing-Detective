@@ -128,13 +128,13 @@ public class InstanceManagementHandler extends AbstractCallbackHandler {
             if (i % 2 == 0) {
                 InlineKeyboardRow row = new InlineKeyboardRow();
                 row.add(KeyboardBuilder.button(
-                        String.format("%s 实例%d", isSelected ?" "☑️" : "�?, i + 1),
+                        String.format("%s 实例%d", isSelected ?" "" : "?, i + 1),
                         "toggle_instance:" + i  // Use index
                 ));
                 keyboard.add(row);
             } else {
                 keyboard.get(keyboard.size() - 1).add(KeyboardBuilder.button(
-                        String.format("%s 实例%d", isSelected ?" "☑️" : "�?, i + 1),
+                        String.format("%s 实例%d", isSelected ?" "" : "?, i + 1),
                         "toggle_instance:" + i  // Use index
                 ));
             }
@@ -142,8 +142,8 @@ public class InstanceManagementHandler extends AbstractCallbackHandler {
         
         // Add batch operation buttons
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("�"?全�?, "select_all_instances"),
-                KeyboardBuilder.button("�"?取消全�?, "deselect_all_instances")
+                KeyboardBuilder.button("�"?全?, "select_all_instances"),
+                KeyboardBuilder.button("�"?取消全?, "deselect_all_instances")
         ));
         
         keyboard.add(new InlineKeyboardRow(
@@ -309,13 +309,13 @@ class ToggleInstanceHandler extends AbstractCallbackHandler {
             if (i % 2 == 0) {
                 InlineKeyboardRow row = new InlineKeyboardRow();
                 row.add(KeyboardBuilder.button(
-                        String.format("%s 实例%d", isSelected ?" "☑️" : "�?, i + 1),
+                        String.format("%s 实例%d", isSelected ?" "" : "?, i + 1),
                         "toggle_instance:" + i
                 ));
                 keyboard.add(row);
             } else {
                 keyboard.get(keyboard.size() - 1).add(KeyboardBuilder.button(
-                        String.format("%s 实例%d", isSelected ?" "☑️" : "�?, i + 1),
+                        String.format("%s 实例%d", isSelected ?" "" : "?, i + 1),
                         "toggle_instance:" + i
                 ));
             }
@@ -323,8 +323,8 @@ class ToggleInstanceHandler extends AbstractCallbackHandler {
         
         // Add batch operation buttons
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("�"?全�?, "select_all_instances"),
-                KeyboardBuilder.button("�"?取消全�?, "deselect_all_instances")
+                KeyboardBuilder.button("�"?全?, "select_all_instances"),
+                KeyboardBuilder.button("�"?取消全?, "deselect_all_instances")
         ));
         
         keyboard.add(new InlineKeyboardRow(
@@ -386,7 +386,7 @@ class SelectAllInstancesHandler extends AbstractCallbackHandler {
             try {
                 telegramClient.execute(AnswerCallbackQuery.builder()
                         .callbackQueryId(callbackQuery.getId())
-                        .text(String.format("已全�"?%d 个实�?, instances.size()))
+                        .text(String.format("已全�"?%d 个实?, instances.size()))
                         .showAlert(false)
                         .build());
             } catch (TelegramApiException e) {
@@ -548,13 +548,13 @@ class RefreshInstancesHandler extends AbstractCallbackHandler {
                 if (i % 2 == 0) {
                     InlineKeyboardRow row = new InlineKeyboardRow();
                     row.add(KeyboardBuilder.button(
-                            String.format("%s 实例%d", isSelected ?" "☑️" : "�?, i + 1),
+                            String.format("%s 实例%d", isSelected ?" "" : "?, i + 1),
                             "toggle_instance:" + i  // Use index
                     ));
                     keyboard.add(row);
                 } else {
                     keyboard.get(keyboard.size() - 1).add(KeyboardBuilder.button(
-                            String.format("%s 实例%d", isSelected ?" "☑️" : "�?, i + 1),
+                            String.format("%s 实例%d", isSelected ?" "" : "?, i + 1),
                             "toggle_instance:" + i  // Use index
                     ));
                 }
@@ -562,8 +562,8 @@ class RefreshInstancesHandler extends AbstractCallbackHandler {
             
             // Add batch operation buttons
             keyboard.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("�"?全�?, "select_all_instances"),
-                    KeyboardBuilder.button("�"?取消全�?, "deselect_all_instances")
+                    KeyboardBuilder.button("�"?全?, "select_all_instances"),
+                    KeyboardBuilder.button("�"?取消全?, "deselect_all_instances")
             ));
             
             keyboard.add(new InlineKeyboardRow(
@@ -756,18 +756,18 @@ class StartVncConnectionHandler extends AbstractCallbackHandler {
                         
             // Determine VNC path based on URL format
             // Different URL formats require different VNC viewer paths:
-            // - IP:port format (e.g., http://1.2.3.4:6080) �?/vnc.html
-            // - HTTP domain (e.g., http://vnc.example.com) �?/vnc.html
-            // - HTTPS domain (e.g., https://vnc.example.com) �?/myvnc/vnc.html
+            // - IP:port format (e.g., http://1.2.3.4:6080) ?/vnc.html
+            // - HTTP domain (e.g., http://vnc.example.com) ?/vnc.html
+            // - HTTPS domain (e.g., https://vnc.example.com) ?/myvnc/vnc.html
             String vncPath;
             if (isDefaultUrl || isIpPortFormat(vncUrl)) {
-                // Default or IP:port format �?use /vnc.html
+                // Default or IP:port format ?use /vnc.html
                 vncPath = "/vnc.html?autoconnect=true";
             } else if (vncUrl.startsWith("https://")) {
-                // HTTPS (domain-based) �?use /myvnc/vnc.html
+                // HTTPS (domain-based) ?use /myvnc/vnc.html
                 vncPath = "/myvnc/vnc.html?autoconnect=true";
             } else {
-                // HTTP (non-IP or domain) �?use /vnc.html as fallback
+                // HTTP (non-IP or domain) ?use /vnc.html as fallback
                 vncPath = "/vnc.html?autoconnect=true";
             }
             

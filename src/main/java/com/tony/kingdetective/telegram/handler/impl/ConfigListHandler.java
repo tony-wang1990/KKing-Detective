@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 配置列表回调处理�?
+ * 配置列表回调处理?
  * 
  * @author Tony Wang
  */
@@ -74,7 +74,7 @@ public class ConfigListHandler extends AbstractCallbackHandler {
         
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
         
-        // 添加配置按钮（每�?个）
+        // 添加配置按钮（每?个）
         List<InlineKeyboardRow> configRows = buildConfigRows(pageUsers);
         keyboard.addAll(configRows);
         
@@ -103,7 +103,7 @@ public class ConfigListHandler extends AbstractCallbackHandler {
     }
     
     /**
-     * 构建配置按钮�?
+     * 构建配置按钮?
      */
     private List<InlineKeyboardRow> buildConfigRows(List<OciUser> userList) {
         List<InlineKeyboardRow> rows = new ArrayList<>();

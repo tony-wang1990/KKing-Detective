@@ -58,7 +58,7 @@ public class MetricsWebSocketHandler {
             throw new OciException(-1, "无效的token");
         }
 
-        // 如果已存在旧�?session，先关闭�?
+        // 如果已存在旧?session，先关闭?
         Session oldSession = SESSION_MAP.get(token);
         if (oldSession != null) {
             try {
@@ -79,7 +79,7 @@ public class MetricsWebSocketHandler {
     public void onClose(Session session, @PathParam(value = "token") String token) {
         SESSION_MAP.remove(token);
         IS_OPEN_MAP.remove(token);
-        // 取消正在运行的任�?
+        // 取消正在运行的任?
         Future<?> future = FUTURE_MAP.remove(token);
         if (future != null && !future.isDone()) {
             future.cancel(true);
@@ -88,7 +88,7 @@ public class MetricsWebSocketHandler {
 
     @OnMessage
     public void onMessage(String message) {
-        log.info("【WebSocket消息】收到客户端消息�? + message);
+        log.info("【WebSocket消息】收到客户端消息�"? + message);
     }
 
     /**
@@ -103,7 +103,7 @@ public class MetricsWebSocketHandler {
                     session.getAsyncRemote().sendText(message);
                 }
             } catch (Exception e) {
-                log.error("仪表盘数据推送失�?, e);
+                log.error("仪表盘数据推送失�"?, e);
             }
         }
     }
@@ -111,7 +111,7 @@ public class MetricsWebSocketHandler {
     private void genCpuMemData(String token) {
         SystemInfo systemInfo = new SystemInfo();
 
-        // 获取 CPU 使用�?
+        // 获取 CPU 使用?
         HardwareAbstractionLayer hardware = systemInfo.getHardware();
         CentralProcessor processor = hardware.getProcessor();
         long[] systemCpuLoadTicks = processor.getSystemCpuLoadTicks();
@@ -148,7 +148,7 @@ public class MetricsWebSocketHandler {
                 .put("outbound", outRates)
                 .build());
 
-        // 发送消息时使用对应�?session
+        // 发送消息时使用对应?session
         Session userSession = SESSION_MAP.get(token);
         if (userSession != null && userSession.isOpen()) {
             sendOneMessage(userSession, JSONUtil.toJsonStr(metrics));
@@ -162,10 +162,10 @@ public class MetricsWebSocketHandler {
 
             NetworkIF networkIF = networkIFs.stream()
                     .filter(NetworkIF::isConnectorPresent) // 必须是有物理连接
-                    .filter(iface -> !Arrays.asList(iface.getIPv4addr()).isEmpty() || !Arrays.asList(iface.getIPv6addr()).isEmpty()) // 必须�?IP 地址
+                    .filter(iface -> !Arrays.asList(iface.getIPv4addr()).isEmpty() || !Arrays.asList(iface.getIPv6addr()).isEmpty()) // 必须?IP 地址
                     .filter(iface -> iface.getName().startsWith("e"))
                     .min((a, b) -> Long.compare(b.getSpeed(), a.getSpeed())) // 找到第一个匹配的网卡
-                    .orElse(null); // 如果没有匹配，返�?null
+                    .orElse(null); // 如果没有匹配，返?null
 
             if (null != networkIF) {
                 networkIF.updateAttributes();
@@ -175,11 +175,11 @@ public class MetricsWebSocketHandler {
                 double currentRxBytes = networkIF.getBytesRecv() / 1024.0;
                 double currentTxBytes = networkIF.getBytesSent() / 1024.0;
 
-                // 计算当前秒的流量速率（单位：KB/s�?
+                // 计算当前秒的流量速率（单位：KB/s?
                 double rxRate = (currentRxBytes - previousRxBytes) / 1024.0;
                 double txRate = (currentTxBytes - previousTxBytes) / 1024.0;
 
-                // 更新上一秒的字节�?
+                // 更新上一秒的字节?
                 previousRxBytes = currentRxBytes;
                 previousTxBytes = currentTxBytes;
 
@@ -187,7 +187,7 @@ public class MetricsWebSocketHandler {
                     Calendar calendar = Calendar.getInstance();
 
                     try {
-                        Thread.sleep(interval * 1000L); // 每秒更新一�?
+                        Thread.sleep(interval * 1000L); // 每秒更新一?
                     } catch (InterruptedException e) {
 
                     }
@@ -196,15 +196,15 @@ public class MetricsWebSocketHandler {
                     currentRxBytes = networkIF.getBytesRecv() / 1024.0;
                     currentTxBytes = networkIF.getBytesSent() / 1024.0;
 
-                    // 计算当前秒的流量速率（单位：KB/s�?
+                    // 计算当前秒的流量速率（单位：KB/s?
                     rxRate = (currentRxBytes - previousRxBytes) / 1024.0;
                     txRate = (currentTxBytes - previousTxBytes) / 1024.0;
 
-                    // 更新上一秒的字节�?
+                    // 更新上一秒的字节?
                     previousRxBytes = currentRxBytes;
                     previousTxBytes = currentTxBytes;
 
-                    // 维护队列大小�?0
+                    // 维护队列大小?0
                     if (inRates.size() == size) {
                         inRates.remove(0);
                     }

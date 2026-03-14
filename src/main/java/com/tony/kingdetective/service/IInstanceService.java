@@ -1,4 +1,4 @@
-﻿package com.tony.kingdetective.service;
+package com.tony.kingdetective.service;
 
 import com.oracle.bmc.core.model.Instance;
 import com.tony.kingdetective.bean.Tuple2;
@@ -23,15 +23,15 @@ import java.util.List;
 public interface IInstanceService {
 
     /**
-     * 获取已开机实例信�?
+     * 获取已开机实例信?
      *
      * @param sysUserDTO oci配置
-     * @return 已开机实例信�?
+     * @return 已开机实例信?
      */
     List<SysUserDTO.CloudInstance> listRunningInstances(SysUserDTO sysUserDTO);
 
     /**
-     * 开�?
+     * 开?
      *
      * @param fetcher oci配置
      * @return 成功开机的实例信息
@@ -44,17 +44,17 @@ public interface IInstanceService {
      * @param instanceId 实例Id
      * @param vnicId     vnicId
      * @param sysUserDTO oci配置
-     * @param cidrList   CIDR 网段 （传为空则随机更换一个ip�?
-     * @return 新的实例公共IP，实�?
+     * @param cidrList   CIDR 网段 （传为空则随机更换一个ip?
+     * @return 新的实例公共IP，实?
      */
     Tuple2<String, Instance> changeInstancePublicIp(String instanceId, String vnicId, SysUserDTO sysUserDTO, List<String> cidrList);
 
     /**
-     * 获取实例需修改的配置信�?
+     * 获取实例需修改的配置信?
      *
      * @param sysUserDTO oci配置
      * @param instanceId 实例Id
-     * @return 实例需修改的配置信�?
+     * @return 实例需修改的配置信?
      */
     InstanceCfgDTO getInstanceCfgInfo(SysUserDTO sysUserDTO, String instanceId);
 
@@ -93,23 +93,23 @@ public interface IInstanceService {
     void updateInstanceCfg(SysUserDTO sysUserDTO, String instanceId, float ocpus, float memory);
 
     /**
-     * 修改引导卷配�?
+     * 修改引导卷配?
      *
      * @param sysUserDTO oci配置
      * @param instanceId 实例id
-     * @param size       引导卷大�?
+     * @param size       引导卷大?
      * @param vpusPer    引导卷vpu [10,120]
      */
     void updateBootVolumeCfg(SysUserDTO sysUserDTO, String instanceId, long size, long vpusPer);
 
     /**
-     * 一键开�?00M
+     * 一键开?00M
      * @param params 参数
      */
     void oneClick500M(CreateNetworkLoadBalancerParams params);
 
     /**
-     * 一键关�?00M
+     * 一键关?00M
      * @param params 参数
      */
     void oneClickClose500M(Close500MParams params);

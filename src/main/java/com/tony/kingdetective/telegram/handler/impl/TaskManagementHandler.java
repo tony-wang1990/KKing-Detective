@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 import static com.tony.kingdetective.service.impl.OciServiceImpl.TEMP_MAP;
 
 /**
- * 任务管理回调处理�?
+ * 任务管理回调处理?
  * 
  * @author Tony Wang
  */
@@ -37,7 +37,7 @@ import static com.tony.kingdetective.service.impl.OciServiceImpl.TEMP_MAP;
 public class TaskManagementHandler extends AbstractCallbackHandler {
     
     private static final String PAGE_TYPE = "task_management";
-    private static final int PAGE_SIZE = 5; // 每页显示5个任�?
+    private static final int PAGE_SIZE = 5; // 每页显示5个任?
     
     @Override
     public BotApiMethod<? extends Serializable> handle(CallbackQuery callbackQuery, TelegramClient telegramClient) {
@@ -49,7 +49,7 @@ public class TaskManagementHandler extends AbstractCallbackHandler {
         if (CollectionUtil.isEmpty(taskList)) {
             return buildEditMessage(
                     callbackQuery,
-                    "�?当前没有正在执行的任�?,
+                    "�"?当前没有正在执行的任?,
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }
@@ -89,7 +89,7 @@ public class TaskManagementHandler extends AbstractCallbackHandler {
         List<OciCreateTask> pageTasks = taskList.subList(startIndex, endIndex);
         
         StringBuilder message = new StringBuilder("【任务管理】\n\n");
-        message.append(String.format("�?%d 个正在执行的任务，当前第 %d/%d 页：\n\n", 
+        message.append(String.format("�?%d 个正在执行的任务，当前第 %d/%d 页：\n\n", 
                 taskList.size(), currentPage + 1, totalPages));
         
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
@@ -108,9 +108,9 @@ public class TaskManagementHandler extends AbstractCallbackHandler {
             
             message.append(String.format(
                     "%s %d. [%s] [%s] [%s]\n" +
-                    "   配置: %s�?%sG/%sG\n" +
-                    "   数量: %s�?| 已运�? %s | 尝试: %s次\n\n",
-                    isSelected ? "☑️" : "�?,
+                    "   配置: %s�?%sG/%sG\n" +
+                    "   数量: %s�?| 已运�? %s | 尝试: %s次\n\n",
+                    isSelected ?" "" : "?,
                     taskNumber,
                     user.getUsername(),
                     user.getOciRegion(),
@@ -123,17 +123,17 @@ public class TaskManagementHandler extends AbstractCallbackHandler {
                     counts == null ? "0" : counts
             ));
             
-            // 添加任务按钮（每�?个）
+            // 添加任务按钮（每?个）
             if (i % 2 == 0) {
                 InlineKeyboardRow row = new InlineKeyboardRow();
                 row.add(KeyboardBuilder.button(
-                        String.format("%s 任务%d", isSelected ? "☑️" : "�?, taskNumber),
+                        String.format("%s 任务%d", isSelected ?" "" : "?, taskNumber),
                         "toggle_task:" + task.getId()
                 ));
                 keyboard.add(row);
             } else {
                 keyboard.get(keyboard.size() - 1).add(KeyboardBuilder.button(
-                        String.format("%s 任务%d", isSelected ? "☑️" : "�?, taskNumber),
+                        String.format("%s 任务%d", isSelected ?" "" : "?, taskNumber),
                         "toggle_task:" + task.getId()
                 ));
             }
@@ -151,12 +151,12 @@ public class TaskManagementHandler extends AbstractCallbackHandler {
         
         // 添加批量操作按钮
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("�?全�?, "select_all_tasks"),
-                KeyboardBuilder.button("�?取消全�?, "deselect_all_tasks")
+                KeyboardBuilder.button("�"?全?, "select_all_tasks"),
+                KeyboardBuilder.button("�"?取消全?, "deselect_all_tasks")
         ));
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("🛑 结束选中的任�?, "stop_selected_tasks")
+                KeyboardBuilder.button("🛑 结束选中的任�"?, "stop_selected_tasks")
         ));
         
         keyboard.add(KeyboardBuilder.buildBackToMainMenuRow());

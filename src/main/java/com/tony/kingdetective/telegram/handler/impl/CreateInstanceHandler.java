@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 创建实例回调处理�?
+ * 创建实例回调处理?
  * 
  * @author Tony Wang
  */
@@ -397,7 +397,7 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
         InstanceCreationService creationService = SpringUtil.getBean(InstanceCreationService.class);
         
         try {
-            // 先删除回调消�?
+            // 先删除回调消?
             telegramClient.execute(org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage.builder()
                     .chatId(callbackQuery.getMessage().getChatId())
                     .messageId(Math.toIntExact(callbackQuery.getMessage().getMessageId()))
@@ -406,8 +406,8 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
             log.error("Failed to delete message", e);
         }
         
-        // 发送创建中的消�?
-        String channelStatus = joinChannelBroadcast ? "�?已开�? : "�?已关�?;
+        // 发送创建中的消?
+        String channelStatus = joinChannelBroadcast ? "�?已开�? : "?已关?;
         String creatingMessage = String.format(
                 "�?正在创建实例...\n\n" +
                 "🔑 配置名：%s\n" +
