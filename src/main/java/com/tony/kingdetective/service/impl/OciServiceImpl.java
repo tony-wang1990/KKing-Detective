@@ -133,7 +133,7 @@ public class OciServiceImpl implements IOciService {
 
                     }
                     if (StringUtils.isNotBlank(x.getCreateTime())) {
-                        x.setCreateTime(x.getCreateTime() + String.format("?"?s?, CommonUtils.getTimeDifference(LocalDateTime.parse(x.getCreateTime(), CommonUtils.DATETIME_FMT_NORM))));
+                        x.setCreateTime(x.getCreateTime() + String.format("%s", CommonUtils.getTimeDifference(LocalDateTime.parse(x.getCreateTime(), CommonUtils.DATETIME_FMT_NORM))));
                     }
                 });
         return CommonUtils.buildPage(list, params.getPageSize(), params.getCurrentPage(), total);
@@ -196,7 +196,7 @@ public class OciServiceImpl implements IOciService {
     public void removeCfg(IdListParams params) {
         params.getIdList().forEach(id -> {
             if (createTaskService.count(new LambdaQueryWrapper<OciCreateTask>().eq(OciCreateTask::getUserId, id)) > 0) {
-                throw new OciException(-1, "??:" + userService.getById(id).getUsername() + " ??????",?);
+                throw new OciException(-1, "??:" + userService.getById(id).getUsername() + " ??????");
             }
         });
         userService.removeBatchByIds(params.getIdList());
@@ -447,7 +447,7 @@ public class OciServiceImpl implements IOciService {
     public void uploadCfg(UploadCfgParams params) {
         params.getFileList().forEach(x -> {
             if (!x.getOriginalFilename().contains(".ini") && !x.getOriginalFilename().contains(".txt")) {
-                throw new OciException(-1, "?????"?txt?ini?);
+                throw new OciException(-1, "Must be txt or ini");
             }
         });
         Set<String> seenUsernames = new HashSet<>();
@@ -642,7 +642,7 @@ public class OciServiceImpl implements IOciService {
                 // fetcher.setCompartmentId(params.getCompartmentId());
             }
 
-            String resStr = String.format("?"?s?s?, sysUserDTO.getUsername(), fetcher.getInstanceById(params.getInstanceId()).getDisplayName());
+            String resStr = String.format("%s %s", sysUserDTO.getUsername(), fetcher.getInstanceById(params.getInstanceId()).getDisplayName());
 
             //  5900 
             try {
@@ -858,7 +858,7 @@ public class OciServiceImpl implements IOciService {
                     log.info("??/9?? AMD??????????");
 
                     // ?
-                    log.warn("?"?/9 ?);
+                    log.warn("Step 2/9");
                     newAmdInstanceBootVolume = newFetcher.getBootVolumeByInstanceId(newAmdInstance.getId());
                     CreateBootVolumeResponse cloneBootVolume = blockstorageClient.createBootVolume(CreateBootVolumeRequest.builder()
                             .createBootVolumeDetails(CreateBootVolumeDetails.builder()
@@ -871,7 +871,7 @@ public class OciServiceImpl implements IOciService {
                                     .build())
                             .build());
                     newAmdInstanceCloneBootVolume = cloneBootVolume.getBootVolume();
-                    log.info("?"?/9 ?);
+                    log.info("Step 2/9");
                 }
 
                 while (!blockstorageClient.getBootVolume(GetBootVolumeRequest.builder()
@@ -996,10 +996,10 @@ public class OciServiceImpl implements IOciService {
 
             if (dieCounts > 0) {
                 stopAndRemoveTask(sysUserDTO, createTaskService);
-                log.error("????????"?[{}],:[{}],:[{}],?[{}] ??(API||\uD83D\uDC7B),?,
+                log.error("API Error [{}] [{}] [{}] [{}]",
                         sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(),
                         sysUserDTO.getArchitecture(), sysUserDTO.getCreateNumbers());
-                sysService.sendMessage(String.format("????????"?[%s],:[%s],:[%s],?[%s] ??(API||\uD83D\uDC7B),?,
+                sysService.sendMessage(String.format("API Error [%s] [%s] [%s] [%s]",
                         sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(),
                         sysUserDTO.getArchitecture(), sysUserDTO.getCreateNumbers()));
             }
@@ -1019,7 +1019,7 @@ public class OciServiceImpl implements IOciService {
                 log.error("?????????[{}],??:[{}],????:[{}],?????[{}] ???? CPU ??:[{}] ???????????..",
                         sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(),
                         sysUserDTO.getArchitecture(), sysUserDTO.getCreateNumbers(), sysUserDTO.getArchitecture());
-                sysService.sendMessage(String.format("????????"?[%s],:[%s],:[%s],?[%s]  CPU :[%s] ?,
+                sysService.sendMessage(String.format("Error [%s] [%s] [%s] [%s] CPU [%s]",
                         sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(),
                         sysUserDTO.getArchitecture(), sysUserDTO.getCreateNumbers(), sysUserDTO.getArchitecture()));
             }
@@ -1055,10 +1055,10 @@ public class OciServiceImpl implements IOciService {
                 BmcException error = (BmcException) e;
                 if (error.getStatusCode() == 401 || error.getMessage().contains(ErrorEnum.NOT_AUTHENTICATED.getErrorType())) {
                     stopAndRemoveTask(sysUserDTO, createTaskService);
-                    log.error("????????"?[{}],:[{}],:[{}],?[{}] ??(API||\uD83D\uDC7B),?,
+                    log.error("API Error [{}] [{}] [{}] [{}]",
                             sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(),
                             sysUserDTO.getArchitecture(), sysUserDTO.getCreateNumbers());
-                    sysService.sendMessage(String.format("????????"?[%s],:[%s],:[%s],?[%s] ??(API||\uD83D\uDC7B),?,
+                    sysService.sendMessage(String.format("API Error [%s] [%s] [%s] [%s]",
                             sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(),
                             sysUserDTO.getArchitecture(), sysUserDTO.getCreateNumbers()));
                 }
@@ -1142,7 +1142,7 @@ public class OciServiceImpl implements IOciService {
     private void sendChangeIpMsg(String ociCfgId, String username, String region, String instanceName, String publicIp) {
         customCache.remove(CacheConstant.PREFIX_INSTANCE_PAGE + ociCfgId);
 
-        log.info("????????IP???"?[{}],:[{}],:[{}],IP,IP:{} ?,
+        log.info("IP Changed [{}] [{}] [{}] IP: {}",
                 username, region, instanceName,
                 publicIp);
         String message = String.format(CommonUtils.CHANGE_IP_MESSAGE_TEMPLATE,
