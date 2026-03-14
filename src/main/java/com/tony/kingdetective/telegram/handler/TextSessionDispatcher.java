@@ -35,8 +35,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Session 状态下的文本消息分发器
- * 将原本散落在 TgBot.java 中的各类 Session 处理逻辑统一到此处
+ * Session 
+ *  TgBot.java  Session 
  *
  * @author Tony Wang
  */
@@ -48,9 +48,9 @@ public class TextSessionDispatcher {
     private String keyDirPath;
 
     /**
-     * 处理 Session 状态下的文本消息
+     *  Session 
      *
-     * @return true 表示已处理，false 表示无匹配 session
+     * @return true false  session
      */
     public boolean dispatch(long chatId, String text, TelegramClient telegramClient) {
         ConfigSessionStorage storage = ConfigSessionStorage.getInstance();
@@ -80,9 +80,9 @@ public class TextSessionDispatcher {
     }
 
     /**
-     * 处理文档上传（备份恢复文件 / 私钥 PEM 文件）
+     *  /  PEM 
      *
-     * @return true 表示已处理
+     * @return true 
      */
     public boolean dispatchDocument(long chatId, Update update, TelegramClient telegramClient) {
         ConfigSessionStorage storage = ConfigSessionStorage.getInstance();
@@ -107,9 +107,9 @@ public class TextSessionDispatcher {
         return true;
     }
 
-    // ─────────────────────────────────────────────
-    // VNC 配置
-    // ─────────────────────────────────────────────
+    // 
+    // VNC 
+    // 
 
     private void handleVncUrlInput(long chatId, String url, TgMessageSender sender) {
         ConfigSessionStorage storage = ConfigSessionStorage.getInstance();
@@ -166,9 +166,9 @@ public class TextSessionDispatcher {
         }
     }
 
-    // ─────────────────────────────────────────────
-    // 备份 / 恢复
-    // ─────────────────────────────────────────────
+    // 
+    //  / 
+    // 
 
     private void handleBackupPasswordInput(long chatId, String password, TelegramClient telegramClient, TgMessageSender sender) {
         ConfigSessionStorage storage = ConfigSessionStorage.getInstance();
@@ -311,9 +311,9 @@ public class TextSessionDispatcher {
         }
     }
 
-    // ─────────────────────────────────────────────
-    // 添加账户（三步流程）
-    // ─────────────────────────────────────────────
+    // 
+    // 
+    // 
 
     private void handleAddAccountConfigInput(long chatId, String text, TgMessageSender sender) {
         ConfigSessionStorage storage = ConfigSessionStorage.getInstance();
@@ -417,7 +417,7 @@ public class TextSessionDispatcher {
             String region = (String) data.get("region");
             String keyContent = (String) data.get("keyContent");
 
-            // 保存私钥文件
+            // 
             if (!FileUtil.exist(keyDirPath)) {
                 FileUtil.mkdir(keyDirPath);
             }
@@ -426,7 +426,7 @@ public class TextSessionDispatcher {
             String keyPath = keyDirPath + File.separator + keyFileName;
             FileUtil.writeUtf8String(keyContent, keyPath);
 
-            // 设置文件权限 (Linux)
+            //  (Linux)
             try {
                 if (!System.getProperty("os.name").toLowerCase().contains("win")) {
                     Files.setPosixFilePermissions(Paths.get(keyPath),
@@ -434,7 +434,7 @@ public class TextSessionDispatcher {
                 }
             } catch (Exception ignored) {}
 
-            // 保存到数据库
+            // 
             IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
             OciUser ociUser = new OciUser();
             ociUser.setId(IdUtil.getSnowflakeNextIdStr());
@@ -468,9 +468,9 @@ public class TextSessionDispatcher {
         }
     }
 
-    // ─────────────────────────────────────────────
-    // SSH 公钥上传
-    // ─────────────────────────────────────────────
+    // 
+    // SSH 
+    // 
 
     private void handleSshPubkeyInput(long chatId, String text, TgMessageSender sender) {
         ConfigSessionStorage storage = ConfigSessionStorage.getInstance();
@@ -528,9 +528,9 @@ public class TextSessionDispatcher {
         }
     }
 
-    // ─────────────────────────────────────────────
-    // 告警邮箱设置
-    // ─────────────────────────────────────────────
+    // 
+    // 
+    // 
 
     private void handleAlertEmailInput(long chatId, String email, TgMessageSender sender) {
         ConfigSessionStorage storage = ConfigSessionStorage.getInstance();
@@ -567,9 +567,9 @@ public class TextSessionDispatcher {
         }
     }
 
-    // ─────────────────────────────────────────────
-    // 实例标签管理
-    // ─────────────────────────────────────────────
+    // 
+    // 
+    // 
 
     private void handleInstanceTagInput(long chatId, String text, TgMessageSender sender) {
         ConfigSessionStorage storage = ConfigSessionStorage.getInstance();
@@ -650,9 +650,9 @@ public class TextSessionDispatcher {
         }
     }
 
-    // ─────────────────────────────────────────────
-    // 工具方法
-    // ─────────────────────────────────────────────
+    // 
+    // 
+    // 
 
     private String getConfigValue(String text, String key) {
         for (String line : text.split("\n")) {
@@ -664,9 +664,9 @@ public class TextSessionDispatcher {
         return null;
     }
 
-    // ─────────────────────────────────────────────
-    // 定时开关机设置
-    // ─────────────────────────────────────────────
+    // 
+    // 
+    // 
 
     private void handleScheduledPowerInput(long chatId, String text, TgMessageSender sender) {
         ConfigSessionStorage storage = ConfigSessionStorage.getInstance();
@@ -692,7 +692,7 @@ public class TextSessionDispatcher {
             if (stopHour < 0 || stopHour > 23 || startHour < 0 || startHour > 23) {
                 throw new NumberFormatException("小时必须在 00-23 之间");
             }
-            // 确保是两位的，比如 "01" 
+            //  "01" 
             stopHourStr = String.format("%02d", stopHour);
             startHourStr = String.format("%02d", startHour);
 

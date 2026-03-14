@@ -152,7 +152,7 @@ class VncSetupHandler extends AbstractCallbackHandler {
                      "  - HTTP域名 �?/vnc.html\n" +
                      "  - HTTPS域名 �?/myvnc/vnc.html\n\n" +
                      "💡 提示：\n" +
-                     "发�"?/cancel 可取消配?;
+                     "发�"?/cancel ?;
         
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
         keyboard.add(new InlineKeyboardRow(

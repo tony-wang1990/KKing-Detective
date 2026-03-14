@@ -18,8 +18,8 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import java.io.IOException;
 
 /**
- * 全局异常处理器
- * 统一处理所有异常并返回标准错误响应
+ * 
+ * 
  * 
  * @author Tony Wang
  */
@@ -28,7 +28,7 @@ import java.io.IOException;
 public class GlobalExceptionHandler {
     
     /**
-     * 处理自定义 OCI 异常
+     *  OCI 
      */
     @ExceptionHandler(OciException.class)
     @ResponseBody
@@ -47,7 +47,7 @@ public class GlobalExceptionHandler {
     }
     
     /**
-     * 处理 Oracle Cloud SDK 异常
+     *  Oracle Cloud SDK 
      */
     @ExceptionHandler(BmcException.class)
     @ResponseBody
@@ -72,7 +72,7 @@ public class GlobalExceptionHandler {
     }
     
     /**
-     * 处理参数验证异常
+     * 
      */
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseBody
@@ -91,7 +91,7 @@ public class GlobalExceptionHandler {
     }
     
     /**
-     * 处理空指针异常
+     * 
      */
     @ExceptionHandler(NullPointerException.class)
     @ResponseBody
@@ -139,7 +139,7 @@ public class GlobalExceptionHandler {
     }
     
     /**
-     * 处理所有未捕获的异常
+     * 
      */
     @ExceptionHandler(Exception.class)
     @ResponseBody
@@ -158,13 +158,13 @@ public class GlobalExceptionHandler {
     }
     
     /**
-     * 格式化 BMC 异常消息为用户友好的文本
+     *  BMC 
      */
     private String formatBmcExceptionMessage(BmcException e) {
         int statusCode = e.getStatusCode();
         String serviceCode = e.getServiceCode();
         
-        // 根据常见错误码返回用户友好的消息
+        // 
         if (statusCode == 401) {
             return "认证失败：请检查 API 密钥配置是否正确";
         } else if (statusCode == 404) {

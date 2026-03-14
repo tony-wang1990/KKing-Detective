@@ -28,10 +28,10 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * 🔑 SSH 密钥对管理 Handler
- * 功能：查看 OCI 账户的 API Key（公钥）列表、上传新公钥、删除密钥
+ *  SSH  Handler
+ *  OCI  API Key
  *
- * 注意：OCI 的 API Key 即 SSH/RSA 公钥，每个用户最多5个
+ * OCI  API Key  SSH/RSA 5
  *
  * @author Tony Wang
  */
@@ -140,7 +140,7 @@ public class SshKeyPairManagementHandler extends AbstractCallbackHandler {
 
     private BotApiMethod<? extends Serializable> startAddKey(CallbackQuery callbackQuery, String userId) {
         long chatId = callbackQuery.getMessage().getChatId();
-        // 进入 Session 等待用户发送公钥内容
+        //  Session 
         ConfigSessionStorage storage = ConfigSessionStorage.getInstance();
         var data = new HashMap<String, Object>();
         data.put("userId", userId);

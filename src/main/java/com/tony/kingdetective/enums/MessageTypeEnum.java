@@ -14,7 +14,7 @@ import lombok.Getter;
 public enum MessageTypeEnum {
 
     /**
-     * 消息通知类型
+     * 
      */
     MSG_TYPE_TELEGRAM("TG", "telegram消息通知"),
     MSG_TYPE_DING_DING("DING", "钉钉消息通知"),

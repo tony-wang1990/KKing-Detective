@@ -7,19 +7,19 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import static java.lang.Math.toIntExact;
 
 /**
- * 抽象基础回调处理器
+ * 
  * 
  * @author yohann
  */
 public abstract class AbstractCallbackHandler implements CallbackHandler {
     
     /**
-     * 构建编辑消息文本
      * 
-     * @param callbackQuery 回调查询
-     * @param text 消息文本
-     * @param markup 内联键盘标记
-     * @return 编辑消息文本
+     * 
+     * @param callbackQuery 
+     * @param text 
+     * @param markup 
+     * @return 
      */
     protected EditMessageText buildEditMessage(CallbackQuery callbackQuery, String text, InlineKeyboardMarkup markup) {
         return EditMessageText.builder()
@@ -32,11 +32,11 @@ public abstract class AbstractCallbackHandler implements CallbackHandler {
     }
     
     /**
-     * 构建编辑消息文本（不带标记）
      * 
-     * @param callbackQuery 回调查询
-     * @param text 消息文本
-     * @return 编辑消息文本
+     * 
+     * @param callbackQuery 
+     * @param text 
+     * @return 
      */
     protected EditMessageText buildEditMessage(CallbackQuery callbackQuery, String text) {
         return buildEditMessage(callbackQuery, text, null);

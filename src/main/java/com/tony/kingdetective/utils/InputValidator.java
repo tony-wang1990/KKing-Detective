@@ -6,39 +6,39 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.regex.Pattern;
 
 /**
- * 输入验证工具类
- * 提供统一的输入验证方法
+ * 
+ * 
  * 
  * @author Tony Wang
  */
 @Slf4j
 public class InputValidator {
     
-    // URL 正则表达式
+    // URL 
     private static final Pattern URL_PATTERN = Pattern.compile(
         "^https?://[\\w.-]+(:\\d+)?(/.*)?$"
     );
     
-    // IP 地址正则表达式
+    // IP 
     private static final Pattern IP_PATTERN = Pattern.compile(
         "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
     );
     
-    // CIDR 正则表达式
+    // CIDR 
     private static final Pattern CIDR_PATTERN = Pattern.compile(
         "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)/([0-9]|[1-2][0-9]|3[0-2])$"
     );
     
-    // 主机名正则表达式
+    // 
     private static final Pattern HOSTNAME_PATTERN = Pattern.compile(
         "^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
     );
     
     /**
-     * 验证 URL格式
+     *  URL
      *
-     * @param url URL字符串
-     * @throws OciException 如果格式无效
+     * @param url URL
+     * @throws OciException 
      */
     public static void validateUrl(String url) {
         if (url == null || url.trim().isEmpty()) {
@@ -59,10 +59,10 @@ public class InputValidator {
     }
     
     /**
-     * 验证端口号
+     * 
      *
-     * @param port 端口号
-     * @throws OciException 如果端口无效
+     * @param port 
+     * @throws OciException 
      */
     public static void validatePort(int port) {
         if (port < 1 || port > 65535) {
@@ -73,10 +73,10 @@ public class InputValidator {
     }
     
     /**
-     * 验证 IP 地址
+     *  IP 
      *
-     * @param ip IP地址字符串
-     * @throws OciException 如果IP无效
+     * @param ip IP
+     * @throws OciException IP
      */
     public static void validateIpAddress(String ip) {
         if (ip == null || ip.trim().isEmpty()) {
@@ -94,10 +94,10 @@ public class InputValidator {
     }
     
     /**
-     * 验证 CIDR 块
+     *  CIDR 
      *
-     * @param cidr CIDR字符串
-     * @throws OciException 如果CIDR无效
+     * @param cidr CIDR
+     * @throws OciException CIDR
      */
     public static void validateCidr(String cidr) {
         if (cidr == null || cidr.trim().isEmpty()) {
@@ -115,10 +115,10 @@ public class InputValidator {
     }
     
     /**
-     * 验证主机名
+     * 
      *
-     * @param hostname 主机名
-     * @throws OciException 如果主机名无效
+     * @param hostname 
+     * @throws OciException 
      */
     public static void validateHostname(String hostname) {
         if (hostname == null || hostname.trim().isEmpty()) {
@@ -136,10 +136,10 @@ public class InputValidator {
     }
     
     /**
-     * 验证用户名（SSH、数据库等）
+     * SSH
      *
-     * @param username 用户名
-     * @throws OciException 如果用户名无效
+     * @param username 
+     * @throws OciException 
      */
     public static void validateUsername(String username) {
         if (username == null || username.trim().isEmpty()) {
@@ -160,11 +160,11 @@ public class InputValidator {
     }
     
     /**
-     * 验证密码强度
+     * 
      *
-     * @param password 密码
-     * @param minLength 最小长度
-     * @throws OciException 如果密码强度不够
+     * @param password 
+     * @param minLength 
+     * @throws OciException 
      */
     public static void validatePassword(String password, int minLength) {
         if (password == null || password.isEmpty()) {
@@ -181,13 +181,13 @@ public class InputValidator {
     }
     
     /**
-     * 验证字符串长度
+     * 
      *
-     * @param text 文本
-     * @param fieldName 字段名称
-     * @param minLength 最小长度
-     * @param maxLength 最大长度
-     * @throws OciException 如果长度不符合要求
+     * @param text 
+     * @param fieldName 
+     * @param minLength 
+     * @param maxLength 
+     * @throws OciException 
      */
     public static void validateLength(String text, String fieldName, int minLength, int maxLength) {
         if (text == null) {
@@ -204,11 +204,11 @@ public class InputValidator {
     }
     
     /**
-     * 验证非空字符串
+     * 
      *
-     * @param text 文本
-     * @param fieldName 字段名称
-     * @throws OciException 如果为空
+     * @param text 
+     * @param fieldName 
+     * @throws OciException 
      */
     public static void validateNotEmpty(String text, String fieldName) {
         if (text == null || text.trim().isEmpty()) {

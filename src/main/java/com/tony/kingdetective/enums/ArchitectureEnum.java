@@ -17,7 +17,7 @@ import static com.oracle.bmc.core.model.Shape.BillingType.*;
 public enum ArchitectureEnum {
 
     /**
-     * 系统架构
+     * 
      */
     AMD("AMD", "VM.Standard.E2.1.Micro", AlwaysFree),
     ARM("ARM", "VM.Standard.A1.Flex", LimitedFree),

@@ -8,8 +8,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 /**
- * 敏感信息加密工具类
- * 使用 AES-256 加密算法
+ * 
+ *  AES-256 
  * 
  * @author Tony Wang
  */
@@ -19,14 +19,14 @@ public class EncryptionUtil {
     private static final String ALGORITHM = "AES";
     private static final String TRANSFORMATION = "AES/ECB/PKCS5Padding";
     
-    // 从环境变量获取密钥，如果不存在则自动生成并保存
+    // 
     private static final String SECRET_KEY = getOrCreateSecretKey();
     
     private static final AES aes;
     
     static {
         try {
-            // 确保密钥长度为32字节(256位)
+            // 32(256)
             String key = SECRET_KEY.length() >= 32
                     ? SECRET_KEY.substring(0, 32)
                     : String.format("%-32s", SECRET_KEY).replace(' ', '0');
@@ -40,10 +40,10 @@ public class EncryptionUtil {
     }
     
     /**
-     * 加密字符串
+     * 
      *
-     * @param plainText 明文
-     * @return Base64编码的密文
+     * @param plainText 
+     * @return Base64
      */
     public static String encrypt(String plainText) {
         if (plainText == null || plainText.isEmpty()) {
@@ -60,10 +60,10 @@ public class EncryptionUtil {
     }
     
     /**
-     * 解密字符串
+     * 
      *
-     * @param encryptedText Base64编码的密文
-     * @return 明文
+     * @param encryptedText Base64
+     * @return 
      */
     public static String decrypt(String encryptedText) {
         if (encryptedText == null || encryptedText.isEmpty()) {
@@ -81,10 +81,10 @@ public class EncryptionUtil {
     }
     
     /**
-     * 判断字符串是否为加密格式（Base64）
+     * Base64
      *
-     * @param text 待检测字符串
-     * @return true如果是加密格式
+     * @param text 
+     * @return true
      */
     public static boolean isEncrypted(String text) {
         if (text == null || text.isEmpty()) {
@@ -100,17 +100,17 @@ public class EncryptionUtil {
     }
     
     /**
-     * 加密敏感字段（智能加密 - 如果已经是加密格式则跳过）
+     *  - 
      *
-     * @param text 待加密文本
-     * @return 加密后的文本
+     * @param text 
+     * @return 
      */
     public static String encryptIfNeeded(String text) {
         if (text == null || text.isEmpty()) {
             return text;
         }
         
-        // 如果已经加密，直接返回
+        // 
         if (isEncrypted(text)) {
             return text;
         }
@@ -119,18 +119,18 @@ public class EncryptionUtil {
     }
     
     /**
-     * 获取或创建密钥
-     * 优先从环境变量读取，如果不存在则自动生成并保存到 .secret_key 文件
+     * 
+     *  .secret_key 
      */
     private static String getOrCreateSecretKey() {
-        // 1. 尝试从环境变量读取
+        // 1. 
         String envKey = System.getenv("KING_DETECTIVE_SECRET_KEY");
         if (envKey != null && !envKey.isEmpty()) {
             log.info("✅ 使用环境变量中的加密密钥");
             return ensureKeyLength(envKey);
         }
         
-        // 2. 尝试从文件读取
+        // 2. 
         java.io.File keyFile = new java.io.File(System.getProperty("user.dir"), ".secret_key");
         if (keyFile.exists()) {
             try {
@@ -144,7 +144,7 @@ public class EncryptionUtil {
             }
         }
         
-        // 3. 自动生成新密钥并保存
+        // 3. 
         String newKey = generateRandomKey();
         try {
             java.nio.file.Files.writeString(keyFile.toPath(), newKey, StandardCharsets.UTF_8);
@@ -158,7 +158,7 @@ public class EncryptionUtil {
     }
     
     /**
-     * 生成随机32字符密钥
+     * 32
      */
     private static String generateRandomKey() {
         String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
@@ -171,7 +171,7 @@ public class EncryptionUtil {
     }
     
     /**
-     * 确保密钥长度为32字节
+     * 32
      */
     private static String ensureKeyLength(String key) {
         if (key.length() >= 32) {

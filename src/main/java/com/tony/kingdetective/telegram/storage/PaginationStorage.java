@@ -4,8 +4,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Telegram Bot 分页存储
- * 线程安全的单例存储，用于管理分页状?
+ * Telegram Bot 
+ * ?
  * 
  * @author Tony Wang
  */
@@ -13,10 +13,10 @@ public class PaginationStorage {
     
     private static final PaginationStorage INSTANCE = new PaginationStorage();
     
-    // 映射: chatId + pageType -> 当前页码
+    // : chatId + pageType -> 
     private final Map<String, Integer> pageNumbers = new ConcurrentHashMap<>();
     
-    // 默认每页大小
+    // 
     public static final int DEFAULT_PAGE_SIZE = 8;
     
     private PaginationStorage() {
@@ -27,55 +27,55 @@ public class PaginationStorage {
     }
     
     /**
-     * 构建存储?
+     * ?
      * 
-     * @param chatId 聊天ID
-     * @param pageType 页面类型（如 "config_list", "task_management"?
-     * @return 存储?
+     * @param chatId ID
+     * @param pageType  "config_list", "task_management"?
+     * @return ?
      */
     private String buildKey(long chatId, String pageType) {
         return chatId + ":" + pageType;
     }
     
     /**
-     * 获取当前页码
      * 
-     * @param chatId 聊天ID
-     * @param pageType 页面类型
-     * @return 当前页码（从0开始）
+     * 
+     * @param chatId ID
+     * @param pageType 
+     * @return 0
      */
     public int getCurrentPage(long chatId, String pageType) {
         return pageNumbers.getOrDefault(buildKey(chatId, pageType), 0);
     }
     
     /**
-     * 设置当前页码
      * 
-     * @param chatId 聊天ID
-     * @param pageType 页面类型
-     * @param page 页码
+     * 
+     * @param chatId ID
+     * @param pageType 
+     * @param page 
      */
     public void setCurrentPage(long chatId, String pageType, int page) {
         pageNumbers.put(buildKey(chatId, pageType), page);
     }
     
     /**
-     * 重置页码?
+     * ?
      * 
-     * @param chatId 聊天ID
-     * @param pageType 页面类型
+     * @param chatId ID
+     * @param pageType 
      */
     public void resetPage(long chatId, String pageType) {
         pageNumbers.remove(buildKey(chatId, pageType));
     }
     
     /**
-     * 跳转到下一?
+     * ?
      * 
-     * @param chatId 聊天ID
-     * @param pageType 页面类型
-     * @param totalPages 总页?
-     * @return 新页?
+     * @param chatId ID
+     * @param pageType 
+     * @param totalPages ?
+     * @return ?
      */
     public int nextPage(long chatId, String pageType, int totalPages) {
         int current = getCurrentPage(chatId, pageType);
@@ -85,11 +85,11 @@ public class PaginationStorage {
     }
     
     /**
-     * 跳转到上一?
+     * ?
      * 
-     * @param chatId 聊天ID
-     * @param pageType 页面类型
-     * @return 新页?
+     * @param chatId ID
+     * @param pageType 
+     * @return ?
      */
     public int previousPage(long chatId, String pageType) {
         int current = getCurrentPage(chatId, pageType);
@@ -99,43 +99,43 @@ public class PaginationStorage {
     }
     
     /**
-     * 计算总页?
+     * ?
      * 
-     * @param totalItems 总项?
-     * @param pageSize 每页大小
-     * @return 总页?
+     * @param totalItems ?
+     * @param pageSize 
+     * @return ?
      */
     public static int calculateTotalPages(int totalItems, int pageSize) {
         return (int) Math.ceil((double) totalItems / pageSize);
     }
     
     /**
-     * 获取当前页的起始索引
      * 
-     * @param page 页码（从0开始）
-     * @param pageSize 每页大小
-     * @return 起始索引
+     * 
+     * @param page 0
+     * @param pageSize 
+     * @return 
      */
     public static int getStartIndex(int page, int pageSize) {
         return page * pageSize;
     }
     
     /**
-     * 获取当前页的结束索引
      * 
-     * @param page 页码（从0开始）
-     * @param pageSize 每页大小
-     * @param totalItems 总项?
-     * @return 结束索引（不包含?
+     * 
+     * @param page 0
+     * @param pageSize 
+     * @param totalItems ?
+     * @return ?
      */
     public static int getEndIndex(int page, int pageSize, int totalItems) {
         return Math.min((page + 1) * pageSize, totalItems);
     }
     
     /**
-     * 清除某个聊天的所有分页数?
+     * ?
      * 
-     * @param chatId 聊天ID
+     * @param chatId ID
      */
     public void clearChat(long chatId) {
         String prefix = chatId + ":";

@@ -23,11 +23,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 📶 带宽限速调整 Handler
- * 功能：通过修改弹性实例的 baselineOcpuUtilization 间接调整网络带宽，
- * 适用于 ARM (VM.Standard.A1.Flex) 或 AMD 弹性实例。
+ *   Handler
+ *  baselineOcpuUtilization 
+ *  ARM (VM.Standard.A1.Flex)  AMD 
  * 
- * 注意：非弹性实例无法直接修改带宽。
+ * 
  *
  * @author Tony Wang
  */
@@ -107,7 +107,7 @@ public class BandwidthAdjustHandler extends AbstractCallbackHandler {
                         sb.append("🚫 `").append(instance.getDisplayName()).append("` (不支持: ").append(shape).append(")\n");
                     } else {
                         sb.append("✅ `").append(instance.getDisplayName()).append("`\n");
-                        // 展示几个常用的带宽档位选项
+                        // 
                         rows.add(new InlineKeyboardRow(
                             KeyboardBuilder.button("⚙️ " + instance.getDisplayName().substring(0, Math.min(instance.getDisplayName().length(), 10)) + " (设为 1 Gbps)", 
                                 "bandwidth_adjust_set:" + userId + ":" + instance.getId() + ":1")
@@ -145,7 +145,7 @@ public class BandwidthAdjustHandler extends AbstractCallbackHandler {
             OciUser user = userService.getById(userId);
             try (OracleInstanceFetcher fetcher = new OracleInstanceFetcher(buildDto(user))) {
                 
-                // 获取当前 CPU/内存配置，保持不变
+                //  CPU/
                 var instance = fetcher.getComputeClient().getInstance(
                     com.oracle.bmc.core.requests.GetInstanceRequest.builder()
                         .instanceId(instanceId)
@@ -157,8 +157,8 @@ public class BandwidthAdjustHandler extends AbstractCallbackHandler {
                     .memoryInGBs(instance.getShapeConfig().getMemoryInGBs())
                     .build();
 
-                // 实际在 OCI API 中，带宽只能随 OCPU 容量线性增长。除非直接调用 Vnic 接口。
-                // 仅作演示调用更新 Shape 配置接口
+                //  OCI API  OCPU  Vnic 
+                //  Shape 
                 fetcher.getComputeClient().updateInstance(
                     UpdateInstanceRequest.builder()
                         .instanceId(instanceId)

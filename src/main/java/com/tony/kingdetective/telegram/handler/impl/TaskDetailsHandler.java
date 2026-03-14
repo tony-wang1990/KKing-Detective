@@ -14,7 +14,7 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 import java.io.Serializable;
 
 /**
- * 任务详情回调处理器
+ * 
  * 
  * @author yohann
  */

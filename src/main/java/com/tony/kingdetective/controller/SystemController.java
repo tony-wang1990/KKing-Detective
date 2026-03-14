@@ -22,8 +22,8 @@ import java.nio.file.Files;
 public class SystemController {
 
     /**
-     * 触发一键更新
-     * 通过修改update_version_trigger.flag文件触发watcher容器更新应用
+     * 
+     * update_version_trigger.flagwatcher
      */
     @PostMapping("/trigger-update")
     public ResponseData<String> triggerUpdate() {
@@ -40,11 +40,11 @@ public class SystemController {
     }
 
     /**
-     * 获取当前版本信息
+     * 
      */
     @PostMapping("/version")
     public ResponseData<String> getVersion() {
-        // 从环境变量或配置文件读取版本号
+        // 
         String version = System.getenv("APP_VERSION");
         if (version == null || version.isEmpty()) {
             version = "v2.0.0";

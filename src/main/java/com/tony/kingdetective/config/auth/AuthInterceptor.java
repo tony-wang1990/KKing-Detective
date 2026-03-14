@@ -42,21 +42,21 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        // 放行 WebSocket 握手请求
+        //  WebSocket 
         if ("GET".equalsIgnoreCase(request.getMethod()) && "websocket".equalsIgnoreCase(request.getHeader("Upgrade"))) {
             return true;
         }
 
-        // 放行预检请求（OPTIONS）
+        // OPTIONS
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
-            response.setStatus(HttpServletResponse.SC_OK); // 直接返回 200 状态码
+            response.setStatus(HttpServletResponse.SC_OK); //  200 
             return true;
         }
         
-        // === 安全检查 ===
+        // ===  ===
         String clientIp = getClientIp(request);
         
-        // 1. 检查防御模式
+        // 1. 
         if (isDefenseModeEnabled()) {
             log.warn("Defense mode is enabled, blocking request from IP: {}", clientIp);
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -64,7 +64,7 @@ public class AuthInterceptor implements HandlerInterceptor {
             return false;
         }
         
-        // 2. 检查IP黑名单
+        // 2. IP
         IIpBlacklistService blacklistService = SpringUtil.getBean(IIpBlacklistService.class);
         if (blacklistService.isBlacklisted(clientIp)) {
             log.warn("IP {} is blacklisted", clientIp);
@@ -76,11 +76,11 @@ public class AuthInterceptor implements HandlerInterceptor {
         String authorizationHeader = request.getHeader("Authorization");
         if (request.getRequestURI().contains("/api") && !noTokenList.contains(request.getRequestURI())) {
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-                String token = authorizationHeader.substring(7); // 去掉"Bearer "前缀
-                // 验证token（这里可以调用你的验证逻辑）
+                String token = authorizationHeader.substring(7); // "Bearer "
+                // token
                 boolean isValid = validateToken(token);
                 if (isValid) {
-                    return true; // 继续处理请求
+                    return true; // 
                 } else {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     throw new OciException(401, "无权限");
@@ -133,7 +133,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
         }
-        // 处理多个IP的情况 (X-Forwarded-For可能包含多个IP)
+        // IP (X-Forwarded-ForIP)
         if (ip != null && ip.contains(",")) {
             ip = ip.split(",")[0].trim();
         }

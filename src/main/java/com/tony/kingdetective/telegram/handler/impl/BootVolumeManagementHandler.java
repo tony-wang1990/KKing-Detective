@@ -62,7 +62,7 @@ public class BootVolumeManagementHandler extends AbstractCallbackHandler {
             if (CollectionUtil.isEmpty(volumes)) {
                 return buildEditMessage(
                         callbackQuery,
-                        "�"?暂无引导?,
+                        "�"??,
                         new InlineKeyboardMarkup(List.of(
                                 new InlineKeyboardRow(
                                         KeyboardBuilder.button("◀�?返回", "select_config:" + ociCfgId)
@@ -148,8 +148,8 @@ public class BootVolumeManagementHandler extends AbstractCallbackHandler {
         
         // Add batch operation buttons
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("�"?全?, "select_all_boot_volumes"),
-                KeyboardBuilder.button("�"?取消全?, "deselect_all_boot_volumes")
+                KeyboardBuilder.button("�"??, "select_all_boot_volumes"),
+                KeyboardBuilder.button("�"??, "deselect_all_boot_volumes")
         ));
         
         keyboard.add(new InlineKeyboardRow(
@@ -318,8 +318,8 @@ class ToggleBootVolumeHandler extends AbstractCallbackHandler {
         
         // Add batch operation buttons
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("�"?全?, "select_all_boot_volumes"),
-                KeyboardBuilder.button("�"?取消全?, "deselect_all_boot_volumes")
+                KeyboardBuilder.button("�"??, "select_all_boot_volumes"),
+                KeyboardBuilder.button("�"??, "deselect_all_boot_volumes")
         ));
         
         keyboard.add(new InlineKeyboardRow(
@@ -669,7 +669,7 @@ class RefreshBootVolumesHandler extends AbstractCallbackHandler {
             if (CollectionUtil.isEmpty(volumes)) {
                 return buildEditMessage(
                         callbackQuery,
-                        "�"?暂无引导?,
+                        "�"??,
                         new InlineKeyboardMarkup(List.of(
                                 new InlineKeyboardRow(
                                         KeyboardBuilder.button("◀�?返回", "select_config:" + ociCfgId)
@@ -735,8 +735,8 @@ class RefreshBootVolumesHandler extends AbstractCallbackHandler {
             
             // Add batch operation buttons
             keyboard.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("�"?全?, "select_all_boot_volumes"),
-                    KeyboardBuilder.button("�"?取消全?, "deselect_all_boot_volumes")
+                    KeyboardBuilder.button("�"??, "select_all_boot_volumes"),
+                    KeyboardBuilder.button("�"??, "deselect_all_boot_volumes")
             ));
             
             keyboard.add(new InlineKeyboardRow(
@@ -763,7 +763,7 @@ class RefreshBootVolumesHandler extends AbstractCallbackHandler {
             log.error("Failed to refresh boot volumes for ociCfgId: {}", ociCfgId, e);
             return buildEditMessage(
                     callbackQuery,
-                    "�"?刷新失败? + e.getMessage(),
+                    "�"?? + e.getMessage(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
                                     KeyboardBuilder.button("🔄 重试", "refresh_boot_volumes")

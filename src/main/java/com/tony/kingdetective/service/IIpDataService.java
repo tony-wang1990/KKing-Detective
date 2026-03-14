@@ -11,7 +11,7 @@ import com.tony.kingdetective.bean.response.ipdata.IpDataPageRsp;
 
 /**
 * @author Tony Wang
-* @description 针对表【ip_data】的数据库操作Service
+* @description ip_dataService
 * @createDate 2025-08-04 17:28:41
 */
 public interface IIpDataService extends IService<IpData> {

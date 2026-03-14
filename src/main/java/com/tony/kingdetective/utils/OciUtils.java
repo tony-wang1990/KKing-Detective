@@ -37,7 +37,7 @@ public class OciUtils {
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
 
     /**
-     * 统一的返回结果封装
+     * 
      */
     public static class Result extends HashMap<String, Object> {
         public static Result ok(String message) {
@@ -61,14 +61,14 @@ public class OciUtils {
     }
 
     /**
-     * 校验邮箱
+     * 
      */
     private static boolean isValidEmail(String email) {
         return StringUtils.isNotBlank(email) && EMAIL_PATTERN.matcher(email.trim()).matches();
     }
 
     /**
-     * 获取当前收件人
+     * 
      */
     public static Result getCurrentRecipients(OracleInstanceFetcher fetcher) {
         try {
@@ -87,7 +87,7 @@ public class OciUtils {
     }
 
     /**
-     * 更新收件人
+     * 
      */
     public static Result updateRecipients(OracleInstanceFetcher fetcher, List<String> emails) {
         List<String> valid = new ArrayList<>();
@@ -136,7 +136,7 @@ public class OciUtils {
     }
 
     /**
-     * 添加收件人
+     * 
      */
     public static Result addRecipients(OracleInstanceFetcher fetcher, List<String> emails) {
         Result currentRes = getCurrentRecipients(fetcher);
@@ -174,7 +174,7 @@ public class OciUtils {
     }
 
     /**
-     * 移除收件人
+     * 
      */
     public static Result removeRecipients(OracleInstanceFetcher fetcher, List<String> emails) {
         Result currentRes = getCurrentRecipients(fetcher);
@@ -204,7 +204,7 @@ public class OciUtils {
     }
 
     /**
-     * 更新测试模式开关
+     * 
      */
     public static Result updateTestMode(OracleInstanceFetcher fetcher, boolean enable) {
         try {
@@ -235,21 +235,21 @@ public class OciUtils {
     }
 
     /**
-     * 关闭密码过期
+     * 
      */
     public static boolean disablePasswordExpirationWithAutoDomain(OracleInstanceFetcher fetcher) {
         return updatePasswordExpiration(fetcher, 0);
     }
 
     /**
-     * 启用密码过期（默认 120 天）
+     *  120 
      */
     public static boolean enablePasswordExpirationWithAutoDomain(OracleInstanceFetcher fetcher) {
         return enablePasswordExpirationWithAutoDomain(fetcher, 120);
     }
 
     /**
-     * 启用密码过期（自定义天数）
+     * 
      */
     public static boolean enablePasswordExpirationWithAutoDomain(OracleInstanceFetcher fetcher, Integer expirationDays) {
         if (expirationDays == null || expirationDays <= 0) {
@@ -260,7 +260,7 @@ public class OciUtils {
     }
 
     /**
-     * 公共方法：更新密码过期策略
+     * 
      */
     private static boolean updatePasswordExpiration(OracleInstanceFetcher fetcher, int expirationDays) {
 
@@ -269,7 +269,7 @@ public class OciUtils {
             IdentityClient identityClient = fetcher.getIdentityClient();
             IdentityDomainsClient identityDomainsClient = fetcher.getIdentityDomainsClient();
 
-            // 获取 Domain URL
+            //  Domain URL
             String domainUrl = getDomain(identityClient, tenantId);
             if (StringUtils.isBlank(domainUrl)) {
                 log.warn("No active domain found for tenant: {}", tenantId);
@@ -277,7 +277,7 @@ public class OciUtils {
             }
             identityDomainsClient.setEndpoint(domainUrl);
 
-            // 查询当前策略
+            // 
             List<PasswordPolicy> policies = listPasswordPolicies(identityDomainsClient);
             if (policies.isEmpty()) {
                 log.warn("No password policies found for domain: {}", domainUrl);
@@ -294,7 +294,7 @@ public class OciUtils {
 
                 com.oracle.bmc.identitydomains.model.PasswordPolicy updated = com.oracle.bmc.identitydomains.model.PasswordPolicy.builder()
                         .copy(policy)
-                        .passwordExpiresAfter(expirationDays)  // 0 = 不过期
+                        .passwordExpiresAfter(expirationDays)  // 0 = 
                         .forcePasswordReset(false)
                         .passwordExpireWarning(7)
                         .build();
@@ -318,7 +318,7 @@ public class OciUtils {
     }
 
     /**
-     * 获取当前密码策略
+     * 
      */
     public static List<com.oracle.bmc.identitydomains.model.PasswordPolicy> getCurrentPasswordPolicy(OracleInstanceFetcher fetcher) {
 
@@ -341,7 +341,7 @@ public class OciUtils {
     }
 
     /**
-     * 列出密码策略
+     * 
      */
     private static List<com.oracle.bmc.identitydomains.model.PasswordPolicy> listPasswordPolicies(IdentityDomainsClient domainsClient) {
         ListPasswordPoliciesResponse resp = domainsClient.listPasswordPolicies(
@@ -352,7 +352,7 @@ public class OciUtils {
     }
 
     /**
-     * 获取 Domain URL
+     *  Domain URL
      */
     public static String getDomain(IdentityClient identityClient, String compartmentId) {
         try {

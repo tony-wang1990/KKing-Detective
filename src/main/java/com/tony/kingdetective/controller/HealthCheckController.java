@@ -11,8 +11,8 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 
 /**
- * 健康检查控制器
- * 提供应用健康状态查询接口
+ * 
+ * 
  * 
  * @author Tony Wang
  */
@@ -25,9 +25,9 @@ public class HealthCheckController {
     private DataSource dataSource;
     
     /**
-     * 健康检查端点
+     * 
      *
-     * @return 健康状态
+     * @return 
      */
     @GetMapping("/health")
     public HealthStatus health() {
@@ -47,11 +47,11 @@ public class HealthCheckController {
     }
     
     /**
-     * 检查数据库连接
+     * 
      */
     private boolean checkDatabase() {
         try (Connection conn = dataSource.getConnection()) {
-            return conn.isValid(5); // 5秒超时
+            return conn.isValid(5); // 5
         } catch (Exception e) {
             log.error("数据库连接检查失败", e);
             return false;
@@ -59,7 +59,7 @@ public class HealthCheckController {
     }
     
     /**
-     * 检查内存状态
+     * 
      */
     private boolean checkMemory() {
         try {
@@ -70,7 +70,7 @@ public class HealthCheckController {
             
             log.debug("内存使用率: {:.2f}%", usagePercent);
             
-            // 如果内存使用率超过90%则认为不健康
+            // 90%
             return usagePercent < 90;
         } catch (Exception e) {
             log.error("内存检查失败", e);

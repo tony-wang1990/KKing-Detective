@@ -20,6 +20,6 @@ public class WebMvcAsyncConfig implements WebMvcConfigurer {
     public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
         AsyncTaskExecutor asyncTaskExecutor = new ConcurrentTaskExecutor(VirtualThreadConfig.VIRTUAL_EXECUTOR);
         configurer.setTaskExecutor(asyncTaskExecutor);
-        configurer.setDefaultTimeout(120_000); // 可选：120秒
+        configurer.setDefaultTimeout(120_000); // 120
     }
 }

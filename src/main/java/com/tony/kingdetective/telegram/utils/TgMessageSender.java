@@ -8,7 +8,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 
 /**
- * Telegram 消息发送工具类，封装普通消息和 Markdown 消息的发送逻辑
+ * Telegram  Markdown 
  *
  * @author Tony Wang
  */
@@ -19,14 +19,14 @@ public class TgMessageSender {
     private final TelegramClient telegramClient;
 
     /**
-     * 发送普通文本消息（不启用 Markdown）
+     *  Markdown
      */
     public void send(long chatId, String text) {
         sendInternal(chatId, text, false);
     }
 
     /**
-     * 发送 Markdown 格式消息
+     *  Markdown 
      */
     public void sendMd(long chatId, String text) {
         sendInternal(chatId, text, true);
@@ -44,7 +44,7 @@ public class TgMessageSender {
             telegramClient.execute(builder.build());
         } catch (TelegramApiException e) {
             log.error("发送消息失败: chatId={}", chatId, e);
-            // Markdown 解析失败时降级为纯文本
+            // Markdown 
             if (markdown) {
                 try {
                     telegramClient.execute(SendMessage.builder()

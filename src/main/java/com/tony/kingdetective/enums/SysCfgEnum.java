@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public enum SysCfgEnum {
 
     /**
-     * 系统配置项
+     * 
      */
     SYS_TG_BOT_TOKEN("Y101", "telegram机器人token", SysCfgTypeEnum.SYS_INIT_CFG),
     SYS_TG_CHAT_ID("Y102", "telegram个人ID", SysCfgTypeEnum.SYS_INIT_CFG),

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 /**
 * @author Administrator
-* @description 针对表【oci_create_task】的数据库操作Service实现
+* @description oci_create_taskService
 * @createDate 2024-11-12 16:44:38
 */
 @Service

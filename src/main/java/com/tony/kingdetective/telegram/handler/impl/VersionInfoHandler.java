@@ -14,7 +14,7 @@ import java.io.Serializable;
 import static java.lang.Math.toIntExact;
 
 /**
- * 版本信息回调处理?
+ * ?
  * 
  * @author Tony Wang
  */
@@ -43,7 +43,7 @@ public class VersionInfoHandler extends VersionInfoBaseHandler {
 }
 
 /**
- * 更新系统版本回调处理?
+ * ?
  * 
  * @author Tony Wang
  */
@@ -58,22 +58,22 @@ class UpdateSysVersionHandler extends VersionInfoBaseHandler {
         long messageId = callbackQuery.getMessage().getMessageId();
         
         try {
-            // 使用Java NIO创建trigger文件，更加可?
+            // Java NIOtrigger?
             java.io.File triggerFile = new java.io.File("/app/king-detective/update_version_trigger.flag");
             
-            // 如果文件存在且是目录，删除该目录
+            // 
             if (triggerFile.exists() && triggerFile.isDirectory()) {
                 log.warn("Trigger文件被错误地创建为目录，正在修复...");
                 org.apache.commons.io.FileUtils.deleteDirectory(triggerFile);
             }
             
-            // 确保父目录存?
+            // ?
             java.io.File parentDir = triggerFile.getParentFile();
             if (!parentDir.exists()) {
                 parentDir.mkdirs();
             }
             
-            // 写入trigger内容
+            // trigger
             java.nio.file.Files.write(
                 triggerFile.toPath(), 
                 "trigger".getBytes(java.nio.charset.StandardCharsets.UTF_8),
@@ -83,13 +83,13 @@ class UpdateSysVersionHandler extends VersionInfoBaseHandler {
             
             log.info("�?成功创建更新触发�? {}", triggerFile.getAbsolutePath());
             
-            // 删除原消?
+            // ?
             telegramClient.execute(DeleteMessage.builder()
                     .chatId(chatId)
                     .messageId(toIntExact(messageId))
                     .build());
             
-            // 发送更新提?
+            // ?
             return SendMessage.builder()
                     .chatId(chatId)
                     .text("🔄 正在更新 king-detective 最新版本，请稍�?..\n\n" +

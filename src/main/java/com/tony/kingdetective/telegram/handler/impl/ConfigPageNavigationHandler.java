@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 配置列表分页导航处理?
+ * ?
  * 
  * @author Tony Wang
  */
@@ -54,7 +54,7 @@ public class ConfigPageNavigationHandler extends AbstractCallbackHandler {
         
         int totalPages = PaginationStorage.calculateTotalPages(userList.size(), PAGE_SIZE);
         
-        // 更新页码
+        // 
         if (isNext) {
             paginationStorage.nextPage(chatId, PAGE_TYPE, totalPages);
         } else {
@@ -65,7 +65,7 @@ public class ConfigPageNavigationHandler extends AbstractCallbackHandler {
     }
     
     /**
-     * 构建配置列表消息
+     * 
      */
     private BotApiMethod<? extends Serializable> buildConfigListMessage(
             CallbackQuery callbackQuery,
@@ -78,16 +78,16 @@ public class ConfigPageNavigationHandler extends AbstractCallbackHandler {
         int startIndex = PaginationStorage.getStartIndex(currentPage, PAGE_SIZE);
         int endIndex = PaginationStorage.getEndIndex(currentPage, PAGE_SIZE, userList.size());
         
-        // 获取当前页的配置列表
+        // 
         List<OciUser> pageUsers = userList.subList(startIndex, endIndex);
         
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
         
-        // 添加配置按钮（每?个）
+        // ?
         List<InlineKeyboardRow> configRows = buildConfigRows(pageUsers);
         keyboard.addAll(configRows);
         
-        // 添加分页按钮
+        // 
         if (totalPages > 1) {
             keyboard.add(KeyboardBuilder.buildPaginationRow(
                     currentPage,
@@ -97,7 +97,7 @@ public class ConfigPageNavigationHandler extends AbstractCallbackHandler {
             ));
         }
         
-        // 添加导航按钮
+        // 
         keyboard.add(KeyboardBuilder.buildBackToMainMenuRow());
         keyboard.add(KeyboardBuilder.buildCancelRow());
         
@@ -112,7 +112,7 @@ public class ConfigPageNavigationHandler extends AbstractCallbackHandler {
     }
     
     /**
-     * 构建配置按钮?
+     * ?
      */
     private List<InlineKeyboardRow> buildConfigRows(List<OciUser> userList) {
         List<InlineKeyboardRow> rows = new ArrayList<>();

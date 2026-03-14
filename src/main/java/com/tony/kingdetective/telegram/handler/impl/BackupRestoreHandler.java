@@ -141,7 +141,7 @@ class BackupExecutePlainHandler extends AbstractCallbackHandler {
             // Send processing message
             telegramClient.execute(buildEditMessage(
                     callbackQuery,
-                    "�"?正在创建备份...\n\n请稍候，这可能需要几秒钟?,
+                    "�"?...\n\n?,
                     null
             ));
 
@@ -149,7 +149,7 @@ class BackupExecutePlainHandler extends AbstractCallbackHandler {
             ISysService sysService = SpringUtil.getBean(ISysService.class);
             BackupParams params = new BackupParams();
             params.setEnableEnc(false);
-            params.setPassword(""); // 传空字符串而不是null
+            params.setPassword(""); // null
 
             String backupFilePath = sysService.createBackupFile(params);
 
@@ -265,7 +265,7 @@ class BackupExecuteEncryptedHandler extends AbstractCallbackHandler {
                 "�?恢复备份时需要相同密码\n" +
                 "�?密码丢失将无法恢复数据\n\n" +
                 "💡 提示：\n" +
-                "发�"?/cancel 可取消操?;
+                "发�"?/cancel ?;
 
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
         keyboard.add(new InlineKeyboardRow(
@@ -348,7 +348,7 @@ class RestoreStartHandler extends AbstractCallbackHandler {
     public BotApiMethod<? extends Serializable> handle(CallbackQuery callbackQuery, TelegramClient telegramClient) {
         long chatId = callbackQuery.getMessage().getChatId();
 
-        // 启动恢复会话
+        // 
         ConfigSessionStorage.getInstance().startRestorePassword(chatId,
                 String.valueOf(callbackQuery.getMessage().getMessageId()));
 
@@ -359,7 +359,7 @@ class RestoreStartHandler extends AbstractCallbackHandler {
                 "�?文件必须是本系统生成的备份\n" +
                 "�?上传后系统会自动检测是否加密\n\n" +
                 "💡 提示：\n" +
-                "发�"?/cancel 可取消操?;
+                "发�"?/cancel ?;
 
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
         keyboard.add(new InlineKeyboardRow(

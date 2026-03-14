@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 import java.util.concurrent.TimeUnit;
 
 /**
- * API 调用重试切面
- * 对 Oracle Cloud API 调用失败时自动重试
+ * API 
+ *  Oracle Cloud API 
  * 
  * @author Tony Wang
  */
@@ -21,11 +21,11 @@ import java.util.concurrent.TimeUnit;
 public class ApiRetryAspect {
     
     private static final int MAX_RETRY_ATTEMPTS = 3;
-    private static final long INITIAL_BACKOFF_MS = 1000;  // 1秒
-    private static final double BACKOFF_MULTIPLIER = 2.0;  // 每次重试延迟翻倍
+    private static final long INITIAL_BACKOFF_MS = 1000;  // 1
+    private static final double BACKOFF_MULTIPLIER = 2.0;  // 
     
     /**
-     * 自动重试 OCI API 调用
+     *  OCI API 
      */
     @Around("@annotation(com.tony.kingdetective.annotation.RetryableOciApi)")
     public Object retryOciApiCall(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -59,7 +59,7 @@ public class ApiRetryAspect {
                         throw new RuntimeException("重试被中断", ie);
                     }
                     
-                    // 指数退避
+                    // 
                     backoffMs = (long) (backoffMs * BACKOFF_MULTIPLIER);
                     
                 } else {
@@ -68,7 +68,7 @@ public class ApiRetryAspect {
                 }
                 
             } catch (Exception e) {
-                // 非 BmcException 的异常不重试
+                //  BmcException 
                 log.error("API 调用发生非预期异常: {}", methodName, e);
                 throw e;
             }
@@ -76,26 +76,26 @@ public class ApiRetryAspect {
     }
     
     /**
-     * 判断是否应该重试
+     * 
      *
      * @param e BmcException
-     * @param attempt 当前尝试次数
-     * @return true 如果应该重试
+     * @param attempt 
+     * @return true 
      */
     private boolean shouldRetry(BmcException e, int attempt) {
-        // 已达最大重试次数
+        // 
         if (attempt >= MAX_RETRY_ATTEMPTS) {
             return false;
         }
         
         int statusCode = e.getStatusCode();
         
-        // 可重试的状态码
-        // 429: Too Many Requests (速率限制)
-        // 500: Internal Server Error (服务器内部错误)
-        // 502: Bad Gateway (网关错误)
-        // 503: Service Unavailable (服务不可用)
-        // 504: Gateway Timeout (网关超时)
+        // 
+        // 429: Too Many Requests ()
+        // 500: Internal Server Error ()
+        // 502: Bad Gateway ()
+        // 503: Service Unavailable ()
+        // 504: Gateway Timeout ()
         return statusCode == 429 ||
                statusCode == 500 ||
                statusCode == 502 ||

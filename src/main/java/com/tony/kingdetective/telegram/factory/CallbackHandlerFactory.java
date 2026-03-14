@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * 回调处理器工厂
+ * 
  * 
  * @author yohann
  */
@@ -26,10 +26,10 @@ public class CallbackHandlerFactory {
     }
     
     /**
-     * 根据回调数据获取处理器
      * 
-     * @param callbackData 回调数据
-     * @return 处理器
+     * 
+     * @param callbackData 
+     * @return 
      */
     public Optional<CallbackHandler> getHandler(String callbackData) {
         return handlers.stream()

@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 import static com.tony.kingdetective.service.impl.OciServiceImpl.TEMP_MAP;
 
 /**
- * 切换任务选择处理?
+ * ?
  * 
  * @author Tony Wang
  */
@@ -53,7 +53,7 @@ public class ToggleTaskHandler extends AbstractCallbackHandler {
         TaskSelectionStorage storage = TaskSelectionStorage.getInstance();
         boolean isSelected = storage.toggleTask(chatId, taskId);
         
-        // 返回回调答复以显示选中状态变?
+        // ?
         try {
             telegramClient.execute(AnswerCallbackQuery.builder()
                     .callbackQueryId(callbackQuery.getId())
@@ -64,12 +64,12 @@ public class ToggleTaskHandler extends AbstractCallbackHandler {
             log.error("回调查询应答失败", e);
         }
         
-        // 刷新任务列表（保持当前页码）
+        // 
         return refreshTaskList(callbackQuery, chatId);
     }
     
     /**
-     * 刷新任务列表（保持分页状态）
+     * 
      */
     public BotApiMethod<? extends Serializable> refreshTaskList(CallbackQuery callbackQuery, long chatId) {
         IOciCreateTaskService taskService = SpringUtil.getBean(IOciCreateTaskService.class);
@@ -80,7 +80,7 @@ public class ToggleTaskHandler extends AbstractCallbackHandler {
         if (CollectionUtil.isEmpty(taskList)) {
             return buildEditMessage(
                     callbackQuery,
-                    "�"?当前没有正在执行的任?,
+                    "�"??,
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }
@@ -102,7 +102,7 @@ public class ToggleTaskHandler extends AbstractCallbackHandler {
     }
     
     /**
-     * 构建任务管理消息
+     * 
      */
     private BotApiMethod<? extends Serializable> buildTaskManagementMessage(
             CallbackQuery callbackQuery,
@@ -118,7 +118,7 @@ public class ToggleTaskHandler extends AbstractCallbackHandler {
         int startIndex = PaginationStorage.getStartIndex(currentPage, PAGE_SIZE);
         int endIndex = PaginationStorage.getEndIndex(currentPage, PAGE_SIZE, taskList.size());
         
-        // 获取当前页的任务列表
+        // 
         List<OciCreateTask> pageTasks = taskList.subList(startIndex, endIndex);
         
         StringBuilder message = new StringBuilder("【任务管理】\n\n");
@@ -137,7 +137,7 @@ public class ToggleTaskHandler extends AbstractCallbackHandler {
             
             Long counts = (Long) TEMP_MAP.get(CommonUtils.CREATE_COUNTS_PREFIX + task.getId());
             boolean isSelected = selectionStorage.isSelected(chatId, task.getId());
-            int taskNumber = startIndex + i + 1; // 全局任务编号
+            int taskNumber = startIndex + i + 1; // 
             
             message.append(String.format(
                     "%s %d. [%s] [%s] [%s]\n" +
@@ -156,7 +156,7 @@ public class ToggleTaskHandler extends AbstractCallbackHandler {
                     counts == null ? "0" : counts
             ));
             
-            // 添加任务按钮（每?个）
+            // ?
             if (i % 2 == 0) {
                 InlineKeyboardRow row = new InlineKeyboardRow();
                 row.add(KeyboardBuilder.button(
@@ -172,7 +172,7 @@ public class ToggleTaskHandler extends AbstractCallbackHandler {
             }
         }
         
-        // 添加分页按钮
+        // 
         if (totalPages > 1) {
             keyboard.add(KeyboardBuilder.buildPaginationRow(
                     currentPage,
@@ -182,10 +182,10 @@ public class ToggleTaskHandler extends AbstractCallbackHandler {
             ));
         }
         
-        // 添加批量操作按钮
+        // 
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("�"?全?, "select_all_tasks"),
-                KeyboardBuilder.button("�"?取消全?, "deselect_all_tasks")
+                KeyboardBuilder.button("�"??, "select_all_tasks"),
+                KeyboardBuilder.button("�"??, "deselect_all_tasks")
         ));
         
         keyboard.add(new InlineKeyboardRow(
@@ -209,7 +209,7 @@ public class ToggleTaskHandler extends AbstractCallbackHandler {
 }
 
 /**
- * 全选任务处理器
+ * 
  * 
  * @author Tony Wang
  */
@@ -241,18 +241,18 @@ class SelectAllTasksHandler extends AbstractCallbackHandler {
         List<OciCreateTask> pageTasks = taskList.subList(startIndex, endIndex);
         pageTasks.forEach(task -> storage.selectTask(chatId, task.getId()));
         
-        // 回答回调
+        // 
         try {
             telegramClient.execute(AnswerCallbackQuery.builder()
                     .callbackQueryId(callbackQuery.getId())
-                    .text(String.format("已全选当前页�"?%d 个任?, pageTasks.size()))
+                    .text(String.format("已全选当前页�"?%d ?, pageTasks.size()))
                     .showAlert(false)
                     .build());
         } catch (TelegramApiException e) {
             log.error("回调查询应答失败", e);
         }
         
-        // 刷新任务列表（使?ToggleTaskHandler 的方法保持分页）
+        // ?ToggleTaskHandler 
         ToggleTaskHandler handler = SpringUtil.getBean(ToggleTaskHandler.class);
         return handler.refreshTaskList(callbackQuery, chatId);
     }
@@ -264,7 +264,7 @@ class SelectAllTasksHandler extends AbstractCallbackHandler {
 }
 
 /**
- * 取消全选任务处理器
+ * 
  * 
  * @author Tony Wang
  */
@@ -279,7 +279,7 @@ class DeselectAllTasksHandler extends AbstractCallbackHandler {
         TaskSelectionStorage storage = TaskSelectionStorage.getInstance();
         storage.clearSelection(chatId);
         
-        // 回答回调
+        // 
         try {
             telegramClient.execute(AnswerCallbackQuery.builder()
                     .callbackQueryId(callbackQuery.getId())
@@ -290,7 +290,7 @@ class DeselectAllTasksHandler extends AbstractCallbackHandler {
             log.error("回调查询应答失败", e);
         }
         
-        // 刷新任务列表（使?ToggleTaskHandler 的方法保持分页）
+        // ?ToggleTaskHandler 
         ToggleTaskHandler handler = SpringUtil.getBean(ToggleTaskHandler.class);
         return handler.refreshTaskList(callbackQuery, chatId);
     }
@@ -302,7 +302,7 @@ class DeselectAllTasksHandler extends AbstractCallbackHandler {
 }
 
 /**
- * 停止选中任务处理?
+ * ?
  * 
  * @author Tony Wang
  */
@@ -330,7 +330,7 @@ class StopSelectedTasksHandler extends AbstractCallbackHandler {
             return null;
         }
         
-        // 调用 IOciService.stopCreate 停止任务
+        //  IOciService.stopCreate 
         IOciService ociService = SpringUtil.getBean(IOciService.class);
         IOciCreateTaskService taskService = SpringUtil.getBean(IOciCreateTaskService.class);
         
@@ -363,9 +363,9 @@ class StopSelectedTasksHandler extends AbstractCallbackHandler {
         // Build result message
         String resultMessage;
         if (failedCount > 0) {
-            resultMessage = String.format("�"?成功停止 %d 个任务\n?失败 %d 个任?, successCount, failedCount);
+            resultMessage = String.format("�"? %d \n? %d ?, successCount, failedCount);
         } else {
-            resultMessage = String.format("�"?已成功停?%d 个任?, successCount);
+            resultMessage = String.format("�"??%d ?, successCount);
         }
         
         // Answer callback
@@ -379,7 +379,7 @@ class StopSelectedTasksHandler extends AbstractCallbackHandler {
             log.error("Failed to answer callback query", e);
         }
         
-        // Refresh task list（使?ToggleTaskHandler 的方法保持分页）
+        // Refresh task list?ToggleTaskHandler 
         ToggleTaskHandler handler = SpringUtil.getBean(ToggleTaskHandler.class);
         return handler.refreshTaskList(callbackQuery, chatId);
     }

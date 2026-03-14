@@ -200,7 +200,7 @@ class SshTestHandler extends AbstractCallbackHandler {
                 "�?主机地址和端口是否正确\n" +
                 "�?用户名和密码是否正确\n" +
                 "�?网络连接是否正常\n" +
-                "�"?SSH 服务是否开?,
+                "�"?SSH ?,
                 info.getHost(),
                 info.getPort(),
                 info.getUsername()

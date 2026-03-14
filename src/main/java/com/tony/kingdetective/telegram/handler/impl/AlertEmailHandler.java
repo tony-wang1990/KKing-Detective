@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * 📧 告警邮件管理 Handler
+ *   Handler
  *
  * @author Tony Wang
  */

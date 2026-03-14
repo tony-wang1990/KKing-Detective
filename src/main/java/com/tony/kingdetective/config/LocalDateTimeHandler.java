@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 /**
- * sqlite localDateTime 处理
+ * sqlite localDateTime 
  *
  * @author Tony Wang
  */

@@ -107,12 +107,12 @@ public class CommonUtils {
                     "⭐注意：验证码有效期为5分钟，终止实例后，数据无法恢复，请谨慎操作！！！";
 
     public static <T> List<T> getPage(List<T> dataList, int page, int pageSize) {
-        // 获取起始和结束索引
-        int[] startEnd = PageUtil.transToStartEnd(page - 1, pageSize); // Hutool的页码是从0开始的
+        // 
+        int[] startEnd = PageUtil.transToStartEnd(page - 1, pageSize); // Hutool0
         int start = startEnd[0];
         int end = startEnd[1];
 
-        // 子列表分页（注意处理索引越界情况）
+        // 
         return dataList.subList(
                 Math.min(start, dataList.size()),
                 Math.min(end, dataList.size())
@@ -120,12 +120,12 @@ public class CommonUtils {
     }
 
     /**
-     * 判断目标字符串中是否包含指定关键字（模糊查询）
+     * 
      *
-     * @param target     目标字符串
-     * @param keyword    查询关键字
-     * @param ignoreCase 是否忽略大小写
-     * @return 是否包含关键字
+     * @param target     
+     * @param keyword    
+     * @param ignoreCase 
+     * @return 
      */
     public static boolean contains(String target, String keyword, boolean ignoreCase) {
         if (StrUtil.isEmpty(target)) {
@@ -177,22 +177,22 @@ public class CommonUtils {
 
     public static void unzipFile(String outFolderPath, String password, String zipFilePath) {
         try {
-            // 创建 ZipFile 实例并传入密码
+            //  ZipFile 
             ZipFile zipFile = new ZipFile(zipFilePath, password.toCharArray());
 
-            // 检查是否加密
+            // 
             if (zipFile.isEncrypted()) {
                 log.info("备份 ZIP 文件已加密，正在解密...");
             }
 
-            // 解压所有文件到目标目录
+            // 
             File outputDir = new File(outFolderPath);
             if (!outputDir.exists()) {
                 outputDir.mkdirs();
             }
             zipFile.extractAll(outputDir.getAbsolutePath());
 
-            // 递归读取文件内容
+            // 
 //            readFilesRecursively(outputDir);
         } catch (ZipException e) {
             log.error("解密备份 ZIP 文件失败：{}", e.getMessage());
@@ -202,12 +202,12 @@ public class CommonUtils {
 
     private static void readFilesRecursively(File file) {
         if (file.isDirectory()) {
-            // 如果是目录，递归处理子文件或子目录
+            // 
             for (File subFile : file.listFiles()) {
                 readFilesRecursively(subFile);
             }
         } else {
-            // 如果是文件，读取文件内容
+            // 
             try {
                 log.info("读取文件: " + file.getAbsolutePath());
                 String content = new String(Files.readAllBytes(file.toPath()));
@@ -262,7 +262,7 @@ public class CommonUtils {
     }
 
     public static List<OciUser> parseConfigContent(String configContent) throws IOException {
-        // 检查并移除 UTF-8 BOM
+        //  UTF-8 BOM
 //        if (configContent.startsWith("\uFEFF")) {
 //            configContent = configContent.substring(1);
 //        }
@@ -365,7 +365,7 @@ public class CommonUtils {
 
         Long exp = Long.parseLong(String.valueOf(jwt.getPayload("exp")));
         if (exp != null) {
-            return exp < System.currentTimeMillis() / 1000; // 将毫秒转换为秒
+            return exp < System.currentTimeMillis() / 1000; // 
         }
         return true;
     }
@@ -382,7 +382,7 @@ public class CommonUtils {
 
     public static LocalDateTime getMonthFirstDayFirstSecond() {
         return LocalDateTime.now()
-                .with(TemporalAdjusters.firstDayOfMonth()) // 设为本月第一天
+                .with(TemporalAdjusters.firstDayOfMonth()) // 
                 .withHour(0)
                 .withMinute(0)
                 .withSecond(0)
@@ -391,7 +391,7 @@ public class CommonUtils {
 
     public static LocalDateTime getMonthLastDayLastSecond() {
         return LocalDateTime.now()
-                .with(TemporalAdjusters.lastDayOfMonth()) // 设为本月最后一天
+                .with(TemporalAdjusters.lastDayOfMonth()) // 
                 .withHour(23)
                 .withMinute(59)
                 .withSecond(59)
@@ -439,19 +439,19 @@ public class CommonUtils {
     }
 
     /**
-     * 校验输入的 CIDR 字符串是否为合法网段
+     *  CIDR 
      *
-     * @param cidr CIDR 字符串 (例如 "192.168.1.0/24")
-     * @return true 如果 CIDR 是合法的，否则 false
+     * @param cidr CIDR  ( "192.168.1.0/24")
+     * @return true  CIDR  false
      */
     public static boolean isValidCidr(String cidr) {
-        // 先匹配基本的 CIDR 正则格式
+        //  CIDR 
         Matcher matcher = CIDR_PATTERN.matcher(cidr);
         if (!matcher.matches()) {
             return false;
         }
 
-        // 拆分 IP 地址和子网掩码部分
+        //  IP 
         String[] parts = cidr.split("/");
         String ip = parts[0];
         int prefixLength = Integer.parseInt(parts[1]);
@@ -460,10 +460,10 @@ public class CommonUtils {
     }
 
     /**
-     * 检查 IP 地址是否有效（每个字节 0–255）
+     *  IP  0255
      *
-     * @param ip IP 地址字符串
-     * @return true 如果 IP 地址有效，否则 false
+     * @param ip IP 
+     * @return true  IP  false
      */
     private static boolean isValidIp(String ip) {
         try {
@@ -478,33 +478,33 @@ public class CommonUtils {
                     return false;
                 }
             }
-            return !inet.isMulticastAddress();  // 排除组播地址
+            return !inet.isMulticastAddress();  // 
         } catch (UnknownHostException | NumberFormatException e) {
             return false;
         }
     }
 
     /**
-     * 检查子网掩码前缀是否在 0 到 32 的范围内
+     *  0  32 
      *
-     * @param prefixLength 子网掩码前缀
-     * @return true 如果前缀长度有效，否则 false
+     * @param prefixLength 
+     * @return true  false
      */
     private static boolean isValidPrefixLength(int prefixLength) {
         return prefixLength >= 0 && prefixLength <= 32;
     }
 
     /**
-     * 判断一个 IPv4 地址是否为私有地址
+     *  IPv4 
      *
-     * @param ip IPv4 地址（如 "192.168.1.10"）
-     * @return true 如果是私有地址，否则 false
+     * @param ip IPv4  "192.168.1.10"
+     * @return true  false
      */
     public static boolean isPrivateIp(String ip) {
         try {
             InetAddress inet = InetAddress.getByName(ip);
             if (!(inet instanceof java.net.Inet4Address)) {
-                return false; // 只判断 IPv4
+                return false; //  IPv4
             }
 
             byte[] addr = inet.getAddress();
@@ -552,10 +552,10 @@ public class CommonUtils {
         Map<String, String> configMap = new HashMap<>();
 
         try {
-            // 使用 StringReader 将字符串内容读取为 Properties
+            //  StringReader  Properties
             properties.load(new StringReader(content));
 
-            // 将 Properties 中的内容转换为 Map
+            //  Properties  Map
             for (String key : properties.stringPropertyNames()) {
                 configMap.put(key, properties.getProperty(key));
             }
@@ -567,7 +567,7 @@ public class CommonUtils {
     }
 
     public static boolean isIpInCidrList(String ip, List<String> cidrList) {
-        long ipLong = Ipv4Util.ipv4ToLong(ip); // 将 IP 转换为 long
+        long ipLong = Ipv4Util.ipv4ToLong(ip); //  IP  long
 
         for (String cidr : cidrList) {
             String[] cidrParts = cidr.split("/");
@@ -585,19 +585,19 @@ public class CommonUtils {
     }
 
     public static String getTimeDifference(LocalDateTime startTime) {
-        // 获取当前时间
+        // 
         LocalDateTime now = LocalDateTime.now();
 
-        // 计算时间差
+        // 
         Duration duration = Duration.between(startTime, now);
 
-        // 转换为天、小时、分钟、秒
+        // 
         long days = duration.toDays();
         long hours = duration.toHours() % 24;
         long minutes = duration.toMinutes() % 60;
         long seconds = duration.getSeconds() % 60;
 
-        // 格式化结果
+        // 
         return days + "天" + hours + "小时" + minutes + "分钟" + seconds + "秒";
     }
 

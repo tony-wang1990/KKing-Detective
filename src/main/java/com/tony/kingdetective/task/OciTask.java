@@ -164,7 +164,7 @@ public class OciTask implements ApplicationRunner {
             Optional.ofNullable(createTaskService.list())
                     .filter(CollectionUtil::isNotEmpty).orElseGet(Collections::emptyList)
                     .forEach(task -> {
-                        // 随机延迟 5~10 秒
+                        //  5~10 
                         int delay = 5 + random.nextInt(6);
                         CREATE_INSTANCE_POOL.schedule(() -> {
                             if (task.getCreateNumbers() <= 0) {

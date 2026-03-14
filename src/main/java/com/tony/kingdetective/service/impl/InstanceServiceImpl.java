@@ -174,7 +174,7 @@ public class InstanceServiceImpl implements IInstanceService {
                 sysService.sendMessage(message);
 
                 virtualExecutor.execute(() -> {
-                    // 放货推送
+                    // 
                     if (Arrays.asList("ARM", "AMD").contains(instanceDetail.getArchitecture())) {
                         String arch = instanceDetail.getArchitecture().toLowerCase();
                         try (HttpResponse response = HttpRequest.get(bootBroadcastUrl)
@@ -200,7 +200,7 @@ public class InstanceServiceImpl implements IInstanceService {
                         }
                     }
 
-                    // TG 频道消息推送
+                    // TG 
                     if (fetcher.getUser().isJoinChannelBroadcast()) {
                         String channelMsg = String.format(CHANNEL_MESSAGE_TEMPLATE,
                                 LocalDateTime.now().format(DateTimeFormatter.ofPattern(DatePattern.NORM_DATETIME_PATTERN)),
@@ -382,7 +382,7 @@ public class InstanceServiceImpl implements IInstanceService {
                 String compartmentId = fetcher.getCompartmentId();
                 VirtualNetworkClient virtualNetworkClient = fetcher.getVirtualNetworkClient();
 
-                // 校验是否为AMD、是否已有实例vnic绑定nat路由表
+                // AMDvnicnat
                 String instanceId = params.getInstanceId();
                 Instance instance = fetcher.getInstanceById(instanceId);
                 instanceName = instance.getDisplayName();
@@ -398,7 +398,7 @@ public class InstanceServiceImpl implements IInstanceService {
                         .vnicId(vnic.getId())
                         .build()).getItems().getFirst().getIpAddress();
 
-                // NAT网关
+                // NAT
                 NatGateway natGateway;
                 List<NatGateway> natGatewayList = virtualNetworkClient.listNatGateways(ListNatGatewaysRequest.builder()
                         .compartmentId(compartmentId)
@@ -425,7 +425,7 @@ public class InstanceServiceImpl implements IInstanceService {
                     log.info("【一键开启下行500Mbps任务】NAT网关创建成功: " + natGateway.getDisplayName());
                 }
 
-                // 路由表
+                // 
                 RouteTable routeTable = null;
                 List<RouteTable> routeTableList = virtualNetworkClient.listRouteTables(ListRouteTablesRequest.builder()
                         .vcnId(vcn.getId())
@@ -465,13 +465,13 @@ public class InstanceServiceImpl implements IInstanceService {
 
                 log.warn("【一键开启下行500Mbps任务】用户:[{}],区域:[{}],实例:[{}] 开始执行一键开启下行500Mbps任务...", sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(), instance.getDisplayName());
 
-                // 选择一个子网
+                // 
                 Subnet subnet = virtualNetworkClient.listSubnets(ListSubnetsRequest.builder()
                         .compartmentId(compartmentId)
                         .vcnId(vcn.getId())
                         .build()).getItems().getFirst();
 
-                // 网络负载平衡器
+                // 
                 NetworkLoadBalancerClient networkLoadBalancerClient = fetcher.getNetworkLoadBalancerClient();
                 List<NetworkLoadBalancerSummary> networkLoadBalancerSummaries = networkLoadBalancerClient.listNetworkLoadBalancers(ListNetworkLoadBalancersRequest.builder()
                         .compartmentId(compartmentId)
@@ -557,7 +557,7 @@ public class InstanceServiceImpl implements IInstanceService {
                     }
                 }
 
-                // NAT路由表
+                // NAT
                 if (routeTable != null) {
                     virtualNetworkClient.updateRouteTable(UpdateRouteTableRequest.builder()
                             .rtId(routeTable.getId())
@@ -593,7 +593,7 @@ public class InstanceServiceImpl implements IInstanceService {
                     log.info("【一键开启下行500Mbps任务】NAT路由表创建成功:" + routeTable.getDisplayName());
                 }
 
-                // 实例vnic绑定路由表,跳过源/目的地检查
+                // vnic,/
                 virtualNetworkClient.updateVnic(UpdateVnicRequest.builder()
                         .vnicId(instanceVnicId)
                         .updateVnicDetails(UpdateVnicDetails.builder()
@@ -602,7 +602,7 @@ public class InstanceServiceImpl implements IInstanceService {
                                 .build())
                         .build());
 
-                // 放行所有端口
+                // 
                 fetcher.releaseSecurityRule(vcn, 0, "10.0.0.0/16", "::/0");
 
                 log.info("【一键开启下行500Mbps任务】实例vnic绑定路由表成功,实例:【{}】已成功开启下行500Mbps🎉,公网IP:{}", instance.getDisplayName(), publicIp);
@@ -644,7 +644,7 @@ public class InstanceServiceImpl implements IInstanceService {
                     throw new OciException(-1, "路由表列表为空");
                 }
 
-                // Nat网关
+                // Nat
                 List<RouteTable> routeTables = new ArrayList<>(routeTableList);
                 List<NatGateway> natGatewayList = virtualNetworkClient.listNatGateways(ListNatGatewaysRequest.builder()
                         .compartmentId(fetcher.getCompartmentId())
@@ -653,7 +653,7 @@ public class InstanceServiceImpl implements IInstanceService {
                         .build()).getItems();
                 if (CollectionUtil.isNotEmpty(natGatewayList)) {
                     for (NatGateway natGateway : natGatewayList) {
-                        // 路由表
+                        // 
                         try {
                             if (CollectionUtil.isNotEmpty(routeTableList)) {
                                 for (RouteTable table : routeTableList) {
@@ -667,7 +667,7 @@ public class InstanceServiceImpl implements IInstanceService {
                                             routeTables.removeIf(x -> x.getId().equals(table.getId()));
                                             if (!params.getRetainNatGw()) {
                                                 log.info("【关闭实例下行500Mbps任务】正在清空路由表:[{}]...", table.getDisplayName());
-                                                // 清空路由表
+                                                // 
                                                 virtualNetworkClient.updateRouteTable(UpdateRouteTableRequest.builder()
                                                         .rtId(table.getId())
                                                         .updateRouteTableDetails(UpdateRouteTableDetails.builder()
@@ -684,7 +684,7 @@ public class InstanceServiceImpl implements IInstanceService {
                             log.error("【关闭实例下行500Mbps任务】用户:[{}],区域:[{}],实例:[{}] 清空路由表失败 ❌",
                                     sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(), instanceName, e);
                         }
-                        // 删除NAT网关
+                        // NAT
                         if (!params.getRetainNatGw()) {
                             log.info("【关闭实例下行500Mbps任务】正在删除NAT网关:[{}] ...", natGateway.getDisplayName());
                             virtualNetworkClient.deleteNatGateway(DeleteNatGatewayRequest.builder()
@@ -694,7 +694,7 @@ public class InstanceServiceImpl implements IInstanceService {
                     }
                 }
 
-                // 修改vnic路由表
+                // vnic
                 log.info("【关闭实例下行500Mbps任务】正在修改vnic:[{}] 的路由表为:[{}]...", vnic.getDisplayName(), routeTables.getFirst().getDisplayName());
                 virtualNetworkClient.updateVnic(UpdateVnicRequest.builder()
                         .vnicId(vnic.getId())
@@ -718,7 +718,7 @@ public class InstanceServiceImpl implements IInstanceService {
                             sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(), instanceName, e);
                 }
 
-                // 删除网络负载平衡器
+                // 
                 if (!params.getRetainBl()) {
                     NetworkLoadBalancerClient networkLoadBalancerClient = fetcher.getNetworkLoadBalancerClient();
                     List<NetworkLoadBalancerSummary> networkLoadBalancerSummaries = networkLoadBalancerClient.listNetworkLoadBalancers(ListNetworkLoadBalancersRequest.builder()

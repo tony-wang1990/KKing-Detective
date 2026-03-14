@@ -52,7 +52,7 @@ public class DuckDuckGoSearchService {
                 while ((line = in.readLine()) != null) {
                     response.append(line);
                 }
-                // 简单返回原始 JSON
+                //  JSON
                 return List.of(response.toString());
             } finally {
                 con.disconnect();
@@ -80,7 +80,7 @@ public class DuckDuckGoSearchService {
                 while ((line = in.readLine()) != null) {
                     response.append(line);
                 }
-                // 简单返回原始 JSON
+                //  JSON
                 return List.of(response.toString());
             } finally {
                 con.disconnect();
@@ -111,19 +111,19 @@ public class DuckDuckGoSearchService {
             } finally {
                 con.disconnect();
             }
-        }).subscribeOn(Schedulers.boundedElastic()); // 避免阻塞 Reactor 线程
+        }).subscribeOn(Schedulers.boundedElastic()); //  Reactor 
     }
 
     private List<String> parseResults(String html) {
         List<String> results = new ArrayList<>();
 
-        // 匹配 DuckDuckGo HTML 搜索结果链接
+        //  DuckDuckGo HTML 
         Pattern pattern = Pattern.compile("<a[^>]+class=\"result__a\"[^>]*>(.*?)</a>");
         Matcher matcher = pattern.matcher(html);
 
         while (matcher.find() && results.size() < 5) {
             String text = matcher.group(1)
-                    .replaceAll("<.*?>", "")   // 去掉 HTML 标签
+                    .replaceAll("<.*?>", "")   //  HTML 
                     .replaceAll("&amp;", "&")
                     .replaceAll("&quot;", "\"")
                     .replaceAll("&lt;", "<")

@@ -17,8 +17,8 @@ import java.sql.Statement;
 import java.util.stream.Collectors;
 
 /**
- * 数据库自动迁移器
- * 在应用启动时自动检查并执行数据库迁移
+ * 
+ * 
  * 
  * @author Tony Wang
  */
@@ -36,7 +36,7 @@ public class DatabaseMigrationRunner implements ApplicationRunner {
         try (Connection conn = dataSource.getConnection();
              Statement stmt = conn.createStatement()) {
             
-            // 检查新版本表是否存在 (只要缺一个就执行迁移)
+            //  ()
             if (!tableExists(conn, "audit_log") || 
                 !tableExists(conn, "ip_blacklist") || 
                 !tableExists(conn, "login_attempts")) {
@@ -49,7 +49,7 @@ public class DatabaseMigrationRunner implements ApplicationRunner {
             
         } catch (Exception e) {
             log.error("❌ 数据库迁移失败", e);
-            // 不抛出异常，允许应用继续启动
+            // 
             log.warn("应用将继续启动，但部分功能可能不可用");
         }
         
@@ -57,7 +57,7 @@ public class DatabaseMigrationRunner implements ApplicationRunner {
     }
     
     /**
-     * 检查表是否存在
+     * 
      */
     private boolean tableExists(Connection conn, String tableName) throws Exception {
         String sql = "SELECT name FROM sqlite_master WHERE type='table' AND name='" + tableName + "'";
@@ -68,10 +68,10 @@ public class DatabaseMigrationRunner implements ApplicationRunner {
     }
     
     /**
-     * 执行迁移脚本
+     * 
      */
     private void executeMigrationScript(Statement stmt) throws Exception {
-        // 读取 SQL 脚本
+        //  SQL 
         ClassPathResource resource = new ClassPathResource("db/migration_v4_0.sql");
         
         String sql;
@@ -80,7 +80,7 @@ public class DatabaseMigrationRunner implements ApplicationRunner {
             sql = reader.lines().collect(Collectors.joining("\n"));
         }
         
-        // 分割并执行每条 SQL 语句
+        //  SQL 
         String[] statements = sql.split(";");
         for (String statement : statements) {
             String trimmed = statement.trim();
@@ -89,7 +89,7 @@ public class DatabaseMigrationRunner implements ApplicationRunner {
                     log.debug("执行 SQL: {}", trimmed.substring(0, Math.min(50, trimmed.length())) + "...");
                     stmt.execute(trimmed);
                 } catch (Exception e) {
-                    // 忽略 "duplicate column" 或 "table already exists" 错误，确保幂等性
+                    //  "duplicate column"  "table already exists" 
                     String msg = e.getMessage().toLowerCase();
                     if (msg.contains("duplicate column") || msg.contains("exists")) {
                         log.warn("忽略已存在的结构: {}", trimmed.split("\n")[0]);

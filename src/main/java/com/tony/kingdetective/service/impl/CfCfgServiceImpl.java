@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author Tony Wang
- * @description 针对表【cf_cfg】的数据库操作Service实现
+ * @description cf_cfgService
  * @createDate 2025-03-19 16:10:18
  */
 @Service

@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * @author Administrator
- * @description 针对表【oci_user】的数据库操作Mapper
+ * @description oci_userMapper
  * @createDate 2024-11-12 16:44:39
  * @Entity com.tony.kingdetective.bean.entity.OciUser
  */

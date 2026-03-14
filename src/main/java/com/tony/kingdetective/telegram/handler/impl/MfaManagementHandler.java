@@ -196,7 +196,7 @@ class MfaEnableHandler extends AbstractCallbackHandler {
             // Show processing message
             telegramClient.execute(buildEditMessage(
                 callbackQuery,
-                "�"?正在启用 MFA...\n\n正在生成密钥和二维码，请稍候?,
+                "�"? MFA...\n\n?,
                 null
             ));
             
@@ -243,7 +243,7 @@ class MfaEnableHandler extends AbstractCallbackHandler {
                             "⚠️ 注意：\n" +
                             "�?请妥善保管此二维码\n" +
                             "�?扫描后即可删除此图片\n" +
-                            "�"?如需重新生成，请先删除密?
+                            "�"??
                         )
                         .parseMode("Markdown")
                         .build();
@@ -267,7 +267,7 @@ class MfaEnableHandler extends AbstractCallbackHandler {
                 "💡 提示：\n" +
                 "�?验证码每 30 秒更新一次\n" +
                 "�?随时可在此查看当前验证码\n" +
-                "�"?二维码只在首次配置时需?,
+                "�"??,
                 formattedCode
             );
             
@@ -450,7 +450,7 @@ class MfaDeleteSecretHandler extends AbstractCallbackHandler {
                      "�?需要通过 Web 界面重新生成\n" +
                      "�?需要重新扫描二维码配置\n\n" +
                      "💡 提示：\n" +
-                     "如果只是不想使用，建议使用「关�"?MFA」功能?;
+                     "如果只是不想使用，建议使用「关�"?MFA?;
         
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
         

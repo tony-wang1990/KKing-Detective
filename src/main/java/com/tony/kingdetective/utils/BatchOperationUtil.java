@@ -11,8 +11,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * 批量操作工具类
- * 优化数据库批量查询和更新操作
+ * 
+ * 
  * 
  * @author Tony Wang
  */
@@ -21,12 +21,12 @@ import java.util.stream.Collectors;
 public class BatchOperationUtil {
     
     /**
-     * 批量查询（减少数据库往返次数）
+     * 
      *
-     * @param ids ID列表
-     * @param queryFunction 查询函数
-     * @param <T> 实体类型
-     * @return ID到实体的映射
+     * @param ids ID
+     * @param queryFunction 
+     * @param <T> 
+     * @return ID
      */
     public static <T> Map<String, T> batchQuery(
             List<String> ids,
@@ -39,10 +39,10 @@ public class BatchOperationUtil {
         
         long startTime = System.currentTimeMillis();
         
-        // 执行批量查询
+        // 
         List<T> results = queryFunction.apply(ids);
         
-        // 转换为 Map
+        //  Map
         Map<String, T> resultMap = results.stream()
                 .collect(Collectors.toMap(idExtractor, Function.identity()));
         
@@ -53,13 +53,13 @@ public class BatchOperationUtil {
     }
     
     /**
-     * 批量更新（减少数据库往返次数）
+     * 
      *
-     * @param items 待更新的项目列表
-     * @param batchSize 批次大小
-     * @param updateFunction 更新函数
-     * @param <T> 实体类型
-     * @return 成功更新的数量
+     * @param items 
+     * @param batchSize 
+     * @param updateFunction 
+     * @param <T> 
+     * @return 
      */
     public static <T> int batchUpdate(
             List<T> items,
@@ -73,7 +73,7 @@ public class BatchOperationUtil {
         long startTime = System.currentTimeMillis();
         int totalUpdated = 0;
         
-        // 分批处理
+        // 
         for (int i = 0; i < items.size(); i += batchSize) {
             int endIndex = Math.min(i + batchSize, items.size());
             List<T> batch = items.subList(i, endIndex);
@@ -94,12 +94,12 @@ public class BatchOperationUtil {
     }
     
     /**
-     * 批量删除
+     * 
      *
-     * @param ids ID列表
-     * @param batchSize 批次大小
-     * @param deleteFunction 删除函数
-     * @return 成功删除的数量
+     * @param ids ID
+     * @param batchSize 
+     * @param deleteFunction 
+     * @return 
      */
     public static int batchDelete(
             List<String> ids,
@@ -113,7 +113,7 @@ public class BatchOperationUtil {
         long startTime = System.currentTimeMillis();
         int totalDeleted = 0;
         
-        // 分批处理
+        // 
         for (int i = 0; i < ids.size(); i += batchSize) {
             int endIndex = Math.min(i + batchSize, ids.size());
             List<String> batch = ids.subList(i, endIndex);

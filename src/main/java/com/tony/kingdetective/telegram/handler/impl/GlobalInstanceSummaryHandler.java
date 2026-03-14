@@ -28,8 +28,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 /**
- * 🌍 全局实例汇总 Handler
- * 功能：一次性查询所有账户下的所有在线实例，生成排版良好的 Markdown 汇总表格
+ *   Handler
+ *  Markdown 
  *
  * @author Tony Wang
  */
@@ -46,13 +46,13 @@ public class GlobalInstanceSummaryHandler extends AbstractCallbackHandler {
     public BotApiMethod<? extends Serializable> handle(CallbackQuery callbackQuery, TelegramClient telegramClient) {
         long chatId = callbackQuery.getMessage().getChatId();
         
-        // 1. 发送提示消息：后台正在查询请稍候
+        // 1. 
         buildEditMessage(callbackQuery, "🚀 正在并行扫描所有区域的实例，可能需要几十秒，请稍候...", null);
 
-        // 2. 异步执行扫瞄，并通过 TelegramClient 主动发消息更新结果
+        // 2.  TelegramClient 
         CompletableFuture.runAsync(() -> doGlobalSummary(chatId, telegramClient));
         
-        // 由于使用异步响应，这里不返回 BotApiMethod，只让编辑消息立刻生效
+        //  BotApiMethod
         return null;
     }
 
@@ -67,7 +67,7 @@ public class GlobalInstanceSummaryHandler extends AbstractCallbackHandler {
             return;
         }
 
-        // 并行查询每个账户的实例
+        // 
         List<CompletableFuture<AccountSummary>> futures = users.stream()
             .map(user -> CompletableFuture.supplyAsync(() -> queryAccount(user, instanceService)))
             .collect(Collectors.toList());
@@ -76,7 +76,7 @@ public class GlobalInstanceSummaryHandler extends AbstractCallbackHandler {
             .map(CompletableFuture::join)
             .collect(Collectors.toList());
 
-        // 拼接报告
+        // 
         StringBuilder sb = new StringBuilder("🌍 *全局实例资产汇总*\n");
         sb.append(String.format("— 耗时: `%.1f 秒`\n\n", timer.intervalMs() / 1000.0));
 
@@ -132,8 +132,8 @@ public class GlobalInstanceSummaryHandler extends AbstractCallbackHandler {
         AccountSummary summary = new AccountSummary(user);
         try {
             SysUserDTO dto = buildSysUserDTO(user);
-            // IInstanceService 默认方法 listRunningInstances 其实会列出所有状态的实例，只是名字叫那个
-            // 包装了 OracleInstanceFetcher
+            // IInstanceService  listRunningInstances 
+            //  OracleInstanceFetcher
             try (OracleInstanceFetcher fetcher = new OracleInstanceFetcher(dto)) {
                 List<Instance> instances = fetcher.getComputeClient()
                     .listInstances(com.oracle.bmc.core.requests.ListInstancesRequest.builder()
@@ -144,10 +144,10 @@ public class GlobalInstanceSummaryHandler extends AbstractCallbackHandler {
                 for (Instance instance : instances) {
                     if ("TERMINATED".equals(instance.getLifecycleState().getValue()) || 
                         "TERMINATING".equals(instance.getLifecycleState().getValue())) {
-                        continue; // 过滤掉已终止的
+                        continue; // 
                     }
                     
-                    // 获取Public IP
+                    // Public IP
                     String publicIp = "无公网";
                     try {
                         var vnicAttachments = fetcher.getComputeClient().listVnicAttachments(

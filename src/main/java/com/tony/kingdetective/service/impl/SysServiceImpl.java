@@ -502,21 +502,21 @@ public class SysServiceImpl implements ISysService {
         }
 
         try {
-            // 解压到临时目录
+            // 
             String tempUnzipDir = basicDirPath + "temp_unzip_" + System.currentTimeMillis();
             new File(tempUnzipDir).mkdirs();
 
             CommonUtils.unzipFile(tempUnzipDir, password, tempZip.getAbsolutePath());
 
-            // 查找解压后的备份目录（应该是 king-detective-backup-* 格式）
+            //  king-detective-backup-* 
             File tempUnzipDirFile = new File(tempUnzipDir);
             File[] subDirs = tempUnzipDirFile.listFiles(File::isDirectory);
 
             if (subDirs == null || subDirs.length == 0) {
-                // 没有子目录，直接使用解压目录
+                // 
                 unzipDir = tempUnzipDirFile;
             } else {
-                // 使用第一个子目录（应该是备份目录）
+                // 
                 unzipDir = subDirs[0];
             }
 
@@ -583,10 +583,10 @@ public class SysServiceImpl implements ISysService {
             log.error("恢复数据失败：{}", e.getLocalizedMessage());
             throw new OciException(-1, "恢复数据失败");
         } finally {
-            // 清理解压目录
+            // 
             if (unzipDir != null) {
                 try {
-                    // 删除整个临时解压目录
+                    // 
                     File tempUnzipDirFile = new File(basicDirPath + "temp_unzip_" +
                             unzipDir.getParentFile().getName().replace("temp_unzip_", ""));
                     if (tempUnzipDirFile.exists()) {
@@ -803,16 +803,16 @@ public class SysServiceImpl implements ISysService {
             try {
                 log.info("开始验证Google Token, Client ID: {}", googleConfig.getClientId());
 
-                // 打印credential的前50个字符（调试用）
+                // credential50
                 String credentialPreview = params.getCredential().length() > 50
                         ? params.getCredential().substring(0, 50) + "..."
                         : params.getCredential();
                 log.info("Credential 预览: {}", params.getCredential());
 
-                // 重要：确保验证器能访问 Google 的公钥
+                //  Google 
                 GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory())
                         .setAudience(Collections.singletonList(googleConfig.getClientId()))
-                        .setIssuer("https://accounts.google.com") // 明确指定 issuer
+                        .setIssuer("https://accounts.google.com") //  issuer
                         .build();
 
                 log.info("开始调用 verifier.verify()...");
@@ -826,7 +826,7 @@ public class SysServiceImpl implements ISysService {
                     log.error("1. 服务器无法访问Google的公钥endpoint");
                     log.error("2. Client ID 不匹配");
                     log.error("3. Token 签名无效");
-                    // 关键修复：必须抛出异常！
+                    // 
                     sendMessage(String.format("请求IP：%s Google登录失败，Token验证失败", clientIp));
                     throw new OciException(-1, "无效的Google凭证：Token验证失败");
                 }
@@ -846,7 +846,7 @@ public class SysServiceImpl implements ISysService {
             GoogleIdToken.Payload payload = idToken.getPayload();
 
             String email = payload.getEmail();
-            String userId = payload.getSubject(); // Google用户的唯一ID
+            String userId = payload.getSubject(); // GoogleID
             Long expirationTime = payload.getExpirationTimeSeconds();
             Long issuedAt = payload.getIssuedAtTimeSeconds();
 
@@ -1001,7 +1001,7 @@ public class SysServiceImpl implements ISysService {
         Optional.ofNullable(createTaskService.list())
                 .filter(CollectionUtil::isNotEmpty).orElseGet(Collections::emptyList).stream()
                 .forEach(task -> {
-                    // 随机延迟 5~10 秒
+                    //  5~10 
                     int delay = 5 + random.nextInt(6);
                     CREATE_INSTANCE_POOL.schedule(() -> {
                         if (task.getCreateNumbers() <= 0) {

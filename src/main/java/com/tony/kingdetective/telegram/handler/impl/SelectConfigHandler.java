@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 閫夋嫨閰嶇疆鍥炶皟澶勭悊鍣?- 鏄剧ず瀹炰緥鏂规
+ * ?- 
  * 
  * @author Tony Wang
  */
@@ -37,7 +37,7 @@ public class SelectConfigHandler extends AbstractCallbackHandler {
         if (user == null) {
             return buildEditMessage(
                     callbackQuery,
-                    "鉂?"閰嶇疆涓嶅瓨鍦?,
+                    "鉂?"?,
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }

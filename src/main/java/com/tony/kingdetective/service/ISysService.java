@@ -66,12 +66,12 @@ public interface ISysService {
     java.util.List<SysUserDTO> list();
     
     /**
-     * 获取全局告警邮箱
+     * 
      */
     String getAlertEmail();
 
     /**
-     * 更新全局告警邮箱
+     * 
      */
     void updateAlertEmail(String email);
 }

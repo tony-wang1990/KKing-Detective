@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 import static com.tony.kingdetective.service.impl.OciServiceImpl.TEMP_MAP;
 
 /**
- * 任务管理回调处理?
+ * ?
  * 
  * @author Tony Wang
  */
@@ -37,7 +37,7 @@ import static com.tony.kingdetective.service.impl.OciServiceImpl.TEMP_MAP;
 public class TaskManagementHandler extends AbstractCallbackHandler {
     
     private static final String PAGE_TYPE = "task_management";
-    private static final int PAGE_SIZE = 5; // 每页显示5个任?
+    private static final int PAGE_SIZE = 5; // 5?
     
     @Override
     public BotApiMethod<? extends Serializable> handle(CallbackQuery callbackQuery, TelegramClient telegramClient) {
@@ -49,19 +49,19 @@ public class TaskManagementHandler extends AbstractCallbackHandler {
         if (CollectionUtil.isEmpty(taskList)) {
             return buildEditMessage(
                     callbackQuery,
-                    "�"?当前没有正在执行的任?,
+                    "�"??,
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }
         
-        // 获取选择存储
+        // 
         long chatId = callbackQuery.getMessage().getChatId();
         PaginationStorage paginationStorage = PaginationStorage.getInstance();
         
-        // 重置页码（每次进入任务管理都从第一页开始）
+        // 
         paginationStorage.resetPage(chatId, PAGE_TYPE);
         
-        // 构建带用户信息的任务列表
+        // 
         Map<String, OciUser> userMap = userService.list().stream()
                 .collect(Collectors.toMap(OciUser::getId, u -> u));
         
@@ -69,7 +69,7 @@ public class TaskManagementHandler extends AbstractCallbackHandler {
     }
     
     /**
-     * 构建任务管理消息
+     * 
      */
     private BotApiMethod<? extends Serializable> buildTaskManagementMessage(
             CallbackQuery callbackQuery,
@@ -85,7 +85,7 @@ public class TaskManagementHandler extends AbstractCallbackHandler {
         int startIndex = PaginationStorage.getStartIndex(currentPage, PAGE_SIZE);
         int endIndex = PaginationStorage.getEndIndex(currentPage, PAGE_SIZE, taskList.size());
         
-        // 获取当前页的任务列表
+        // 
         List<OciCreateTask> pageTasks = taskList.subList(startIndex, endIndex);
         
         StringBuilder message = new StringBuilder("【任务管理】\n\n");
@@ -104,7 +104,7 @@ public class TaskManagementHandler extends AbstractCallbackHandler {
             
             Long counts = (Long) TEMP_MAP.get(CommonUtils.CREATE_COUNTS_PREFIX + task.getId());
             boolean isSelected = selectionStorage.isSelected(chatId, task.getId());
-            int taskNumber = startIndex + i + 1; // 全局任务编号
+            int taskNumber = startIndex + i + 1; // 
             
             message.append(String.format(
                     "%s %d. [%s] [%s] [%s]\n" +
@@ -123,7 +123,7 @@ public class TaskManagementHandler extends AbstractCallbackHandler {
                     counts == null ? "0" : counts
             ));
             
-            // 添加任务按钮（每?个）
+            // ?
             if (i % 2 == 0) {
                 InlineKeyboardRow row = new InlineKeyboardRow();
                 row.add(KeyboardBuilder.button(
@@ -139,7 +139,7 @@ public class TaskManagementHandler extends AbstractCallbackHandler {
             }
         }
         
-        // 添加分页按钮（如果需要）
+        // 
         if (totalPages > 1) {
             keyboard.add(KeyboardBuilder.buildPaginationRow(
                     currentPage,
@@ -149,10 +149,10 @@ public class TaskManagementHandler extends AbstractCallbackHandler {
             ));
         }
         
-        // 添加批量操作按钮
+        // 
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("�"?全?, "select_all_tasks"),
-                KeyboardBuilder.button("�"?取消全?, "deselect_all_tasks")
+                KeyboardBuilder.button("�"??, "select_all_tasks"),
+                KeyboardBuilder.button("�"??, "deselect_all_tasks")
         ));
         
         keyboard.add(new InlineKeyboardRow(

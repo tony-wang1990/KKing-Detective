@@ -28,9 +28,9 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * 🔄 重建实例 (Re-image) Handler
- * 功能：删除当前实例（保留启动卷可选），并用相同的配置（基于原启动卷或新镜像）原位拉起新实例
- * 注：受限于 Telegram 交互的复杂性，此处实现最常用的 "带 Boot Volume 终止并原地重建"
+ *   (Re-image) Handler
+ * 
+ *  Telegram  "带 Boot Volume 终止并原地重建"
  * 
  * @author Tony Wang
  */
@@ -166,12 +166,12 @@ public class ReimageHandler extends AbstractCallbackHandler {
 
             try (OracleInstanceFetcher fetcher = new OracleInstanceFetcher(buildDto(user))) {
                 
-                // 1. 获取原实例详细信息
+                // 1. 
                 Instance oldInstance = fetcher.getComputeClient().getInstance(
                     GetInstanceRequest.builder().instanceId(instanceId).build()
                 ).getInstance();
 
-                // 获取 VNIC 信息以备份子网
+                //  VNIC 
                 var vnicAttachments = fetcher.getComputeClient().listVnicAttachments(
                     com.oracle.bmc.core.requests.ListVnicAttachmentsRequest.builder()
                         .compartmentId(fetcher.getCompartmentId())
@@ -185,7 +185,7 @@ public class ReimageHandler extends AbstractCallbackHandler {
                     return;
                 }
 
-                // 1.5 获取 BootVolume 信息
+                // 1.5  BootVolume 
                 var bootVolumeAttachments = fetcher.getComputeClient().listBootVolumeAttachments(
                     com.oracle.bmc.core.requests.ListBootVolumeAttachmentsRequest.builder()
                         .availabilityDomain(oldInstance.getAvailabilityDomain())
@@ -200,7 +200,7 @@ public class ReimageHandler extends AbstractCallbackHandler {
                     return;
                 }
 
-                // 2. 终止实例，但保留 Boot Volume
+                // 2.  Boot Volume
                 fetcher.getComputeClient().terminateInstance(
                     TerminateInstanceRequest.builder()
                         .instanceId(instanceId)
@@ -210,7 +210,7 @@ public class ReimageHandler extends AbstractCallbackHandler {
 
                 sendMarkdownMessage(chatId, "⏳ 实例 `" + oldInstance.getDisplayName() + "` 正在终止中，保留了启动卷... (大概需要 1-3 分钟)", telegramClient);
 
-                // 等待实例完全终止 (简易轮询)
+                //  ()
                 boolean terminated = false;
                 for (int i = 0; i < 30; i++) {
                     Thread.sleep(10000);
@@ -223,7 +223,7 @@ public class ReimageHandler extends AbstractCallbackHandler {
                             break;
                         }
                     } catch (Exception e) {
-                        // 如果抛出 404 等，通常也表示被彻底删除了
+                        //  404 
                         terminated = true;
                         break;
                     }
@@ -234,7 +234,7 @@ public class ReimageHandler extends AbstractCallbackHandler {
                     return;
                 }
 
-                // 3. 用旧配置和旧 BootVolume 拉起新实例
+                // 3.  BootVolume 
                 LaunchInstanceDetails launchDetails = LaunchInstanceDetails.builder()
                     .compartmentId(fetcher.getCompartmentId())
                     .availabilityDomain(oldInstance.getAvailabilityDomain())
@@ -254,7 +254,7 @@ public class ReimageHandler extends AbstractCallbackHandler {
                     )
                     .build();
 
-                // 拉起新实例
+                // 
                 fetcher.getComputeClient().launchInstance(
                     LaunchInstanceRequest.builder()
                         .launchInstanceDetails(launchDetails)

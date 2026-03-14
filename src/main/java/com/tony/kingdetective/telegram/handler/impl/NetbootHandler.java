@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * 🚑 netboot.xyz 救砖 Handler
- * 功能：将实例的 iPXE 启动脚本替换为 netboot.xyz，然后重启实例进入网络引导界面
+ *  netboot.xyz  Handler
+ *  iPXE  netboot.xyz
  *
  * @author Tony Wang
  */
@@ -105,7 +105,7 @@ public class NetbootHandler extends AbstractCallbackHandler {
 
             try (OracleInstanceFetcher fetcher = new OracleInstanceFetcher(dto)) {
                 
-                // 1. 设置 iPXE 脚本
+                // 1.  iPXE 
                 fetcher.getComputeClient().updateInstance(
                     UpdateInstanceRequest.builder()
                         .instanceId(instanceId)
@@ -117,7 +117,7 @@ public class NetbootHandler extends AbstractCallbackHandler {
                         .build()
                 );
 
-                // 2. 软重启实例
+                // 2. 
                 fetcher.getComputeClient().instanceAction(
                     InstanceActionRequest.builder()
                         .instanceId(instanceId)

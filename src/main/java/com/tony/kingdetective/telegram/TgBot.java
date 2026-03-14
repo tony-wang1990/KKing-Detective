@@ -26,15 +26,15 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * Telegram Bot 主类（消息路由层）
+ * Telegram Bot 
  *
- * 架构说明：
- * - TgBot 只负责消息分发，不包含任何具体业务逻辑
- * - Session 状态下的文本/文件处理委托给 {@link TextSessionDispatcher}
- * - 菜单回调处理委托给 {@link CallbackHandlerFactory} + 各 Handler 实现
- * - 消息发送统一使用 {@link TgMessageSender}
+ * 
+ * - TgBot 
+ * - Session / {@link TextSessionDispatcher}
+ * -  {@link CallbackHandlerFactory} +  Handler 
+ * -  {@link TgMessageSender}
  *
- * 性能：使用 Java 21 虚拟线程（Virtual Threads）处理所有消息，避免阻塞主线程。
+ *  Java 21 Virtual Threads
  *
  * @author Tony Wang
  */
@@ -75,9 +75,9 @@ public class TgBot implements LongPollingSingleThreadUpdateConsumer {
         });
     }
 
-    // ─────────────────────────────────────────────
-    // 文本消息处理
-    // ─────────────────────────────────────────────
+    // 
+    // 
+    // 
 
     private void handleTextMessage(Update update) {
         String text = update.getMessage().getText();
@@ -88,25 +88,25 @@ public class TgBot implements LongPollingSingleThreadUpdateConsumer {
             return;
         }
 
-        // 命令优先处理
+        // 
         if (text.startsWith("/")) {
             handleCommand(chatId, text);
             return;
         }
 
-        // Session 状态下交给 TextSessionDispatcher 处理
+        // Session  TextSessionDispatcher 
         TextSessionDispatcher dispatcher = SpringUtil.getBean(TextSessionDispatcher.class);
         if (dispatcher.dispatch(chatId, text, telegramClient)) {
             return;
         }
 
-        // 无 session，走 AI 对话
+        //  session AI 
         handleAiChat(chatId, text);
     }
 
-    // ─────────────────────────────────────────────
-    // 文件上传处理
-    // ─────────────────────────────────────────────
+    // 
+    // 
+    // 
 
     private void handleDocumentMessage(Update update) {
         long chatId = update.getMessage().getChatId();
@@ -122,9 +122,9 @@ public class TgBot implements LongPollingSingleThreadUpdateConsumer {
         }
     }
 
-    // ─────────────────────────────────────────────
-    // 命令处理
-    // ─────────────────────────────────────────────
+    // 
+    // 
+    // 
 
     private void handleCommand(long chatId, String command) {
         Thread.ofVirtual().start(() -> {
@@ -160,9 +160,9 @@ public class TgBot implements LongPollingSingleThreadUpdateConsumer {
         }
     }
 
-    // ─────────────────────────────────────────────
+    // 
     // SSH
-    // ─────────────────────────────────────────────
+    // 
 
     private void handleSshConfig(long chatId, String command) {
         try {
@@ -248,9 +248,9 @@ public class TgBot implements LongPollingSingleThreadUpdateConsumer {
         }
     }
 
-    // ─────────────────────────────────────────────
-    // AI 对话
-    // ─────────────────────────────────────────────
+    // 
+    // AI 
+    // 
 
     private void handleAiChat(long chatId, String message) {
         try {
@@ -269,9 +269,9 @@ public class TgBot implements LongPollingSingleThreadUpdateConsumer {
         }
     }
 
-    // ─────────────────────────────────────────────
-    // 回调查询处理
-    // ─────────────────────────────────────────────
+    // 
+    // 
+    // 
 
     private void handleCallbackQuery(Update update) {
         String callbackData = update.getCallbackQuery().getData();
@@ -309,9 +309,9 @@ public class TgBot implements LongPollingSingleThreadUpdateConsumer {
         });
     }
 
-    // ─────────────────────────────────────────────
-    // 主菜单 & 帮助
-    // ─────────────────────────────────────────────
+    // 
+    //  & 
+    // 
 
     private void sendMainMenu(long chatId) {
         try {
@@ -345,9 +345,9 @@ public class TgBot implements LongPollingSingleThreadUpdateConsumer {
         sender.sendMd(chatId, MarkdownFormatter.formatMarkdown(helpText));
     }
 
-    // ─────────────────────────────────────────────
-    // 权限检查
-    // ─────────────────────────────────────────────
+    // 
+    // 
+    // 
 
     private boolean isAuthorized(long chatId) {
         return CHAT_ID.equals(String.valueOf(chatId));

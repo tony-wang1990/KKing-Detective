@@ -19,7 +19,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * ⏰ 定时开关机后台任务
+ *  
  *
  * @author Tony Wang
  */
@@ -31,7 +31,7 @@ public class ScheduledPowerTask {
     private static final Pattern CONFIG_PATTERN = Pattern.compile("STOP=(.*?):00,START=(.*?):00,USER=(.*)");
 
     /**
-     * 每小时执行一次，检查是否有实例需要开关机
+     * 
      */
     @Scheduled(cron = "0 0 * * * ?")
     public void executeSchedule() {
@@ -39,8 +39,8 @@ public class ScheduledPowerTask {
         IOciKvService kvService = SpringUtil.getBean(IOciKvService.class);
         IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
 
-        // 获取当前时间（小时），假设服务器运行在 UTC+8
-        // 为确保时区一致，建议使用 Server 本地时区判断
+        //  UTC+8
+        //  Server 
         String currentHourStr = DateUtil.format(DateUtil.date(), "HH");
 
         List<OciKv> configs = kvService.list(new LambdaQueryWrapper<OciKv>().likeRight(OciKv::getCode, KV_KEY_PREFIX));

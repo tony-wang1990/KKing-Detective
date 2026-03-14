@@ -16,7 +16,7 @@ import java.io.Serializable;
 import static java.lang.Math.toIntExact;
 
 /**
- * 通用回调处理器
+ * 
  * 
  * @author yohann
  */
@@ -39,7 +39,7 @@ public class CancelHandler extends AbstractCallbackHandler {
 }
 
 /**
- * 返回主菜单处理器
+ * 
  * 
  * @author yohann
  */

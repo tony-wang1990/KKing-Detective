@@ -3,36 +3,36 @@ package com.tony.kingdetective.service;
 import com.tony.kingdetective.bean.entity.AuditLog;
 
 /**
- * 审计日志服务接口
+ * 
  * 
  * @author Tony Wang
  */
 public interface IAuditLogService {
     
     /**
-     * 记录审计日志
+     * 
      *
-     * @param log 审计日志
+     * @param log 
      */
     void log(AuditLog log);
     
     /**
-     * 记录操作成功
+     * 
      *
-     * @param userId 用户ID
-     * @param operation 操作类型
-     * @param target 操作目标
-     * @param details 操作详情
+     * @param userId ID
+     * @param operation 
+     * @param target 
+     * @param details 
      */
     void logSuccess(String userId, String operation, String target, String details);
     
     /**
-     * 记录操作失败
+     * 
      *
-     * @param userId 用户ID
-     * @param operation 操作类型
-     * @param target 操作目标
-     * @param error 错误消息
+     * @param userId ID
+     * @param operation 
+     * @param target 
+     * @param error 
      */
     void logFailure(String userId, String operation, String target, String error);
 }

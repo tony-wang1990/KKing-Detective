@@ -42,7 +42,7 @@ public class InstanceCreationService {
                 // Send success message
                 telegramClient.execute(SendMessage.builder()
                         .chatId(chatId)
-                        .text("�"?开机任务已成功提交！\n\n可以通过【任务管理】查看任务进度?)
+                        .text("�"?\n\n?)
                         .build());
                 
                 log.info("Instance creation task submitted successfully: userId={}, chatId={}", userId, chatId);

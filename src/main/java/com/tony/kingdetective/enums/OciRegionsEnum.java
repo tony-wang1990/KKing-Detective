@@ -89,7 +89,7 @@ public enum OciRegionsEnum {
     }
 
     /**
-     * 根据 region id 获取 key
+     *  region id  key
      */
     public static Optional<String> getKeyById(String id) {
         return Arrays.stream(values())
@@ -99,7 +99,7 @@ public enum OciRegionsEnum {
     }
 
     /**
-     * 根据 region id 获取 name
+     *  region id  name
      */
     public static Optional<String> getNameById(String id) {
         return Arrays.stream(values())

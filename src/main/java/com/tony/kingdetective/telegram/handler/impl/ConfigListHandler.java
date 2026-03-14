@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 配置列表回调处理?
+ * ?
  * 
  * @author Tony Wang
  */
@@ -30,7 +30,7 @@ import java.util.List;
 public class ConfigListHandler extends AbstractCallbackHandler {
     
     private static final String PAGE_TYPE = "config_list";
-    private static final int PAGE_SIZE = 8; // 每页显示8个配置（4行，每行2个）
+    private static final int PAGE_SIZE = 8; // 842
     
     @Override
     public BotApiMethod<? extends Serializable> handle(CallbackQuery callbackQuery, TelegramClient telegramClient) {
@@ -49,14 +49,14 @@ public class ConfigListHandler extends AbstractCallbackHandler {
         long chatId = callbackQuery.getMessage().getChatId();
         PaginationStorage paginationStorage = PaginationStorage.getInstance();
         
-        // 重置页码（每次进入配置列表都从第一页开始）
+        // 
         paginationStorage.resetPage(chatId, PAGE_TYPE);
         
         return buildConfigListMessage(callbackQuery, userList, chatId, paginationStorage);
     }
     
     /**
-     * 构建配置列表消息
+     * 
      */
     private BotApiMethod<? extends Serializable> buildConfigListMessage(
             CallbackQuery callbackQuery, 
@@ -69,16 +69,16 @@ public class ConfigListHandler extends AbstractCallbackHandler {
         int startIndex = PaginationStorage.getStartIndex(currentPage, PAGE_SIZE);
         int endIndex = PaginationStorage.getEndIndex(currentPage, PAGE_SIZE, userList.size());
         
-        // 获取当前页的配置列表
+        // 
         List<OciUser> pageUsers = userList.subList(startIndex, endIndex);
         
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
         
-        // 添加配置按钮（每?个）
+        // ?
         List<InlineKeyboardRow> configRows = buildConfigRows(pageUsers);
         keyboard.addAll(configRows);
         
-        // 添加分页按钮（如果需要）
+        // 
         if (totalPages > 1) {
             keyboard.add(KeyboardBuilder.buildPaginationRow(
                     currentPage, 
@@ -88,7 +88,7 @@ public class ConfigListHandler extends AbstractCallbackHandler {
             ));
         }
         
-        // 添加导航按钮
+        // 
         keyboard.add(KeyboardBuilder.buildBackToMainMenuRow());
         keyboard.add(KeyboardBuilder.buildCancelRow());
         
@@ -103,7 +103,7 @@ public class ConfigListHandler extends AbstractCallbackHandler {
     }
     
     /**
-     * 构建配置按钮?
+     * ?
      */
     private List<InlineKeyboardRow> buildConfigRows(List<OciUser> userList) {
         List<InlineKeyboardRow> rows = new ArrayList<>();

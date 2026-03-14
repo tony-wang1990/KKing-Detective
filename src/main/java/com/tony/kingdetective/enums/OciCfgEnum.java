@@ -14,7 +14,7 @@ import lombok.Getter;
 public enum OciCfgEnum {
 
     /**
-     * OCI配置
+     * OCI
      */
     OCI_CFG_USER_ID("user", "用户id"),
     OCI_CFG_TENANT_ID("tenancy", "租户id"),

@@ -25,8 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * ⏰ 定时开关机管理 Handler
- * 功能：配置实例的每天定时开机/关机时间（保存到 KV 数据库，由后台定时任务执行）
+ *   Handler
+ * / KV 
  *
  * @author Tony Wang
  */

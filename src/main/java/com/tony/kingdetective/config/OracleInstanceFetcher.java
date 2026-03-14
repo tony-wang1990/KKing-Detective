@@ -466,7 +466,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
     }
 
     public List<Vnic> listInstanceIPs(String instanceId) {
-        // 获取实例的所有VNIC附件
+        // VNIC
         ListVnicAttachmentsRequest vnicRequest = ListVnicAttachmentsRequest.builder()
                 .compartmentId(compartmentId)
                 .instanceId(instanceId)
@@ -479,7 +479,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
                 .map(x -> {
                     String vnicId = x.getVnicId();
                     if (vnicId != null) {
-                        // 获取VNIC详细信息,包括IP地址
+                        // VNIC,IP
                         GetVnicRequest getVnicRequest = GetVnicRequest.builder().vnicId(vnicId).build();
                         GetVnicResponse getVnicResponse = virtualNetworkClient.getVnic(getVnicRequest);
                         Vnic vnic = getVnicResponse.getVnic();
@@ -490,12 +490,12 @@ public class OracleInstanceFetcher implements AutoCloseable {
     }
 
     private String getCidr(VirtualNetworkClient virtualNetworkClient, String compartmentId) {
-        // 创建列出 VCN 的请求
+        //  VCN 
         ListVcnsRequest listVcnsRequest = ListVcnsRequest.builder()
                 .compartmentId(compartmentId)
                 .build();
 
-        // 发送请求并获取响应
+        // 
         ListVcnsResponse listVcnsResponse = virtualNetworkClient.listVcns(listVcnsRequest);
         if (CollectionUtil.isEmpty(listVcnsResponse.getItems())) {
             return CIDR_BLOCK;
@@ -638,12 +638,12 @@ public class OracleInstanceFetcher implements AutoCloseable {
 
     public Vcn getVcnByInstanceId(String instanceId) {
         Vnic vnic = getVnicByInstanceId(instanceId);
-        // 获取子网信息
+        // 
         String subnetId = vnic.getSubnetId();
         GetSubnetRequest getSubnetRequest = GetSubnetRequest.builder().subnetId(subnetId).build();
         GetSubnetResponse getSubnetResponse = virtualNetworkClient.getSubnet(getSubnetRequest);
         Subnet subnet = getSubnetResponse.getSubnet();
-        // 获取 VCN 信息
+        //  VCN 
         String vcnId = subnet.getVcnId();
         GetVcnRequest getVcnRequest = GetVcnRequest.builder().vcnId(vcnId).build();
         GetVcnResponse getVcnResponse = virtualNetworkClient.getVcn(getVcnRequest);
@@ -714,7 +714,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
             throws Exception {
         String internetGatewayName = "king-detective-gateway";
 
-        //查询网关是否存在,不存在再创建
+        //,
         ListInternetGatewaysRequest build = ListInternetGatewaysRequest.builder()
                 .compartmentId(compartmentId)
                 .displayName(internetGatewayName)
@@ -770,24 +770,24 @@ public class OracleInstanceFetcher implements AutoCloseable {
         GetRouteTableResponse getRouteTableResponse = virtualNetworkClient.getRouteTable(getRouteTableRequest);
         List<RouteRule> routeRules = getRouteTableResponse.getRouteTable().getRouteRules();
 
-        // 检查是否已有相同的路由规则
+        // 
         boolean ruleExists = routeRules.stream()
                 .anyMatch(rule -> "0.0.0.0/0".equals(rule.getDestination())
                         && rule.getDestinationType() == RouteRule.DestinationType.CidrBlock);
 
         if (ruleExists) {
             log.info("The route rule for destination 0.0.0.0/0 already exists.");
-            return; // 退出方法,不添加新的规则
+            return; // ,
         }
 
-        // 创建新的路由规则
+        // 
         RouteRule internetAccessRoute = RouteRule.builder()
                 .destination("0.0.0.0/0")
                 .destinationType(RouteRule.DestinationType.CidrBlock)
                 .networkEntityId(internetGateway.getId())
                 .build();
 
-        // 将新的规则添加到新的列表中
+        // 
         List<RouteRule> updatedRouteRules = new ArrayList<>(routeRules);
         updatedRouteRules.add(internetAccessRoute);
 
@@ -801,7 +801,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
 
         virtualNetworkClient.updateRouteTable(updateRouteTableRequest);
 
-        // 等待路由表更新完成
+        // 
         getRouteTableResponse = virtualNetworkClient.getWaiters()
                 .forRouteTable(getRouteTableRequest, RouteTable.LifecycleState.Available)
                 .execute();
@@ -1143,13 +1143,13 @@ public class OracleInstanceFetcher implements AutoCloseable {
                 .agentConfig(LaunchInstanceAgentConfigDetails.builder()
                         .isMonitoringDisabled(true)
                         .build())
-                //配置核心和内存
+                //
                 .shapeConfig(LaunchInstanceShapeConfigDetails.
                         builder().
                         ocpus(user.getOcpus()).
                         memoryInGBs(user.getMemory()).
                         build())
-                //配置磁盘大小
+                //
                 .sourceDetails(InstanceSourceViaImageDetails.builder()
                         .imageId(image.getId())
                         .bootVolumeSizeInGBs(user.getDisk())
@@ -1259,7 +1259,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
     }
 
     private String findRootCompartment(IdentityClient identityClient, String tenantId) {
-        // 使用`compartmentIdInSubtree`参数来获取所有子区间
+        // `compartmentIdInSubtree`
         ListCompartmentsRequest request = ListCompartmentsRequest.builder()
                 .compartmentId(tenantId)
                 .compartmentIdInSubtree(true)
@@ -1270,17 +1270,17 @@ public class OracleInstanceFetcher implements AutoCloseable {
             ListCompartmentsResponse response = identityClient.listCompartments(request);
             List<Compartment> compartments = response.getItems();
 
-            // 根区间是没有parentCompartmentId的区间
+            // parentCompartmentId
             for (Compartment compartment : compartments) {
                 if (compartment.getCompartmentId().equals(tenantId) && compartment.getId().equals(compartment.getCompartmentId())) {
-                    return compartment.getId(); // 返回根区间ID
+                    return compartment.getId(); // ID
                 }
             }
         } catch (Exception e) {
             return tenantId;
         }
 
-        // 如果没有找到根区间,返回租户ID作为默认值
+        // ,ID
         return tenantId;
     }
 
@@ -1292,7 +1292,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
         ListPrivateIpsResponse privateIpsResponse = virtualNetworkClient.listPrivateIps(listPrivateIpsRequest);
 
         for (PrivateIp privateIp : privateIpsResponse.getItems()) {
-            // 返回第一个 Private IP 的 ID
+            //  Private IP  ID
             return privateIp.getId();
         }
         throw new RuntimeException("No Private IP found for VNIC ID:" + vnic.getId());
@@ -1311,7 +1311,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
             return;
         }
         for (PublicIp publicIp : response.getItems()) {
-            if (publicIp.getAssignedEntityId() == null) {  // 检查是否未分配到实例
+            if (publicIp.getAssignedEntityId() == null) {  // 
                 DeletePublicIpRequest deleteRequest = DeletePublicIpRequest.builder()
                         .publicIpId(publicIp.getId())
                         .build();
@@ -1327,11 +1327,11 @@ public class OracleInstanceFetcher implements AutoCloseable {
         }
         String vnicId = vnic.getId();
         if (vnicId != null) {
-            // Step 1:解除当前的 Public IP（如果已存在）
+            // Step 1: Public IP
             GetVnicRequest getVnicRequest = GetVnicRequest.builder().vnicId(vnicId).build();
             String existingPublicIpAddress = virtualNetworkClient.getVnic(getVnicRequest).getVnic().getPublicIp();
             if (StrUtil.isNotBlank(existingPublicIpAddress)) {
-                // Step 1:查找公网 IP 的 OCID
+                // Step 1: IP  OCID
                 GetPublicIpByIpAddressRequest getPublicIpByIpAddressRequest = GetPublicIpByIpAddressRequest.builder()
                         .getPublicIpByIpAddressDetails(
                                 GetPublicIpByIpAddressDetails.builder()
@@ -1352,10 +1352,10 @@ public class OracleInstanceFetcher implements AutoCloseable {
         String publicIp;
         try {
             String privateIpId = getPrivateIpIdForVnic(vnic);
-            // Step 1:创建一个 Reserved Public IP
+            // Step 1: Reserved Public IP
             CreatePublicIpDetails createPublicIpDetails = CreatePublicIpDetails.builder()
                     .compartmentId(compartmentId)
-                    .lifetime(CreatePublicIpDetails.Lifetime.Ephemeral)  // 设置为 Ephemeral
+                    .lifetime(CreatePublicIpDetails.Lifetime.Ephemeral)  //  Ephemeral
                     .displayName("publicIp")
                     .privateIpId(privateIpId)
                     .build();
@@ -1366,7 +1366,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
             PublicIp reservedPublicIp = virtualNetworkClient.createPublicIp(createRequest).getPublicIp();
 //            log.info("Reserved Public IP created:[{}]", reservedPublicIp.getIpAddress());
 
-            // Step 2:使用 UpdatePublicIpRequest 将 Reserved Public IP 关联到 VNIC
+            // Step 2: UpdatePublicIpRequest  Reserved Public IP  VNIC
             UpdatePublicIpDetails updatePublicIpDetails = UpdatePublicIpDetails.builder()
                     .privateIpId(privateIpId)
                     .build();
@@ -1484,7 +1484,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
                     instance.getDisplayName(), e);
         }
 
-        // 打印引导卷大小（以 GB 为单位）
+        //  GB 
         return OciCfgDetailsRsp.InstanceInfo.builder()
                 .ocId(instanceId)
                 .region(instance.getRegion())
@@ -1528,8 +1528,8 @@ public class OracleInstanceFetcher implements AutoCloseable {
         TerminateInstanceRequest terminateInstanceRequest = TerminateInstanceRequest.builder()
                 .instanceId(instanceId)
 //                .ifMatch("EXAMPLE-ifMatch-Value")
-                .preserveBootVolume(preserveBootVolume) // 是否删除或保留引导卷 默认false不保留
-                .preserveDataVolumesCreatedAtLaunch(preserveDataVolumesCreatedAtLaunch) // 是否删除或保留启动期间创建的数据卷,默认true保留
+                .preserveBootVolume(preserveBootVolume) //  false
+                .preserveDataVolumesCreatedAtLaunch(preserveDataVolumesCreatedAtLaunch) // ,true
                 .build();
 
         /* Send request to the Client */
@@ -1737,7 +1737,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
 
         String vcnId = vcn.getId();
 
-        // 添加ipv6 cidr 前缀
+        // ipv6 cidr 
         List<String> oldIpv6CidrBlocks = vcn.getIpv6CidrBlocks();
         if (CollectionUtil.isEmpty(oldIpv6CidrBlocks)) {
             try {
@@ -1756,7 +1756,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
             }
         }
 
-        // 子网
+        // 
         List<Subnet> oldSubnet = listSubnets(vcnId);
         if (CollectionUtil.isEmpty(oldSubnet)) {
             try {
@@ -1795,7 +1795,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
             }
         }
 
-        // 更新路由表（默认存在）
+        // 
         ListInternetGatewaysResponse listInternetGatewaysResponse = virtualNetworkClient.listInternetGateways(
                 ListInternetGatewaysRequest.builder()
                         .compartmentId(compartmentId)
@@ -1816,7 +1816,7 @@ public class OracleInstanceFetcher implements AutoCloseable {
         }
 
         try {
-            // 安全列表（默认存在）
+            // 
             releaseSecurityRule(vcn, 6, "0.0.0.0/0", "::/0");
         } catch (Exception e) {
             log.error("release security rule error >>>>>>>>>>>>>>>>>> ", e);

@@ -6,8 +6,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Telegram Bot 任务选择存储
- * 线程安全的单例存储，用于任务选择
+ * Telegram Bot 
+ * 
  * 
  * @author Tony Wang
  */
@@ -15,7 +15,7 @@ public class TaskSelectionStorage {
     
     private static final TaskSelectionStorage INSTANCE = new TaskSelectionStorage();
     
-    // 映射: chatId -> 选中的任务ID集合
+    // : chatId -> ID
     private final Map<Long, Set<String>> selections = new ConcurrentHashMap<>();
     
     private TaskSelectionStorage() {
@@ -26,11 +26,11 @@ public class TaskSelectionStorage {
     }
     
     /**
-     * 切换任务选择状?
+     * ?
      * 
-     * @param chatId 聊天ID
-     * @param taskId 任务ID
-     * @return true表示已选中，false表示已取消选中
+     * @param chatId ID
+     * @param taskId ID
+     * @return truefalse
      */
     public boolean toggleTask(long chatId, String taskId) {
         Set<String> selected = selections.computeIfAbsent(chatId, k -> new HashSet<>());
@@ -45,20 +45,20 @@ public class TaskSelectionStorage {
     }
     
     /**
-     * 选中任务
      * 
-     * @param chatId 聊天ID
-     * @param taskId 任务ID
+     * 
+     * @param chatId ID
+     * @param taskId ID
      */
     public void selectTask(long chatId, String taskId) {
         selections.computeIfAbsent(chatId, k -> new HashSet<>()).add(taskId);
     }
     
     /**
-     * 取消选中任务
      * 
-     * @param chatId 聊天ID
-     * @param taskId 任务ID
+     * 
+     * @param chatId ID
+     * @param taskId ID
      */
     public void deselectTask(long chatId, String taskId) {
         Set<String> selected = selections.get(chatId);
@@ -68,11 +68,11 @@ public class TaskSelectionStorage {
     }
     
     /**
-     * 检查任务是否已选中
      * 
-     * @param chatId 聊天ID
-     * @param taskId 任务ID
-     * @return 如果已选中返回true
+     * 
+     * @param chatId ID
+     * @param taskId ID
+     * @return true
      */
     public boolean isSelected(long chatId, String taskId) {
         Set<String> selected = selections.get(chatId);
@@ -80,19 +80,19 @@ public class TaskSelectionStorage {
     }
     
     /**
-     * 获取选中的任?
+     * ?
      * 
-     * @param chatId 聊天ID
-     * @return 选中的任务ID集合
+     * @param chatId ID
+     * @return ID
      */
     public Set<String> getSelectedTasks(long chatId) {
         return new HashSet<>(selections.getOrDefault(chatId, new HashSet<>()));
     }
     
     /**
-     * 清除聊天的选择
      * 
-     * @param chatId 聊天ID
+     * 
+     * @param chatId ID
      */
     public void clearSelection(long chatId) {
         selections.remove(chatId);

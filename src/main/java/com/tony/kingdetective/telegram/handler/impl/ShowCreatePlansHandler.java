@@ -37,7 +37,7 @@ public class ShowCreatePlansHandler extends AbstractCallbackHandler {
         if (user == null) {
             return buildEditMessage(
                     callbackQuery,
-                    "�"?配置不存?,
+                    "�"??,
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }

@@ -29,9 +29,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 📸 实例快照管理 Handler
- * 支持：选择账户 → 选择实例 → 查看/创建/删除快照
- * 修复：快照创建现在绑定到正确的实例 BootVolume，不再默认取第一个
+ *   Handler
+ *     //
+ *  BootVolume
  *
  * @author Tony Wang
  */
@@ -58,7 +58,7 @@ public class SnapshotManagementHandler extends AbstractCallbackHandler {
         if (data.equals("snapshot_management")) {
             return showAccountList(callbackQuery);
         } else if (data.startsWith("snapshot_instances:")) {
-            // 选择账户后 → 显示实例列表供用户选择
+            //   
             return showInstanceList(callbackQuery, data.substring("snapshot_instances:".length()));
         } else if (data.startsWith("snapshot_list:")) {
             // snapshot_list:<userId>:<instanceId>:<bootVolumeId>
@@ -74,7 +74,7 @@ public class SnapshotManagementHandler extends AbstractCallbackHandler {
         return buildEditMessage(callbackQuery, "❌ 未知操作");
     }
 
-    // ── Step 1: 账户列表 ──────────────────────────────────────────────────────
+    //  Step 1:  
     private BotApiMethod<? extends Serializable> showAccountList(CallbackQuery callbackQuery) {
         IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
         List<OciUser> users = userService.getEnabledOciUserList();
@@ -97,7 +97,7 @@ public class SnapshotManagementHandler extends AbstractCallbackHandler {
         );
     }
 
-    // ── Step 2: 实例列表（选择要操作的实例，然后进入该实例的快照列表） ──────────
+    //  Step 2:  
     private BotApiMethod<? extends Serializable> showInstanceList(CallbackQuery callbackQuery, String userId) {
         try {
             IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
@@ -123,7 +123,7 @@ public class SnapshotManagementHandler extends AbstractCallbackHandler {
                     String state = inst.getLifecycleState().getValue();
                     if ("TERMINATED".equals(state) || "TERMINATING".equals(state)) continue;
 
-                    // 获取该实例的 Boot Volume ID
+                    //  Boot Volume ID
                     var bvAttachments = fetcher.getComputeClient().listBootVolumeAttachments(
                         com.oracle.bmc.core.requests.ListBootVolumeAttachmentsRequest.builder()
                             .availabilityDomain(inst.getAvailabilityDomain())
@@ -155,7 +155,7 @@ public class SnapshotManagementHandler extends AbstractCallbackHandler {
         }
     }
 
-    // ── Step 3: 快照列表（针对具体实例的 Boot Volume） ───────────────────────
+    //  Step 3:  Boot Volume 
     private BotApiMethod<? extends Serializable> showSnapshotList(CallbackQuery callbackQuery, String params) {
         // params = <userId>:<instanceId>:<bootVolumeId>
         String[] parts = params.split(":", 3);
@@ -177,7 +177,7 @@ public class SnapshotManagementHandler extends AbstractCallbackHandler {
                 ListBootVolumeBackupsResponse response = blockstorageClient.listBootVolumeBackups(
                     ListBootVolumeBackupsRequest.builder()
                         .compartmentId(fetcher.getCompartmentId())
-                        .bootVolumeId(bootVolumeId)   // ✅ 只查该实例的快照
+                        .bootVolumeId(bootVolumeId)   //  
                         .limit(20)
                         .build()
                 );
@@ -185,7 +185,7 @@ public class SnapshotManagementHandler extends AbstractCallbackHandler {
                 List<BootVolumeBackup> backups = response.getItems();
                 List<InlineKeyboardRow> rows = new ArrayList<>();
 
-                // 创建快照按钮（传 bootVolumeId）
+                //  bootVolumeId
                 rows.add(new InlineKeyboardRow(
                     KeyboardBuilder.button("➕ 创建新快照", "snapshot_create:" + userId + ":" + bootVolumeId)
                 ));
@@ -219,7 +219,7 @@ public class SnapshotManagementHandler extends AbstractCallbackHandler {
         }
     }
 
-    // ── Step 4: 创建快照（使用正确的 bootVolumeId） ──────────────────────────
+    //  Step 4:  bootVolumeId 
     private BotApiMethod<? extends Serializable> createSnapshot(CallbackQuery callbackQuery, String params, TelegramClient telegramClient) {
         // params = <userId>:<bootVolumeId>
         String[] parts = params.split(":", 2);
@@ -239,7 +239,7 @@ public class SnapshotManagementHandler extends AbstractCallbackHandler {
                     CreateBootVolumeBackupRequest.builder()
                         .createBootVolumeBackupDetails(
                             CreateBootVolumeBackupDetails.builder()
-                                .bootVolumeId(bootVolumeId)   // ✅ 正确绑定到目标实例
+                                .bootVolumeId(bootVolumeId)   //  
                                 .displayName(snapshotName)
                                 .type(CreateBootVolumeBackupDetails.Type.Full)
                                 .build()
@@ -264,7 +264,7 @@ public class SnapshotManagementHandler extends AbstractCallbackHandler {
         }
     }
 
-    // ── Step 5: 确认删除 ────────────────────────────────────────────────────
+    //  Step 5:  
     private BotApiMethod<? extends Serializable> confirmDelete(CallbackQuery callbackQuery, String backupId) {
         return buildEditMessage(callbackQuery,
             "⚠️ *确认删除快照？*\n\n" +
@@ -277,7 +277,7 @@ public class SnapshotManagementHandler extends AbstractCallbackHandler {
         );
     }
 
-    // ── Step 6: 执行删除 ────────────────────────────────────────────────────
+    //  Step 6:  
     private BotApiMethod<? extends Serializable> deleteSnapshot(CallbackQuery callbackQuery, String backupId, TelegramClient telegramClient) {
         try {
             IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
@@ -306,7 +306,7 @@ public class SnapshotManagementHandler extends AbstractCallbackHandler {
         }
     }
 
-    // ── Helpers ─────────────────────────────────────────────────────────────
+    //  Helpers 
     private SysUserDTO buildSysUserDTO(OciUser user) {
         return SysUserDTO.builder()
             .ociCfg(SysUserDTO.OciCfg.builder()

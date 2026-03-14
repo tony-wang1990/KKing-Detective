@@ -49,12 +49,12 @@ public class AiChatController {
         this.searchService = searchService;
     }
 
-    // 限制最多缓存多少个 ChatClient
+    //  ChatClient
     private static final int MAX_CHAT_CLIENT_CACHE_SIZE = 5;
-    // 最长闲置时间（毫秒）
-    private static final long MAX_IDLE_TIME = 30 * 60 * 1000; // 半小时
+    // 
+    private static final long MAX_IDLE_TIME = 30 * 60 * 1000; // 
 
-    // 封装 ChatClient + 最后使用时间
+    //  ChatClient + 
     private static class CachedClient {
         private final ChatClient client;
         private volatile long lastUsed;
@@ -74,7 +74,7 @@ public class AiChatController {
         }
     }
 
-    // LRU 缓存（线程安全）
+    // LRU 
     private final Map<String, CachedClient> chatClientCache = Collections.synchronizedMap(
             new LinkedHashMap<String, CachedClient>(16, 0.75f, true) {
                 @Override
@@ -95,11 +95,11 @@ public class AiChatController {
                     log.info("创建新的 ChatClient，model = {}", model);
                     return new CachedClient(factory.create(apiKey, baseUrl, model));
                 })
-                .getClient(); // 每次取出都会刷新 lastUsed
+                .getClient(); //  lastUsed
     }
 
-    // 定时清理不活跃的 ChatClient
-    @Scheduled(fixedRate = 30 * 60 * 1000) // 每 30 分钟执行一次
+    //  ChatClient
+    @Scheduled(fixedRate = 30 * 60 * 1000) //  30 
     public void cleanIdleClients() {
         long now = System.currentTimeMillis();
         synchronized (chatClientCache) {
@@ -141,13 +141,13 @@ public class AiChatController {
         String finalModel = StringUtils.isBlank(model) ? defaultModel : model;
         ChatClient chatClient = getOrCreateChatClient(apiKey, baseUrl, finalModel);
 
-        // 拿当前 session 的历史消息（过期时间：30分钟）
+        //  session 30
         List<Message> history = (List<Message>) customCache.get(sessionId);
         if (history == null) {
             history = new ArrayList<>();
         }
 
-        // 添加用户消息
+        // 
         history.add(new UserMessage(message));
 
         try {
@@ -169,14 +169,14 @@ public class AiChatController {
                                     .content()
                                     .map(chunk -> chunk == null ? "" : chunk)
                                     .doOnNext(chunk -> {
-                                        // 把 AI 回复追加进历史
+                                        //  AI 
                                         finalHistory.add(new AssistantMessage(chunk));
-                                        customCache.put(sessionId, finalHistory, 30 * 60 * 1000); // 30分钟对话过期
+                                        customCache.put(sessionId, finalHistory, 30 * 60 * 1000); // 30
                                     })
                                     .bufferUntil(chunk -> chunk.endsWith("。") || chunk.endsWith("\n") || chunk.endsWith("."))
                                     .map(list -> String.join("", list))
                                     .onErrorResume(error -> {
-                                        // 错误处理
+                                        // 
                                         log.error("Stream error: ", error);
                                         return Flux.just("抱歉，处理您的请求时出现了错误。");
                                     });
@@ -191,9 +191,9 @@ public class AiChatController {
                         .content()
                         .map(chunk -> chunk == null ? "" : chunk)
                         .doOnNext(chunk -> {
-                            // 把 AI 回复追加进历史
+                            //  AI 
                             finalHistory.add(new AssistantMessage(chunk));
-                            customCache.put(sessionId, finalHistory, 30 * 60 * 1000); // 30分钟对话过期
+                            customCache.put(sessionId, finalHistory, 30 * 60 * 1000); // 30
                         })
                         .bufferUntil(chunk -> chunk.endsWith("。") || chunk.endsWith("\n") || chunk.endsWith("."))
                         .map(list -> String.join("", list))

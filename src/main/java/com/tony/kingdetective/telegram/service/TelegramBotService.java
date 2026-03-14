@@ -28,7 +28,7 @@ import static com.tony.kingdetective.config.VirtualThreadConfig.VIRTUAL_EXECUTOR
 import static com.tony.kingdetective.service.impl.OciServiceImpl.TEMP_MAP;
 
 /**
- * Telegram Bot 业务逻辑服务
+ * Telegram Bot 
  * 
  * @author Tony Wang
  */
@@ -37,9 +37,9 @@ import static com.tony.kingdetective.service.impl.OciServiceImpl.TEMP_MAP;
 public class TelegramBotService {
     
     /**
-     * 检查所?OCI 配置?API 测活
+     * ?OCI ?API 
      * 
-     * @return 结果消息
+     * @return 
      */
     public String checkAlive() {
         ISysService sysService = SpringUtil.getBean(ISysService.class);
@@ -77,9 +77,9 @@ public class TelegramBotService {
     }
     
     /**
-     * 获取任务详情
      * 
-     * @return 任务详情消息
+     * 
+     * @return 
      */
     public String getTaskDetails() {
         IOciUserService userService = SpringUtil.getBean(IOciUserService.class);
@@ -124,9 +124,9 @@ public class TelegramBotService {
     }
     
     /**
-     * 获取流量统计
      * 
-     * @return 流量统计消息
+     * 
+     * @return 
      */
     public String getTrafficStatistics() {
         IOciUserService userService = SpringUtil.getBean(IOciUserService.class);

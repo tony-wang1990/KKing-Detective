@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 import static com.yohann.ocihelper.service.impl.OciServiceImpl.TEMP_MAP;
 
 /**
- * 任务管理分页导航处理器
+ * 
  * 
  * @author yohann
  */
@@ -62,14 +62,14 @@ public class TaskPageNavigationHandler extends AbstractCallbackHandler {
         
         int totalPages = PaginationStorage.calculateTotalPages(taskList.size(), PAGE_SIZE);
         
-        // 更新页码
+        // 
         if (isNext) {
             paginationStorage.nextPage(chatId, PAGE_TYPE, totalPages);
         } else {
             paginationStorage.previousPage(chatId, PAGE_TYPE);
         }
         
-        // 构建带用户信息的任务列表
+        // 
         Map<String, OciUser> userMap = userService.list().stream()
                 .collect(Collectors.toMap(OciUser::getId, u -> u));
         
@@ -77,7 +77,7 @@ public class TaskPageNavigationHandler extends AbstractCallbackHandler {
     }
     
     /**
-     * 构建任务管理消息
+     * 
      */
     private BotApiMethod<? extends Serializable> buildTaskManagementMessage(
             CallbackQuery callbackQuery,
@@ -93,7 +93,7 @@ public class TaskPageNavigationHandler extends AbstractCallbackHandler {
         int startIndex = PaginationStorage.getStartIndex(currentPage, PAGE_SIZE);
         int endIndex = PaginationStorage.getEndIndex(currentPage, PAGE_SIZE, taskList.size());
         
-        // 获取当前页的任务列表
+        // 
         List<OciCreateTask> pageTasks = taskList.subList(startIndex, endIndex);
         
         StringBuilder message = new StringBuilder("【任务管理】\n\n");
@@ -112,7 +112,7 @@ public class TaskPageNavigationHandler extends AbstractCallbackHandler {
             
             Long counts = (Long) TEMP_MAP.get(CommonUtils.CREATE_COUNTS_PREFIX + task.getId());
             boolean isSelected = selectionStorage.isSelected(chatId, task.getId());
-            int taskNumber = startIndex + i + 1; // 全局任务编号
+            int taskNumber = startIndex + i + 1; // 
             
             message.append(String.format(
                     "%s %d. [%s] [%s] [%s]\n" +
@@ -131,7 +131,7 @@ public class TaskPageNavigationHandler extends AbstractCallbackHandler {
                     counts == null ? "0" : counts
             ));
             
-            // 添加任务按钮（每行2个）
+            // 2
             if (i % 2 == 0) {
                 InlineKeyboardRow row = new InlineKeyboardRow();
                 row.add(KeyboardBuilder.button(
@@ -147,7 +147,7 @@ public class TaskPageNavigationHandler extends AbstractCallbackHandler {
             }
         }
         
-        // 添加分页按钮
+        // 
         if (totalPages > 1) {
             keyboard.add(KeyboardBuilder.buildPaginationRow(
                     currentPage,
@@ -157,7 +157,7 @@ public class TaskPageNavigationHandler extends AbstractCallbackHandler {
             ));
         }
         
-        // 添加批量操作按钮
+        // 
         keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button("✅ 全选", "select_all_tasks"),
                 KeyboardBuilder.button("⬜ 取消全选", "deselect_all_tasks")

@@ -13,7 +13,7 @@ import lombok.Getter;
 @Getter
 public enum OperationSystemEnum {
     /**
-     * 系统镜像类型及版本
+     * 
      */
     ORACLE_LINUX("Oracle Autonomous Linux", "9"),
     UBUNTU_20_04("Canonical Ubuntu", "20.04"),

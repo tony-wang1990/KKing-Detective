@@ -24,8 +24,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 📌 实例标签管理 Handler
- * 功能：通过 UpdateInstance API 的 freeformTags 对实例打标签（用于分组和备注）
+ *   Handler
+ *  UpdateInstance API  freeformTags 
  *
  * @author Tony Wang
  */
@@ -81,7 +81,7 @@ public class InstanceTagHandler extends AbstractCallbackHandler {
         String[] parts = params.split(":");
         String userId = parts[0];
         
-        // 若参数中有 instanceId 则显示对应实例的标签，否则显示该账户的实例列表
+        //  instanceId 
         if (parts.length > 1 && parts[1].equals("account")) {
             return showInstanceList(callbackQuery, userId);
         }
@@ -166,7 +166,7 @@ public class InstanceTagHandler extends AbstractCallbackHandler {
         String userId = parts[0];
         String instanceId = parts[1];
 
-        // 启动 Session 等待用户输入
+        //  Session 
         com.tony.kingdetective.telegram.storage.ConfigSessionStorage storage = 
             com.tony.kingdetective.telegram.storage.ConfigSessionStorage.getInstance();
         

@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * Instance Creation Configuration
- * 实例创建配置
+ * 
  * 
  * @author Tony Wang
  */
@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 public class InstanceCreationConfig {
     
     /**
-     * 抢机重试间隔（秒）
+     * 
      * Retry interval for instance creation attempts (seconds)
      * Default: 80 seconds
      */

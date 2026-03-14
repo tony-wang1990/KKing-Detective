@@ -55,7 +55,7 @@ public class ConfirmTerminateHandler extends AbstractCallbackHandler {
         
         List<InlineKeyboardRow> keyboard = List.of(
                 new InlineKeyboardRow(
-                        KeyboardBuilder.button("�"?保留引导?, "terminate_instances:true")
+                        KeyboardBuilder.button("�"??, "terminate_instances:true")
                 ),
                 new InlineKeyboardRow(
                         KeyboardBuilder.button("�?不保留引导卷", "terminate_instances:false")

@@ -23,7 +23,7 @@ import java.util.List;
 import static java.lang.Math.toIntExact;
 
 /**
- * 版本信息基础处理器（共享逻辑）
+ * 
  * 
  * @author yohann
  */

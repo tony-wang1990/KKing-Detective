@@ -20,7 +20,7 @@ import java.util.concurrent.*;
 public class CustomExpiryGuavaCache<K, V> {
 
     /**
-     * 缓存存储的值，包括实际值和过期时间
+     * 
      *
      * @param <V>
      */
@@ -48,7 +48,7 @@ public class CustomExpiryGuavaCache<K, V> {
 
     public CustomExpiryGuavaCache() {
         this.cache = CacheBuilder.newBuilder()
-                .expireAfterWrite(1, TimeUnit.DAYS) // 全局过期时间，仅用于兜底
+                .expireAfterWrite(1, TimeUnit.DAYS) // 
                 .removalListener((RemovalListener<K, CacheValue<V>>) notification -> {
                     if (notification.wasEvicted()) {
                         log.info("cache key: [{}] was evicted.", notification.getKey());
@@ -56,7 +56,7 @@ public class CustomExpiryGuavaCache<K, V> {
                 })
                 .build();
 
-        // 定期清理过期条目
+        // 
         SCHEDULER.scheduleAtFixedRate(() -> {
             long currentTime = System.currentTimeMillis();
             cache.asMap().entrySet().removeIf(entry -> entry.getValue().isExpired(currentTime));
@@ -64,7 +64,7 @@ public class CustomExpiryGuavaCache<K, V> {
     }
 
     /**
-     * 添加键值对，并设置自定义过期时间（单位：毫秒）
+     * 
      *
      * @param key
      * @param value
@@ -76,7 +76,7 @@ public class CustomExpiryGuavaCache<K, V> {
     }
 
     /**
-     * 获取值，并检查是否过期
+     * 
      *
      * @param key
      * @return
@@ -84,14 +84,14 @@ public class CustomExpiryGuavaCache<K, V> {
     public V get(K key) {
         CacheValue<V> cacheValue = cache.getIfPresent(key);
         if (cacheValue == null || cacheValue.isExpired(System.currentTimeMillis())) {
-            cache.invalidate(key); // 过期后主动移除
+            cache.invalidate(key); // 
             return null;
         }
         return cacheValue.getValue();
     }
 
     /**
-     * 移除键
+     * 
      *
      * @param key
      */
@@ -100,7 +100,7 @@ public class CustomExpiryGuavaCache<K, V> {
     }
 
     /**
-     * 清理过期数据
+     * 
      */
     public void cleanUp() {
         cache.cleanUp();

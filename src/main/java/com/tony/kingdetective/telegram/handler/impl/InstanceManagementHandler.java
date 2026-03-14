@@ -142,8 +142,8 @@ public class InstanceManagementHandler extends AbstractCallbackHandler {
         
         // Add batch operation buttons
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("�"?全?, "select_all_instances"),
-                KeyboardBuilder.button("�"?取消全?, "deselect_all_instances")
+                KeyboardBuilder.button("�"??, "select_all_instances"),
+                KeyboardBuilder.button("�"??, "deselect_all_instances")
         ));
         
         keyboard.add(new InlineKeyboardRow(
@@ -323,8 +323,8 @@ class ToggleInstanceHandler extends AbstractCallbackHandler {
         
         // Add batch operation buttons
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("�"?全?, "select_all_instances"),
-                KeyboardBuilder.button("�"?取消全?, "deselect_all_instances")
+                KeyboardBuilder.button("�"??, "select_all_instances"),
+                KeyboardBuilder.button("�"??, "deselect_all_instances")
         ));
         
         keyboard.add(new InlineKeyboardRow(
@@ -386,7 +386,7 @@ class SelectAllInstancesHandler extends AbstractCallbackHandler {
             try {
                 telegramClient.execute(AnswerCallbackQuery.builder()
                         .callbackQueryId(callbackQuery.getId())
-                        .text(String.format("已全�"?%d 个实?, instances.size()))
+                        .text(String.format("已全�"?%d ?, instances.size()))
                         .showAlert(false)
                         .build());
             } catch (TelegramApiException e) {
@@ -562,8 +562,8 @@ class RefreshInstancesHandler extends AbstractCallbackHandler {
             
             // Add batch operation buttons
             keyboard.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("�"?全?, "select_all_instances"),
-                    KeyboardBuilder.button("�"?取消全?, "deselect_all_instances")
+                    KeyboardBuilder.button("�"??, "select_all_instances"),
+                    KeyboardBuilder.button("�"??, "deselect_all_instances")
             ));
             
             keyboard.add(new InlineKeyboardRow(

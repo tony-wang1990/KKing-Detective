@@ -23,100 +23,100 @@ import java.util.List;
 public interface IInstanceService {
 
     /**
-     * 获取已开机实例信?
+     * ?
      *
-     * @param sysUserDTO oci配置
-     * @return 已开机实例信?
+     * @param sysUserDTO oci
+     * @return ?
      */
     List<SysUserDTO.CloudInstance> listRunningInstances(SysUserDTO sysUserDTO);
 
     /**
-     * 开?
+     * ?
      *
-     * @param fetcher oci配置
-     * @return 成功开机的实例信息
+     * @param fetcher oci
+     * @return 
      */
     CreateInstanceDTO createInstance(OracleInstanceFetcher fetcher);
 
     /**
-     * 根据 CIDR 网段更换实例公共IP
+     *  CIDR IP
      *
-     * @param instanceId 实例Id
+     * @param instanceId Id
      * @param vnicId     vnicId
-     * @param sysUserDTO oci配置
-     * @param cidrList   CIDR 网段 （传为空则随机更换一个ip?
-     * @return 新的实例公共IP，实?
+     * @param sysUserDTO oci
+     * @param cidrList   CIDR  ip?
+     * @return IP?
      */
     Tuple2<String, Instance> changeInstancePublicIp(String instanceId, String vnicId, SysUserDTO sysUserDTO, List<String> cidrList);
 
     /**
-     * 获取实例需修改的配置信?
+     * ?
      *
-     * @param sysUserDTO oci配置
-     * @param instanceId 实例Id
-     * @return 实例需修改的配置信?
+     * @param sysUserDTO oci
+     * @param instanceId Id
+     * @return ?
      */
     InstanceCfgDTO getInstanceCfgInfo(SysUserDTO sysUserDTO, String instanceId);
 
     /**
-     * 安全列表放行
+     * 
      *
-     * @param sysUserDTO oci配置
+     * @param sysUserDTO oci
      */
     void releaseSecurityRule(SysUserDTO sysUserDTO);
 
     /**
-     * 附加IPV6
+     * IPV6
      *
-     * @param sysUserDTO oci配置
-     * @param instanceId 实例Id
+     * @param sysUserDTO oci
+     * @param instanceId Id
      */
     String createIpv6(SysUserDTO sysUserDTO, String instanceId);
 
     /**
-     * 修改实例名称
+     * 
      *
-     * @param sysUserDTO oci配置
-     * @param instanceId 实例Id
-     * @param name       实例名称
+     * @param sysUserDTO oci
+     * @param instanceId Id
+     * @param name       
      */
     void updateInstanceName(SysUserDTO sysUserDTO, String instanceId, String name);
 
     /**
-     * 修改实例配置
+     * 
      *
-     * @param sysUserDTO oci配置
-     * @param instanceId 实例Id
+     * @param sysUserDTO oci
+     * @param instanceId Id
      * @param ocpus      cpu
-     * @param memory     内存
+     * @param memory     
      */
     void updateInstanceCfg(SysUserDTO sysUserDTO, String instanceId, float ocpus, float memory);
 
     /**
-     * 修改引导卷配?
+     * ?
      *
-     * @param sysUserDTO oci配置
-     * @param instanceId 实例id
-     * @param size       引导卷大?
-     * @param vpusPer    引导卷vpu [10,120]
+     * @param sysUserDTO oci
+     * @param instanceId id
+     * @param size       ?
+     * @param vpusPer    vpu [10,120]
      */
     void updateBootVolumeCfg(SysUserDTO sysUserDTO, String instanceId, long size, long vpusPer);
 
     /**
-     * 一键开?00M
-     * @param params 参数
+     * ?00M
+     * @param params 
      */
     void oneClick500M(CreateNetworkLoadBalancerParams params);
 
     /**
-     * 一键关?00M
-     * @param params 参数
+     * ?00M
+     * @param params 
      */
     void oneClickClose500M(Close500MParams params);
 
     /**
-     * 修改实例Shape
-     * @param params 参数
+     * Shape
+     * @param params 
      */
     void updateInstanceShape(UpdateShapeParams params);
 

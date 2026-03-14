@@ -9,20 +9,20 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Telegram Bot 键盘构建?
+ * Telegram Bot ?
  *
  * @author Tony Wang
  */
 public class KeyboardBuilder {
 
     /**
-     * 构建主菜单键盘（每行4个按钮布局?
+     * 4?
      *
-     * @return 键盘行列?
+     * @return ?
      */
     public static List<InlineKeyboardRow> buildMainMenu() {
         return Arrays.asList(
-                // 快捷功能（顶部）
+                // 
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
                                 .text("🚀 一键抢?")
@@ -30,7 +30,7 @@ public class KeyboardBuilder {
                                 .build()
                 ),
                 
-                // ========== 💼实例 + 🌐网络 ==========
+                // ==========  +  ==========
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
                                 .text("快捷开?")
@@ -68,7 +68,7 @@ public class KeyboardBuilder {
                                 .build()
                 ),
                 
-                // ========== 📊资源监控 ==========
+                // ==========  ==========
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
                                 .text("配额查询")
@@ -106,7 +106,7 @@ public class KeyboardBuilder {
                                 .build()
                 ),
                 
-                // ========== 🤖自动?+ 🔐安全 ==========
+                // ========== ?+  ==========
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
                                 .text("监控通知")
@@ -144,7 +144,7 @@ public class KeyboardBuilder {
                                 .build()
                 ),
                 
-                // ========== 🛠系统工?==========
+                // ========== ?==========
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
                                 .text("批量查邮")
@@ -182,7 +182,7 @@ public class KeyboardBuilder {
                                 .build()
                 ),
                 
-                // ========== 🔗外部链接 ==========
+                // ==========  ==========
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
                                 .text("放货查询")
@@ -194,7 +194,7 @@ public class KeyboardBuilder {
                                 .build()
                 ),
                 
-                // 关闭按钮
+                // 
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
                                 .text("?关闭窗口")
@@ -205,9 +205,9 @@ public class KeyboardBuilder {
     }
 
     /**
-     * 构建账户选择键盘
+     * 
      *
-     * @param accounts 账户列表
+     * @param accounts 
      * @return InlineKeyboardMarkup
      */
     public static InlineKeyboardMarkup buildAccountSelectionKeyboard(List<String> accounts) {
@@ -222,7 +222,7 @@ public class KeyboardBuilder {
             keyboard.add(row);
         }
 
-        // 添加返回按钮
+        // 
         InlineKeyboardRow backRow = new InlineKeyboardRow();
         backRow.add(InlineKeyboardButton.builder()
                 .text("« 返回主菜?")
@@ -234,10 +234,10 @@ public class KeyboardBuilder {
     }
 
     /**
-     * 构建确认键盘
+     * 
      *
-     * @param confirmCallback 确认回调数据
-     * @param cancelCallback  取消回调数据
+     * @param confirmCallback 
+     * @param cancelCallback  
      * @return InlineKeyboardMarkup
      */
     public static InlineKeyboardMarkup buildConfirmationKeyboard(String confirmCallback, String cancelCallback) {
@@ -258,7 +258,7 @@ public class KeyboardBuilder {
     }
 
     /**
-     * 构建带返回按钮的键盘
+     * 
      *
      * @return InlineKeyboardMarkup
      */
@@ -276,7 +276,7 @@ public class KeyboardBuilder {
     }
 
     /**
-     * 构建空键盘（用于移除键盘?
+     * ?
      *
      * @return InlineKeyboardMarkup
      */
@@ -285,9 +285,9 @@ public class KeyboardBuilder {
     }
 
     /**
-     * 从行列表构建键盘标记
+     * 
      *
-     * @param rows 键盘行列?
+     * @param rows ?
      * @return InlineKeyboardMarkup
      */
     public static InlineKeyboardMarkup fromRows(List<InlineKeyboardRow> rows) {
@@ -295,7 +295,7 @@ public class KeyboardBuilder {
     }
 
     /**
-     * 构建取消行（返回主菜单）
+     * 
      *
      * @return InlineKeyboardRow
      */
@@ -309,7 +309,7 @@ public class KeyboardBuilder {
     }
 
     /**
-     * 构建返回主菜单行
+     * 
      *
      * @return InlineKeyboardRow
      */
@@ -323,12 +323,12 @@ public class KeyboardBuilder {
     }
 
     /**
-     * 构建分页?
+     * ?
      *
-     * @param currentPage 当前?
-     * @param totalPages 总页?
-     * @param prevCallback 上一页回?
-     * @param nextCallback 下一页回?
+     * @param currentPage ?
+     * @param totalPages ?
+     * @param prevCallback ?
+     * @param nextCallback ?
      * @return InlineKeyboardRow
      */
     public static InlineKeyboardRow buildPaginationRow(int currentPage, int totalPages, String prevCallback, String nextCallback) {
@@ -357,10 +357,10 @@ public class KeyboardBuilder {
     }
 
     /**
-     * 快捷方法：创建按?
+     * ?
      *
-     * @param text 按钮文本
-     * @param callbackData 回调数据
+     * @param text 
+     * @param callbackData 
      * @return InlineKeyboardButton
      */
     public static InlineKeyboardButton button(String text, String callbackData) {
@@ -371,10 +371,10 @@ public class KeyboardBuilder {
     }
 
     /**
-     * 快捷方法：创建URL按钮
+     * URL
      *
-     * @param text 按钮文本
-     * @param url URL地址
+     * @param text 
+     * @param url URL
      * @return InlineKeyboardButton
      */
     public static InlineKeyboardButton urlButton(String text, String url) {

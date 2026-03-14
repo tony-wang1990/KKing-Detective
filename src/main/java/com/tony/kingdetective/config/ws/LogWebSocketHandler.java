@@ -44,7 +44,7 @@ public class LogWebSocketHandler extends TextWebSocketHandler {
     private volatile boolean isSenderRunning = false;
 
     private String getTokenFromSession(WebSocketSession session) {
-        // 解析 URI 中的 token 参数
+        //  URI  token 
         String query = session.getUri().getQuery();
         if (query != null && query.contains("token=")) {
             return query.replaceAll(".*token=([^&]*).*", "$1");

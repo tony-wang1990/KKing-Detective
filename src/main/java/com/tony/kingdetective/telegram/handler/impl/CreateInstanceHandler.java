@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 创建实例回调处理?
+ * ?
  * 
  * @author Tony Wang
  */
@@ -185,7 +185,7 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
         
         log.debug("showIntervalOptions: User found: username={}", user.getUsername());
         
-        // 获取方案详情
+        // 
         InstancePlan plan = getPlanByType(planType);
         
         // Get plan display name
@@ -286,7 +286,7 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
         
         log.debug("showBroadcastOptions: User found: username={}", user.getUsername());
         
-        // 获取方案详情
+        // 
         InstancePlan plan = getPlanByType(planType);
         
         // Get plan display name
@@ -378,7 +378,7 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
             );
         }
         
-        // 获取方案详情
+        // 
         InstancePlan plan = getPlanByType(planType);
         plan.setCreateNumbers(count);  // Set the actual count
         plan.setInterval(interval);  // Set the selected interval
@@ -393,11 +393,11 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
             default -> planType;
         };
         
-        // 启动异步创建
+        // 
         InstanceCreationService creationService = SpringUtil.getBean(InstanceCreationService.class);
         
         try {
-            // 先删除回调消?
+            // ?
             telegramClient.execute(org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage.builder()
                     .chatId(callbackQuery.getMessage().getChatId())
                     .messageId(Math.toIntExact(callbackQuery.getMessage().getMessageId()))
@@ -406,8 +406,8 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
             log.error("Failed to delete message", e);
         }
         
-        // 发送创建中的消?
-        String channelStatus = joinChannelBroadcast ? "�?已开�? : "?已关?;
+        // ?
+        String channelStatus = joinChannelBroadcast ? "�?已开�? : "??;
         String creatingMessage = String.format(
                 "�?正在创建实例...\n\n" +
                 "🔑 配置名：%s\n" +
@@ -433,7 +433,7 @@ public class CreateInstanceHandler extends AbstractCallbackHandler {
                 channelStatus
         );
         
-        // 异步提交创建任务
+        // 
         creationService.createInstanceAsync(
                 userId,
                 plan,
