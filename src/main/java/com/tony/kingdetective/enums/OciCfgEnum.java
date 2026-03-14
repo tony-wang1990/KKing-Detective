@@ -7,7 +7,7 @@ import lombok.Getter;
  * OciCfgEnum
  * </p >
  *
- * @author Tony Wang
+ * @author yohann
  * @since 2024/11/8 12:12
  */
 @Getter
@@ -20,7 +20,7 @@ public enum OciCfgEnum {
     OCI_CFG_TENANT_ID("tenancy", "租户id"),
     OCI_CFG_REGION("region", "区域"),
     OCI_CFG_FINGERPRINT("fingerprint", "指纹"),
-    OCI_CFG_KEY_FILE("key_file", "密钥文件全路�?),
+    OCI_CFG_KEY_FILE("key_file", "密钥文件全路径"),
     ;
 
     private String type;

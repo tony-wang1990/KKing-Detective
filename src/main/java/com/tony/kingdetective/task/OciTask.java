@@ -45,14 +45,14 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static com.tony.kingdetective.service.impl.OciServiceImpl.*;
+import static com.yohann.ocihelper.service.impl.OciServiceImpl.*;
 
 /**
  * <p>
  * OciTask
  * </p >
  *
- * @author Tony Wang
+ * @author yohann
  * @since 2024/11/1 19:21
  */
 @Slf4j
@@ -107,18 +107,17 @@ public class OciTask implements ApplicationRunner {
             OciKv tgToken = kvService.getOne(new LambdaQueryWrapper<OciKv>().eq(OciKv::getCode, SysCfgEnum.SYS_TG_BOT_TOKEN.getCode()));
             OciKv tgChatId = kvService.getOne(new LambdaQueryWrapper<OciKv>().eq(OciKv::getCode, SysCfgEnum.SYS_TG_CHAT_ID.getCode()));
             if (null == tgToken || null == tgChatId) {
-                log.warn("TG Bot token or chat ID not configured, skipping TG Bot startup");
                 return;
             }
             if (StrUtil.isNotBlank(tgToken.getValue()) && StrUtil.isNotBlank(tgChatId.getValue())) {
                 botsApplication = new TelegramBotsLongPollingApplication();
                 try {
                     botsApplication.registerBot(tgToken.getValue(), new TgBot(tgToken.getValue(), tgChatId.getValue()));
-                    log.info("TG Bot successfully started with chatId: {}", tgChatId.getValue());
+                    Thread.currentThread().join();
                 } catch (Exception e) {
-                    log.error("Failed to start TG Bot", e);
+                    throw new RuntimeException(e);
                 }
-                // Virtual thread continues to run, no need for join()
+                log.info("TG Bot successfully started");
             }
         });
     }
@@ -126,7 +125,7 @@ public class OciTask implements ApplicationRunner {
     private void cleanLogTask() {
         addAtFixedRateTask(account, () -> {
             FileUtil.writeUtf8String("", CommonUtils.LOG_FILE_PATH);
-            log.info("【日志清理任务】日志文件：{} 已清�?, CommonUtils.LOG_FILE_PATH);
+            log.info("【日志清理任务】日志文件：{} 已清空", CommonUtils.LOG_FILE_PATH);
         }, 8, 8, TimeUnit.HOURS);
     }
 
@@ -165,7 +164,7 @@ public class OciTask implements ApplicationRunner {
             Optional.ofNullable(createTaskService.list())
                     .filter(CollectionUtil::isNotEmpty).orElseGet(Collections::emptyList)
                     .forEach(task -> {
-                        // 随机延迟 5~10 �?
+                        // 随机延迟 5~10 秒
                         int delay = 5 + random.nextInt(6);
                         CREATE_INSTANCE_POOL.schedule(() -> {
                             if (task.getCreateNumbers() <= 0) {
@@ -179,7 +178,6 @@ public class OciTask implements ApplicationRunner {
                                                 .region(StrUtil.isBlank(task.getOciRegion()) ? ociUser.getOciRegion() : task.getOciRegion())
                                                 .fingerprint(ociUser.getOciFingerprint())
                                                 .privateKeyPath(ociUser.getOciKeyPath())
-                                                .privateKey(ociUser.getPrivateKey())
                                                 .build())
                                         .taskId(task.getId())
                                         .username(ociUser.getUsername())
@@ -214,9 +212,6 @@ public class OciTask implements ApplicationRunner {
     private void saveVersion() {
         virtualExecutor.execute(() -> {
             String latestVersion = CommonUtils.getLatestVersion();
-            if (StrUtil.isBlank(latestVersion)) {
-                latestVersion = "v2.00"; // 默认版本，如果无法获�?
-            }
             OciKv oldVersion = kvService.getOne(new LambdaQueryWrapper<OciKv>()
                     .eq(OciKv::getCode, SysCfgEnum.SYS_INFO_VERSION.getCode())
                     .eq(OciKv::getType, SysCfgTypeEnum.SYS_INFO.getCode()));
@@ -227,12 +222,6 @@ public class OciTask implements ApplicationRunner {
                         .type(SysCfgTypeEnum.SYS_INFO.getCode())
                         .value(latestVersion)
                         .build());
-                log.info("版本信息已初始化：{}", latestVersion);
-            } else if (StrUtil.isBlank(oldVersion.getValue())) {
-                // 如果已有记录但值为�?null，更新为最新版�?
-                oldVersion.setValue(latestVersion);
-                kvService.updateById(oldVersion);
-                log.info("版本信息已更新：null -> {}", latestVersion);
             }
         });
 
@@ -244,8 +233,8 @@ public class OciTask implements ApplicationRunner {
                 .eq(OciKv::getCode, SysCfgEnum.SYS_INFO_VERSION.getCode())
                 .eq(OciKv::getType, SysCfgTypeEnum.SYS_INFO.getCode())
                 .select(OciKv::getValue), String::valueOf);
-        log.info(String.format("【king-detective】服务启动成功~ 当前版本�?s 最新版本：%s", nowVersion, latestVersion));
-        sysService.sendMessage(String.format("【king-detective】服务启动成功🎉🎉\n\n当前版本�?s\n最新版本：%s\n发�?/start 操作机器人🤖\n放货通知频道：https://t.me/Woci_detective", nowVersion, latestVersion));
+        log.info(String.format("【king-detective】服务启动成功~ 当前版本：%s 最新版本：%s", nowVersion, latestVersion));
+        sysService.sendMessage(String.format("【king-detective】服务启动成功🎉🎉\n\n当前版本：%s\n最新版本：%s\n发送 /start 操作机器人🤖\n放货通知频道：https://t.me/king_detective", nowVersion, latestVersion));
     }
 
     public static void pushVersionUpdateMsg(IOciKvService kvService, ISysService sysService) {
@@ -265,10 +254,10 @@ public class OciTask implements ApplicationRunner {
             if (StrUtil.isBlank(latest)) {
                 return;
             }
-            if (StrUtil.isNotBlank(now) && !now.equals(latest)) {
+            if (!now.equals(latest)) {
                 log.warn(String.format("【king-detective】版本更新啦！！！当前版本：%s 最新版本：%s", now, latest));
                 if (!isPushedLatestVersion) {
-                    sysService.sendMessage(String.format("🔔【king-detective】版本更新啦！！！\n\n当前版本�?s\n最新版本：%s\n一键脚本：%s\n\n更新内容：\n%s",
+                    sysService.sendMessage(String.format("🔔【king-detective】版本更新啦！！！\n\n当前版本：%s\n最新版本：%s\n一键脚本：%s\n\n更新内容：\n%s",
                             now, latest,
                             "bash <(wget -qO- https://github.com/tony-wang1990/king-detective/releases/latest/download/sh_king-detective_install.sh)",
                             CommonUtils.getLatestVersionBody()));
@@ -301,7 +290,7 @@ public class OciTask implements ApplicationRunner {
                     "\n" +
                     "\uD83D\uDD58 时间：\t%s\n" +
                     "\uD83D\uDD11 总API配置数：\t%s\n" +
-                    "�?失效API配置数：\t%s\n" +
+                    "❌ 失效API配置数：\t%s\n" +
                     "⚠\uFE0F 失效的API配置：\t\n- %s\n" +
                     "\uD83D\uDECE 正在执行的开机任务：\n" +
                     "%s\n";
@@ -327,9 +316,9 @@ public class OciTask implements ApplicationRunner {
             CompletableFuture<String> task = CompletableFuture.supplyAsync(() -> {
                 List<OciCreateTask> ociCreateTaskList = createTaskService.list();
                 if (ociCreateTaskList.isEmpty()) {
-                    return "�?;
+                    return "无";
                 }
-                String template = "[%s] [%s] [%s] [%s�?%sGB/%sGB] [%s台] [%s] [%s次]";
+                String template = "[%s] [%s] [%s] [%s核/%sGB/%sGB] [%s台] [%s] [%s次]";
                 return ociCreateTaskList.parallelStream().map(x -> {
                     OciUser ociUser = userService.getById(x.getUserId());
                     Long counts = (Long) TEMP_MAP.get(CommonUtils.CREATE_COUNTS_PREFIX + x.getId());
@@ -369,59 +358,25 @@ public class OciTask implements ApplicationRunner {
 
     private void initMapData() {
         virtualExecutor.execute(() -> {
-            try {
-                log.info("正在初始化地图数据，调用 ip-api.com API...");
-                String jsonStr = HttpUtil.get("http://ip-api.com/json/?fields=status,message,country,regionName,city,lat,lon,isp,as,query");
-                
-                // 验证返回内容是否为有效JSON
-                if (jsonStr == null || jsonStr.trim().isEmpty()) {
-                    log.warn("ip-api.com API 返回空内容，跳过地图数据初始�?);
-                    return;
-                }
-                
-                // 检查是否返回HTML而不是JSON
-                if (jsonStr.trim().startsWith("<")) {
-                    log.warn("ip-api.com API 返回HTML而非JSON，可能服务异常。返回内容前100字符：{}", 
-                            jsonStr.substring(0, Math.min(100, jsonStr.length())));
-                    return;
-                }
-                
-                JSONObject json = JSONUtil.parseObj(jsonStr);
-                
-                // 检查API返回状�?
-                if (!"success".equals(json.getStr("status"))) {
-                    log.warn("ip-api.com API 返回失败：{}", json.getStr("message"));
-                    return;
-                }
-                
-                // 验证必要字段
-                if (!json.containsKey("query") || !json.containsKey("lat") || !json.containsKey("lon")) {
-                    log.warn("ip-api.com API 返回的JSON缺少必要字段。返回内容：{}", jsonStr);
-                    return;
-                }
-                
-                IpData ipData = new IpData();
-                ipData.setId(IdUtil.getSnowflakeNextIdStr());
-                ipData.setIp(json.getStr("query"));  // ip-api.com uses "query" for IP
-                ipData.setCountry(json.getStr("country"));
-                ipData.setArea(json.getStr("regionName"));  // ip-api.com uses "regionName"
-                ipData.setCity(json.getStr("city"));
-                ipData.setOrg(json.getStr("isp"));  // ip-api.com uses "isp" for organization
-                ipData.setAsn(json.getStr("as"));  // ip-api.com uses "as" for ASN
-                ipData.setLat(json.getDouble("lat"));  // ip-api.com returns numbers, not strings
-                ipData.setLng(json.getDouble("lon"));  // ip-api.com uses "lon" instead of "lng"
-                
-                List<IpData> ipDataList = ipDataService.list(new LambdaQueryWrapper<IpData>()
-                        .eq(IpData::getIp, json.getStr("query")));
-                if (CollectionUtil.isNotEmpty(ipDataList)) {
-                    ipDataService.remove(new LambdaQueryWrapper<IpData>().eq(IpData::getIp, json.getStr("query")));
-                }
-                ipDataService.save(ipData);
-                log.info("�?新增地图IP数据：{} ({}, {}) 成功", ipData.getIp(), ipData.getCity(), ipData.getCountry());
-            } catch (Exception e) {
-                log.error("初始化地图数据失败，跳过该步骤。错误详情：{}", e.getMessage(), e);
-                // 不抛出异常，避免影响其他启动任务
+            String jsonStr = HttpUtil.get(String.format("https://ipapi.co/json"));
+            JSONObject json = JSONUtil.parseObj(jsonStr);
+            IpData ipData = new IpData();
+            ipData.setId(IdUtil.getSnowflakeNextIdStr());
+            ipData.setIp(json.getStr("ip"));
+            ipData.setCountry(json.getStr("country"));
+            ipData.setArea(json.getStr("region"));
+            ipData.setCity(json.getStr("city"));
+            ipData.setOrg(json.getStr("org"));
+            ipData.setAsn(json.getStr("asn"));
+            ipData.setLat(Double.valueOf(json.getStr("latitude")));
+            ipData.setLng(Double.valueOf(json.getStr("longitude")));
+            List<IpData> ipDataList = ipDataService.list(new LambdaQueryWrapper<IpData>()
+                    .eq(IpData::getIp, json.getStr("ip")));
+            if (CollectionUtil.isNotEmpty(ipDataList)) {
+                ipDataService.remove(new LambdaQueryWrapper<IpData>().eq(IpData::getIp, json.getStr("ip")));
             }
+            ipDataService.save(ipData);
+            log.info("新增地图IP数据：{} 成功", ipData.getIp());
         });
     }
 }

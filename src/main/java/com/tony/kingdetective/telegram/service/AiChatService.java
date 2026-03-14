@@ -26,7 +26,7 @@ import java.util.concurrent.CompletableFuture;
  * AI Chat Service for Telegram Bot
  * Provides non-streaming chat functionality
  * 
- * @author Tony Wang
+ * @author yohann
  */
 @Slf4j
 @Service
@@ -71,7 +71,7 @@ public class AiChatService {
                 // Get API key
                 String apiKey = getApiKey();
                 if (StringUtils.isBlank(apiKey)) {
-                    return "�?未配�?AI API 密钥，请在系统配置中设置";
+                    return "❌ 未配置 AI API 密钥，请在系统配置中设置";
                 }
                 
                 // Get or create ChatClient
@@ -102,7 +102,7 @@ public class AiChatService {
                 
             } catch (Exception e) {
                 log.error("AI chat failed: chatId={}, message={}", chatId, message, e);
-                return "�?AI 对话失败: " + e.getMessage();
+                return "❌ AI 对话失败: " + e.getMessage();
             }
         });
     }
@@ -145,7 +145,7 @@ public class AiChatService {
                 
                 // Add answer with Markdown support
                 if (!answer.isEmpty()) {
-                    formatted.append("💬 *回答�?\n");
+                    formatted.append("💬 *回答：*\n");
                     // Process answer to support Markdown properly
                     formatted.append(processMarkdownContent(answer));
                 } else {
@@ -156,7 +156,7 @@ public class AiChatService {
             } else if (thinkEnd != -1) {
                 // Only </think> found, everything after is answer
                 String answer = response.substring(thinkEnd + 8).trim();
-                return "💬 *回答�?\n" + processMarkdownContent(answer);
+                return "💬 *回答：*\n" + processMarkdownContent(answer);
             }
         }
         
