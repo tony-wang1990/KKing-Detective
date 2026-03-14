@@ -37,7 +37,7 @@ public class ShowCreatePlansHandler extends AbstractCallbackHandler {
         if (user == null) {
             return buildEditMessage(
                     callbackQuery,
-                    "?"??,
+                    "User not found",
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }
@@ -47,7 +47,7 @@ public class ShowCreatePlansHandler extends AbstractCallbackHandler {
         // Plan 1: AMD 1C1G50G
         keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button(
-                        "? ??1: 1??G50G (AMD)",
+                        " ??1: 1??G50G (AMD)",
                         "ci:" + userId + ":plan1"
                 )
         ));
@@ -55,7 +55,7 @@ public class ShowCreatePlansHandler extends AbstractCallbackHandler {
         // Plan 2: ARM 1C6G50G
         keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button(
-                        "? ??2: 1??G50G (ARM)",
+                        " ??2: 1??G50G (ARM)",
                         "ci:" + userId + ":plan2"
                 )
         ));
@@ -63,7 +63,7 @@ public class ShowCreatePlansHandler extends AbstractCallbackHandler {
         // Plan 3: ARM 2C12G50G (NEW)
         keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button(
-                        "? ??3: 2??2G50G (ARM)",
+                        " ??3: 2??2G50G (ARM)",
                         "ci:" + userId + ":plan3"
                 )
         ));
@@ -89,10 +89,10 @@ public class ShowCreatePlansHandler extends AbstractCallbackHandler {
         
         String message = String.format(
                 "????????\n\n" +
-                "? ????%s\n" +
-                "? ????s\n" +
-                "? ????%s\n" +
-                "? ????????s\n\n" +
+                " ????%s\n" +
+                " ????s\n" +
+                " ????%s\n" +
+                " ????????s\n\n" +
                 "????????",
                 user.getUsername(),
                 user.getOciRegion(),

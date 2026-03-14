@@ -128,13 +128,13 @@ public class InstanceManagementHandler extends AbstractCallbackHandler {
             if (i % 2 == 0) {
                 InlineKeyboardRow row = new InlineKeyboardRow();
                 row.add(KeyboardBuilder.button(
-                        String.format("%s ??%d", isSelected ?" "" : "?, i + 1),
+                        String.format("%s %d", isSelected ? "[v]" : "[ ]", i + 1),
                         "toggle_instance:" + i  // Use index
                 ));
                 keyboard.add(row);
             } else {
                 keyboard.get(keyboard.size() - 1).add(KeyboardBuilder.button(
-                        String.format("%s ??%d", isSelected ?" "" : "?, i + 1),
+                        String.format("%s %d", isSelected ? "[v]" : "[ ]", i + 1),
                         "toggle_instance:" + i  // Use index
                 ));
             }
@@ -142,24 +142,24 @@ public class InstanceManagementHandler extends AbstractCallbackHandler {
         
         // Add batch operation buttons
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("?"??, "select_all_instances"),
-                KeyboardBuilder.button("?"??, "deselect_all_instances")
+                KeyboardBuilder.button("[v] Select All", "select_all_instances"),
+                KeyboardBuilder.button("[ ] Deselect All", "deselect_all_instances")
         ));
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("? ????", "refresh_instances")
+                KeyboardBuilder.button(" ????", "refresh_instances")
         ));
         
         // Add VNC button only when exactly one instance is selected
         java.util.Set<String> selectedInstances = storage.getSelectedInstances(chatId);
         if (selectedInstances != null && selectedInstances.size() == 1) {
             keyboard.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("? ??VNC??", "start_vnc_connection")
+                    KeyboardBuilder.button(" ??VNC??", "start_vnc_connection")
             ));
         }
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("? ???????"?, "confirm_terminate_instances")
+                KeyboardBuilder.button("[!] Terminate Selected", "confirm_terminate_instances")
         ));
         
         // Back button
@@ -309,13 +309,13 @@ class ToggleInstanceHandler extends AbstractCallbackHandler {
             if (i % 2 == 0) {
                 InlineKeyboardRow row = new InlineKeyboardRow();
                 row.add(KeyboardBuilder.button(
-                        String.format("%s ??%d", isSelected ?" "" : "?, i + 1),
+                        String.format("%s %d", isSelected ? "[v]" : "[ ]", i + 1),
                         "toggle_instance:" + i
                 ));
                 keyboard.add(row);
             } else {
                 keyboard.get(keyboard.size() - 1).add(KeyboardBuilder.button(
-                        String.format("%s ??%d", isSelected ?" "" : "?, i + 1),
+                        String.format("%s %d", isSelected ? "[v]" : "[ ]", i + 1),
                         "toggle_instance:" + i
                 ));
             }
@@ -323,24 +323,24 @@ class ToggleInstanceHandler extends AbstractCallbackHandler {
         
         // Add batch operation buttons
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("?"??, "select_all_instances"),
-                KeyboardBuilder.button("?"??, "deselect_all_instances")
+                KeyboardBuilder.button("[v] Select All", "select_all_instances"),
+                KeyboardBuilder.button("[ ] Deselect All", "deselect_all_instances")
         ));
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("? ????", "refresh_instances")
+                KeyboardBuilder.button(" ????", "refresh_instances")
         ));
         
         // Add VNC button only when exactly one instance is selected
         java.util.Set<String> selectedInstances = storage.getSelectedInstances(chatId);
         if (selectedInstances != null && selectedInstances.size() == 1) {
             keyboard.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("? ??VNC??", "start_vnc_connection")
+                    KeyboardBuilder.button(" ??VNC??", "start_vnc_connection")
             ));
         }
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("? ???????"?, "confirm_terminate_instances")
+                KeyboardBuilder.button("[!] Terminate Selected", "confirm_terminate_instances")
         ));
         
         // Back button
@@ -386,7 +386,7 @@ class SelectAllInstancesHandler extends AbstractCallbackHandler {
             try {
                 telegramClient.execute(AnswerCallbackQuery.builder()
                         .callbackQueryId(callbackQuery.getId())
-                        .text(String.format("???"?%d ?, instances.size()))
+                        .text(String.format("Selected %d instances", instances.size()))
                         .showAlert(false)
                         .build());
             } catch (TelegramApiException e) {
@@ -512,7 +512,7 @@ class RefreshInstancesHandler extends AbstractCallbackHandler {
             
             StringBuilder message = new StringBuilder("??????\n\n");
             message.append(String.format("??%d ????????\n", instances.size()));
-            message.append("? ????: ");
+            message.append(" ????: ");
             message.append(java.time.LocalDateTime.now().format(
                     java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")));
             message.append("\n\n");
@@ -548,13 +548,13 @@ class RefreshInstancesHandler extends AbstractCallbackHandler {
                 if (i % 2 == 0) {
                     InlineKeyboardRow row = new InlineKeyboardRow();
                     row.add(KeyboardBuilder.button(
-                            String.format("%s ??%d", isSelected ?" "" : "?, i + 1),
+                            String.format("%s %d", isSelected ? "[v]" : "[ ]", i + 1),
                             "toggle_instance:" + i  // Use index
                     ));
                     keyboard.add(row);
                 } else {
                     keyboard.get(keyboard.size() - 1).add(KeyboardBuilder.button(
-                            String.format("%s ??%d", isSelected ?" "" : "?, i + 1),
+                            String.format("%s %d", isSelected ? "[v]" : "[ ]", i + 1),
                             "toggle_instance:" + i  // Use index
                     ));
                 }
@@ -562,24 +562,24 @@ class RefreshInstancesHandler extends AbstractCallbackHandler {
             
             // Add batch operation buttons
             keyboard.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("?"??, "select_all_instances"),
-                    KeyboardBuilder.button("?"??, "deselect_all_instances")
+                    KeyboardBuilder.button("[v] Select All", "select_all_instances"),
+                    KeyboardBuilder.button("[ ] Deselect All", "deselect_all_instances")
             ));
             
             keyboard.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("? ????", "refresh_instances")
+                    KeyboardBuilder.button(" ????", "refresh_instances")
             ));
             
             // Add VNC button only when exactly one instance is selected
             java.util.Set<String> selectedInstances = storage2.getSelectedInstances(chatId);
             if (selectedInstances != null && selectedInstances.size() == 1) {
                 keyboard.add(new InlineKeyboardRow(
-                        KeyboardBuilder.button("? ??VNC??", "start_vnc_connection")
+                        KeyboardBuilder.button(" ??VNC??", "start_vnc_connection")
                 ));
             }
             
             keyboard.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("? ???????"?, "confirm_terminate_instances")
+                    KeyboardBuilder.button("[!] Terminate Selected", "confirm_terminate_instances")
             ));
             
             // Back button
@@ -690,7 +690,7 @@ class StartVncConnectionHandler extends AbstractCallbackHandler {
         try {
             telegramClient.execute(AnswerCallbackQuery.builder()
                     .callbackQueryId(callbackQuery.getId())
-                    .text("???? VNC ??...")
+                    .text(" VNC ??...")
                     .showAlert(false)
                     .build());
         } catch (TelegramApiException e) {
@@ -780,7 +780,7 @@ class StartVncConnectionHandler extends AbstractCallbackHandler {
                     "??: %s\n" +
                     "ID: ...%s\n\n" +
                     "VNC ????:\n%s\n\n" +
-                    "?? ??????????????????",
+                    " ??????????????????",
                     instance.getName(),
                     instance.getRegion(),
                     instanceId.substring(Math.max(0, instanceId.length() - 8)),
@@ -803,7 +803,7 @@ class StartVncConnectionHandler extends AbstractCallbackHandler {
             
             return buildEditMessage(
                     callbackQuery,
-                    "???? VNC ??????" + e.getMessage(),
+                    " VNC ??????" + e.getMessage(),
                     new InlineKeyboardMarkup(java.util.List.of(
                             new InlineKeyboardRow(
                                     KeyboardBuilder.button("?????????", "instance_management:" + ociCfgId)

@@ -144,7 +144,7 @@ public class OciServiceImpl implements IOciService {
     public void addCfg(AddCfgParams params) {
         List<OciUser> ociUserList = userService.list(new LambdaQueryWrapper<OciUser>().eq(OciUser::getUsername, params.getUsername()));
         if (ociUserList.size() != 0) {
-            throw new OciException(-1, "?????????"?);
+            throw new OciException(-1, "?????????");
         }
 
         String priKeyPath = keyDirPath + File.separator + params.getFile().getOriginalFilename();
@@ -186,7 +186,7 @@ public class OciServiceImpl implements IOciService {
         } catch (Exception e) {
             log.error("??:[{}],??:[{}],????????:[{}]",
                     ociUser.getUsername(), ociUser.getOciRegion(), e.getLocalizedMessage());
-            throw new OciException(-1, "?????????????????????"?);
+            throw new OciException(-1, "?????????????????????");
         }
         userService.save(ociUser);
     }
@@ -196,7 +196,7 @@ public class OciServiceImpl implements IOciService {
     public void removeCfg(IdListParams params) {
         params.getIdList().forEach(id -> {
             if (createTaskService.count(new LambdaQueryWrapper<OciCreateTask>().eq(OciCreateTask::getUserId, id)) > 0) {
-                throw new OciException(-1, "??:" + userService.getById(id).getUsername() + " ??????"?,?);
+                throw new OciException(-1, "??:" + userService.getById(id).getUsername() + " ??????",?);
             }
         });
         userService.removeBatchByIds(params.getIdList());
@@ -312,13 +312,13 @@ public class OciServiceImpl implements IOciService {
                                 }
                                 return netLoadBalancer;
                             } catch (Exception e) {
-                                log.error("?????????????"?, e);
+                                log.error("?????????????", e);
                             }
                             return null;
                         }).filter(Objects::nonNull).collect(Collectors.toList());
                 rsp.setNlbList(nlbList);
             } catch (Exception e) {
-                log.error("?????????????"?, e);
+                log.error("?????????????", e);
             }
         } else {
             rsp.setNlbList(netLoadBalancers);
@@ -436,7 +436,7 @@ public class OciServiceImpl implements IOciService {
                 try {
                     createInstance(item);
                 } catch (Exception e) {
-                    throw new OciException(-1, "????????"?);
+                    throw new OciException(-1, "????????");
                 }
             }, delay, TimeUnit.SECONDS);
         });
@@ -489,7 +489,7 @@ public class OciServiceImpl implements IOciService {
                     } catch (Exception e) {
                         log.error("??:[{}],??:[{}]????????????????????????:{}",
                                 ociUser.getUsername(), ociUser.getOciRegion(), e.getLocalizedMessage());
-                        throw new OciException(-1, "??:" + ociUser.getUsername() + " ???"??);
+                        throw new OciException(-1, "??:" + ociUser.getUsername() + " ???");
                     }
                 })
                 .collect(Collectors.toList());
@@ -504,7 +504,7 @@ public class OciServiceImpl implements IOciService {
         } catch (Exception e) {
             log.error("??:[{}],??:[{}] ?????????????:[{}]",
                     sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(), e.getLocalizedMessage());
-            throw new OciException(-1, "????????"?);
+            throw new OciException(-1, "????????");
         }
     }
 
@@ -624,7 +624,7 @@ public class OciServiceImpl implements IOciService {
         Optional.ofNullable(userService.getOne(new LambdaQueryWrapper<OciUser>()
                 .eq(OciUser::getUsername, params.getUpdateCfgName()))).ifPresent(user -> {
             if (!user.getId().equals(params.getCfgId())) {
-                throw new OciException(-1, "????:?"? + params.getUpdateCfgName() + "????");
+                throw new OciException(-1, "????:?" + params.getUpdateCfgName() + "????");
             }
         });
 
@@ -934,7 +934,7 @@ public class OciServiceImpl implements IOciService {
                         publicIp, newAmdSshPwd));
             } catch (Exception e) {
                 log.error("????/??????", e);
-                throw new OciException(-1, "????/??????,?????????"?);
+                throw new OciException(-1, "????/??????,?????????");
             }
         });
     }

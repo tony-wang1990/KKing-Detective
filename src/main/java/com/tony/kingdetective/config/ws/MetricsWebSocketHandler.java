@@ -88,7 +88,7 @@ public class MetricsWebSocketHandler {
 
     @OnMessage
     public void onMessage(String message) {
-        log.info("?WebSocket???????????"? + message);
+        log.info("?WebSocket???????????" + message);
     }
 
     /**
@@ -103,7 +103,7 @@ public class MetricsWebSocketHandler {
                     session.getAsyncRemote().sendText(message);
                 }
             } catch (Exception e) {
-                log.error("?????????"?, e);
+                log.error("?????????", e);
             }
         }
     }
