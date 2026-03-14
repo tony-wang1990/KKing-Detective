@@ -37,7 +37,7 @@ public class SelectConfigHandler extends AbstractCallbackHandler {
         if (user == null) {
             return buildEditMessage(
                     callbackQuery,
-                    "??"?,
+                    "??",
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }

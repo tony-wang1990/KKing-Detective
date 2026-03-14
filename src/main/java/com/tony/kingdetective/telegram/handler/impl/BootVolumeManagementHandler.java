@@ -62,7 +62,7 @@ public class BootVolumeManagementHandler extends AbstractCallbackHandler {
             if (CollectionUtil.isEmpty(volumes)) {
                 return buildEditMessage(
                         callbackQuery,
-                        "?"??,
+                        "?",
                         new InlineKeyboardMarkup(List.of(
                                 new InlineKeyboardRow(
                                         KeyboardBuilder.button("?????", "select_config:" + ociCfgId)
@@ -119,14 +119,14 @@ public class BootVolumeManagementHandler extends AbstractCallbackHandler {
                     "   ??: %sGB | VPUs: %s\n" +
                     "   ???? %s\n" +
                     "   ???? %s%s\n\n",
-                    isSelected ?" "" : "?,
+                    isSelected ? "[v]" : "[ ]",
                     i + 1,
                     volume.getDisplayName(),
                     volume.getLifecycleState(),
                     volume.getSizeInGBs(),
                     volume.getVpusPerGB(),
                     volume.getAvailabilityDomain(),
-                    volume.getAttached() ? "?? : "?,
+                    volume.getAttached() ? "Yes" : "No",
                     volume.getAttached() && volume.getInstanceName() != null ? " (" + volume.getInstanceName() + ")" : ""
             ));
             
@@ -134,13 +134,13 @@ public class BootVolumeManagementHandler extends AbstractCallbackHandler {
             if (i % 2 == 0) {
                 InlineKeyboardRow row = new InlineKeyboardRow();
                 row.add(KeyboardBuilder.button(
-                        String.format("%s ?"?d", isSelected ? "" : "?, i + 1),
+                        String.format("%s ?"d", isSelected ? "" : ", i + 1),
                         "toggle_boot_volume:" + i  // Use index
                 ));
                 keyboard.add(row);
             } else {
                 keyboard.get(keyboard.size() - 1).add(KeyboardBuilder.button(
-                        String.format("%s ?"?d", isSelected ? "" : "?, i + 1),
+                        String.format("%s ?"d", isSelected ? "" : ", i + 1),
                         "toggle_boot_volume:" + i  // Use index
                 ));
             }
@@ -148,16 +148,16 @@ public class BootVolumeManagementHandler extends AbstractCallbackHandler {
         
         // Add batch operation buttons
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("?"??, "select_all_boot_volumes"),
-                KeyboardBuilder.button("?"??, "deselect_all_boot_volumes")
+                KeyboardBuilder.button("?", "select_all_boot_volumes"),
+                KeyboardBuilder.button("?", "deselect_all_boot_volumes")
         ));
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("? ????", "refresh_boot_volumes")
+                KeyboardBuilder.button(" ????", "refresh_boot_volumes")
         ));
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("? ????????", "confirm_terminate_boot_volumes")
+                KeyboardBuilder.button(" ????????", "confirm_terminate_boot_volumes")
         ));
         
         // Back button
@@ -217,7 +217,7 @@ class ToggleBootVolumeHandler extends AbstractCallbackHandler {
         try {
             telegramClient.execute(AnswerCallbackQuery.builder()
                     .callbackQueryId(callbackQuery.getId())
-                    .text(isSelected ? "???" : "?????")
+                    .text(isSelected ? "???" : "????")
                     .showAlert(false)
                     .build());
         } catch (TelegramApiException e) {
@@ -289,14 +289,14 @@ class ToggleBootVolumeHandler extends AbstractCallbackHandler {
                     "   ??: %sGB | VPUs: %s\n" +
                     "   ???? %s\n" +
                     "   ???? %s%s\n\n",
-                    isSelected ?" "" : "?,
+                    isSelected ? "[v]" : "[ ]",
                     i + 1,
                     volume.getDisplayName(),
                     volume.getLifecycleState(),
                     volume.getSizeInGBs(),
                     volume.getVpusPerGB(),
                     volume.getAvailabilityDomain(),
-                    volume.getAttached() ? "?? : "?,
+                    volume.getAttached() ? "Yes" : "No",
                     volume.getAttached() && volume.getInstanceName() != null ? " (" + volume.getInstanceName() + ")" : ""
             ));
             
@@ -304,13 +304,13 @@ class ToggleBootVolumeHandler extends AbstractCallbackHandler {
             if (i % 2 == 0) {
                 InlineKeyboardRow row = new InlineKeyboardRow();
                 row.add(KeyboardBuilder.button(
-                        String.format("%s ?"?d", isSelected ? "" : "?, i + 1),
+                        String.format("%s ?"d", isSelected ? "" : ", i + 1),
                         "toggle_boot_volume:" + i
                 ));
                 keyboard.add(row);
             } else {
                 keyboard.get(keyboard.size() - 1).add(KeyboardBuilder.button(
-                        String.format("%s ?"?d", isSelected ? "" : "?, i + 1),
+                        String.format("%s ?"d", isSelected ? "" : ", i + 1),
                         "toggle_boot_volume:" + i
                 ));
             }
@@ -318,16 +318,16 @@ class ToggleBootVolumeHandler extends AbstractCallbackHandler {
         
         // Add batch operation buttons
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("?"??, "select_all_boot_volumes"),
-                KeyboardBuilder.button("?"??, "deselect_all_boot_volumes")
+                KeyboardBuilder.button("?", "select_all_boot_volumes"),
+                KeyboardBuilder.button("?", "deselect_all_boot_volumes")
         ));
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("? ????", "refresh_boot_volumes")
+                KeyboardBuilder.button(" ????", "refresh_boot_volumes")
         ));
         
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("? ????????", "confirm_terminate_boot_volumes")
+                KeyboardBuilder.button(" ????????", "confirm_terminate_boot_volumes")
         ));
         
         // Back button
@@ -449,7 +449,7 @@ class ConfirmTerminateBootVolumesHandler extends AbstractCallbackHandler {
             try {
                 telegramClient.execute(AnswerCallbackQuery.builder()
                         .callbackQueryId(callbackQuery.getId())
-                        .text("???????????"?)
+                        .text("???????????")
                         .showAlert(true)
                         .build());
             } catch (TelegramApiException e) {
@@ -473,7 +473,7 @@ class ConfirmTerminateBootVolumesHandler extends AbstractCallbackHandler {
                 "?????????\n\n" +
                 "?? ?????%d ???????????????\n\n" +
                 "?? ??????????\n" +
-                "?????????????????"?,
+                "?????????????????",
                 selectedVolumes.size()
         );
         
@@ -523,7 +523,7 @@ class ExecuteTerminateBootVolumesHandler extends AbstractCallbackHandler {
             try {
                 telegramClient.execute(AnswerCallbackQuery.builder()
                         .callbackQueryId(callbackQuery.getId())
-                        .text("???????"?)
+                        .text("???????")
                         .showAlert(true)
                         .build());
             } catch (TelegramApiException e) {
@@ -669,7 +669,7 @@ class RefreshBootVolumesHandler extends AbstractCallbackHandler {
             if (CollectionUtil.isEmpty(volumes)) {
                 return buildEditMessage(
                         callbackQuery,
-                        "?"??,
+                        "?",
                         new InlineKeyboardMarkup(List.of(
                                 new InlineKeyboardRow(
                                         KeyboardBuilder.button("?????", "select_config:" + ociCfgId)
@@ -688,7 +688,7 @@ class RefreshBootVolumesHandler extends AbstractCallbackHandler {
             
             StringBuilder message = new StringBuilder("???????\n\n");
             message.append(String.format("??%d ?????\n", volumes.size()));
-            message.append("? ????: ");
+            message.append(" ????: ");
             message.append(java.time.LocalDateTime.now().format(
                     java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")));
             message.append("\n\n");
@@ -706,14 +706,14 @@ class RefreshBootVolumesHandler extends AbstractCallbackHandler {
                         "   ??: %sGB | VPUs: %s\n" +
                         "   ???? %s\n" +
                         "   ???? %s%s\n\n",
-                        isSelected ?" "" : "?,
+                        isSelected ? "[v]" : "[ ]",
                         i + 1,
                         volume.getDisplayName(),
                         volume.getLifecycleState(),
                         volume.getSizeInGBs(),
                         volume.getVpusPerGB(),
                         volume.getAvailabilityDomain(),
-                        volume.getAttached() ? "?? : "?,
+                        volume.getAttached() ? "Yes" : "No",
                         volume.getAttached() && volume.getInstanceName() != null ? " (" + volume.getInstanceName() + ")" : ""
                 ));
                 
@@ -721,13 +721,13 @@ class RefreshBootVolumesHandler extends AbstractCallbackHandler {
                 if (i % 2 == 0) {
                     InlineKeyboardRow row = new InlineKeyboardRow();
                     row.add(KeyboardBuilder.button(
-                            String.format("%s ?"?d", isSelected ? "" : "?, i + 1),
+                            String.format("%s ?"d", isSelected ? "" : ", i + 1),
                             "toggle_boot_volume:" + i  // Use index
                     ));
                     keyboard.add(row);
                 } else {
                     keyboard.get(keyboard.size() - 1).add(KeyboardBuilder.button(
-                            String.format("%s ?"?d", isSelected ? "" : "?, i + 1),
+                            String.format("%s ?"d", isSelected ? "" : ", i + 1),
                             "toggle_boot_volume:" + i  // Use index
                     ));
                 }
@@ -735,16 +735,16 @@ class RefreshBootVolumesHandler extends AbstractCallbackHandler {
             
             // Add batch operation buttons
             keyboard.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("?"??, "select_all_boot_volumes"),
-                    KeyboardBuilder.button("?"??, "deselect_all_boot_volumes")
+                    KeyboardBuilder.button("?", "select_all_boot_volumes"),
+                    KeyboardBuilder.button("?", "deselect_all_boot_volumes")
             ));
             
             keyboard.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("? ????", "refresh_boot_volumes")
+                    KeyboardBuilder.button(" ????", "refresh_boot_volumes")
             ));
             
             keyboard.add(new InlineKeyboardRow(
-                    KeyboardBuilder.button("? ????????", "confirm_terminate_boot_volumes")
+                    KeyboardBuilder.button(" ????????", "confirm_terminate_boot_volumes")
             ));
             
             // Back button
@@ -763,10 +763,10 @@ class RefreshBootVolumesHandler extends AbstractCallbackHandler {
             log.error("Failed to refresh boot volumes for ociCfgId: {}", ociCfgId, e);
             return buildEditMessage(
                     callbackQuery,
-                    "?"?? + e.getMessage(),
+                    "?" + e.getMessage(),
                     new InlineKeyboardMarkup(List.of(
                             new InlineKeyboardRow(
-                                    KeyboardBuilder.button("? ??", "refresh_boot_volumes")
+                                    KeyboardBuilder.button(" ??", "refresh_boot_volumes")
                             ),
                             new InlineKeyboardRow(
                                     KeyboardBuilder.button("?????", "select_config:" + ociCfgId)

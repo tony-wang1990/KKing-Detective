@@ -49,19 +49,19 @@ public class VncConfigHandler extends AbstractCallbackHandler {
         if (hasConfig) {
             String vncUrl = vncConfig.getValue().trim();
             text = String.format(
-                "? *VNC ????*\n\n" +
-                "? ?????\n" +
+                " *VNC ????*\n\n" +
+                " ?????\n" +
                 "??VNC URL: %s\n" +
                 "????? ?????\n\n" +
-                "? ?????\n" +
+                " ?????\n" +
                 "??URL ???????? VNC ???\n" +
-                "????????????????\"??VNC??\"??\n" +
+                "????????????????\"?VNC??\"??\n" +
                 "?????? URL ??????VNC ?????\n\n" +
                 "?? URL ?????\n" +
                 "??IP??: http://IP:?? (???? /vnc.html)\n" +
                 "????HTTP: http://domain.com (?? /vnc.html)\n" +
                 "????HTTPS: https://domain.com (?? /myvnc/vnc.html)\n\n" +
-                "? ???\n" +
+                " ???\n" +
                 "??http://192.168.1.100:6080\n" +
                 "??http://vnc.example.com\n" +
                 "??https://vnc.example.com\n\n" +
@@ -74,23 +74,23 @@ public class VncConfigHandler extends AbstractCallbackHandler {
             );
             
             keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("? ????", "vnc_setup")
+                KeyboardBuilder.button(" ????", "vnc_setup")
             ));
             
             keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button("???????", "vnc_delete")
             ));
         } else {
-            text = "? *VNC ????*\n\n" +
-                   "? ?????? VNC URL\n\n" +
-                   "? ?????\n" +
+            text = " *VNC ????*\n\n" +
+                   " ?????? VNC URL\n\n" +
+                   " ?????\n" +
                    "?? VNC URL ???????????VNC ????\n" +
                    "?????? URL ?? VNC ?????\n\n" +
                    "?? URL ?????\n" +
                    "??IP??: http://IP:?? (???? /vnc.html)\n" +
                    "????HTTP: http://domain.com (?? /vnc.html)\n" +
                    "????HTTPS: https://domain.com (?? /myvnc/vnc.html)\n\n" +
-                   "? ???\n" +
+                   " ???\n" +
                    "??http://192.168.1.100:6080\n" +
                    "??http://vnc.example.com\n" +
                    "??https://vnc.example.com\n\n" +
@@ -137,9 +137,9 @@ class VncSetupHandler extends AbstractCallbackHandler {
         // Mark this chat as configuring VNC
         ConfigSessionStorage.getInstance().startVncConfig(chatId);
         
-        String text = "? *?? VNC URL*\n\n" +
+        String text = " *?? VNC URL*\n\n" +
                      "??????VNC URL??????????\n\n" +
-                     "? ?????\n" +
+                     " ?????\n" +
                      "??http://192.168.1.100:6080\n" +
                      "??http://vnc.example.com\n" +
                      "??https://vnc.example.com\n\n" +
@@ -151,7 +151,7 @@ class VncSetupHandler extends AbstractCallbackHandler {
                      "  - IP?? ??/vnc.html\n" +
                      "  - HTTP?? ??/vnc.html\n" +
                      "  - HTTPS?? ??/myvnc/vnc.html\n\n" +
-                     "? ???\n" +
+                     " ???\n" +
                      "/cancel";
         
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
@@ -196,7 +196,7 @@ class VncDeleteHandler extends AbstractCallbackHandler {
             
             String text = "??*VNC ??????\n\n" +
                          "???????????????IP:6080?\n\n" +
-                         "? ???\n" +
+                         " ???\n" +
                          "????????? VNC URL";
             
             List<InlineKeyboardRow> keyboard = new ArrayList<>();
@@ -215,7 +215,7 @@ class VncDeleteHandler extends AbstractCallbackHandler {
             log.error("Failed to delete VNC configuration", e);
             
             String text = "??*?? VNC ????*\n\n" +
-                         "?????"? + e.getMessage();
+                         "Error: " + e.getMessage();
             
             List<InlineKeyboardRow> keyboard = new ArrayList<>();
             keyboard.add(new InlineKeyboardRow(

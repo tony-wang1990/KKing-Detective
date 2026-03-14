@@ -55,7 +55,7 @@ public class ConfirmTerminateHandler extends AbstractCallbackHandler {
         
         List<InlineKeyboardRow> keyboard = List.of(
                 new InlineKeyboardRow(
-                        KeyboardBuilder.button("?"??, "terminate_instances:true")
+                        KeyboardBuilder.button("?", "terminate_instances:true")
                 ),
                 new InlineKeyboardRow(
                         KeyboardBuilder.button("????????", "terminate_instances:false")
@@ -112,7 +112,7 @@ class TerminateSelectedInstancesHandler extends AbstractCallbackHandler {
             try {
                 telegramClient.execute(AnswerCallbackQuery.builder()
                         .callbackQueryId(callbackQuery.getId())
-                        .text("???????"?)
+                        .text("???????")
                         .showAlert(true)
                         .build());
             } catch (TelegramApiException e) {
@@ -125,7 +125,7 @@ class TerminateSelectedInstancesHandler extends AbstractCallbackHandler {
             try {
                 telegramClient.execute(AnswerCallbackQuery.builder()
                         .callbackQueryId(callbackQuery.getId())
-                        .text("???????"?)
+                        .text("???????")
                         .showAlert(true)
                         .build());
             } catch (TelegramApiException e) {
@@ -161,7 +161,7 @@ class TerminateSelectedInstancesHandler extends AbstractCallbackHandler {
                 "??????%s\n\n" +
                 "??????????..",
                 selectedInstances.size(),
-                preserveBootVolume ? "?? : "?
+                preserveBootVolume ? "?? : "
         );
         
         try {
@@ -226,12 +226,12 @@ class TerminateSelectedInstancesHandler extends AbstractCallbackHandler {
             if (failedCount > 0) {
                 resultMessage.append(String.format(
                         "????????????????%d ???\n???? %d ?????????????~\n\n??????%s",
-                        successCount, failedCount, preserveBootVolume ? "?? : "?
+                        successCount, failedCount, preserveBootVolume ? "?? : "
                 ));
             } else {
                 resultMessage.append(String.format(
                         "??????????%d ???????????????~\n\n??????%s",
-                        successCount, preserveBootVolume ? "?? : "?
+                        successCount, preserveBootVolume ? "?? : "
                 ));
             }
             

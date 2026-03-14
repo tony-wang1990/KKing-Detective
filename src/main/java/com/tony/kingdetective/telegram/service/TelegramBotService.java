@@ -72,7 +72,7 @@ public class TelegramBotService {
                 ids.size() - failNames.size(),
                 failNames.size(),
                 ids.size(),
-                CollectionUtil.isEmpty(failNames) ?" "? : String.join("\n", failNames)
+                CollectionUtil.isEmpty(failNames) ?" " : String.join("\n", failNames)
         );
     }
     
@@ -92,7 +92,7 @@ public class TelegramBotService {
         CompletableFuture<String> task = CompletableFuture.supplyAsync(() -> {
             List<OciCreateTask> ociCreateTaskList = createTaskService.list();
             if (ociCreateTaskList.isEmpty()) {
-                return "?"?;
+                return "?";
             }
             
             String template = "[%s] [%s] [%s] [%s??%sGB/%sGB] [%s?] [%s] [%s?]";
@@ -150,8 +150,8 @@ public class TelegramBotService {
                     }
                     return String.format(
                             "\uD83D\uDD58 ????s\n" +
-                            "? ??????s?\n" +
-                            "? ??????s?\n" +
+                            " ??????s?\n" +
+                            " ??????s?\n" +
                             "\uD83D\uDDA5 ???????s???\n" +
                             "????????????s\n" +
                             "????????????s\n",

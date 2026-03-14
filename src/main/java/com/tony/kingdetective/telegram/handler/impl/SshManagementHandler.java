@@ -42,39 +42,39 @@ public class SshManagementHandler extends AbstractCallbackHandler {
         if (hasConnection) {
             SshConnectionStorage.SshInfo info = storage.getConnection(chatId);
             text = String.format(
-                "? *SSH ????*\n\n" +
-                "? ?????\n" +
+                " *SSH ????*\n\n" +
+                " ?????\n" +
                 "????: %s:%d\n" +
                 "????: %s\n" +
                 "????? ?????\n\n" +
-                "? ?????\n" +
+                " ?????\n" +
                 "???/ssh [??] ????SSH ??\n" +
                 "??: /ssh ls -la\n\n" +
-                "?? ??????"?,
+                "?? ??????",
                 info.getHost(),
                 info.getPort(),
                 info.getUsername()
             );
             
             keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("? ????", "ssh_setup")
+                KeyboardBuilder.button(" ????", "ssh_setup")
             ));
             
             keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("? ????", "ssh_test")
+                KeyboardBuilder.button(" ????", "ssh_test")
             ));
             
             keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button("???????", "ssh_disconnect")
             ));
         } else {
-            text = "? *SSH ????*\n\n" +
-                   "? ?????? SSH ??\n\n" +
-                   "? ?????\n" +
+            text = " *SSH ????*\n\n" +
+                   " ?????? SSH ??\n\n" +
+                   " ?????\n" +
                    "???????? SSH ????\n" +
                    "?????host port username password\n" +
                    "??: 192.168.1.100 22 root mypassword\n\n" +
-                   "?? ??????"?;
+                   "?? ??????";
             
             keyboard.add(new InlineKeyboardRow(
                 KeyboardBuilder.button("??????", "ssh_setup")
@@ -108,10 +108,10 @@ class SshSetupHandler extends AbstractCallbackHandler {
     public BotApiMethod<? extends Serializable> handle(CallbackQuery callbackQuery, TelegramClient telegramClient) {
         long chatId = callbackQuery.getMessage().getChatId();
         
-        String text = "? *?? SSH ??*\n\n" +
+        String text = " *?? SSH ??*\n\n" +
                      "?????????????\n\n" +
                      "/ssh_config host port username password\n\n" +
-                     "? ???\n" +
+                     " ???\n" +
                      "/ssh_config 192.168.1.100 22 root mypassword\n\n" +
                      "?? ???\n" +
                      "???????????\n" +
@@ -163,7 +163,7 @@ class SshTestHandler extends AbstractCallbackHandler {
         try {
             telegramClient.execute(buildEditMessage(
                 callbackQuery,
-                "? ??????...",
+                " ??????...",
                 null
             ));
         } catch (TelegramApiException e) {
@@ -186,7 +186,7 @@ class SshTestHandler extends AbstractCallbackHandler {
                 "??*??????*\n\n" +
                 "??: %s:%d\n" +
                 "??: %s\n\n" +
-                "SSH ?????????????"?,
+                "SSH ?????????????",
                 info.getHost(),
                 info.getPort(),
                 info.getUsername()
@@ -200,7 +200,7 @@ class SshTestHandler extends AbstractCallbackHandler {
                 "?????????????\n" +
                 "????????????\n" +
                 "??????????\n" +
-                "?"?SSH ?,
+                "?"SSH ?,
                 info.getHost(),
                 info.getPort(),
                 info.getUsername()
