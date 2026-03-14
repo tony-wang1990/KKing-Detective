@@ -49,7 +49,7 @@ public class TaskManagementHandler extends AbstractCallbackHandler {
         if (CollectionUtil.isEmpty(taskList)) {
             return buildEditMessage(
                     callbackQuery,
-                    "?"??,
+                    "Select All",
                     new InlineKeyboardMarkup(KeyboardBuilder.buildMainMenu())
             );
         }
@@ -110,7 +110,7 @@ public class TaskManagementHandler extends AbstractCallbackHandler {
                     "%s %d. [%s] [%s] [%s]\n" +
                     "   ??: %s??%sG/%sG\n" +
                     "   ??: %s??| ???? %s | ??: %s?\n\n",
-                    isSelected ?" "" : "?,
+                    isSelected ? "[x]" : "[ ]",
                     taskNumber,
                     user.getUsername(),
                     user.getOciRegion(),
@@ -127,13 +127,13 @@ public class TaskManagementHandler extends AbstractCallbackHandler {
             if (i % 2 == 0) {
                 InlineKeyboardRow row = new InlineKeyboardRow();
                 row.add(KeyboardBuilder.button(
-                        String.format("%s ??%d", isSelected ?" "" : "?, taskNumber),
+                        String.format("%s ??%d", isSelected ? "[x]" : "[ ]", taskNumber),
                         "toggle_task:" + task.getId()
                 ));
                 keyboard.add(row);
             } else {
                 keyboard.get(keyboard.size() - 1).add(KeyboardBuilder.button(
-                        String.format("%s ??%d", isSelected ?" "" : "?, taskNumber),
+                        String.format("%s ??%d", isSelected ? "[x]" : "[ ]", taskNumber),
                         "toggle_task:" + task.getId()
                 ));
             }
@@ -151,8 +151,8 @@ public class TaskManagementHandler extends AbstractCallbackHandler {
         
         // 
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("?"??, "select_all_tasks"),
-                KeyboardBuilder.button("?"??, "deselect_all_tasks")
+                KeyboardBuilder.button("Select All", "select_all_tasks"),
+                KeyboardBuilder.button("Select All", "deselect_all_tasks")
         ));
         
         keyboard.add(new InlineKeyboardRow(

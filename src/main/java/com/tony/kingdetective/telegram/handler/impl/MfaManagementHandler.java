@@ -196,7 +196,7 @@ class MfaEnableHandler extends AbstractCallbackHandler {
             // Show processing message
             telegramClient.execute(buildEditMessage(
                 callbackQuery,
-                "?" MFA...\n\n?,
+                "Processing MFA...\n\n",
                 null
             ));
             
@@ -450,7 +450,7 @@ class MfaDeleteSecretHandler extends AbstractCallbackHandler {
                      "?????? Web ??????\n" +
                      "?????????????\n\n" +
                      " ???\n" +
-                     "????????????????"MFA?;
+                     "Please provide MFA code:";
         
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
         

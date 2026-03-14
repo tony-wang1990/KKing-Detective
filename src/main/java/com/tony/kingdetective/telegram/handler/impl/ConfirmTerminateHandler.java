@@ -161,7 +161,7 @@ class TerminateSelectedInstancesHandler extends AbstractCallbackHandler {
                 "??????%s\n\n" +
                 "??????????..",
                 selectedInstances.size(),
-                preserveBootVolume ? "?? : "
+                preserveBootVolume ? "Yes" : "No"
         );
         
         try {
@@ -226,12 +226,12 @@ class TerminateSelectedInstancesHandler extends AbstractCallbackHandler {
             if (failedCount > 0) {
                 resultMessage.append(String.format(
                         "????????????????%d ???\n???? %d ?????????????~\n\n??????%s",
-                        successCount, failedCount, preserveBootVolume ? "?? : "
+                        successCount, failedCount, preserveBootVolume ? "Yes" : "No"
                 ));
             } else {
                 resultMessage.append(String.format(
                         "??????????%d ???????????????~\n\n??????%s",
-                        successCount, preserveBootVolume ? "?? : "
+                        successCount, preserveBootVolume ? "Yes" : "No"
                 ));
             }
             

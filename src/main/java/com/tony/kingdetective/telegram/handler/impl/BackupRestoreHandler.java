@@ -47,7 +47,7 @@ public class BackupRestoreHandler extends AbstractCallbackHandler {
                 "?????????????\n" +
                 "????????????\n" +
                 "???????????\n\n" +
-                "?? ??????"?;
+                "Backup Execute";
 
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
 
@@ -97,12 +97,12 @@ class BackupCreateHandler extends AbstractCallbackHandler {
                 "????????\n" +
                 "????????\n\n" +
                 "?? ???\n" +
-                "?????????????????????"?;
+                "Please confirm backup";
 
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
 
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("? ????"?, "backup_execute_plain"),
+                KeyboardBuilder.button("Execute Backup", "backup_execute_plain"),
                 KeyboardBuilder.button("? ????", "backup_execute_encrypted")
         ));
 
@@ -141,7 +141,7 @@ class BackupExecutePlainHandler extends AbstractCallbackHandler {
             // Send processing message
             telegramClient.execute(buildEditMessage(
                     callbackQuery,
-                    "?"?...\n\n?,
+                    "Processing backup...\n\n",
                     null
             ));
 
@@ -218,7 +218,7 @@ class BackupExecutePlainHandler extends AbstractCallbackHandler {
 
             String text = "??*??????*\n\n" +
                     "?????"? + e.getMessage() + "\n\n" +
-                    "?????????????"?;
+                    "Processing restore...";
 
             List<InlineKeyboardRow> keyboard = new ArrayList<>();
             keyboard.add(new InlineKeyboardRow(
@@ -265,7 +265,7 @@ class BackupExecuteEncryptedHandler extends AbstractCallbackHandler {
                 "?????????????\n" +
                 "?????????????\n\n" +
                 "? ???\n" +
-                "??"?/cancel ?;
+                "/cancel";
 
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
         keyboard.add(new InlineKeyboardRow(
@@ -316,7 +316,7 @@ class RestoreDataHandler extends AbstractCallbackHandler {
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
 
         keyboard.add(new InlineKeyboardRow(
-                KeyboardBuilder.button("? ????"?, "restore_start")
+                KeyboardBuilder.button("Start Restore", "restore_start")
         ));
 
         keyboard.add(new InlineKeyboardRow(
@@ -359,7 +359,7 @@ class RestoreStartHandler extends AbstractCallbackHandler {
                 "???????????????\n" +
                 "????????????????\n\n" +
                 "? ???\n" +
-                "??"?/cancel ?;
+                "/cancel";
 
         List<InlineKeyboardRow> keyboard = new ArrayList<>();
         keyboard.add(new InlineKeyboardRow(

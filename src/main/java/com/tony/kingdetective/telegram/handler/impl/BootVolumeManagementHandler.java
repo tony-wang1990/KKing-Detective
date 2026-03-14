@@ -134,13 +134,13 @@ public class BootVolumeManagementHandler extends AbstractCallbackHandler {
             if (i % 2 == 0) {
                 InlineKeyboardRow row = new InlineKeyboardRow();
                 row.add(KeyboardBuilder.button(
-                        String.format("%s ?"d", isSelected ? "" : ", i + 1),
+                        String.format("[%s] %d", isSelected ? "x" : " ", i + 1),
                         "toggle_boot_volume:" + i  // Use index
                 ));
                 keyboard.add(row);
             } else {
                 keyboard.get(keyboard.size() - 1).add(KeyboardBuilder.button(
-                        String.format("%s ?"d", isSelected ? "" : ", i + 1),
+                        String.format("[%s] %d", isSelected ? "x" : " ", i + 1),
                         "toggle_boot_volume:" + i  // Use index
                 ));
             }
@@ -304,13 +304,13 @@ class ToggleBootVolumeHandler extends AbstractCallbackHandler {
             if (i % 2 == 0) {
                 InlineKeyboardRow row = new InlineKeyboardRow();
                 row.add(KeyboardBuilder.button(
-                        String.format("%s ?"d", isSelected ? "" : ", i + 1),
+                        String.format("[%s] %d", isSelected ? "x" : " ", i + 1),
                         "toggle_boot_volume:" + i
                 ));
                 keyboard.add(row);
             } else {
                 keyboard.get(keyboard.size() - 1).add(KeyboardBuilder.button(
-                        String.format("%s ?"d", isSelected ? "" : ", i + 1),
+                        String.format("[%s] %d", isSelected ? "x" : " ", i + 1),
                         "toggle_boot_volume:" + i
                 ));
             }
@@ -721,13 +721,13 @@ class RefreshBootVolumesHandler extends AbstractCallbackHandler {
                 if (i % 2 == 0) {
                     InlineKeyboardRow row = new InlineKeyboardRow();
                     row.add(KeyboardBuilder.button(
-                            String.format("%s ?"d", isSelected ? "" : ", i + 1),
+                            String.format("[%s] %d", isSelected ? "x" : " ", i + 1),
                             "toggle_boot_volume:" + i  // Use index
                     ));
                     keyboard.add(row);
                 } else {
                     keyboard.get(keyboard.size() - 1).add(KeyboardBuilder.button(
-                            String.format("%s ?"d", isSelected ? "" : ", i + 1),
+                            String.format("[%s] %d", isSelected ? "x" : " ", i + 1),
                             "toggle_boot_volume:" + i  // Use index
                     ));
                 }
