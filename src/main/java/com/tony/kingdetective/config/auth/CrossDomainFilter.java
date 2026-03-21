@@ -34,6 +34,18 @@ public class CrossDomainFilter implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**")
-                .addResourceLocations("classpath:/dist/");
+                .addResourceLocations("classpath:/static/")
+                .resourceChain(true)
+                .addResolver(new org.springframework.web.servlet.resource.PathResourceResolver() {
+                    @Override
+                    protected org.springframework.core.io.Resource getResource(String resourcePath, org.springframework.core.io.Resource location) throws java.io.IOException {
+                        org.springframework.core.io.Resource requested = location.createRelative(resourcePath);
+                        if (requested.exists() && requested.isReadable()) {
+                            return requested;
+                        }
+                        // SPA fallback: serve index.html for all non-file routes
+                        return new org.springframework.core.io.ClassPathResource("static/index.html");
+                    }
+                });
     }
 }
