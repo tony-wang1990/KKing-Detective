@@ -111,7 +111,7 @@ public class NetbootHandler extends AbstractCallbackHandler {
                         .instanceId(instanceId)
                         .updateInstanceDetails(
                             UpdateInstanceDetails.builder()
-                                .ipxeScript(IPXE_SCRIPT)
+                                .extendedMetadata(java.util.Map.of("ipxeScript", IPXE_SCRIPT))
                                 .build()
                         )
                         .build()
@@ -153,5 +153,10 @@ public class NetbootHandler extends AbstractCallbackHandler {
         } catch (Exception e) {
             log.error("Failed to send msg", e);
         }
+    }
+
+    @Override
+    public String getCallbackPattern() {
+        return "netboot_";
     }
 }

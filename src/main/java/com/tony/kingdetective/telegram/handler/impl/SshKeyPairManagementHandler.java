@@ -214,4 +214,9 @@ public class SshKeyPairManagementHandler extends AbstractCallbackHandler {
             .username(user.getUsername())
             .build();
     }
+
+    @Override
+    public String getCallbackPattern() {
+        return "sshkeypairmanagement_";
+    }
 }

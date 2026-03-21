@@ -82,6 +82,9 @@ public class InstanceServiceImpl implements IInstanceService {
     @Value("${oci-cfg.boot-broadcast-url}")
     private String bootBroadcastUrl;
 
+    @Value("${oci-cfg.boot-broadcast-channel}")
+    private String bootBroadcastChannel;
+
     private static final String LEGACY_MESSAGE_TEMPLATE =
             "?????? \n\n? ???[%s] ???? ?\n" +
                     "??? %s\n" +

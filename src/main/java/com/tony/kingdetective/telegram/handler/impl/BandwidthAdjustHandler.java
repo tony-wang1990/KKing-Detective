@@ -199,4 +199,9 @@ public class BandwidthAdjustHandler extends AbstractCallbackHandler {
             .username(user.getUsername())
             .build();
     }
+
+    @Override
+    public String getCallbackPattern() {
+        return "bandwidthadjust_";
+    }
 }

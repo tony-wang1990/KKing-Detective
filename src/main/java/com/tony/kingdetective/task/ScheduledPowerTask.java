@@ -80,7 +80,7 @@ public class ScheduledPowerTask {
 
     private void executeInstanceAction(String userId, String instanceId, String action, IOciUserService userService) {
         OciUser user = userService.getById(userId);
-        if (user == null || user.getOciUserStatus() == 0) {
+        if (user == null || user.getDeleted() != null && user.getDeleted() == 1) {
             log.warn("??????????????????");
             return;
         }

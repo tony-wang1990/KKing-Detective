@@ -243,4 +243,9 @@ public class InstanceTagHandler extends AbstractCallbackHandler {
             .username(user.getUsername())
             .build();
     }
+
+    @Override
+    public String getCallbackPattern() {
+        return "instancetag_";
+    }
 }

@@ -146,6 +146,16 @@ public class ConfigSessionStorage {
 
     // ... existing methods ...
 
+    public void startCustomSession(long chatId, SessionType type, java.util.Map<?, ?> data) {
+        SessionState state = new SessionState();
+        state.setType(type);
+        if (data != null) {
+            state.getData().putAll((java.util.Map<String, Object>) data);
+        }
+        sessions.put(chatId, state);
+        log.debug("Started custom session {} for chatId: {}", type, chatId);
+    }
+
     /**
      * Session type enum
      */

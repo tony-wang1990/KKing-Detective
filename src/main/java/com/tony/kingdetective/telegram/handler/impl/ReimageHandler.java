@@ -239,7 +239,11 @@ public class ReimageHandler extends AbstractCallbackHandler {
                     .compartmentId(fetcher.getCompartmentId())
                     .availabilityDomain(oldInstance.getAvailabilityDomain())
                     .shape(oldInstance.getShape())
-                    .shapeConfig(oldInstance.getShapeConfig())
+                    .shapeConfig(oldInstance.getShapeConfig() != null ? 
+                        com.oracle.bmc.core.model.LaunchInstanceShapeConfigDetails.builder()
+                            .ocpus(oldInstance.getShapeConfig().getOcpus())
+                            .memoryInGBs(oldInstance.getShapeConfig().getMemoryInGBs())
+                            .build() : null)
                     .displayName(oldInstance.getDisplayName() + "-Reimaged")
                     .sourceDetails(
                         com.oracle.bmc.core.model.InstanceSourceViaBootVolumeDetails.builder()
@@ -297,5 +301,10 @@ public class ReimageHandler extends AbstractCallbackHandler {
                 .build())
             .username(user.getUsername())
             .build();
+    }
+
+    @Override
+    public String getCallbackPattern() {
+        return "reimage_";
     }
 }

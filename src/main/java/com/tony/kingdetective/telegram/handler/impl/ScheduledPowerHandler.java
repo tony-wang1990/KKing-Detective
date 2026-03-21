@@ -241,4 +241,9 @@ public class ScheduledPowerHandler extends AbstractCallbackHandler {
             .username(user.getUsername())
             .build();
     }
+
+    @Override
+    public String getCallbackPattern() {
+        return "scheduledpower_";
+    }
 }

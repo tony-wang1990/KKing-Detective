@@ -220,4 +220,9 @@ public class GlobalInstanceSummaryHandler extends AbstractCallbackHandler {
 
         AccountSummary(OciUser user) { this.user = user; }
     }
+
+    @Override
+    public String getCallbackPattern() {
+        return "globalinstancesummary_";
+    }
 }

@@ -108,4 +108,9 @@ public class AlertEmailHandler extends AbstractCallbackHandler {
             return buildEditMessage(callbackQuery, "? ?????" + e.getMessage());
         }
     }
+
+    @Override
+    public String getCallbackPattern() {
+        return "alertemail_";
+    }
 }

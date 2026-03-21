@@ -334,4 +334,9 @@ public class SnapshotManagementHandler extends AbstractCallbackHandler {
             default          -> state;
         };
     }
+
+    @Override
+    public String getCallbackPattern() {
+        return "snapshotmanagement_";
+    }
 }
