@@ -769,40 +769,44 @@
                 async loadData() {
                     this.loadingInstances = true;
                     try {
-                        // Load Settings
+                        // Load Settings (alert email)
                         axios.get('/api/sys/getAlertEmail').then(res => {
                             if (res.data.success) {
                                 this.settings.alertEmail = res.data.data;
                             }
                         });
 
-                        // First load user configurations mappings
-                        const userRes = await axios.post('/api/oci/userPage', { current: 1, size: 50 });
-                        const users = userRes.data.data.records || [];
+                        // Load OCI user list — correct field names: currentPage, pageSize
+                        const userRes = await axios.post('/api/oci/userPage', { currentPage: 1, pageSize: 50 });
+                        const users = (userRes.data.data && userRes.data.data.records) ? userRes.data.data.records : [];
                         this.ociUsers = users;
                         
                         let allInstances = [];
                         
-                        // We iterate users to fetch detailed instances for each
+                        // Fetch instance details for each OCI user
                         for(const user of users) {
                             try {
-                                const detailsRes = await axios.post('/api/oci/details', { id: user.id });
-                                const regionDesps = detailsRes.data.data.regionDesp || [];
+                                // correct field name: cfgId (not id)
+                                const detailsRes = await axios.post('/api/oci/details', { cfgId: user.id });
+                                const data = detailsRes.data.data;
+                                // OciCfgDetailsRsp returns instanceList (not regionDesp)
+                                const instanceList = (data && data.instanceList) ? data.instanceList : [];
                                 
-                                regionDesps.forEach(r => {
-                                    if(r.instances && r.instances.length > 0) {
-                                        r.instances.forEach(inst => {
-                                            allInstances.push({
-                                                id: inst.id,
-                                                displayName: inst.displayName,
-                                                lifecycleState: inst.lifecycleState,
-                                                publicIp: inst.publicIp,
-                                                shape: inst.shape,
-                                                region: r.regionName || r.region,
-                                                userId: user.id
-                                            });
-                                        });
-                                    }
+                                instanceList.forEach(inst => {
+                                    // Map InstanceInfo fields to UI model
+                                    // InstanceInfo: ocId, name, state, publicIp(List), shape, region
+                                    const ipList = Array.isArray(inst.publicIp) ? inst.publicIp : [];
+                                    allInstances.push({
+                                        id: inst.ocId,
+                                        displayName: inst.name,
+                                        lifecycleState: inst.state || 'UNKNOWN',
+                                        publicIp: ipList.length > 0 ? ipList[0] : 'N/A',
+                                        shape: inst.shape,
+                                        ocpus: inst.ocpus,
+                                        memory: inst.memory,
+                                        region: inst.region || data.region,
+                                        userId: user.id
+                                    });
                                 });
                             } catch (e) {
                                 console.warn(`Failed to fetch details for user ${user.username}`, e);
@@ -826,8 +830,9 @@
                     
                     showToast('Sending Request', `${actName} instance ${instance.displayName}...`, 'success');
                     
+                    // updateInstanceState: ociCfgId is the correct field name per UpdateInstanceStateParams
                     axios.post('/api/oci/updateInstanceState', {
-                        cfgId: instance.userId,
+                        ociCfgId: instance.userId,
                         instanceId: instance.id,
                         action: action
                     }).then(res => {
@@ -916,29 +921,35 @@
                 submitAction() {
                     this.modal.loading = true;
                     let endpoint = '';
+                    // Base params: ociCfgId matches all backend Params objects (GetInstanceCfgInfoParams etc.)
                     let reqData = { 
-                        cfgId: this.modal.instance.userId, 
+                        ociCfgId: this.modal.instance.userId, 
                         instanceId: this.modal.instance.id 
                     };
 
                     if (this.modal.type === 'bandwidth') {
                         endpoint = '/api/oci/updateInstanceShape';
                         reqData.ocpus = parseFloat(this.modal.payload.bandwidth);
-                        // Using same shape logic as backend
                         reqData.memoryInGBs = reqData.ocpus * 6; 
                     } else if (this.modal.type === 'reimage') {
+                        // AutoRescueParams: ociCfgId, instanceId, name, keepBackupVolume
                         endpoint = '/api/oci/autoRescue';
-                        reqData.action = "REIMAGE";
+                        reqData.name = this.modal.instance.displayName || 'Reimage-Task';
+                        reqData.keepBackupVolume = true;
                     } else if (this.modal.type === 'netboot') {
                         endpoint = '/api/oci/autoRescue';
-                        reqData.action = "NETBOOT";
+                        reqData.name = this.modal.instance.displayName || 'Netboot-Task';
+                        reqData.keepBackupVolume = false;
                     } else if (this.modal.type === 'snapshot') {
+                        // CreateSnapshotParams: ociCfgId, instanceId, snapshotName
                         endpoint = '/api/oci/createSnapshot';
                         reqData.snapshotName = this.modal.payload.snapshotName;
                     } else if (this.modal.type === 'tags') {
+                        // updateTags: ociCfgId, instanceId, tagsJson
                         endpoint = '/api/oci/updateTags';
                         reqData.tagsJson = this.modal.payload.tagsJson;
                     } else if (this.modal.type === 'schedule') {
+                        // ScheduledPowerParams: ociCfgId, instanceId, stopTime, startTime
                         endpoint = '/api/oci/setScheduledPower';
                         reqData.stopTime = this.modal.payload.stopTime;
                         reqData.startTime = this.modal.payload.startTime;
@@ -947,7 +958,7 @@
                     axios.post(endpoint, reqData)
                         .then(res => {
                             if(res.data && res.data.success) {
-                                showToast('Success', res.data.message || 'Operation dispatched sent successfully.', 'success');
+                                showToast('Success', res.data.message || 'Operation dispatched successfully.', 'success');
                                 this.modal.show = false;
                             } else {
                                 showToast('Failed', res.data?.message || 'The server rejected the request.');
