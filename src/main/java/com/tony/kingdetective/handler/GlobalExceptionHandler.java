@@ -131,11 +131,25 @@ public class GlobalExceptionHandler {
 
     /**
      * Handle SPA routing (404 -> index.html)
+     * For API paths return JSON 404; for other paths redirect to root (SPA will handle routing)
      */
     @ExceptionHandler(NoResourceFoundException.class)
-    public void handleNoResourceFoundException(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Forward to index.html for SPA support
-        request.getRequestDispatcher("/index.html").forward(request, response);
+    @ResponseBody
+    public ResponseEntity<?> handleNoResourceFoundException(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String path = request.getRequestURI();
+        // API paths should return a proper 404 JSON response
+        if (path != null && path.startsWith("/api")) {
+            ErrorResponse errorResponse = ErrorResponse.builder()
+                    .code(404)
+                    .message("Resource not found: " + path)
+                    .timestamp(System.currentTimeMillis())
+                    .build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        }
+        // For SPA frontend routes, send HTTP redirect to root
+        // The frontend JS router will handle the path
+        response.sendRedirect("/");
+        return null;
     }
     
     /**

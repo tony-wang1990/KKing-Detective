@@ -1,4 +1,4 @@
-﻿server:
+server:
   port: 9527
   # 支持 IPv6 和 IPv4 双栈
   address: '::'  # 监听所有 IPv6 地址（也兼容 IPv4）
