@@ -287,6 +287,75 @@
             <div class="flex-1 overflow-auto p-8" x-show="currentTab === 'settings'" style="display:none;">
                 <div class="max-w-4xl mx-auto space-y-8 pb-12">
                     
+                    <!-- Telegram Config -->
+                    <div class="glass-panel rounded-2xl p-8 border border-borderLight relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-sky-500/10 to-blue-500/10 blur-[60px] rounded-full pointer-events-none"></div>
+                        <h3 class="text-xl font-medium text-white mb-2 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-sky-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.941z"/></svg>
+                            Telegram Bot 配置
+                        </h3>
+                        <p class="text-sm text-gray-400 mb-6 border-b border-white/10 pb-4">Configure your Telegram Bot Token and Personal Chat ID for alerts and remote control.</p>
+                        
+                        <form @submit.prevent="saveTelegramCfg" class="space-y-4 max-w-lg relative z-10">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-400 mb-2">机器人 Token (Bot Token)</label>
+                                <input type="text" x-model="settings.tgBotToken" class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-sky-500 transition-colors text-sm font-mono" placeholder="1234567890:ABCdef...">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-400 mb-2">个人 Chat ID</label>
+                                <div class="flex gap-3">
+                                    <input type="text" x-model="settings.tgChatId" class="flex-1 bg-black/50 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-sky-500 transition-colors text-sm font-mono" placeholder="123456789">
+                                    <button type="submit" :disabled="settings.savingTg" class="bg-sky-500 text-white px-6 py-2.5 rounded-lg hover:bg-sky-600 transition-colors text-sm font-medium flex items-center justify-center min-w-[80px]">
+                                        <span x-show="!settings.savingTg">保存</span>
+                                        <svg x-show="settings.savingTg" class="animate-spin h-4 w-4" style="display:none;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="pt-2 border-t border-white/5">
+                                <label class="block text-xs font-medium text-gray-400 mb-2">测试消息发送 (Test Message)</label>
+                                <div class="flex gap-3">
+                                    <input type="text" x-model="settings.testMsg" class="flex-1 bg-black/50 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-sky-500 transition-colors text-sm" placeholder="Hello from King Detective!">
+                                    <button type="button" @click="sendTestMsg" :disabled="settings.sendingMsg" class="bg-emerald-500 text-white px-4 py-2.5 rounded-lg hover:bg-emerald-600 transition-colors text-sm font-medium flex items-center whitespace-nowrap">
+                                        <svg class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
+                                        <span x-show="!settings.sendingMsg">发送测试</span>
+                                        <span x-show="settings.sendingMsg" style="display:none;">发送中...</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Change Password -->
+                    <div class="glass-panel rounded-2xl p-8 border border-borderLight relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-rose-500/10 to-pink-500/10 blur-[60px] rounded-full pointer-events-none"></div>
+                        <h3 class="text-xl font-medium text-white mb-2 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                            修改登录密码 (Change Password)
+                        </h3>
+                        <p class="text-sm text-gray-400 mb-6 border-b border-white/10 pb-4">Update the admin account username and password for dashboard access.</p>
+                        
+                        <form @submit.prevent="changePassword" class="space-y-4 max-w-lg relative z-10">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-400 mb-2">新用户名 (New Username)</label>
+                                <input type="text" x-model="settings.newUsername" class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-rose-500 transition-colors text-sm" placeholder="admin">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-400 mb-2">新密码 (New Password)</label>
+                                <input type="password" x-model="settings.newPassword" class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-rose-500 transition-colors text-sm" placeholder="••••••••">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-400 mb-2">原密码 (Current Password for Verification)</label>
+                                <div class="flex gap-3">
+                                    <input type="password" x-model="settings.oldPassword" class="flex-1 bg-black/50 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-rose-500 transition-colors text-sm" placeholder="••••••••">
+                                    <button type="submit" :disabled="settings.savingPwd" class="bg-rose-500 text-white px-6 py-2.5 rounded-lg hover:bg-rose-600 transition-colors text-sm font-medium flex items-center justify-center min-w-[80px]">
+                                        <span x-show="!settings.savingPwd">确认修改</span>
+                                        <svg x-show="settings.savingPwd" class="animate-spin h-4 w-4" style="display:none;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
                     <!-- Alert Settings -->
                     <div class="glass-panel rounded-2xl p-8 border border-borderLight relative overflow-hidden">
                         <div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 blur-[60px] rounded-full pointer-events-none"></div>
@@ -611,7 +680,16 @@
                 
                 settings: {
                     alertEmail: '',
-                    saving: false
+                    saving: false,
+                    tgBotToken: '',
+                    tgChatId: '',
+                    savingTg: false,
+                    testMsg: 'Hello from King Detective! 👑',
+                    sendingMsg: false,
+                    newUsername: '',
+                    newPassword: '',
+                    oldPassword: '',
+                    savingPwd: false
                 },
                 
                 ociUsers: [],
@@ -635,6 +713,7 @@
                     
                     if (this.isLoggedIn) {
                         this.loadData();
+                        this.loadTelegramCfg();
                     }
                 },
 
@@ -1065,7 +1144,6 @@
                 
                 saveAlertEmail() {
                     this.settings.saving = true;
-                    // Use URLSearchParams for application/x-www-form-urlencoded format per @RequestParam definition
                     const params = new URLSearchParams();
                     params.append('email', this.settings.alertEmail);
                     
@@ -1079,6 +1157,67 @@
                          })
                          .catch(err => showToast('Error', 'Network error occurred'))
                          .finally(() => this.settings.saving = false);
+                },
+
+                loadTelegramCfg() {
+                    axios.post('/api/sys/getSysCfg').then(res => {
+                        if (res.data && res.data.success && res.data.data) {
+                            this.settings.tgBotToken = res.data.data.tgBotToken || '';
+                            this.settings.tgChatId = res.data.data.tgChatId || '';
+                        }
+                    }).catch(() => {});
+                },
+
+                saveTelegramCfg() {
+                    this.settings.savingTg = true;
+                    axios.post('/api/sys/updateSysCfg', {
+                        tgBotToken: this.settings.tgBotToken,
+                        tgChatId: this.settings.tgChatId
+                    }).then(res => {
+                        if (res.data && res.data.success) {
+                            showToast('Saved', 'Telegram configuration updated successfully.', 'success');
+                        } else {
+                            showToast('Error', res.data.message || 'Failed to save.');
+                        }
+                    }).catch(() => showToast('Error', 'Network error'))
+                    .finally(() => this.settings.savingTg = false);
+                },
+
+                sendTestMsg() {
+                    if (!this.settings.testMsg.trim()) return;
+                    this.settings.sendingMsg = true;
+                    axios.post('/api/sys/sendMsg', { message: this.settings.testMsg })
+                        .then(res => {
+                            if (res.data && res.data.success) {
+                                showToast('Sent!', 'Test message dispatched to your Telegram.', 'success');
+                            } else {
+                                showToast('Error', res.data.message || 'Message failed to send.');
+                            }
+                        }).catch(() => showToast('Error', 'Network error'))
+                        .finally(() => this.settings.sendingMsg = false);
+                },
+
+                changePassword() {
+                    if (!this.settings.newPassword || !this.settings.oldPassword) {
+                        showToast('Error', 'Please fill in all password fields.');
+                        return;
+                    }
+                    this.settings.savingPwd = true;
+                    axios.post('/api/sys/updateSysCfg', {
+                        account: this.settings.newUsername || undefined,
+                        password: this.settings.newPassword,
+                        oldPassword: this.settings.oldPassword
+                    }).then(res => {
+                        if (res.data && res.data.success) {
+                            showToast('Updated', 'Password changed. Please log in again.', 'success');
+                            this.settings.newPassword = '';
+                            this.settings.oldPassword = '';
+                            setTimeout(() => this.logout(), 2000);
+                        } else {
+                            showToast('Error', res.data.message || 'Failed to change password.');
+                        }
+                    }).catch(() => showToast('Error', 'Network error'))
+                    .finally(() => this.settings.savingPwd = false);
                 }
             }));
         });
