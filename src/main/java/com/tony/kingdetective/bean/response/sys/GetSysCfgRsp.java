@@ -29,5 +29,7 @@ public class GetSysCfgRsp {
     private Boolean enableGoogleLogin;
     private String googleClientId;
     private String allowedEmails;
+    /** OCI Details cache time in minutes, default 10 */
+    private Integer ociCacheTimeMinutes;
 
 }

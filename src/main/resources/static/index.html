@@ -328,6 +328,14 @@
                                     </button>
                                 </div>
                             </div>
+                            <div class="pt-2 border-t border-white/5">
+                                <label class="block text-xs font-medium text-gray-400 mb-1">🗄️ OCI 实例列表缓存时间 (Cache Duration)</label>
+                                <p class="text-xs text-gray-500 mb-2">设置 OCI 实例数据的缓存时长（分钟）。较长的缓存可减少 API 调用次数，较短的缓存可确保数据更实时。</p>
+                                <div class="flex gap-3 items-center">
+                                    <input type="number" x-model="settings.ociCacheTimeMinutes" min="1" max="60" class="w-32 bg-black/50 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-sky-500 transition-colors text-sm" placeholder="10">
+                                    <span class="text-xs text-gray-500">分钟（1-60），默认 10 分钟</span>
+                                </div>
+                            </div>
                         </form>
                     </div>
 
@@ -702,7 +710,8 @@
                     newUsername: '',
                     newPassword: '',
                     oldPassword: '',
-                    savingPwd: false
+                    savingPwd: false,
+                    ociCacheTimeMinutes: 10
                 },
                 
                 ociUsers: [],
@@ -1203,6 +1212,7 @@
                         if (res.data && res.data.success && res.data.data) {
                             this.settings.tgBotToken = res.data.data.tgBotToken || '';
                             this.settings.tgChatId = res.data.data.tgChatId || '';
+                            this.settings.ociCacheTimeMinutes = res.data.data.ociCacheTimeMinutes || 10;
                         }
                     }).catch(() => {});
                 },
@@ -1211,10 +1221,11 @@
                     this.settings.savingTg = true;
                     axios.post('/api/sys/updateSysCfg', {
                         tgBotToken: this.settings.tgBotToken,
-                        tgChatId: this.settings.tgChatId
+                        tgChatId: this.settings.tgChatId,
+                        ociCacheTimeMinutes: parseInt(this.settings.ociCacheTimeMinutes) || 10
                     }).then(res => {
                         if (res.data && res.data.success) {
-                            showToast('Saved', 'Telegram configuration updated successfully.', 'success');
+                            showToast('Saved', 'Telegram & cache settings updated.', 'success');
                         } else {
                             showToast('Error', res.data.message || 'Failed to save.');
                         }

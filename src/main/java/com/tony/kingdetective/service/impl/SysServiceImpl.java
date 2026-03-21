@@ -209,6 +209,11 @@ public class SysServiceImpl implements ISysService {
                             googleConfig.setAllowedEmails(params.getAllowedEmails());
                             ociKv.setValue(JSONUtil.toJsonStr(googleConfig));
                             break;
+                        case OCI_DETAILS_CACHE_TIME:
+                            int cacheMinutes = (params.getOciCacheTimeMinutes() != null && params.getOciCacheTimeMinutes() >= 1)
+                                    ? params.getOciCacheTimeMinutes() : 10;
+                            ociKv.setValue(String.valueOf(cacheMinutes));
+                            break;
                         default:
                             break;
                     }
@@ -266,6 +271,10 @@ public class SysServiceImpl implements ISysService {
         rsp.setEnableVersionInform(Boolean.valueOf(null == evunValue ? EnableEnum.ON.getCode() : evunValue));
         rsp.setGjAiApi(getCfgValue(SysCfgEnum.SILICONFLOW_AI_API));
         rsp.setBootBroadcastToken(getCfgValue(SysCfgEnum.BOOT_BROADCAST_TOKEN));
+
+        // OCI Details cache time (minutes)
+        String cacheTimeVal = getCfgValue(SysCfgEnum.OCI_DETAILS_CACHE_TIME);
+        rsp.setOciCacheTimeMinutes(cacheTimeVal != null ? Integer.parseInt(cacheTimeVal) : 10);
 
         // Parse Google login configuration from JSON
         String googleLoginJson = getCfgValue(SysCfgEnum.GOOGLE_ONE_CLICK_LOGIN);

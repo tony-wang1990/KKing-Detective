@@ -324,8 +324,15 @@ public class OciServiceImpl implements IOciService {
             rsp.setNlbList(netLoadBalancers);
         }
 
-        customCache.put(CacheConstant.PREFIX_INSTANCE_PAGE + params.getCfgId(), rsp.getInstanceList(), 10 * 60 * 1000);
-        customCache.put(CacheConstant.PREFIX_NETWORK_LOAD_BALANCER + params.getCfgId(), rsp.getNlbList(), 10 * 60 * 1000);
+        // Read configurable cache duration from system settings (default 10 minutes)
+        int cacheMinutes = 10;
+        try {
+            Integer cfg = sysService.getSysCfg().getOciCacheTimeMinutes();
+            if (cfg != null && cfg >= 1) cacheMinutes = cfg;
+        } catch (Exception ignored) {}
+        long cacheMs = (long) cacheMinutes * 60_000L;
+        customCache.put(CacheConstant.PREFIX_INSTANCE_PAGE + params.getCfgId(), rsp.getInstanceList(), cacheMs);
+        customCache.put(CacheConstant.PREFIX_NETWORK_LOAD_BALANCER + params.getCfgId(), rsp.getNlbList(), cacheMs);
 
         rsp.setCfCfgList(Optional.ofNullable(cfCfgService.list())
                 .filter(CollectionUtil::isNotEmpty).orElseGet(Collections::emptyList).stream()

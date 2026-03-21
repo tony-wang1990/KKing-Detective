@@ -32,6 +32,7 @@ public enum SysCfgEnum {
     BOOT_BROADCAST_CHANNEL("Y114", "TG??????", SysCfgTypeEnum.SYS_INIT_CFG),
     SYS_VNC("Y112", "??VNC??url", SysCfgTypeEnum.SYS_INIT_CFG),
     GOOGLE_ONE_CLICK_LOGIN("Y113", "??????????", SysCfgTypeEnum.SYS_INIT_CFG),
+    OCI_DETAILS_CACHE_TIME("Y115", "OCI???????????(?)", SysCfgTypeEnum.SYS_INIT_CFG),
 
     SYS_INFO_VERSION("Y106", "?????", SysCfgTypeEnum.SYS_INFO),
 
