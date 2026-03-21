@@ -144,7 +144,13 @@
             <header class="h-16 border-b border-borderLight flex items-center px-8 z-10 glass-panel shrink-0">
                 <h1 class="text-xl font-medium tracking-tight" x-text="tabTitle">Dashboard</h1>
                 <div class="ml-auto flex items-center space-x-4 text-sm text-gray-400">
-                    <span class="flex items-center"><span class="w-2 h-2 rounded-full bg-emerald-500 mr-2"></span> System Online</span>
+                    <span class="flex items-center">
+                        <span class="w-2 h-2 rounded-full mr-2 animate-pulse" :class="systemOnline ? 'bg-emerald-500' : 'bg-red-500'"></span>
+                        <span x-text="systemOnline ? 'System Online' : 'System Offline'" :class="systemOnline ? 'text-emerald-400' : 'text-red-400'"></span>
+                    </span>
+                    <button @click="loadData()" class="text-gray-500 hover:text-white transition-colors" title="Refresh instances">
+                        <svg class="w-4 h-4" :class="loadingInstances ? 'animate-spin' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                    </button>
                 </div>
             </header>
 
@@ -674,6 +680,7 @@
                 loginForm: { account: '', password: '' },
                 errorMsg: '',
                 currentTab: 'dashboard',
+                systemOnline: true,
                 
                 loadingInstances: false,
                 instances: [],
@@ -715,6 +722,21 @@
                         this.loadData();
                         this.loadTelegramCfg();
                     }
+
+                    // Heartbeat: poll /api/sys/glance every 30s to check if backend is alive
+                    setInterval(() => {
+                        if (!this.isLoggedIn) return;
+                        axios.get('/api/sys/glance')
+                            .then(() => { this.systemOnline = true; })
+                            .catch(() => { this.systemOnline = false; });
+                    }, 30000);
+
+                    // Auto-refresh instance list every 60s
+                    setInterval(() => {
+                        if (this.isLoggedIn && this.currentTab === 'dashboard') {
+                            this.loadData();
+                        }
+                    }, 60000);
                 },
 
                 async login() {
