@@ -25,7 +25,7 @@ public class KeyboardBuilder {
                 // 
                 new InlineKeyboardRow(
                         InlineKeyboardButton.builder()
-                                .text("? ????")
+                                .text("🚀 一键抢机")
                                 .callbackData("config_list")
                                 .build()
                 ),
