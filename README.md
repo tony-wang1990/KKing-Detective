@@ -1,10 +1,10 @@
 <div align="center">
-  <h1>👑 King-Detective v4.1.1</h1>
+  <h1>👑 King-Detective v4.1.2</h1>
   <p><strong>专业的 Oracle Cloud (OCI) 实例管理集成系统</strong></p>
   <p><i>Telegram Bot 极速响应终端 + 全新玻璃拟态 (Glassmorphism) Web UI</i></p>
   
   [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-  [![Version](https://img.shields.io/badge/Version-v4.1.1-green.svg)]()
+  [![Version](https://img.shields.io/badge/Version-v4.1.2-green.svg)]()
   [![Java](https://img.shields.io/badge/Java-21-orange.svg)]()
   [![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.2+-brightgreen.svg)]()
 </div>
@@ -13,7 +13,7 @@
 
 ## 📖 项目简介
 
-`King-Detective` 是一款为甲骨文云 (OCI) 玩家与管理员量身定制的深度架构管理工具。通过底层的 **OCI Java SDK** 直接调用真实物理机器资源流，它不仅支持极致便捷的 Telegram Bot 移动端随时发包交互，更在 v4.1.1 版本中迎来了 **革命性的 Web 端全图形化重构**。这无异于搭建属于您个人的 OCI 随身控制台。
+`King-Detective` 是一款为甲骨文云 (OCI) 玩家与管理员量身定制的深度架构管理工具。通过底层的 **OCI Java SDK** 直接调用真实物理机器资源流，它不仅支持极致便捷的 Telegram Bot 移动端随时发包交互，更在 v4.1.2 版本中迎来了 **革命性的 Web 端全图形化重构**。这无异于搭建属于您个人的 OCI 随身控制台。
 
 ---
 
