@@ -64,17 +64,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.telegram.telegrambots.longpolling.TelegramBotsLongPollingApplication;
 
-import jakarta.annotation.Resource;
-
-import java.io.*;
-import java.nio.charset.Charset;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.concurrent.*;
-import java.util.stream.Collectors;
-
 import static com.tony.kingdetective.service.impl.OciServiceImpl.*;
 import static com.tony.kingdetective.task.OciTask.botsApplication;
 import static com.tony.kingdetective.task.OciTask.pushVersionUpdateMsg;

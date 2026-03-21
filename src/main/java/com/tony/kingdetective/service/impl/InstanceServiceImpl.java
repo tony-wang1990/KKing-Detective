@@ -81,8 +81,6 @@ public class InstanceServiceImpl implements IInstanceService {
 
     @Value("${oci-cfg.boot-broadcast-url}")
     private String bootBroadcastUrl;
-    @Value("${oci-cfg.boot-broadcast-channel}")
-    private String bootBroadcastChannel;
 
     private static final String LEGACY_MESSAGE_TEMPLATE =
             "?????? \n\n? ???[%s] ???? ?\n" +
@@ -774,9 +772,178 @@ public class InstanceServiceImpl implements IInstanceService {
                         .build());
             }
         } catch (Exception e) {
-            log.error("?????Shape?????:[{}],??:[{}],??ID:[{}] ?? Shape ?:[{}] ???",
+            log.error("更新Shape失败，账号:[{}],地区:[{}],实例ID:[{}] 修改 Shape 为:[{}] 失败",
                     sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(), params.getInstanceId(), params.getShape(), e);
-            throw new OciException(-1, "???? Shape ?:" + params.getShape() + " ??");
+            throw new OciException(-1, "修改 Shape 为:" + params.getShape() + " 失败");
+        }
+    }
+
+    // ==================== 以下为补充实现的接口方法 ====================
+
+    @Override
+    public void createSnapshot(com.tony.kingdetective.bean.params.oci.instance.CreateSnapshotParams params) {
+        SysUserDTO sysUserDTO = sysService.getOciUser(params.getOciCfgId());
+        try (OracleInstanceFetcher fetcher = new OracleInstanceFetcher(sysUserDTO)) {
+            com.oracle.bmc.core.BlockstorageClient blockstorageClient = fetcher.getBlockstorageClient();
+            com.oracle.bmc.core.model.BootVolume bootVolume = fetcher.getBootVolumeByInstanceId(params.getInstanceId());
+            String snapshotName = (params.getSnapshotName() != null && !params.getSnapshotName().isBlank())
+                    ? params.getSnapshotName()
+                    : "snapshot-" + java.time.LocalDateTime.now().format(CommonUtils.DATETIME_FMT_PURE);
+            blockstorageClient.createBootVolumeBackup(
+                    com.oracle.bmc.core.requests.CreateBootVolumeBackupRequest.builder()
+                            .createBootVolumeBackupDetails(
+                                    com.oracle.bmc.core.model.CreateBootVolumeBackupDetails.builder()
+                                            .bootVolumeId(bootVolume.getId())
+                                            .displayName(snapshotName)
+                                            .type(com.oracle.bmc.core.model.CreateBootVolumeBackupDetails.Type.Full)
+                                            .build()
+                            )
+                            .build()
+            );
+            log.info("小划账号:[{}],地区:[{}],实例:[{}] 快照已提交,名称:{}",
+                    sysUserDTO.getUsername(), sysUserDTO.getOciCfg().getRegion(), params.getInstanceId(), snapshotName);
+        } catch (Exception e) {
+            log.error("创建快照失败,账号:[{}],实例ID:[{}],错误:{}",
+                    sysUserDTO.getUsername(), params.getInstanceId(), e.getLocalizedMessage(), e);
+            throw new OciException(-1, "创建快照失败");
+        }
+    }
+
+    @Override
+    public void updateTags(com.tony.kingdetective.bean.params.oci.instance.UpdateTagsParams params) {
+        SysUserDTO sysUserDTO = sysService.getOciUser(params.getOciCfgId());
+        try (OracleInstanceFetcher fetcher = new OracleInstanceFetcher(sysUserDTO)) {
+            com.oracle.bmc.core.ComputeClient computeClient = fetcher.getComputeClient();
+            com.oracle.bmc.core.model.Instance instance = fetcher.getInstanceById(params.getInstanceId());
+            java.util.Map<String, String> tags = new java.util.HashMap<>();
+            if (instance.getFreeformTags() != null) {
+                tags.putAll(instance.getFreeformTags());
+            }
+            if (params.getTagsJson() != null && !params.getTagsJson().isBlank()) {
+                try {
+                    @SuppressWarnings("unchecked")
+                    java.util.Map<String, String> parsedTags = cn.hutool.json.JSONUtil.toBean(
+                            params.getTagsJson(), java.util.Map.class);
+                    tags.putAll(parsedTags);
+                } catch (Exception ex) {
+                    log.warn("解析 tagsJson 失败，跳过标签更新: {}", ex.getMessage());
+                }
+            }
+            computeClient.updateInstance(
+                    UpdateInstanceRequest.builder()
+                            .instanceId(params.getInstanceId())
+                            .updateInstanceDetails(
+                                    UpdateInstanceDetails.builder()
+                                            .freeformTags(tags)
+                                            .build()
+                            )
+                            .build()
+            );
+            log.info("账号:[{}],实例:[{}] Tags 更新成功",
+                    sysUserDTO.getUsername(), instance.getDisplayName());
+        } catch (Exception e) {
+            log.error("更新Tags失败,账号:[{}],实例ID:[{}],错误:{}",
+                    sysUserDTO.getUsername(), params.getInstanceId(), e.getLocalizedMessage(), e);
+            throw new OciException(-1, "更新实例 Tags 失败");
+        }
+    }
+
+    @Override
+    public String getScheduledPower(String instanceId) {
+        try {
+            String key = "scheduled_power:" + instanceId;
+            com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<OciKv> wrapper =
+                    new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<OciKv>()
+                            .eq(OciKv::getCode, key);
+            OciKv cfg = kvService.getOne(wrapper);
+            return cfg != null ? cfg.getValue() : null;
+        } catch (Exception e) {
+            log.error("获取定时开关机配置失败,实例ID:[{}]", instanceId, e);
+            return null;
+        }
+    }
+
+    @Override
+    public void setScheduledPower(String instanceId, String ociCfgId, String stopTime, String startTime) {
+        try {
+            String key = "scheduled_power:" + instanceId;
+            String configStr = "STOP=" + stopTime + ",START=" + startTime + ",USER=" + ociCfgId;
+            com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<OciKv> wrapper =
+                    new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<OciKv>()
+                            .eq(OciKv::getCode, key);
+            OciKv cfg = kvService.getOne(wrapper);
+            if (cfg != null) {
+                cfg.setValue(configStr);
+                kvService.updateById(cfg);
+            } else {
+                cfg = new OciKv();
+                cfg.setId(cn.hutool.core.util.IdUtil.getSnowflakeNextIdStr());
+                cfg.setCode(key);
+                cfg.setValue(configStr);
+                cfg.setType(com.tony.kingdetective.enums.SysCfgTypeEnum.SYS_INIT_CFG.getCode());
+                kvService.save(cfg);
+            }
+            log.info("实例:[{}] 定时开关机配置已保存: {}", instanceId, configStr);
+        } catch (Exception e) {
+            log.error("设置定时开关机失败,实例ID:[{}]", instanceId, e);
+            throw new OciException(-1, "设置定时开关机失败");
+        }
+    }
+
+    @Override
+    public java.util.List<com.oracle.bmc.identity.model.ApiKey> listApiKeys(String ociCfgId) {
+        SysUserDTO sysUserDTO = sysService.getOciUser(ociCfgId);
+        try (OracleInstanceFetcher fetcher = new OracleInstanceFetcher(sysUserDTO)) {
+            return fetcher.getIdentityClient().listApiKeys(
+                    com.oracle.bmc.identity.requests.ListApiKeysRequest.builder()
+                            .userId(sysUserDTO.getOciCfg().getUserId())
+                            .build()
+            ).getItems();
+        } catch (Exception e) {
+            log.error("获取 API Keys 失败,账号:[{}],错误:{}",
+                    sysUserDTO.getUsername(), e.getLocalizedMessage(), e);
+            throw new OciException(-1, "获取 API Keys 失败");
+        }
+    }
+
+    @Override
+    public void deleteApiKey(String ociCfgId, String fingerprint) {
+        SysUserDTO sysUserDTO = sysService.getOciUser(ociCfgId);
+        try (OracleInstanceFetcher fetcher = new OracleInstanceFetcher(sysUserDTO)) {
+            fetcher.getIdentityClient().deleteApiKey(
+                    com.oracle.bmc.identity.requests.DeleteApiKeyRequest.builder()
+                            .userId(sysUserDTO.getOciCfg().getUserId())
+                            .fingerprint(fingerprint)
+                            .build()
+            );
+            log.info("账号:[{}] 删除 API Key 成功,fingerprint:{}",
+                    sysUserDTO.getUsername(), fingerprint);
+        } catch (Exception e) {
+            log.error("删除 API Key 失败,账号:[{}],fingerprint:[{}],错误:{}",
+                    sysUserDTO.getUsername(), fingerprint, e.getLocalizedMessage(), e);
+            throw new OciException(-1, "删除 API Key 失败");
+        }
+    }
+
+    @Override
+    public void addApiKey(String ociCfgId, String publicKeyContent) {
+        SysUserDTO sysUserDTO = sysService.getOciUser(ociCfgId);
+        try (OracleInstanceFetcher fetcher = new OracleInstanceFetcher(sysUserDTO)) {
+            fetcher.getIdentityClient().uploadApiKey(
+                    com.oracle.bmc.identity.requests.UploadApiKeyRequest.builder()
+                            .userId(sysUserDTO.getOciCfg().getUserId())
+                            .createApiKeyDetails(
+                                    com.oracle.bmc.identity.model.CreateApiKeyDetails.builder()
+                                            .key(publicKeyContent)
+                                            .build()
+                            )
+                            .build()
+            );
+            log.info("账号:[{}] 添加 API Key 成功", sysUserDTO.getUsername());
+        } catch (Exception e) {
+            log.error("添加 API Key 失败,账号:[{}],错误:{}",
+                    sysUserDTO.getUsername(), e.getLocalizedMessage(), e);
+            throw new OciException(-1, "添加 API Key 失败");
         }
     }
 

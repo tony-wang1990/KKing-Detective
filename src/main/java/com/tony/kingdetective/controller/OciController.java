@@ -102,8 +102,8 @@ public class OciController {
      */
     @PostMapping(path = "/updateInstanceState")
     public ResponseData<Void> updateInstanceState(@Validated @RequestBody UpdateInstanceStateParams params) {
-        instanceService.updateInstanceState(params);
-        return ResponseData.successData("???????");
+        ociService.updateInstanceState(params);
+        return ResponseData.successData("实例状态修改成功");
     }
 
     /**
@@ -111,8 +111,8 @@ public class OciController {
      */
     @PostMapping(path = "/updateInstanceName")
     public ResponseData<Void> updateInstanceName(@Validated @RequestBody UpdateInstanceNameParams params) {
-        instanceService.updateInstanceName(params);
-        return ResponseData.successData("????????");
+        ociService.updateInstanceName(params);
+        return ResponseData.successData("实例名称修改成功");
     }
 
     /**
@@ -120,8 +120,8 @@ public class OciController {
      */
     @PostMapping(path = "/updateInstanceCfg")
     public ResponseData<Void> updateInstanceCfg(@Validated @RequestBody UpdateInstanceCfgParams params) {
-        instanceService.updateInstanceCfg(params);
-        return ResponseData.successData("????????");
+        ociService.updateInstanceCfg(params);
+        return ResponseData.successData("实例配置修改成功");
     }
 
     /**
@@ -138,7 +138,7 @@ public class OciController {
      */
     @PostMapping(path = "/getInstanceCfgInfo")
     public ResponseData<InstanceCfgDTO> getInstanceCfgInfo(@Validated @RequestBody GetInstanceCfgInfoParams params) {
-        return ResponseData.successData(instanceService.getInstanceCfgInfo(params), "????????");
+        return ResponseData.successData(ociService.getInstanceCfgInfo(params), "获取实例配置成功");
     }
 
     /**
@@ -146,8 +146,8 @@ public class OciController {
      */
     @PostMapping(path = "/terminateInstance")
     public ResponseData<Void> terminateInstance(@Validated @RequestBody TerminateInstanceParams params) {
-        instanceService.terminateInstance(params);
-        return ResponseData.successData("?????????");
+        ociService.terminateInstance(params);
+        return ResponseData.successData("实例销毁任务已提交");
     }
 
     /**
@@ -166,8 +166,8 @@ public class OciController {
      */
     @PostMapping(path = "/autoRescue")
     public ResponseData<Void> autoRescue(@Validated @RequestBody AutoRescueParams params) {
-        instanceService.autoRescue(params);
-        return ResponseData.successData("???????????????");
+        ociService.autoRescue(params);
+        return ResponseData.successData("一键救援任务已提交，请耐心等待");
     }
 
     // ==================  ==================
@@ -305,8 +305,8 @@ public class OciController {
      */
     @PostMapping(path = "/updateBootVolumeCfg")
     public ResponseData<Void> updateBootVolumeCfg(@Validated @RequestBody UpdateBootVolumeCfgParams params) {
-        instanceService.updateBootVolumeCfg(params);
-        return ResponseData.successData("?????????");
+        ociService.updateBootVolumeCfg(params);
+        return ResponseData.successData("启动卷配置更新成功");
     }
 
     // ================== VNC  ==================
