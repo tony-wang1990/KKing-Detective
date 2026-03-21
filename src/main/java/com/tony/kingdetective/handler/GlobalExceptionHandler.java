@@ -41,8 +41,17 @@ public class GlobalExceptionHandler {
                 .timestamp(System.currentTimeMillis())
                 .build();
         
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        try {
+            if (e.getCode() >= 100 && e.getCode() <= 599) {
+                status = HttpStatus.valueOf(e.getCode());
+            }
+        } catch (IllegalArgumentException ex) {
+            // Fallback to BAD_REQUEST if code is not a valid HTTP status
+        }
+        
         return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
+                .status(status)
                 .body(response);
     }
     

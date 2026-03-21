@@ -551,9 +551,9 @@
                     <textarea x-model="cfgModal.payload.ociCfgStr" required rows="5" class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500 text-xs font-mono" placeholder="[DEFAULT]&#10;user=ocid1.user.oc1..&#10;fingerprint=aa:bb:cc..&#10;tenancy=ocid1.tenancy.oc1..&#10;region=ap-tokyo-1"></textarea>
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-gray-400 mb-2">私钥文件 (Private Key .pem)</label>
+                    <label class="block text-xs font-medium text-gray-400 mb-2">私钥文件 (Private Key .pem / .key / .txt)</label>
                     <div class="relative border-2 border-dashed border-gray-600 rounded-lg p-6 flex flex-col items-center justify-center hover:border-indigo-500 transition-colors bg-black/30">
-                        <input type="file" required accept=".pem, .key" @change="cfgModal.payload.file = $event.target.files[0]" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                        <input type="file" required accept=".pem, .key, .txt" @change="cfgModal.payload.file = $event.target.files[0]" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                         <svg class="w-8 h-8 text-gray-500 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
                         <p class="text-sm text-gray-400" x-text="cfgModal.payload.file ? cfgModal.payload.file.name : '点击选择或拖动私钥上传 (Click or Drop)'"></p>
                     </div>
@@ -781,7 +781,7 @@
                     try {
                         const res = await axios.post('/api/sys/login', this.loginForm);
                         if (res.data.success) {
-                            localStorage.setItem('kd_token', res.data.data.tokenValue);
+                            localStorage.setItem('kd_token', res.data.data.token);
                             this.isLoggedIn = true;
                             showToast('Welcome Back', 'Authentication successful', 'success');
                             this.loadData();
@@ -1050,7 +1050,7 @@
                             showToast('Failed', res.data.message || 'Error saving configuration');
                         }
                     } catch (e) {
-                        showToast('Error', 'Network or Server error');
+                        showToast('Error', e.response?.data?.message || 'Network error');
                     } finally {
                         this.cfgModal.loading = false;
                     }
@@ -1250,7 +1250,7 @@
                         } else {
                             showToast('Error', res.data.message || 'Failed to save.');
                         }
-                    }).catch(() => showToast('Error', 'Network error'))
+                    }).catch(e => showToast('Error', e.response?.data?.message || 'Network error'))
                     .finally(() => this.settings.savingTg = false);
                 },
 
@@ -1264,7 +1264,7 @@
                             } else {
                                 showToast('Error', res.data.message || 'Message failed to send.');
                             }
-                        }).catch(() => showToast('Error', 'Network error'))
+                        }).catch(e => showToast('Error', e.response?.data?.message || 'Network error'))
                         .finally(() => this.settings.sendingMsg = false);
                 },
 
