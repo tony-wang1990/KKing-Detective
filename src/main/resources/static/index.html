@@ -625,7 +625,9 @@
     <div class="fixed bottom-4 right-4 z-[100] flex flex-col space-y-2 pointer-events-none" id="toast-container"></div>
 
     <script>
-        // Setup axios interceptor
+        // Setup axios interceptor: attach SaToken on every request
+        // SaToken auto-renews the session on each valid request, so the 30s
+        // heartbeat poll of /api/sys/glance doubles as a session keep-alive.
         axios.interceptors.request.use(config => {
             const token = localStorage.getItem('kd_token');
             if (token) {
@@ -639,7 +641,11 @@
         }, error => {
             if (error.response && error.response.status === 401) {
                 localStorage.removeItem('kd_token');
-                window.dispatchEvent(new CustomEvent('auth-expired'));
+                // Show user-friendly toast before forcing re-login
+                showToast('Session Expired', 'Your login session has expired. Please sign in again.', 'error');
+                setTimeout(() => {
+                    window.dispatchEvent(new CustomEvent('auth-expired'));
+                }, 1500);
             }
             return Promise.reject(error);
         });
