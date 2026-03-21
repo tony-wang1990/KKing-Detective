@@ -1,24 +1,38 @@
 package com.tony.kingdetective.config;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.resource.PathResourceResolver;
+
+import java.io.IOException;
 
 /**
- *  Web UI 
- *  (SPA)  index.html
+ * SPA (Single Page Application) routing support.
+ * All non-API, non-static routes fall back to index.html so that
+ * the frontend JS router can handle navigation.
  */
 @Configuration
 public class WebUiConfig implements WebMvcConfigurer {
 
     @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        // 
-        registry.addViewController("/").setViewName("forward:/index.html");
-        
-        //  /dashboard, /settings  index.html
-        //  Alpine.js/Vue  SPA
-        registry.addViewController("/{path:[^\\.]+}").setViewName("forward:/index.html");
-        registry.addViewController("/**/{path:[^\\.]+}").setViewName("forward:/index.html");
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/**")
+                .addResourceLocations("classpath:/static/")
+                .resourceChain(true)
+                .addResolver(new PathResourceResolver() {
+                    @Override
+                    protected Resource getResource(String resourcePath, Resource location) throws IOException {
+                        Resource requestedResource = location.createRelative(resourcePath);
+                        // If the resource exists (CSS/JS/images etc.), serve it directly
+                        if (requestedResource.exists() && requestedResource.isReadable()) {
+                            return requestedResource;
+                        }
+                        // Otherwise fall back to index.html for SPA routing
+                        return new ClassPathResource("/static/index.html");
+                    }
+                });
     }
 }
